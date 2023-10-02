@@ -1,0 +1,44 @@
+
+.signin-content{position: fixed;right: 10rem;height: auto;max-width: 590px;z-index: 9;min-width: 480px;top: 4rem;}
+.signin-content.RTL{text-align: right;}
+.signin-content .card{border-radius: 0px;border:none;box-shadow: 0px 0px 10px rgba(0,0,0,0.2);box-shadow: 0px 0px 25px rgba(0,0,0,0.2);height: 100%;padding-bottom: 10rem;}
+body.d-mode .signin-content .card{background: #222c38;box-shadow: 0px 0px 10px rgb(0 0 0 / 20%);}
+.signin-maincontainer .landing-content{position: absolute;padding-top: 10rem;margin-left: 5rem;}
+.signin-maincontainer .landing-content h1{font-size: 2.5rem;}
+.signin-content .card .card-body{padding: 35px 55px;padding-top: 6rem;}
+.signin-content .card .card-body h3{margin-left: 55px;margin-top: -4px;font-size: 24px;font-weight: 800;}
+body.d-mode .signin-content .card .card-body h3{color: #009788;}
+.signin-content .card .card-body .back-link{position: absolute;z-index: 2;padding: 5px;margin-top: -6px;border-radius: 15px;transition: all 0.3s;-webkit-transition: all 0.3s;left: 45px;}
+.signin-content .card .card-body .back-link:hover{background: aliceblue;cursor: pointer;color: blue;}
+.signin-content .card .link-label{text-align: right;margin-top: 28px;margin-bottom: 0px;font-size: 14px;position: absolute;right: 50px;font-weight: 700;}
+.signin-content .card a{text-decoration: none;color: #0c6c3b;}
+body.d-mode .signin-content .card a{color: #28a745;}
+/* .signin-content .card .form-label{font-size: 12px;font-weight: 600;margin-bottom: 0px;}
+.signin-content .card .form-control{font-size: 14px;padding: 10px 0px;border: none;border-bottom: 2px solid #21e17e;border-radius: 0px;}
+.signin-content.RTL .card .form-control{text-align: right;}
+.signin-content .card .form-control:hover, .signin-content .card .form-control:focus, .signin-content .card .form-control:active{box-shadow: none;outline: none;} */
+.signin-content .card .btn{width: 45%;margin-top: 20px;padding: 8px 15px;box-shadow: 0px 0px 10px rgba(33, 225, 126, 0.4);background: #21e17e;border: none;font-weight: 600;border-radius: 0px;}
+.signin-content .card .btn.RTL{margin-top: 60px;}
+.signin-content .card .landing-footer{left: 0px;padding: 0px 50px;}
+.signin-content .card .newaccount-footer{position: absolute;width: 100%;background: #dffeee;left: 0px;bottom: 45px;padding: 15px 55px;}
+body.d-mode .signin-content .card .newaccount-footer{background: #334151;color: #999;}
+.signin-content .card .newaccount-footer h4{font-size: 18px;margin: 0px;font-weight: 600;}
+.signin-content .card .newaccount-footer h4 small{font-size: 12px;}
+
+@media (max-width: 1200px) { 
+    .signin-content{top: 50%;left: 50%;transform: translate(-50%, -50%);}
+    .signin-maincontainer .landing-content h1{font-size: 2rem;}
+}
+
+@media (max-width: 768px) {
+    .signin-content{position: relative;right: 0rem;top: 6rem;min-width: auto;transform: none;left: 0px;}
+    .signin-content .card{padding-bottom: 2rem;}
+    .signin-content .card .card-body{padding: 150px 15px;padding-top: 3rem;}
+    .signin-content .card .card-body .back-link{left: 10px;}
+    .signin-content .card .card-body h3{margin-left: 30px;font-size: 20px;}
+    .signin-content .card .newaccount-footer{padding: 15px;}
+    .signin-content .card .newaccount-footer h4{font-size: 14px;}
+    .signin-content .card .landing-footer{padding: 0px 10px;}
+    .signin-content .card .landing-footer ul li{font-size: 10px;}
+    .signin-content .card .landing-footer ul li:first-child{margin-right: 30px !important;}
+}
