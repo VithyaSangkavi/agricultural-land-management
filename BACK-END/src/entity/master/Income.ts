@@ -1,5 +1,5 @@
 import { Column, Double, Entity, PrimaryGeneratedColumn, Table } from "typeorm";
-import { Status } from "../../enum/dStatus";
+import { Status } from "../../enum/Status";
 
 @Entity({
     name: "income",
