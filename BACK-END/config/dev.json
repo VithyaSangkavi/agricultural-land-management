@@ -6,8 +6,8 @@
   "db": {
     "host": "localhost",
     "userName": "root",
-    "password": "1234",
-    "db":"pl",
+    "password": "Vithya24",
+    "db":"task_2",
     "port":"3306"
   },
   "aws": {
