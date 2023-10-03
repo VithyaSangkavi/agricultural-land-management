@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn, Table } from "typeorm";
+import { Column, Double, Entity, PrimaryGeneratedColumn, Table } from "typeorm";
 import { Status } from "../../enum/status";
 import { double } from "aws-sdk/clients/storagegateway";
 
@@ -10,7 +10,7 @@ export class TaskExpenseEntity {
   taskExpenseId: number;
 
   @Column()
-  value: double;
+  value: Double;
 
   @Column()
   createdDate: Date;

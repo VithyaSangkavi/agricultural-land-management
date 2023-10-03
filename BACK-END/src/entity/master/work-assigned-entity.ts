@@ -1,6 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn, Table } from "typeorm";
+import { Column, Double, Entity, PrimaryGeneratedColumn, Table } from "typeorm";
 import { Status } from "../../enum/status";
-import { double } from "aws-sdk/clients/lightsail";
 import { Units } from "../../enum/units";
 import { TaskStatus } from "../../enum/taskStatus";
 
@@ -12,7 +11,7 @@ export class WorkAssignedEntity {
   attendanceId: number;
 
   @Column()
-  quantity: double;
+  quantity: Double;
 
   @Column({ type: "enum" , enum: Units, default: Units.Gram})
   units: Units
