@@ -5,7 +5,7 @@ import { ExpensesEntity } from "../entity/master/Expenses";
 import { IncomeEntity } from "../entity/master/Income";
 import { LandEntity } from "../entity/master/Land";
 import { LotEntity } from "../entity/master/Lot";
-import { PaymentEntity } from "../entity/master/payment";
+import { PaymentEntity } from "../entity/master/payment-entity";
 import { TaskEntity } from "../entity/master/task-entity";
 import { TaskExpenseEntity } from "../entity/master/task-expense-entity";
 import { WorkAssignedEntity } from "../entity/master/work-assigned-entity";
