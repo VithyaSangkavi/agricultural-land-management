@@ -15,8 +15,8 @@ export class IncomeEntity {
     @Column()
     month: string;
 
-    value: Double;
     @Column()
+    value: Double;
 
     @Column()
     createdDate: Date;
