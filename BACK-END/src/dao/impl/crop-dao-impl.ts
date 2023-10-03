@@ -16,7 +16,10 @@ export class CropDaoImpl implements CropDao {
   }
   async update(cropDto: CropDto): Promise<CropEntity> {
     let cropRepo = getConnection().getRepository(CropEntity);
-    let cropModel = await cropRepo.findOne(cropDto.getCropId());
+
+    let cropId = cropDto.getCropId() //changed this code, this is noy original structure
+    let cropModel = await cropRepo.findOne({ where: { crop_id: cropId } }); //changed this code, this is noy original structure
+        
     if (cropModel) {
       this.prepareCropModel(cropModel, cropDto);
       let updatedModel = await cropRepo.save(cropModel);
@@ -27,7 +30,10 @@ export class CropDaoImpl implements CropDao {
   }
   async delete(cropDto: CropDto): Promise<CropEntity> {
     let cropRepo = getConnection().getRepository(CropEntity);
-    let cropModel = await cropRepo.findOne(cropDto.getCropId());
+
+    let cropId = cropDto.getCropId() //changed this code, this is noy original structure
+    let cropModel = await cropRepo.findOne({ where: { crop_id: cropId } }); //changed this code, this is noy original structure
+
     if (cropModel) {
       cropModel.status = Status.Offline;
       let updatedModel = await cropRepo.save(cropModel);
@@ -43,14 +49,14 @@ export class CropDaoImpl implements CropDao {
       where: searchObject,
       skip: cropDto.getStartIndex(),
       take: cropDto.getMaxResult(),
-      order:{crop_id:"DESC"}
+      order: { crop_id: "DESC" }
     });
     return cropModel;
   }
 
   async findById(crop_id: number): Promise<CropEntity> {
     let cropRepo = getConnection().getRepository(CropEntity);
-    let cropModel = await cropRepo.findOne(crop_id);
+    let cropModel = await cropRepo.findOne({ where: { crop_id } });//changed this code, this is noy original structure
     return cropModel;
   }
 
@@ -66,21 +72,21 @@ export class CropDaoImpl implements CropDao {
     let searchObject: any = {};
 
     if (cropDto.getLandId()) {
-        searchObject.land_id = Like("%" + cropDto.getLandId() + "%");
-      }
+      searchObject.land_id = Like("%" + cropDto.getLandId() + "%");
+    }
     if (cropDto.getName()) {
       searchObject.name = Like("%" + cropDto.getName() + "%");
     }
     if (cropDto.getCreatedDate()) {
-        searchObject.createdDate = Like("%" + cropDto.getCreatedDate() + "%");
+      searchObject.createdDate = Like("%" + cropDto.getCreatedDate() + "%");
     }
 
     if (cropDto.getUpdatedDate()) {
-        searchObject.updatedDate = Like("%" + cropDto.getUpdatedDate() + "%");
+      searchObject.updatedDate = Like("%" + cropDto.getUpdatedDate() + "%");
     }
 
     searchObject.status = Status.Online;
-    
+
     return searchObject;
   }
 }
