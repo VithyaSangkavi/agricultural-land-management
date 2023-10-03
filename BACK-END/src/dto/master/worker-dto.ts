@@ -75,6 +75,14 @@ export class WorkerDto extends PaginationDto {
     this.name = name;
   }
 
+  public getDob(): Date {
+    return this.dob;
+  }
+
+  public setDob(dob: Date): void {
+    this.dob = dob;
+  }
+
   public getNic(): string {
     return this.nic;
   }
