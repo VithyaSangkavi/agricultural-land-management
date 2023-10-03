@@ -3,7 +3,7 @@ import { PaginationDto } from "../pagination-dto";
 import { Status } from "../../enum/status";
 import { Double } from "typeorm";
 
-export class ExpensesDto extends PaginationDto {
+export class IncomeDto extends PaginationDto {
     private income_id: number;
     private land_id: number;
     private month: string;
@@ -70,7 +70,6 @@ export class ExpensesDto extends PaginationDto {
     public setValue(value: Double): void {
         this.value = value;
     }
-    
     public getCreatedDate(): Date {
         return this.createdDate;
     }
