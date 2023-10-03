@@ -16,7 +16,10 @@ export class ExpensesDaoImpl implements ExpensesDao {
     }
     async update(expensesDto: ExpensesDto): Promise<ExpensesEntity> {
         let expensesRepo = getConnection().getRepository(ExpensesEntity);
-        let expensesModel = await expensesRepo.findOne(expensesDto.getExpensesId());
+
+        const expensesId = expensesDto.getExpensesId(); //changed this code, this is noy original structure
+        let expensesModel = await expensesRepo.findOne({ where: { expenses_id: expensesId } }); //changed this code, this is noy original structure
+
         if (expensesModel) {
             this.prepareExpensesModel(expensesModel, expensesDto);
             let updatedModel = await expensesRepo.save(expensesModel);
@@ -27,7 +30,10 @@ export class ExpensesDaoImpl implements ExpensesDao {
     }
     async delete(expensesDto: ExpensesDto): Promise<ExpensesEntity> {
         let expensesRepo = getConnection().getRepository(ExpensesEntity);
-        let expensesModel = await expensesRepo.findOne(expensesDto.getExpensesId());
+
+        const expensesId = expensesDto.getExpensesId(); //changed this code, this is noy original structure
+        let expensesModel = await expensesRepo.findOne({ where: { expenses_id: expensesId } }); //changed this code, this is noy original structure
+
         if (expensesModel) {
             expensesModel.status = Status.Offline;
             let updatedModel = await expensesRepo.save(expensesModel);
@@ -47,15 +53,10 @@ export class ExpensesDaoImpl implements ExpensesDao {
         });
         return expensesModel;
     }
-    async findCount(expensesDto: ExpensesDto): Promise<number> {
-        let expensesRepo = getConnection().getRepository(ExpensesEntity);
-        let searchObject: any = this.prepareSearchObject(expensesDto);
-        let expensesModel = await expensesRepo.count({ where: searchObject });
-        return expensesModel;
-    }
+
     async findById(expenses_id: number): Promise<ExpensesEntity> {
         let expensesRepo = getConnection().getRepository(ExpensesEntity);
-        let expensesModel = await expensesRepo.findOne(expenses_id);
+        let expensesModel = await expensesRepo.findOne({ where: { expenses_id } });
         return expensesModel;
     }
     async prepareExpensesModel(expensesModel: ExpensesEntity, expensesDto: ExpensesDto) {
@@ -66,18 +67,18 @@ export class ExpensesDaoImpl implements ExpensesDao {
     }
     prepareSearchObject(expensesDto: ExpensesDto): any {
         let searchObject: any = {};
-        
+
         if (expensesDto.getType()) {
             searchObject.name = Like("%" + expensesDto.getType() + "%");
         }
         if (expensesDto.getCreatedDate()) {
             searchObject.createdDate = Like("%" + expensesDto.getCreatedDate() + "%");
         }
-    
+
         if (expensesDto.getUpdatedDate()) {
             searchObject.updatedDate = Like("%" + expensesDto.getUpdatedDate() + "%");
         }
-    
+
         searchObject.status = Status.Online;
         return searchObject;
     }
