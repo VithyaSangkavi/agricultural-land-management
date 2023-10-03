@@ -3,7 +3,7 @@ import { Status } from "../../enum/status";
 import { TaskExpenseEntity } from "../../entity/master/task-expense-entity";
 import { Double } from "typeorm";
 
-export class TaskDto extends PaginationDto {
+export class TaskExpenseDto extends PaginationDto {
   private taskExpenseId: number;
   private value: Double;
   private createdDate: Date;
