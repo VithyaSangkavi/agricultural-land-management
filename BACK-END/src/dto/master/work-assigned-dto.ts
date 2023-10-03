@@ -6,7 +6,7 @@ import { TaskStatus } from "../../enum/taskStatus";
 import { Double } from "typeorm";
 
 
-export class WorkeAssignedDto extends PaginationDto {
+export class WorkAssignedDto extends PaginationDto {
   private attendanceId: number;
   private quantity: Double;
   private units: Units;
