@@ -16,23 +16,32 @@ export class WorkerEntity {
   dob: Date;
 
   @Column()
-  nic: String;
+  nic: string;
 
   @Column()
-  gender: String;
+  gender: string;
 
   @Column()
   joinedDate: Date;
 
   @Column()
-  phone: String;
+  phone: string;
 
   @Column()
-  address: String;
+  address: string;
 
   @Column({ type: "enum" ,enum:WorkerStatus,default:WorkerStatus.Active})
   workerStatus: WorkerStatus
 
+  @Column()
+  createdDate: Date;
+
+  @Column()
+  updatedDate: Date;
+
   @Column({ type: "enum" ,enum:Status,default:Status.Online})
   status: Status;
+
+  @Column()
+  landId: number;
 }

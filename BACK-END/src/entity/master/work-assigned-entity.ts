@@ -27,7 +27,7 @@ export class WorkAssignedEntity {
   createdDate: Date;
 
   @Column()
-  updatedDate: String;
+  updatedDate: Date;
 
   @Column({ type: "enum" ,enum:Status,default:Status.Online})
   status: Status;
