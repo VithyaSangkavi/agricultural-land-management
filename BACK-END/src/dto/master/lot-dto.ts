@@ -43,35 +43,38 @@ export class LotDto extends PaginationDto {
     public getLotId(): number {
         return this.lot_id;
     }
-    
+
     public setLotId(land_id: number): void {
         this.lot_id = land_id;
     }
-    
+
     public getName(): string {
         return this.name;
     }
-    
+
     public setName(name: string): void {
         this.name = name;
     }
-    
+
     public getArea(): Double {
         return this.area;
     }
-    
+
     public setArea(area: Double): void {
         this.area = area;
     }
-    
+
     public getUom(): uStatus {
         return this.uom;
     }
-    
+
     public setUom(uom: uStatus): void {
         this.uom = uom;
     }
-    
+
+    public getCreatedDate(): Date {
+        return this.createdDate;
+    }
 
     public setCreatedDate(createdDate: Date): void {
         this.createdDate = createdDate;
