@@ -28,11 +28,11 @@ export class CropDto extends PaginationDto {
 
     filViaDbObject(cropModel: CropEntity) {
         this.id = cropModel.id;
-        this.landId = cropModel.landId;
         this.cropName = cropModel.cropName;
         this.createdDate = cropModel.createdDate;
         this.updatedDate = cropModel.updatedDate;
         this.status = cropModel.status;
+        this.landId = cropModel.land.id;
     }
 
     public getCropId(): number {

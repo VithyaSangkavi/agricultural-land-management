@@ -7,7 +7,7 @@
     "host": "localhost",
     "userName": "root",
     "password": "Vithya24",
-    "db":"task_2",
+    "db":"agri-management",
     "port":"3306"
   },
   "aws": {

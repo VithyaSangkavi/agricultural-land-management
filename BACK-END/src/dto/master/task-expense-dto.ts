@@ -20,8 +20,8 @@ export class TaskExpenseDto extends PaginationDto {
     this.createdDate = body.createdDate;
     this.updatedDate = body.updatedDate;
     this.status= body.status;
-    this.taskId = body.taskId;
-    this.expenseId = body.expenseId;
+    this.taskId = body.task.id;
+    this.expenseId = body.expense.id;
 
     if (body.startIndex && body.maxResult) {
       this.setStartIndex(body.startIndex);
@@ -35,8 +35,8 @@ export class TaskExpenseDto extends PaginationDto {
     this.createdDate = TaskExpenseModel.createdDate;
     this.updatedDate = TaskExpenseModel.updatedDate;
     this.status = TaskExpenseModel.status;
-    this.taskId = TaskExpenseModel.taskId;  
-    this.expenseId = TaskExpenseModel.expenseId;
+    this.taskId = TaskExpenseModel.task.id;  
+    this.expenseId = TaskExpenseModel.expense.id;
   }
 
   public getTaskExpenseId(): number {

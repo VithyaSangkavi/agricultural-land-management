@@ -56,7 +56,7 @@ export class WorkerDto extends PaginationDto {
     this.createdDate = workerModel.createdDate;
     this.updatedDate = workerModel.updatedDate;
     this.status = workerModel.status;
-    this.landId = workerModel.landId;  
+    this.landId = workerModel.land.id;  
   }
 
   public getWorkerId(): number {

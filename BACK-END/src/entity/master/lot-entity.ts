@@ -1,6 +1,7 @@
-import { Column, Double, Entity, PrimaryGeneratedColumn, Table } from "typeorm";
+import { Column, Double, Entity, ManyToOne, PrimaryGeneratedColumn, Table } from "typeorm";
 import { Status } from "../../enum/Status";
 import { areaUOM } from "../../enum/areaUOM";
+import { LandEntity } from "./land-entity";
 
 @Entity({
     name: "lot",
@@ -28,7 +29,6 @@ export class LotEntity {
     @Column({ type: "enum", enum:Status, default: Status.Online})
     status: Status;
 
-    @Column()
-    landId: number;
-
+    @ManyToOne(() => LandEntity, (land) => land.id)
+    land: LandEntity
 }

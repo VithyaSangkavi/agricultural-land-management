@@ -1,6 +1,8 @@
-import { Column, Double, Entity, PrimaryGeneratedColumn, Table } from "typeorm";
+import { Column, Double, Entity, ManyToOne, PrimaryGeneratedColumn, Table } from "typeorm";
 import { Status } from "../../enum/Status";
 import { double } from "aws-sdk/clients/storagegateway";
+import { TaskEntity } from "./task-entity";
+import { ExpensesEntity } from "./expense-entity";
 
 @Entity({
   name: "task-expense",
@@ -21,9 +23,9 @@ export class TaskExpenseEntity {
   @Column({ type: "enum" ,enum:Status,default:Status.Online})
   status: Status;
 
-  @Column()
-  taskId: number;
+  @ManyToOne(()=> TaskEntity, (task) => task.id)
+  task: TaskEntity;
 
-  @Column()
-  expenseId: number
+  @ManyToOne(()=> ExpensesEntity, (expense) => expense.id)
+  expense: ExpensesEntity;
 }

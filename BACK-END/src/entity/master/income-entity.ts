@@ -1,5 +1,6 @@
-import { Column, Double, Entity, PrimaryGeneratedColumn, Table } from "typeorm";
+import { Column, Double, Entity, ManyToOne, PrimaryGeneratedColumn, Table } from "typeorm";
 import { Status } from "../../enum/Status";
+import { LandEntity } from "./land-entity";
 
 @Entity({
     name: "income",
@@ -27,4 +28,6 @@ export class IncomeEntity {
     @Column()
     landId: number;
 
+    @ManyToOne(() => LandEntity, (land) => land.id)
+    land: LandEntity
 }

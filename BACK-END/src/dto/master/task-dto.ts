@@ -19,7 +19,7 @@ export class TaskDto extends PaginationDto {
     this.createdDate = body.createdDate;
     this.updatedDate = body.updatedDate;
     this.status= body.status;
-    this.cropId = body.cropId;
+    this.cropId = body.crop.id;
 
     if (body.startIndex && body.maxResult) {
       this.setStartIndex(body.startIndex);
@@ -33,7 +33,7 @@ export class TaskDto extends PaginationDto {
     this.createdDate = TaskModel.createdDate;
     this.updatedDate = TaskModel.updatedDate;
     this.status = TaskModel.status;
-    this.cropId = TaskModel.cropId;  
+    this.cropId = TaskModel.crop.id;  
   }
 
   public gettaskId(): number {

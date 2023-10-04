@@ -1,7 +1,8 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Table } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, Table } from "typeorm";
 import { Status } from "../../enum/Status";
 import { WorkerStatus } from "../../enum/workerStatus";
 import { PaymentEntity } from "./payment-entity";
+import { LandEntity } from "./land-entity";
 
 @Entity({
   name: "worker",
@@ -43,8 +44,10 @@ export class WorkerEntity {
   @Column({ type: "enum" ,enum:Status,default:Status.Online})
   status: Status;
 
-  @Column()
-  landId: number;
+  //fk
+  @ManyToOne(()=> LandEntity, (land) => land.id)
+  land: LandEntity;
 
-  //@OneToMany((type) => PaymentEntity, (payment) => payment.)
+  @OneToMany(() => PaymentEntity, (payment) => payment.id)
+  payment: PaymentEntity
 }

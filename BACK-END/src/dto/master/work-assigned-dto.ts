@@ -31,9 +31,9 @@ export class WorkAssignedDto extends PaginationDto {
     this.updatedDate = body.updatedDate;
     this.status= body.status;
     this.taskStatus = body.taskStatus;
-    this.workerId = body.workerId;
-    this.taskId = body.taskId;
-    this.lotId = body.lotId;
+    this.workerId = body.worker.id;
+    this.taskId = body.task.id;
+    this.lotId = body.lot.id;
 
 
     if (body.startIndex && body.maxResult) {
@@ -52,9 +52,9 @@ export class WorkAssignedDto extends PaginationDto {
     this.updatedDate = workAssignedModel.updatedDate;
     this.status = workAssignedModel.status;
     this.taskStatus = workAssignedModel.taskStatus;
-    this.workerId = workAssignedModel.workerId;
-    this.taskId = workAssignedModel.taskId;
-    this.lotId = workAssignedModel.lotId;  
+    this.workerId = workAssignedModel.worker.id;
+    this.taskId = workAssignedModel.task.id;
+    this.lotId = workAssignedModel.lot.id;  
   }
 
   public getAttendanceid(): number {

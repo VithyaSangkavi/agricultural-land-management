@@ -1,5 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn, Table } from "typeorm";
+import { Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, Table } from "typeorm";
 import { Status } from "../../enum/Status";
+import { LandEntity } from "./land-entity";
+import { TaskEntity } from "./task-entity";
 
 @Entity({
     name: "crop",
@@ -21,6 +23,9 @@ export class CropEntity {
     @Column({ type: "enum", enum:Status, default: Status.Online})
     status: Status;
 
-    @Column()
-    landId: number;
+    @ManyToOne(() => LandEntity, (land) => land.id)
+    land: LandEntity
+
+    @OneToMany(() => TaskEntity, (task) => task.id)
+    task: TaskEntity
 }

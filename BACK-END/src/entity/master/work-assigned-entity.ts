@@ -1,7 +1,10 @@
-import { Column, Double, Entity, PrimaryGeneratedColumn, Table } from "typeorm";
+import { Column, Double, Entity, ManyToOne, PrimaryGeneratedColumn, Table } from "typeorm";
 import { Status } from "../../enum/Status";
 import { Units } from "../../enum/units";
 import { TaskStatus } from "../../enum/taskStatus";
+import { WorkerEntity } from "./worker-entity";
+import { TaskEntity } from "./task-entity";
+import { LotEntity } from "./lot-entity";
 
 @Entity({
   name: "work-assigned",
@@ -34,12 +37,12 @@ export class WorkAssignedEntity {
   @Column({ type: "enum" ,enum:TaskStatus,default:TaskStatus.Completed})
   taskStatus: TaskStatus;
 
-  @Column()
-  workerId: number;
+  @ManyToOne(()=> WorkerEntity, (worker) => worker.id)
+  worker: WorkerEntity;
 
-  @Column()
-  taskId: number;
+  @ManyToOne(()=> TaskEntity, (task) => task.id)
+  task: TaskEntity;
 
-  @Column()
-  lotId: number;
+  @ManyToOne(()=> LotEntity, (lot) => lot.id)
+  lot: LotEntity;
 }
