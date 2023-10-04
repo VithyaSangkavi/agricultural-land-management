@@ -1,26 +1,23 @@
 import { Column, Double, Entity, PrimaryGeneratedColumn, Table } from "typeorm";
-import { Status } from "../../enum/status";
-import { uStatus } from "../../enum/uStatus";
+import { Status } from "../../enum/Status";
+import { uStatus } from "../../enum/areaUOM";
 
 @Entity({
     name: "lot",
 })
 
 export class LotEntity {
-    @PrimaryGeneratedColumn()
-    lot_id: number;
+    @PrimaryGeneratedColumn({name: "lotId"})
+    id: number;
 
     @Column()
-    land_id: number;
+    lotName: string;
 
-    @Column()
-    name: string;
-
-    @Column()
-    area: Double;
+    @Column({type: "double"})
+    area: number;
     
     @Column({ type: "enum", enum:uStatus, default: uStatus.Arce})
-    uom: uStatus;
+    areaUOM: uStatus;
 
     @Column()
     createdDate: Date;
@@ -30,4 +27,8 @@ export class LotEntity {
 
     @Column({ type: "enum", enum:Status, default: Status.Online})
     status: Status;
+
+    @Column()
+    landId: number;
+
 }

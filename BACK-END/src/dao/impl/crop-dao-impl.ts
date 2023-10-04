@@ -1,7 +1,7 @@
 import { getConnection, Like } from "typeorm";
 import { CropDto } from "../../dto/master/crop-dto";
 import { Status } from "../../enum/status";
-import { CropEntity } from "../../entity/master/Crop";
+import { CropEntity } from "../../entity/master/crop-entity";
 import { CropDao } from "../crop-dao";
 
 export class CropDaoImpl implements CropDao {

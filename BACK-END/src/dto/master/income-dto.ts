@@ -1,4 +1,4 @@
-import { IncomeEntity } from "../../entity/master/Income";
+import { IncomeEntity } from "../../entity/master/income-entity";
 import { PaginationDto } from "../pagination-dto";
 import { Status } from "../../enum/status";
 import { Double } from "typeorm";

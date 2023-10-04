@@ -1,4 +1,4 @@
-import { ExpensesEntity } from "../../entity/master/Expenses";
+import { ExpensesEntity } from "../../entity/master/expense-entity";
 import { PaginationDto } from "../pagination-dto";
 import { Status } from "../../enum/status";
 

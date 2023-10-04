@@ -1,8 +1,8 @@
 import { getConnection, Like } from "typeorm";
 import { LandDto } from "../../dto/master/land-dto";
 import { Status } from "../../enum/status";
-import { uStatus } from "../../enum/uStatus";
-import { LandEntity } from "../../entity/master/Land";
+import { uStatus } from "../../enum/areaUOM";
+import { LandEntity } from "../../entity/master/land-entity";
 import { LandDao } from "../land-dao";
 
 export class LandDaoImpl implements LandDao {

@@ -1,6 +1,6 @@
 import { PaymentDto } from "../dto/master/payment-dto"
 import { PaymentEntity } from "../entity/master/payment-entity";
-import { mStatus } from "../enum/mStatus";
+import { mStatus } from "../enum/paymentType";
 
 export interface PaymentDao {
   save(paymentDto: PaymentDto): Promise<PaymentEntity>;

@@ -1,22 +1,19 @@
 import { Column, Double, Entity, PrimaryGeneratedColumn, Table } from "typeorm";
-import { Status } from "../../enum/status";
+import { Status } from "../../enum/Status";
 
 @Entity({
     name: "income",
 })
 
 export class IncomeEntity {
-    @PrimaryGeneratedColumn()
-    income_id: number;
-
-    @Column()
-    land_id: number;
+    @PrimaryGeneratedColumn({name : "incomeId"})
+    id: number;
 
     @Column()
     month: string;
 
-    @Column()
-    value: Double;
+    @Column({type: "double"})
+    price: number;
 
     @Column()
     createdDate: Date;
@@ -26,4 +23,8 @@ export class IncomeEntity {
 
     @Column({ type: "enum", enum:Status, default: Status.Online})
     status: Status;
+
+    @Column()
+    landId: number;
+
 }

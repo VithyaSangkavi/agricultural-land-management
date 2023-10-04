@@ -1,10 +1,10 @@
 import { Db, getConnection, getConnectionManager } from "typeorm";
 import { EnvironmentConfiguration } from "./environment-configuration";
-import { CropEntity } from "../entity/master/Crop";
-import { ExpensesEntity } from "../entity/master/Expenses";
-import { IncomeEntity } from "../entity/master/Income";
-import { LandEntity } from "../entity/master/Land";
-import { LotEntity } from "../entity/master/Lot";
+import { CropEntity } from "../entity/master/crop-entity";
+import { ExpensesEntity } from "../entity/master/expense-entity";
+import { IncomeEntity } from "../entity/master/income-entity";
+import { LandEntity } from "../entity/master/land-entity";
+import { LotEntity } from "../entity/master/lot-entity";
 import { PaymentEntity } from "../entity/master/payment-entity";
 import { TaskEntity } from "../entity/master/task-entity";
 import { TaskExpenseEntity } from "../entity/master/task-expense-entity";
@@ -22,7 +22,7 @@ const Connection = connectionManager.create({
   username: appConfig.getUserName(),
   password: appConfig.getPassword(),
   database: appConfig.getDataBase(),
-  synchronize: false,
+  synchronize: true,
   entities: [CropEntity, ExpensesEntity, IncomeEntity, LandEntity, LotEntity, PaymentEntity, TaskEntity, TaskExpenseEntity, WorkAssignedEntity, WorkerEntity],
   logging: false,
 });

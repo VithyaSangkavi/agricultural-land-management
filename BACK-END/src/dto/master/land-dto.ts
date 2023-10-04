@@ -1,7 +1,7 @@
-import { LandEntity } from "../../entity/master/Land";
+import { LandEntity } from "../../entity/master/land-entity";
 import { PaginationDto } from "../pagination-dto";
 import { Status } from "../../enum/status";
-import { uStatus } from "../../enum/uStatus";
+import { uStatus } from "../../enum/areaUOM";
 import { Double } from "typeorm";
 
 export class LandDto extends PaginationDto {

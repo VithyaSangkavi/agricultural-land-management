@@ -1,7 +1,7 @@
 import { getConnection, Like } from "typeorm";
 import { LotDto } from "../../dto/master/lot-dto";
 import { Status } from "../../enum/status";
-import { LotEntity } from "../../entity/master/Lot";
+import { LotEntity } from "../../entity/master/lot-entity";
 import { LotDao } from "../lot-dao";
 
 export class LotDaoImpl implements LotDao {

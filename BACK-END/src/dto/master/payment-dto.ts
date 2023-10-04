@@ -1,5 +1,5 @@
 import { PaginationDto } from "../pagination-dto";
-import { mStatus } from "../../enum/mStatus";
+import { mStatus } from "../../enum/paymentType";
 import { Status } from "../../enum/status";
 import { PaymentEntity } from "../../entity/master/payment-entity";
 import { Double } from "typeorm";

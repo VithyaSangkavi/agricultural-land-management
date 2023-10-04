@@ -1,5 +1,5 @@
 import { CropDto } from "../dto/master/crop-dto";
-import { CropEntity } from "../entity/master/Crop";
+import { CropEntity } from "../entity/master/crop-entity";
 
 export interface CropDao {
     save(cropDto: CropDto): Promise<CropEntity>;

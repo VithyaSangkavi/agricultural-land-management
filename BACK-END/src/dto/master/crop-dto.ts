@@ -1,4 +1,4 @@
-import { CropEntity } from "../../entity/master/Crop";
+import { CropEntity } from "../../entity/master/crop-entity";
 import { PaginationDto } from "../pagination-dto";
 import { Status } from "../../enum/status";
 

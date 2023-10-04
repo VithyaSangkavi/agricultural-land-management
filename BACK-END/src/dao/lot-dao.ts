@@ -1,5 +1,5 @@
 import { LotDto } from "../dto/master/lot-dto";
-import { LotEntity } from "../entity/master/Lot";
+import { LotEntity } from "../entity/master/lot-entity";
 
 export interface LotDao {
     save(lotDto: LotDto): Promise<LotEntity>;

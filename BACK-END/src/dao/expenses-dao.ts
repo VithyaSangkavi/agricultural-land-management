@@ -1,5 +1,5 @@
 import { ExpensesDto } from "../dto/master/expenses-dto";
-import { ExpensesEntity } from "../entity/master/Expenses";
+import { ExpensesEntity } from "../entity/master/expense-entity";
 
 export interface ExpensesDao {
     save(expensesDto: ExpensesDto): Promise<ExpensesEntity>;

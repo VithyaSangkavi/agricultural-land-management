@@ -1,7 +1,7 @@
-import { LotEntity } from "../../entity/master/Lot";
+import { LotEntity } from "../../entity/master/lot-entity";
 import { PaginationDto } from "../pagination-dto";
 import { Status } from "../../enum/status";
-import { uStatus } from "../../enum/uStatus";
+import { uStatus } from "../../enum/areaUOM";
 import { Double } from "typeorm";
 
 export class LotDto extends PaginationDto {

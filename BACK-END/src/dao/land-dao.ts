@@ -1,5 +1,5 @@
 import { LandDto } from "../dto/master/land-dto";
-import { LandEntity } from "../entity/master/Land";
+import { LandEntity } from "../entity/master/land-entity";
 
 export interface LandDao {
     save(landDto: LandDto): Promise<LandEntity>;

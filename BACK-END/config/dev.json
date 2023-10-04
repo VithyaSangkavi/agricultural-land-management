@@ -1,13 +1,13 @@
 {
   "server": {
-    "port": "8080",
+    "port": "8081",
     "ip": "127.0.0.1"
   },
   "db": {
     "host": "localhost",
     "userName": "root",
     "password": "Vithya24",
-    "db":"task_2",
+    "db":"temp",
     "port":"3306"
   },
   "aws": {
