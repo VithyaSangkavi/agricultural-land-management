@@ -1,5 +1,5 @@
 import { CommonResponse } from "../../common/dto/common-response";
-import { TaskDto } from "../../dto/master/task-dto";
+import { TaskDto } from "../../dto/master/task-type-dto";
 
 export interface TaskService {
   save(taskDto: TaskDto): Promise<CommonResponse>;

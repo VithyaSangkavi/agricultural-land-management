@@ -3,7 +3,7 @@ import { Status } from "../../enum/Status";
 import { Units } from "../../enum/units";
 import { TaskStatus } from "../../enum/taskStatus";
 import { WorkerEntity } from "./worker-entity";
-import { TaskEntity } from "./task-entity";
+import { TaskTypeEntity } from "./task-type-entity";
 import { LotEntity } from "./lot-entity";
 
 @Entity({
@@ -40,8 +40,8 @@ export class WorkAssignedEntity {
   @ManyToOne(()=> WorkerEntity, (worker) => worker.id)
   worker: WorkerEntity;
 
-  @ManyToOne(()=> TaskEntity, (task) => task.id)
-  task: TaskEntity;
+  @ManyToOne(()=> TaskTypeEntity, (task) => task.id)
+  task: TaskTypeEntity;
 
   @ManyToOne(()=> LotEntity, (lot) => lot.id)
   lot: LotEntity;

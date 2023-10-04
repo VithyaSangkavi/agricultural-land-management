@@ -1,6 +1,6 @@
 import { getConnection, Like } from "typeorm";
 import { DepartmentDto } from "../../dto/master/department-dto";
-import { Status } from "../../enum/status";
+import { Status } from "../../enum/Status";
 import { DepartmentEntity } from "../../entity/master/department-entity";
 import { DepartmentDao } from "../department-dao";
 

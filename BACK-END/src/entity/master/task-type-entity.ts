@@ -6,7 +6,7 @@ import { TaskExpenseEntity } from "./task-expense-entity";
 @Entity({
   name: "task",
 })
-export class TaskEntity {
+export class TaskTypeEntity {
   @PrimaryGeneratedColumn({name: "taskId"})
   id: number;
 

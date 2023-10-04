@@ -11,6 +11,7 @@ export class LotDto extends PaginationDto {
     private createdDate: Date;
     private updatedDate: Date;
     private status: Status;
+    private landId: number;
 
     filViaRequest(body) {
 
@@ -23,6 +24,7 @@ export class LotDto extends PaginationDto {
         this.createdDate = body.createdDate;
         this.updatedDate = body.updatedDate;
         this.status = body.status;
+        this.landId = body.land.id;
         if (body.startIndex && body.maxResult) {
             this.setStartIndex(body.startIndex);
             this.setMaxResult(body.maxResult);
@@ -37,6 +39,7 @@ export class LotDto extends PaginationDto {
         this.createdDate = LotModel.createdDate;
         this.updatedDate = LotModel.updatedDate;
         this.status = LotModel.status
+        this.landId = LotModel.land.id;
     }
 
     public getLotId(): number {
@@ -47,11 +50,11 @@ export class LotDto extends PaginationDto {
         this.id = id;
     }
 
-    public getlotName(): string {
+    public getLotName(): string {
         return this.lotName;
     }
 
-    public setlotName(lotName: string): void {
+    public setLotName(lotName: string): void {
         this.lotName = lotName;
     }
 
@@ -63,11 +66,11 @@ export class LotDto extends PaginationDto {
         this.area = area;
     }
 
-    public getUom(): areaUOM {
+    public getAreaUOM(): areaUOM {
         return this.areaUOM;
     }
 
-    public setUom(areaUOM: areaUOM): void {
+    public setAreaUOM(areaUOM: areaUOM): void {
         this.areaUOM = areaUOM;
     }
 
@@ -93,5 +96,13 @@ export class LotDto extends PaginationDto {
 
     public setStatus(status: Status): void {
         this.status = status;
+    }
+
+    public getLandId(): number {
+        return this.landId;
+    }
+
+    public setLandId(landId: number): void {
+        this.landId = landId;
     }
 }
