@@ -1,6 +1,10 @@
-import { Column, Double, Entity, PrimaryGeneratedColumn, Table } from "typeorm";
+import { Column, Double, Entity, OneToMany, PrimaryGeneratedColumn, Table } from "typeorm";
 import { Status } from "../../enum/Status";
 import { areaUOM } from "../../enum/areaUOM";
+import { LotEntity } from "./lot-entity";
+import { CropEntity } from "./crop-entity";
+import { WorkerEntity } from "./worker-entity";
+import { IncomeEntity } from "./income-entity";
 
 @Entity({
     name: "land",
@@ -30,4 +34,16 @@ export class LandEntity {
 
     @Column({ type: "enum", enum:Status, default: Status.Online})
     status: Status;
+
+    @OneToMany(() => LotEntity, (lot) => lot.id)
+    lot: LotEntity
+
+    @OneToMany(() => CropEntity, (crop) => crop.id)
+    crop: CropEntity
+
+    @OneToMany(() => WorkerEntity, (worker) => worker.id)
+    worker: WorkerEntity
+
+    @OneToMany(() => IncomeEntity, (income) => income.id)
+    income: IncomeEntity
 }

@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn, Table } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Table } from "typeorm";
 import { Status } from "../../enum/Status";
+import { TaskExpenseEntity } from "./task-expense-entity";
 
 @Entity({
     name: "expense",
@@ -20,4 +21,7 @@ export class ExpensesEntity {
     
     @Column({ type: "enum", enum:Status, default: Status.Online})
     status: Status;
+
+    @OneToMany(() => TaskExpenseEntity, (taskExpense) => taskExpense.id)
+    taskExpense: TaskExpenseEntity
 }

@@ -1,5 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn, Table } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, Table } from "typeorm";
 import { Status } from "../../enum/Status";
+import { CropEntity } from "./crop-entity";
+import { TaskExpenseEntity } from "./task-expense-entity";
 
 @Entity({
   name: "task",
@@ -20,6 +22,9 @@ export class TaskEntity {
   @Column({ type: "enum" ,enum:Status,default:Status.Online})
   status: Status;
 
-  @Column()
-  cropId: number;
+  @ManyToOne(()=> CropEntity, (crop) => crop.id)
+  crop: CropEntity;
+
+  @OneToMany(() => TaskExpenseEntity, (taskExpense) => taskExpense.id)
+  taskExpense: TaskExpenseEntity
 }

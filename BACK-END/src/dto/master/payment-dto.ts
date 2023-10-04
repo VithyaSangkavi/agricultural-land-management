@@ -26,7 +26,7 @@ export class PaymentDto extends PaginationDto {
     this.createdDate = body.createdDate;
     this.updatedDate = body.updatedDate;
     this.status= body.status;
-    this.workerId = body.workerId;
+    this.workerId = body.worker.id;
 
     if (body.startIndex && body.maxResult) {
       this.setStartIndex(body.startIndex);
@@ -43,7 +43,7 @@ export class PaymentDto extends PaginationDto {
     this.createdDate = PaymentModel.createdDate;
     this.updatedDate = PaymentModel.updatedDate;
     this.status = PaymentModel.status;
-    this.workerId = PaymentModel.workerId;  
+    this.workerId = PaymentModel.worker.id;  
   }
 
   public getPaymentId(): number {
