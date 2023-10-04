@@ -6,7 +6,7 @@ import { IncomeEntity } from "../entity/master/income-entity";
 import { LandEntity } from "../entity/master/land-entity";
 import { LotEntity } from "../entity/master/lot-entity";
 import { PaymentEntity } from "../entity/master/payment-entity";
-import { TaskEntity } from "../entity/master/task-entity";
+import { TaskTypeEntity } from "../entity/master/task-type-entity";
 import { TaskExpenseEntity } from "../entity/master/task-expense-entity";
 import { WorkAssignedEntity } from "../entity/master/work-assigned-entity";
 import { WorkerEntity } from "../entity/master/worker-entity";
@@ -23,7 +23,7 @@ const Connection = connectionManager.create({
   password: appConfig.getPassword(),
   database: appConfig.getDataBase(),
   synchronize: true,
-  entities: [CropEntity, ExpensesEntity, IncomeEntity, LandEntity, LotEntity, PaymentEntity, TaskEntity, TaskExpenseEntity, WorkAssignedEntity, WorkerEntity],
+  entities: [CropEntity, ExpensesEntity, IncomeEntity, LandEntity, LotEntity, PaymentEntity, TaskTypeEntity, TaskExpenseEntity, WorkAssignedEntity, WorkerEntity],
   logging: false,
 });
 

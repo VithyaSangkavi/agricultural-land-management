@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, Table } from "typeorm";
 import { Status } from "../../enum/Status";
 import { LandEntity } from "./land-entity";
-import { TaskEntity } from "./task-entity";
+import { TaskEntity } from "./task-type-entity";
 
 @Entity({
     name: "crop",

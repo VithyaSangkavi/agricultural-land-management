@@ -1,99 +1,101 @@
 import { getConnection, Like } from "typeorm";
 import { IncomeDto } from "../../dto/master/income-dto";
-import { Status } from "../../enum/status";
+import { Status } from "../../enum/Status";
 import { IncomeEntity } from "../../entity/master/income-entity";
 import { IncomeDao } from "../income-dao";
 
+/**
+ * department data access layer
+ * contain crud method
+ */
 export class IncomeDaoImpl implements IncomeDao {
-    async save(incomeDto: IncomeDto): Promise<IncomeEntity> {
-        let incomeRepo = getConnection().getRepository(IncomeEntity);
-        let incomeModel = new IncomeEntity();
+  async save(incomeDto: IncomeDto): Promise<IncomeEntity> {
+    let incomeRepo = getConnection().getRepository(IncomeEntity);
+    let incomeModel = new IncomeEntity();
 
-        incomeModel.status = Status.Online;
-        this.prepareIncomeModel(incomeModel, incomeDto);
-        let savedIncome = await incomeRepo.save(incomeModel);
-        return savedIncome;
+    incomeModel.status = Status.Online;
+    this.prepareincomeModel(incomeModel, incomeDto);
+    let savedDept = await incomeRepo.save(incomeModel);
+    return savedDept;
+  }
+  async update(incomeDto: IncomeDto): Promise<IncomeEntity> {
+    let incomeRepo = getConnection().getRepository(IncomeEntity);
+    let incomeModel = await incomeRepo.findOne(incomeDto.getIncomeId());
+    if (incomeModel) {
+      this.prepareincomeModel(incomeModel, incomeDto);
+      let updatedModel = await incomeRepo.save(incomeModel);
+      return updatedModel;
+    } else {
+      return null;
     }
-    async update(incomeDto: IncomeDto): Promise<IncomeEntity> {
-        let incomeRepo = getConnection().getRepository(IncomeEntity);
-
-        let incomeId = incomeDto.getIncomeId(); //changed this code, this is noy original structure
-        let incomeModel = await incomeRepo.findOne({ where: { income_id: incomeId } }); //changed this code, this is noy original structure
-
-        if (incomeModel) {
-            this.prepareIncomeModel(incomeModel, incomeDto);
-            let updatedModel = await incomeRepo.save(incomeModel);
-            return updatedModel;
-        } else {
-            return null;
-        }
+  }
+  async delete(incomeDto: IncomeDto): Promise<IncomeEntity> {
+    let incomeRepo = getConnection().getRepository(IncomeEntity);
+    let incomeModel = await incomeRepo.findOne(incomeDto.getIncomeId());
+    if (incomeModel) {
+      incomeModel.status = Status.Offline;
+      let updatedModel = await incomeRepo.save(incomeModel);
+      return updatedModel;
+    } else {
+      return null;
     }
-    async delete(incomeDto: IncomeDto): Promise<IncomeEntity> {
-        let incomeRepo = getConnection().getRepository(IncomeEntity);
+  }
+  async findAll(incomeDto: IncomeDto): Promise<IncomeEntity[]> {
+    let incomeRepo = getConnection().getRepository(IncomeEntity);
+    let searchObject: any = this.prepareSearchObject(incomeDto);
+    let incomeModel = await incomeRepo.find({
+      where: searchObject,
+      skip: incomeDto.getStartIndex(),
+      take: incomeDto.getMaxResult(),
+      order:{id:"DESC"}
+    });
+    return incomeModel;
+  }
+  async findCount(incomeDto: IncomeDto): Promise<number> {
+    let incomeRepo = getConnection().getRepository(IncomeEntity);
+    let searchObject: any = this.prepareSearchObject(incomeDto);
+    let incomeModel = await incomeRepo.count({ where: searchObject });
+    return incomeModel;
+  }
+  async findById(departmentId: number): Promise<IncomeEntity> {
+    let incomeRepo = getConnection().getRepository(IncomeEntity);
+    let incomeModel = await incomeRepo.findOne(departmentId);
+    return incomeModel;
+  }
 
-        let incomeId = incomeDto.getIncomeId(); //changed this code, this is noy original structure
-        let incomeModel = await incomeRepo.findOne({ where: { income_id: incomeId } }); //changed this code, this is noy original structure
-
-        if (incomeModel) {
-            incomeModel.status = Status.Offline;
-            let updatedModel = await incomeRepo.save(incomeModel);
-            return updatedModel;
-        } else {
-            return null;
-        }
+  async findByName(name: String): Promise<IncomeEntity> {
+    let incomeRepo = getConnection().getRepository(IncomeEntity);
+    let incomeModel = await incomeRepo.findOne({ where: { name: name, status: Status.Online } });
+    return incomeModel;
+  }
+  async prepareincomeModel(incomeModel: IncomeEntity, incomeDto: IncomeDto) {
+    incomeModel.month = incomeDto.getMonth();
+    incomeModel.price = incomeDto.getPrice();
+    incomeModel.createdDate = incomeDto.getCreatedDate();
+    incomeModel.updatedDate = incomeDto.getUpdatedDate();
+    incomeModel.status = incomeDto.getStatus();
+    incomeModel.land.id = incomeDto.getLandId();
+  }
+  prepareSearchObject(incomeDto: IncomeDto): any {
+    let searchObject: any = {};
+    if (incomeDto.getMonth()) {
+        searchObject.name = Like("%" + incomeDto.getMonth() + "%");
     }
-    async findAll(incomeDto: IncomeDto): Promise<IncomeEntity[]> {
-        let incomeRepo = getConnection().getRepository(IncomeEntity);
-        let searchObject: any = this.prepareSearchObject(incomeDto);
-        let incomeModel = await incomeRepo.find({
-            where: searchObject,
-            skip: incomeDto.getStartIndex(),
-            take: incomeDto.getMaxResult(),
-            order: { income_id: "DESC" }
-        });
-        return incomeModel;
+    if (incomeDto.getPrice()) {
+      searchObject.name = Like("%" + incomeDto.getPrice() + "%");
     }
-    async findCount(incomeDto: IncomeDto): Promise<number> {
-        let incomeRepo = getConnection().getRepository(IncomeEntity);
-        let searchObject: any = this.prepareSearchObject(incomeDto);
-        let incomeModel = await incomeRepo.count({ where: searchObject });
-        return incomeModel;
+    if (incomeDto.getCreatedDate()) {
+      searchObject.color = Like("%" + incomeDto.getCreatedDate() + "%");
     }
-    async findById(income_id: number): Promise<IncomeEntity> {
-        let incomeRepo = getConnection().getRepository(IncomeEntity);
-        let incomeModel = await incomeRepo.findOne({ where: { income_id } }); //c
-        return incomeModel;
+    if (incomeDto.getUpdatedDate()) {
+      searchObject.color = Like("%" + incomeDto.getUpdatedDate() + "%");
     }
-    async prepareIncomeModel(incomeModel: IncomeEntity, incomeDto: IncomeDto) {
-        incomeModel.land_id = incomeDto.getLandId();
-        incomeModel.month = incomeDto.getMonth();
-        incomeModel.value = incomeDto.getValue();
-        incomeModel.createdDate = incomeDto.getCreatedDate();
-        incomeModel.updatedDate = incomeDto.getUpdatedDate();
-        incomeModel.status = incomeDto.getStatus();
+    
+    searchObject.status = Status.Online;
+    
+    if (incomeDto.getLandId()) {
+      searchObject.color = Like("%" + incomeDto.getLandId() + "%");
     }
-    prepareSearchObject(incomeDto: IncomeDto): any {
-        let searchObject: any = {};
-
-        if (incomeDto.getLandId()) {
-            searchObject.name = Like("%" + incomeDto.getLandId() + "%");
-        }
-        if (incomeDto.getMonth()) {
-            searchObject.name = Like("%" + incomeDto.getMonth() + "%");
-        }
-        if (incomeDto.getValue()) {
-            searchObject.name = Like("%" + incomeDto.getValue() + "%");
-        }
-        if (incomeDto.getCreatedDate()) {
-            searchObject.createdDate = Like("%" + incomeDto.getCreatedDate() + "%");
-        }
-
-        if (incomeDto.getUpdatedDate()) {
-            searchObject.updatedDate = Like("%" + incomeDto.getUpdatedDate() + "%");
-        }
-
-        searchObject.status = Status.Online;
-
-        return searchObject;
-    }
+    return searchObject;
+  }
 }
