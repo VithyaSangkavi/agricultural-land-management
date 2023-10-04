@@ -1,12 +1,12 @@
 import { Column, Entity, PrimaryGeneratedColumn, Table } from "typeorm";
-import { Status } from "../../enum/status";
+import { Status } from "../../enum/Status";
 
 @Entity({
   name: "task",
 })
 export class TaskEntity {
-  @PrimaryGeneratedColumn()
-  taskId: number;
+  @PrimaryGeneratedColumn({name: "taskId"})
+  id: number;
 
   @Column()
   taskName: string;

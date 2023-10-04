@@ -1,21 +1,21 @@
-import { CropEntity } from "../../entity/master/Crop";
+import { CropEntity } from "../../entity/master/crop-entity";
 import { PaginationDto } from "../pagination-dto";
-import { Status } from "../../enum/status";
+import { Status } from "../../enum/Status";
 
 export class CropDto extends PaginationDto {
-    private crop_id: number;
-    private land_id: number;
-    private name: string;
+    private id: number;
+    private cropName: string;
     private createdDate: Date;
     private updatedDate: Date;
     private status: Status;
+    private landId: number;
 
     filViaRequest(body) {
-        if (body.crop_id) {
-            this.crop_id = body.crop_id;
+        if (body.id) {
+            this.id = body.id;
         }
-        this.land_id = body.land_id;
-        this.name = body.name;
+        this.landId = body.landId;
+        this.cropName = body.cropName;
         this.createdDate = body.createdDate;
         this.updatedDate = body.updatedDate;
 
@@ -27,36 +27,36 @@ export class CropDto extends PaginationDto {
     }
 
     filViaDbObject(cropModel: CropEntity) {
-        this.crop_id = cropModel.crop_id;
-        this.land_id = cropModel.land_id;
-        this.name = cropModel.name;
+        this.id = cropModel.id;
+        this.landId = cropModel.landId;
+        this.cropName = cropModel.cropName;
         this.createdDate = cropModel.createdDate;
         this.updatedDate = cropModel.updatedDate;
         this.status = cropModel.status;
     }
 
     public getCropId(): number {
-        return this.crop_id;
+        return this.id;
     }
 
-    public setCropId(crop_id: number): void {
-        this.crop_id = crop_id;
+    public setcropId(id: number): void {
+        this.id = id;
     }
 
     public getLandId(): number {
-        return this.land_id;
+        return this.landId;
     }
 
-    public setLandId(land_id: number): void {
-        this.land_id = land_id;
+    public setLandId(landId: number): void {
+        this.landId = landId;
     }
 
-    public getName(): string {
-        return this.name;
+    public getCropName(): string {
+        return this.cropName;
     }
 
-    public setName(name: string): void {
-        this.name = name;
+    public setCropName(cropName: string): void {
+        this.cropName = cropName;
     }
 
     public getCreatedDate(): Date {

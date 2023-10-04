@@ -1,27 +1,27 @@
 import { Column, Double, Entity, PrimaryGeneratedColumn, Table } from "typeorm";
-import { Status } from "../../enum/status";
-import { uStatus } from "../../enum/uStatus";
+import { Status } from "../../enum/Status";
+import { areaUOM } from "../../enum/areaUOM";
 
 @Entity({
     name: "land",
 })
 
 export class LandEntity {
-    @PrimaryGeneratedColumn()
-    land_id: number;
+    @PrimaryGeneratedColumn({name: "landId"})
+    id: number;
 
     @Column()
-    name: string;
+    landName: string;
 
-    @Column()
-    area: Double;
+    @Column({type: "double"})
+    area: number;
+
+    @Column({ type: "enum", enum:areaUOM, default: areaUOM.Acre})
+    areaUOM: areaUOM;
 
     @Column()
     city: string;
     
-    @Column({ type: "enum", enum:uStatus, default: uStatus.Arce})
-    uom: uStatus;
-
     @Column()
     createdDate: Date;
 

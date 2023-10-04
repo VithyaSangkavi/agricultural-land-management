@@ -1,28 +1,28 @@
-import { LandEntity } from "../../entity/master/Land";
+import { LandEntity } from "../../entity/master/land-entity";
 import { PaginationDto } from "../pagination-dto";
-import { Status } from "../../enum/status";
-import { uStatus } from "../../enum/uStatus";
+import { Status } from "../../enum/Status";
+import { areaUOM } from "../../enum/areaUOM";
 import { Double } from "typeorm";
 
 export class LandDto extends PaginationDto {
-    private land_id: number;
-    private name: string;
+    private id: number;
+    private landName: string;
     private area: Double;
+    private areaUOM: areaUOM;
     private city: string;
-    private uom: uStatus;
     private createdDate: Date;
     private updatedDate: Date;
     private status: Status;
 
     filViaRequest(body) {
 
-        if (body.land_id) {
-            this.land_id = body.land_id;
+        if (body.id) {
+            this.id = body.id;
         }
-        this.name = body.name;
+        this.landName = body.landName;
         this.area = body.area;
         this.city = body.city;
-        this.uom = body.uom;
+        this.areaUOM = body.areaUOM;
         this.createdDate = body.createdDate;
         this.updatedDate = body.updatedDate;
         this.status = body.status;
@@ -33,30 +33,30 @@ export class LandDto extends PaginationDto {
     }
 
     filViaDbObject(LandModel: LandEntity) {
-        this.land_id = LandModel.land_id;
-        this.name = LandModel.name;
+        this.id = LandModel.id;
+        this.landName = LandModel.landName;
         this.area = LandModel.area;
         this.city = LandModel.city;
-        this.uom = LandModel.uom;
+        this.areaUOM = LandModel.areaUOM;
         this.createdDate = LandModel.createdDate;
         this.updatedDate = LandModel.updatedDate;
         this.status = LandModel.status
     }
 
     public getLandId(): number {
-        return this.land_id;
+        return this.id;
     }
     
-    public setLandId(land_id: number): void {
-        this.land_id = land_id;
+    public setLandId(id: number): void {
+        this.id = id;
     }
     
-    public getName(): string {
-        return this.name;
+    public getlandName(): string {
+        return this.landName;
     }
     
-    public setName(name: string): void {
-        this.name = name;
+    public setlandName(landName: string): void {
+        this.landName = landName;
     }
     
     public getArea(): Double {
@@ -65,6 +65,14 @@ export class LandDto extends PaginationDto {
     
     public setArea(area: Double): void {
         this.area = area;
+    }
+
+    public getareaUOM(): areaUOM {
+        return this.areaUOM;
+    }
+    
+    public setareaUOM(areaUOM: areaUOM): void {
+        this.areaUOM = areaUOM;
     }
     
     public getCity(): string {
@@ -75,14 +83,6 @@ export class LandDto extends PaginationDto {
         this.city = city;
     }
     
-    public getUom(): uStatus {
-        return this.uom;
-    }
-    
-    public setUom(uom: uStatus): void {
-        this.uom = uom;
-    }
-
     public getCreatedDate(): Date {
         return this.createdDate;
     }

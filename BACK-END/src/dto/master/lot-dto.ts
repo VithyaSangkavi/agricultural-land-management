@@ -1,26 +1,25 @@
-import { LotEntity } from "../../entity/master/Lot";
+import { LotEntity } from "../../entity/master/lot-entity";
 import { PaginationDto } from "../pagination-dto";
-import { Status } from "../../enum/status";
-import { uStatus } from "../../enum/uStatus";
-import { Double } from "typeorm";
+import { Status } from "../../enum/Status";
+import { areaUOM } from "../../enum/areaUOM";
 
 export class LotDto extends PaginationDto {
-    private lot_id: number;
-    private name: string;
-    private area: Double;
-    private uom: uStatus;
+    private id: number;
+    private lotName: string;
+    private area: number;
+    private areaUOM: areaUOM;
     private createdDate: Date;
     private updatedDate: Date;
     private status: Status;
 
     filViaRequest(body) {
 
-        if (body.lot_id) {
-            this.lot_id = body.lot_id;
+        if (body.id) {
+            this.id = body.id;
         }
-        this.name = body.name;
+        this.lotName = body.lotName;
         this.area = body.area;
-        this.uom = body.uom;
+        this.areaUOM = body.areaUOM;
         this.createdDate = body.createdDate;
         this.updatedDate = body.updatedDate;
         this.status = body.status;
@@ -31,45 +30,45 @@ export class LotDto extends PaginationDto {
     }
 
     filViaDbObject(LotModel: LotEntity) {
-        this.lot_id = LotModel.lot_id;
-        this.name = LotModel.name;
+        this.id = LotModel.id;
+        this.lotName = LotModel.lotName;
         this.area = LotModel.area;
-        this.uom = LotModel.uom;
+        this.areaUOM = LotModel.areaUOM;
         this.createdDate = LotModel.createdDate;
         this.updatedDate = LotModel.updatedDate;
         this.status = LotModel.status
     }
 
     public getLotId(): number {
-        return this.lot_id;
+        return this.id;
     }
 
-    public setLotId(land_id: number): void {
-        this.lot_id = land_id;
+    public setLotId(id: number): void {
+        this.id = id;
     }
 
-    public getName(): string {
-        return this.name;
+    public getlotName(): string {
+        return this.lotName;
     }
 
-    public setName(name: string): void {
-        this.name = name;
+    public setlotName(lotName: string): void {
+        this.lotName = lotName;
     }
 
-    public getArea(): Double {
+    public getArea(): number {
         return this.area;
     }
 
-    public setArea(area: Double): void {
+    public setArea(area: number): void {
         this.area = area;
     }
 
-    public getUom(): uStatus {
-        return this.uom;
+    public getUom(): areaUOM {
+        return this.areaUOM;
     }
 
-    public setUom(uom: uStatus): void {
-        this.uom = uom;
+    public setUom(areaUOM: areaUOM): void {
+        this.areaUOM = areaUOM;
     }
 
     public getCreatedDate(): Date {

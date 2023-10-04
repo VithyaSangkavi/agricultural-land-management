@@ -1,7 +1,7 @@
 import { getConnection, Like } from "typeorm";
 import { ExpensesDto } from "../../dto/master/expenses-dto";
 import { Status } from "../../enum/status";
-import { ExpensesEntity } from "../../entity/master/Expenses";
+import { ExpensesEntity } from "../../entity/master/expense-entity";
 import { ExpensesDao } from "../expenses-dao";
 
 export class ExpensesDaoImpl implements ExpensesDao {

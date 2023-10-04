@@ -1,4 +1,4 @@
-export enum mStatus {
+export enum paymentType {
     Monthly = 'monthly',
     Daily = 'daily',
 }

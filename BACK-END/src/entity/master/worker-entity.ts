@@ -1,13 +1,14 @@
-import { Column, Entity, PrimaryGeneratedColumn, Table } from "typeorm";
-import { Status } from "../../enum/status";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Table } from "typeorm";
+import { Status } from "../../enum/Status";
 import { WorkerStatus } from "../../enum/workerStatus";
+import { PaymentEntity } from "./payment-entity";
 
 @Entity({
   name: "worker",
 })
 export class WorkerEntity {
-  @PrimaryGeneratedColumn()
-  workerId: number;
+  @PrimaryGeneratedColumn({name: "workerId"})
+  id: number;
 
   @Column()
   name: string;
@@ -44,4 +45,6 @@ export class WorkerEntity {
 
   @Column()
   landId: number;
+
+  //@OneToMany((type) => PaymentEntity, (payment) => payment.)
 }

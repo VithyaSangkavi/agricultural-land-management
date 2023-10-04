@@ -1,16 +1,16 @@
 import { Column, Double, Entity, PrimaryGeneratedColumn, Table } from "typeorm";
-import { Status } from "../../enum/status";
+import { Status } from "../../enum/Status";
 import { double } from "aws-sdk/clients/storagegateway";
 
 @Entity({
   name: "task-expense",
 })
 export class TaskExpenseEntity {
-  @PrimaryGeneratedColumn()
-  taskExpenseId: number;
+  @PrimaryGeneratedColumn({name: "taskExpenseId"})
+  id: number;
 
-  @Column()
-  value: Double;
+  @Column({type : "double"})
+  value: number;
 
   @Column()
   createdDate: Date;

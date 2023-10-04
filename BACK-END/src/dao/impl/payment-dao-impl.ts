@@ -3,7 +3,7 @@ import { PaymentDto } from "../../dto/master/payment-dto";
 import { Status } from "../../enum/status";
 import { PaymentEntity } from "../../entity/master/payment-entity";
 import { PaymentDao } from "../payment-dao";
-import { mStatus } from "../../enum/mStatus";
+import { mStatus } from "../../enum/paymentType";
 
 /**
  * payment data access layer

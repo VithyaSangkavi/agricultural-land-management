@@ -1,5 +1,5 @@
 import { Column, Double, Entity, PrimaryGeneratedColumn, Table } from "typeorm";
-import { Status } from "../../enum/status";
+import { Status } from "../../enum/Status";
 import { Units } from "../../enum/units";
 import { TaskStatus } from "../../enum/taskStatus";
 
@@ -7,11 +7,11 @@ import { TaskStatus } from "../../enum/taskStatus";
   name: "work-assigned",
 })
 export class WorkAssignedEntity {
-  @PrimaryGeneratedColumn()
-  attendanceId: number;
+  @PrimaryGeneratedColumn({name: "attendanceId"})
+  id: number;
 
-  @Column()
-  quantity: Double;
+  @Column({type : "double"})
+  quantity: number;
 
   @Column({ type: "enum" , enum: Units, default: Units.Gram})
   units: Units

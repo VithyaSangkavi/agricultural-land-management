@@ -1,7 +1,7 @@
 import { getConnection, Like } from "typeorm";
 import { IncomeDto } from "../../dto/master/income-dto";
 import { Status } from "../../enum/status";
-import { IncomeEntity } from "../../entity/master/Income";
+import { IncomeEntity } from "../../entity/master/income-entity";
 import { IncomeDao } from "../income-dao";
 
 export class IncomeDaoImpl implements IncomeDao {

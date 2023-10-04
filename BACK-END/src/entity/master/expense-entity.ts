@@ -1,16 +1,16 @@
 import { Column, Entity, PrimaryGeneratedColumn, Table } from "typeorm";
-import { Status } from "../../enum/status";
+import { Status } from "../../enum/Status";
 
 @Entity({
-    name: "expenses",
+    name: "expense",
 })
 
 export class ExpensesEntity {
-    @PrimaryGeneratedColumn()
-    expenses_id: number;
+    @PrimaryGeneratedColumn({name: "expenseId"})
+    id: number;
 
     @Column()
-    type: string;
+    expenseType: string;
 
     @Column()
     createdDate: Date;

@@ -1,5 +1,5 @@
 import { IncomeDto } from "../dto/master/income-dto";
-import { IncomeEntity } from "../entity/master/Income";
+import { IncomeEntity } from "../entity/master/income-entity";
 
 export interface IncomeDao {
     save(incomeDto: IncomeDto): Promise<IncomeEntity>;

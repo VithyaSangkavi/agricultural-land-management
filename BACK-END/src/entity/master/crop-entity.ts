@@ -1,19 +1,16 @@
 import { Column, Entity, PrimaryGeneratedColumn, Table } from "typeorm";
-import { Status } from "../../enum/status";
+import { Status } from "../../enum/Status";
 
 @Entity({
     name: "crop",
 })
 
 export class CropEntity {
-    @PrimaryGeneratedColumn()
-    crop_id: number;
+    @PrimaryGeneratedColumn({name: "cropId"})
+    id: number;
 
     @Column()
-    land_id: number;
-
-    @Column()
-    name: string;
+    cropName: string;
 
     @Column()
     createdDate: Date;
@@ -23,4 +20,7 @@ export class CropEntity {
     
     @Column({ type: "enum", enum:Status, default: Status.Online})
     status: Status;
+
+    @Column()
+    landId: number;
 }

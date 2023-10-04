@@ -1,26 +1,27 @@
-import { Column, Double, Entity, PrimaryGeneratedColumn, Table } from "typeorm";
-import { Status } from "../../enum/status";
-import { mStatus } from "../../enum/mStatus";
+import { Column, Double, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Table } from "typeorm";
+import { Status } from "../../enum/Status";
+import { paymentType } from "../../enum/paymentType";
+import { WorkerEntity } from "./worker-entity";
 
 @Entity({
     name: "payment",
 })
 
 export class PaymentEntity {
-    @PrimaryGeneratedColumn()
-    paymentId: number;
+    @PrimaryGeneratedColumn({name: "paymentId"})
+    id: number;
    
-    @Column({ type: "enum", enum:mStatus, default: mStatus.Monthly})
-    paymentType: mStatus;
+    @Column({ type: "enum", enum:paymentType, default: paymentType.Monthly})
+    paymentType: paymentType;
     
-    @Column()
-    basePayment: Double;
+    @Column({type: "double"})
+    basePayment: number;
 
-    @Column()
-    extraPayment: Double;
+    @Column({type: "double"})
+    extraPayment: number;
 
-    @Column()
-    attendancePayment: Double;
+    @Column({type: "double"})
+    attendancePayment: number;
 
     @Column()
     createdDate: Date;
@@ -32,5 +33,8 @@ export class PaymentEntity {
     status: Status;
 
     @Column()
-    workerId: number;
+    workerId: number
+//     @ManyToOne((type)=> WorkerEntity, (worker) => worker.id)
+//  @JoinColumn()
+//     workerId: number;
 }

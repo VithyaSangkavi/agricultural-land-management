@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn, Table } from "typeorm";
-import { Status } from "../../enum/status";
+import { Status } from "../../enum/Status";
 
 @Entity({
   name: "department",
@@ -7,7 +7,7 @@ import { Status } from "../../enum/status";
 export class DepartmentEntity {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column()
+  @Column({name: "deptName"})
   name: string;
   @Column()
   color: string;
