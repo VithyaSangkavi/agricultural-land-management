@@ -1,6 +1,6 @@
 import { Column, Double, Entity, PrimaryGeneratedColumn, Table } from "typeorm";
 import { Status } from "../../enum/Status";
-import { uStatus } from "../../enum/areaUOM";
+import { areaUOM } from "../../enum/areaUOM";
 
 @Entity({
     name: "lot",
@@ -16,8 +16,8 @@ export class LotEntity {
     @Column({type: "double"})
     area: number;
     
-    @Column({ type: "enum", enum:uStatus, default: uStatus.Arce})
-    areaUOM: uStatus;
+    @Column({ type: "enum", enum:areaUOM, default: areaUOM.Acre})
+    areaUOM: areaUOM;
 
     @Column()
     createdDate: Date;

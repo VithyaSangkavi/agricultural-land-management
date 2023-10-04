@@ -1,4 +1,4 @@
-export enum uStatus {
-    Arce = 'arce',
+export enum areaUOM {
+    Acre = 'acre',
     Perch = 'perch',
 }

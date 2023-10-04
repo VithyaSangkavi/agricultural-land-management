@@ -1,6 +1,6 @@
 import { Column, Double, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Table } from "typeorm";
 import { Status } from "../../enum/Status";
-import { mStatus } from "../../enum/paymentType";
+import { paymentType } from "../../enum/paymentType";
 import { WorkerEntity } from "./worker-entity";
 import { worker } from "cluster";
 
@@ -12,8 +12,8 @@ export class PaymentEntity {
     @PrimaryGeneratedColumn()
     paymentId: number;
    
-    @Column({ type: "enum", enum:mStatus, default: mStatus.Monthly})
-    paymentType: mStatus;
+    @Column({ type: "enum", enum:paymentType, default: paymentType.Monthly})
+    paymentType: paymentType;
     
     @Column({type: "double"})
     basePayment: number;
