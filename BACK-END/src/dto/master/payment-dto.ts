@@ -1,15 +1,14 @@
 import { PaginationDto } from "../pagination-dto";
-import { mStatus } from "../../enum/paymentType";
-import { Status } from "../../enum/status";
+import { paymentType } from "../../enum/paymentType";
+import { Status } from "../../enum/Status";
 import { PaymentEntity } from "../../entity/master/payment-entity";
-import { Double } from "typeorm";
 
 export class PaymentDto extends PaginationDto {
-  private paymentId: number;
-  private paymentType: mStatus;
-  private basePayment: Double;
-  private extraPayment: Double;
-  private attendancePayment: Double;
+  private id: number;
+  private paymentType: paymentType;
+  private basePayment: number;
+  private extraPayment: number;
+  private attendancePayment: number;
   private createdDate: Date;
   private updatedDate: Date;
   private status: Status;
@@ -17,8 +16,8 @@ export class PaymentDto extends PaginationDto {
 
   filViaRequest(body) {
     
-    if (body.paymentId) {
-      this.paymentId = body.paymentId;
+    if (body.id) {
+      this.id = body.id;
     }
     this.paymentType = body.paymentType;
     this.basePayment = body.basePayment;
@@ -36,7 +35,7 @@ export class PaymentDto extends PaginationDto {
   }
 
   filViaDbObject(PaymentModel: PaymentEntity) {
-    this.paymentId = PaymentModel.paymentId;
+    this.id = PaymentModel.id;
     this.paymentType = PaymentModel.paymentType;
     this.basePayment = PaymentModel.basePayment;
     this.extraPayment = PaymentModel.extraPayment;
@@ -48,42 +47,42 @@ export class PaymentDto extends PaginationDto {
   }
 
   public getPaymentId(): number {
-    return this.paymentId;
+    return this.id;
   }
 
-  public setPaymentId(paymentId: number): void {
-    this.paymentId = paymentId;
+  public setpaymentId(id: number): void {
+    this.id = id;
   }
 
-  public getPaymentType(): mStatus {
+  public getPaymentType(): paymentType {
     return this.paymentType;
   }
 
-  public setPaymentType(paymentType: mStatus): void {
+  public setPaymentType(paymentType: paymentType): void {
     this.paymentType = paymentType;
   }
 
-  public getBasePayment(): Double {
+  public getBasePayment(): number {
     return this.basePayment;
   }
 
-  public setBasePayment(basePayment: Double): void {
+  public setBasePayment(basePayment: number): void {
     this.basePayment = basePayment;
   }
 
-  public getExtraPayment(): Double {
+  public getExtraPayment(): number {
     return this.extraPayment;
   }
 
-  public setExtraPayment(extraPayment: Double): void {
+  public setExtraPayment(extraPayment: number): void {
     this.extraPayment = extraPayment;
   }
 
-  public getAttendancePayment(): Double {
+  public getAttendancePayment(): number {
     return this.attendancePayment;
   }
 
-  public setAttendancePayment(attendancePayment: Double): void {
+  public setAttendancePayment(attendancePayment: number): void {
     this.attendancePayment = attendancePayment;
   }
 

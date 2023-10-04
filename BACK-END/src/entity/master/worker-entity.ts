@@ -7,8 +7,8 @@ import { PaymentEntity } from "./payment-entity";
   name: "worker",
 })
 export class WorkerEntity {
-  @PrimaryGeneratedColumn()
-  workerId: number;
+  @PrimaryGeneratedColumn({name: "workerId"})
+  id: number;
 
   @Column()
   name: string;

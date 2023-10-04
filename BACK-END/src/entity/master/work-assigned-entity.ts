@@ -7,8 +7,8 @@ import { TaskStatus } from "../../enum/taskStatus";
   name: "work-assigned",
 })
 export class WorkAssignedEntity {
-  @PrimaryGeneratedColumn()
-  attendanceId: number;
+  @PrimaryGeneratedColumn({name: "attendanceId"})
+  id: number;
 
   @Column({type : "double"})
   quantity: number;

@@ -6,8 +6,8 @@ import { double } from "aws-sdk/clients/storagegateway";
   name: "task-expense",
 })
 export class TaskExpenseEntity {
-  @PrimaryGeneratedColumn()
-  taskExpenseId: number;
+  @PrimaryGeneratedColumn({name: "taskExpenseId"})
+  id: number;
 
   @Column({type : "double"})
   value: number;

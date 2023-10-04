@@ -1,11 +1,10 @@
 import { PaginationDto } from "../pagination-dto";
-import { Status } from "../../enum/status";
+import { Status } from "../../enum/Status";
 import { TaskExpenseEntity } from "../../entity/master/task-expense-entity";
-import { Double } from "typeorm";
 
 export class TaskExpenseDto extends PaginationDto {
-  private taskExpenseId: number;
-  private value: Double;
+  private id: number;
+  private value: number;
   private createdDate: Date;
   private updatedDate: Date;
   private status: Status;
@@ -14,8 +13,8 @@ export class TaskExpenseDto extends PaginationDto {
 
   filViaRequest(body) {
     
-    if (body.taskExpenseId) {
-      this.taskExpenseId = body.taskExpenseId;
+    if (body.id) {
+      this.id = body.id;
     }
     this.value = body.value;
     this.createdDate = body.createdDate;
@@ -31,7 +30,7 @@ export class TaskExpenseDto extends PaginationDto {
   }
 
   filViaDbObject(TaskExpenseModel: TaskExpenseEntity) {
-    this.taskExpenseId = TaskExpenseModel.taskExpenseId;
+    this.id = TaskExpenseModel.id;
     this.value = TaskExpenseModel.value;
     this.createdDate = TaskExpenseModel.createdDate;
     this.updatedDate = TaskExpenseModel.updatedDate;
@@ -41,18 +40,18 @@ export class TaskExpenseDto extends PaginationDto {
   }
 
   public getTaskExpenseId(): number {
-    return this.taskExpenseId;
+    return this.id;
   }
 
-  public setTaskExpenseId(taskExpenseId: number): void {
-    this.taskExpenseId = taskExpenseId;
+  public setTaskExpenseId(id: number): void {
+    this.id = id;
   }
 
-  public getValue(): Double {
+  public getValue(): number {
     return this.value;
   }
 
-  public setValue(value: Double): void {
+  public setValue(value: number): void {
     this.value = value;
   }
 

@@ -2,15 +2,14 @@ import { Column, Double, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, 
 import { Status } from "../../enum/Status";
 import { paymentType } from "../../enum/paymentType";
 import { WorkerEntity } from "./worker-entity";
-import { worker } from "cluster";
 
 @Entity({
     name: "payment",
 })
 
 export class PaymentEntity {
-    @PrimaryGeneratedColumn()
-    paymentId: number;
+    @PrimaryGeneratedColumn({name: "paymentId"})
+    id: number;
    
     @Column({ type: "enum", enum:paymentType, default: paymentType.Monthly})
     paymentType: paymentType;
@@ -33,7 +32,9 @@ export class PaymentEntity {
     @Column({ type: "enum", enum:Status, default: Status.Online})
     status: Status;
 
-    // @ManyToOne((type)=> WorkerEntity, (worker) => worker.workerId)
-    // @JoinColumn()
-    // workerId: number;
+    @Column()
+    workerId: number
+//     @ManyToOne((type)=> WorkerEntity, (worker) => worker.id)
+//  @JoinColumn()
+//     workerId: number;
 }

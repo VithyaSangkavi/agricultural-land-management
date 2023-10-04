@@ -10,10 +10,7 @@ export class CropEntity {
     id: number;
 
     @Column()
-    land_id: number;
-
-    @Column()
-    name: string;
+    cropName: string;
 
     @Column()
     createdDate: Date;
@@ -23,4 +20,7 @@ export class CropEntity {
     
     @Column({ type: "enum", enum:Status, default: Status.Online})
     status: Status;
+
+    @Column()
+    landId: number;
 }

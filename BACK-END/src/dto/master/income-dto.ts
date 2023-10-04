@@ -1,25 +1,24 @@
 import { IncomeEntity } from "../../entity/master/income-entity";
 import { PaginationDto } from "../pagination-dto";
-import { Status } from "../../enum/status";
-import { Double } from "typeorm";
+import { Status } from "../../enum/Status";
 
 export class IncomeDto extends PaginationDto {
-    private income_id: number;
-    private land_id: number;
+    private id: number;
     private month: string;
-    private value: Double;
+    private price: number;
     private createdDate: Date;
     private updatedDate: Date;
     private status: Status;
+    private landId: number;
 
     filViaRequest(body) {
 
-        if (body.income_id) {
-            this.income_id = body.income_id;
+        if (body.id) {
+            this.id = body.id;
         }
-        this.land_id = body.land_id;
+        this.landId = body.landId;
         this.month = body.month;
-        this.value = body.value;
+        this.price = body.price;
         this.createdDate = body.createdDate;
         this.updatedDate = body.updatedDate;
         this.status = body.status;
@@ -30,29 +29,29 @@ export class IncomeDto extends PaginationDto {
     }
 
     filViaDbObject(incomeModel: IncomeEntity) {
-        this.income_id = incomeModel.income_id;
-        this.land_id = incomeModel.land_id;
+        this.id = incomeModel.id;
+        this.landId = incomeModel.landId;
         this.month = incomeModel.month;
-        this.value = incomeModel.value;
+        this.price = incomeModel.price;
         this.createdDate = incomeModel.createdDate;
         this.updatedDate = incomeModel.updatedDate;
         this.status = incomeModel.status
     }
 
     public getIncomeId(): number {
-        return this.income_id;
+        return this.id;
     }
 
-    public setIncomeId(income_id: number): void {
-        this.income_id = income_id;
+    public setIncomeId(id: number): void {
+        this.id = id;
     }
 
     public getLandId(): number {
-        return this.land_id;
+        return this.landId;
     }
 
-    public setLandId(land_id: number): void {
-        this.land_id = land_id;
+    public setLandId(landId: number): void {
+        this.landId = landId;
     }
 
     public getMonth(): string {
@@ -63,12 +62,12 @@ export class IncomeDto extends PaginationDto {
         this.month = month;
     }
 
-    public getValue(): Double {
-        return this.value;
+    public getPrice(): number {
+        return this.price;
     }
 
-    public setValue(value: Double): void {
-        this.value = value;
+    public setPrice(price: number): void {
+        this.price = price;
     }
     public getCreatedDate(): Date {
         return this.createdDate;

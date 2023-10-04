@@ -1,9 +1,9 @@
 import { PaginationDto } from "../pagination-dto";
-import { Status } from "../../enum/status";
+import { Status } from "../../enum/Status";
 import { TaskEntity } from "../../entity/master/task-entity";
 
 export class TaskDto extends PaginationDto {
-  private taskId: number;
+  private id: number;
   private taskName: string;
   private createdDate: Date;
   private updatedDate: Date;
@@ -12,8 +12,8 @@ export class TaskDto extends PaginationDto {
 
   filViaRequest(body) {
     
-    if (body.taskId) {
-      this.taskId = body.taskId;
+    if (body.id) {
+      this.id = body.id;
     }
     this.taskName = body.taskName;
     this.createdDate = body.createdDate;
@@ -28,7 +28,7 @@ export class TaskDto extends PaginationDto {
   }
 
   filViaDbObject(TaskModel: TaskEntity) {
-    this.taskId = TaskModel.taskId;
+    this.id = TaskModel.id;
     this.taskName = TaskModel.taskName;
     this.createdDate = TaskModel.createdDate;
     this.updatedDate = TaskModel.updatedDate;
@@ -36,12 +36,12 @@ export class TaskDto extends PaginationDto {
     this.cropId = TaskModel.cropId;  
   }
 
-  public getTaskId(): number {
-    return this.taskId;
+  public gettaskId(): number {
+    return this.id;
   }
 
-  public setTaskId(taskId: number): void {
-    this.taskId = taskId;
+  public setTaskId(id: number): void {
+    this.id = id;
   }
 
   public getTaskName(): string {

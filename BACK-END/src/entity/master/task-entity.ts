@@ -5,8 +5,8 @@ import { Status } from "../../enum/Status";
   name: "task",
 })
 export class TaskEntity {
-  @PrimaryGeneratedColumn()
-  taskId: number;
+  @PrimaryGeneratedColumn({name: "taskId"})
+  id: number;
 
   @Column()
   taskName: string;

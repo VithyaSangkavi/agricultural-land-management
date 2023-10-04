@@ -1,10 +1,10 @@
 import { WorkerEntity } from "../../entity/master/worker-entity";
 import { PaginationDto } from "../pagination-dto";
 import { WorkerStatus } from "../../enum/workerStatus";
-import { Status } from "../../enum/status";
+import { Status } from "../../enum/Status";
 
 export class WorkerDto extends PaginationDto {
-  private workerId: number;
+  private id: number;
   private name: string;
   private dob: Date;
   private nic: string;
@@ -20,8 +20,8 @@ export class WorkerDto extends PaginationDto {
 
   filViaRequest(body) {
     
-    if (body.workerId) {
-      this.workerId = body.workerId;
+    if (body.id) {
+      this.id = body.id;
     }
     this.name = body.name;
     this.dob = body.dob;
@@ -44,7 +44,7 @@ export class WorkerDto extends PaginationDto {
   }
 
   filViaDbObject(workerModel: WorkerEntity) {
-    this.workerId = workerModel.workerId;
+    this.id = workerModel.id;
     this.name = workerModel.name;
     this.dob = workerModel.dob;
     this.nic = workerModel.nic;
@@ -59,12 +59,12 @@ export class WorkerDto extends PaginationDto {
     this.landId = workerModel.landId;  
   }
 
-  public getworkerId(): number {
-    return this.workerId;
+  public getWorkerId(): number {
+    return this.id;
   }
 
-  public setworkerId(workerId: number): void {
-    this.workerId = workerId;
+  public setWorkerId(id: number): void {
+    this.id = id;
   }
 
   public getName(): string {

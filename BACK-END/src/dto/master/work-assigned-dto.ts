@@ -1,14 +1,12 @@
 import { WorkAssignedEntity } from "../../entity/master/work-assigned-entity";
 import { PaginationDto } from "../pagination-dto";
 import { Units } from "../../enum/units";
-import { Status } from "../../enum/status";
+import { Status } from "../../enum/Status";
 import { TaskStatus } from "../../enum/taskStatus";
-import { Double } from "typeorm";
-
 
 export class WorkAssignedDto extends PaginationDto {
-  private attendanceId: number;
-  private quantity: Double;
+  private id: number;
+  private quantity: number;
   private units: Units;
   private startDate: Date;
   private endDate: Date;
@@ -22,8 +20,8 @@ export class WorkAssignedDto extends PaginationDto {
 
   filViaRequest(body) {
     
-    if (body.attendanceId) {
-      this.attendanceId = body.attendanceId;
+    if (body.id) {
+      this.id = body.id;
     }
     this.quantity = body.quantity;
     this.units = body.units;
@@ -45,7 +43,7 @@ export class WorkAssignedDto extends PaginationDto {
   }
 
   filViaDbObject(workAssignedModel: WorkAssignedEntity) {
-    this.attendanceId = workAssignedModel.attendanceId;
+    this.id = workAssignedModel.id;
     this.quantity = workAssignedModel.quantity;
     this.units = workAssignedModel.units;
     this.startDate = workAssignedModel.startDate;
@@ -59,19 +57,19 @@ export class WorkAssignedDto extends PaginationDto {
     this.lotId = workAssignedModel.lotId;  
   }
 
-  public getAttendanceId(): number {
-    return this.attendanceId;
+  public getAttendanceid(): number {
+    return this.id;
   }
 
-  public setAttendanceId(attendanceId: number): void {
-    this.attendanceId = attendanceId;
+  public setAttendanceId(id: number): void {
+    this.id = id;
   }
   
-  public getQuantity(): Double {
+  public getQuantity(): number {
     return this.quantity;
   }
 
-  public setQuantity(quantity: Double): void {
+  public setQuantity(quantity: number): void {
     this.quantity = quantity;
   }
 

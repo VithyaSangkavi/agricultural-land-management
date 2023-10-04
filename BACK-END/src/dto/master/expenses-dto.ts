@@ -1,20 +1,20 @@
 import { ExpensesEntity } from "../../entity/master/expense-entity";
 import { PaginationDto } from "../pagination-dto";
-import { Status } from "../../enum/status";
+import { Status } from "../../enum/Status";
 
 export class ExpensesDto extends PaginationDto {
-    private expenses_id: number;
-    private type: string;
+    private id: number;
+    private expenseType: string;
     private createdDate: Date;
     private updatedDate: Date;
     private status: Status;
 
     filViaRequest(body) {
 
-        if (body.expenses_id) {
-            this.expenses_id = body.expenses_id;
+        if (body.id) {
+            this.id = body.id;
         }
-        this.type = body.type;
+        this.expenseType = body.expenseType;
         this.createdDate = body.createdDate;
         this.updatedDate = body.updatedDate;
         this.status = body.status;
@@ -25,27 +25,27 @@ export class ExpensesDto extends PaginationDto {
     }
 
     filViaDbObject(expensesModel: ExpensesEntity) {
-        this.expenses_id = expensesModel.expenses_id;
-        this.type = expensesModel.type;
+        this.id = expensesModel.id;
+        this.expenseType = expensesModel.expenseType;
         this.createdDate = expensesModel.createdDate;
         this.updatedDate = expensesModel.updatedDate;
         this.status = expensesModel.status
     }
 
     public getExpensesId(): number {
-        return this.expenses_id;
+        return this.id;
     }
 
-    public setExpensesId(expenses_id: number): void {
-        this.expenses_id = expenses_id;
+    public setExpensesId(id: number): void {
+        this.id = id;
     }
 
-    public getType(): string {
-        return this.type;
+    public getExpenseType(): string {
+        return this.expenseType;
     }
 
-    public setType(type: string): void {
-        this.type = type;
+    public setExpenseType(expenseType: string): void {
+        this.expenseType = expenseType;
     }
 
     public getCreatedDate(): Date {
