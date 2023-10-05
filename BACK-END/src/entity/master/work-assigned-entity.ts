@@ -10,7 +10,7 @@ import { LotEntity } from "./lot-entity";
   name: "work-assigned",
 })
 export class WorkAssignedEntity {
-  @PrimaryGeneratedColumn({name: "attendanceId"})
+  @PrimaryGeneratedColumn({name: "taskAssignedId"})
   id: number;
 
   @Column({type : "double"})
