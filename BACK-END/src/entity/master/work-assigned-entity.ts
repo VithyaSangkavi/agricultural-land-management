@@ -1,5 +1,5 @@
 import { Column, Double, Entity, ManyToOne, PrimaryGeneratedColumn, Table } from "typeorm";
-import { Status } from "../../enum/Status";
+import { Status } from "../../enum/status";
 import { Units } from "../../enum/units";
 import { TaskStatus } from "../../enum/taskStatus";
 import { WorkerEntity } from "./worker-entity";
@@ -11,7 +11,7 @@ import { TaskAssignedEntity } from "./task-assigned-entity";
   name: "work-assigned",
 })
 export class WorkAssignedEntity {
-  @PrimaryGeneratedColumn({name: "attendanceId"})
+  @PrimaryGeneratedColumn({name: "taskAssignedId"})
   id: number;
 
   @Column({type : "double"})

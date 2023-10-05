@@ -1,5 +1,5 @@
 import { Column, Double, Entity, ManyToOne, PrimaryGeneratedColumn, Table } from "typeorm";
-import { Status } from "../../enum/Status";
+import { Status } from "../../enum/status";
 import { LandEntity } from "./land-entity";
 
 @Entity({
