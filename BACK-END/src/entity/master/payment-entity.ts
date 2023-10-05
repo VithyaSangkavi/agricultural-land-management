@@ -1,5 +1,5 @@
 import { Column, Double, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Table } from "typeorm";
-import { Status } from "../../enum/Status";
+import { Status } from "../../enum/status";
 import { paymentType } from "../../enum/paymentType";
 import { WorkerEntity } from "./worker-entity";
 import { Worker } from "cluster";

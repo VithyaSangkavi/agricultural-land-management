@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, Table } from "typeorm";
-import { Status } from "../../enum/Status";
+import { Status } from "../../enum/status";
 import { WorkerStatus } from "../../enum/workerStatus";
 import { PaymentEntity } from "./payment-entity";
 import { LandEntity } from "./land-entity";

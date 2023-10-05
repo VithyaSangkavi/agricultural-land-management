@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, Table } from "typeorm";
-import { Status } from "../../enum/Status";
+import { Status } from "../../enum/status";
 import { LandEntity } from "./land-entity";
-import { TaskEntity } from "./task-type-entity";
+import { TaskTypeEntity } from "./task-type-entity";
 
 @Entity({
     name: "crop",
@@ -26,6 +26,6 @@ export class CropEntity {
     @ManyToOne(() => LandEntity, (land) => land.id)
     land: LandEntity
 
-    @OneToMany(() => TaskEntity, (task) => task.id)
-    task: TaskEntity
+    @OneToMany(() => TaskTypeEntity, (task) => task.id)
+    task: TaskTypeEntity
 }
