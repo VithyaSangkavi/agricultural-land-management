@@ -1,4 +1,5 @@
 export enum TaskStatus{
     Completed="completed",
-    Reopen="reopen"
+    Reopen="reopen",
+    Ongoing="ongoing"
 }

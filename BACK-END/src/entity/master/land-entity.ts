@@ -1,5 +1,5 @@
 import { Column, Double, Entity, OneToMany, PrimaryGeneratedColumn, Table } from "typeorm";
-import { Status } from "../../enum/Status";
+import { Status } from "../../enum/status";
 import { areaUOM } from "../../enum/areaUOM";
 import { LotEntity } from "./lot-entity";
 import { CropEntity } from "./crop-entity";
