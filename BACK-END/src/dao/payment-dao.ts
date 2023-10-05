@@ -1,6 +1,6 @@
 import { PaymentDto } from "../dto/master/payment-dto"
 import { PaymentEntity } from "../entity/master/payment-entity";
-import { mStatus } from "../enum/paymentType";
+import { paymentType } from "../enum/paymentType";
 
 export interface PaymentDao {
   save(paymentDto: PaymentDto): Promise<PaymentEntity>;
@@ -8,6 +8,6 @@ export interface PaymentDao {
   delete(paymentDto: PaymentDto): Promise<PaymentEntity>;
   findAll(paymentDto: PaymentDto): Promise<PaymentEntity[]>;
   findById(paymentId: number): Promise<PaymentEntity>;
-  //findByName(paymentType: mStatus): Promise<PaymentEntity>;
+  findByName(paymentType: paymentType): Promise<PaymentEntity>;
   findCount(paymentDto: PaymentDto): Promise<number> ;
 }
