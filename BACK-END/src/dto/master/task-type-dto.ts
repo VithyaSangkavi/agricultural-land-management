@@ -2,7 +2,7 @@ import { PaginationDto } from "../pagination-dto";
 import { Status } from "../../enum/Status";
 import { TaskTypeEntity } from "../../entity/master/task-type-entity";
 
-export class TaskDto extends PaginationDto {
+export class TaskTypeDto extends PaginationDto {
   private id: number;
   private taskName: string;
   private createdDate: Date;
