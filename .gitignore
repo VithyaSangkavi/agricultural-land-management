@@ -1,4 +1,5 @@
 BACK-END/node_modules
+BACK-END/config/dev.json
 BACK-END/logs/
 BACK-END/dist
 BACK-END/upload-excel/*
