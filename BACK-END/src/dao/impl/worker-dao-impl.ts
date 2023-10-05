@@ -1,6 +1,6 @@
 import { getConnection, Like } from "typeorm";
 import { WorkerDto } from "../../dto/master/worker-dto";
-import { Status } from "../../enum/status";
+import { Status } from "../../enum/Status";
 import { WorkerEntity } from "../../entity/master/worker-entity";
 import { WorkerDao } from "../worker-dao";
 import { WorkerStatus } from "../../enum/workerStatus";
@@ -21,7 +21,7 @@ export class WorkerDaoImpl implements WorkerDao {
   }
   async update(workerDto: WorkerDto): Promise<WorkerEntity> {
     let workerRepo = getConnection().getRepository(WorkerEntity);
-    let workerModel = await workerRepo.findOne(workerDto.getworkerId());
+    let workerModel = await workerRepo.findOne(workerDto.getWorkerId());
     if (workerModel) {
       this.prepareWorkerModel(workerModel, workerDto);
       let updatedModel = await workerRepo.save(workerModel);
@@ -32,7 +32,7 @@ export class WorkerDaoImpl implements WorkerDao {
   }
   async delete(workerDto: WorkerDto): Promise<WorkerEntity> {
     let workerRepo = getConnection().getRepository(WorkerEntity);
-    let workerModel = await workerRepo.findOne(workerDto.getworkerId());
+    let workerModel = await workerRepo.findOne(workerDto.getWorkerId());
     if (workerModel) {
       workerModel.status = Status.Offline;
       let updatedModel = await workerRepo.save(workerModel);
@@ -48,7 +48,7 @@ export class WorkerDaoImpl implements WorkerDao {
       where: searchObject,
       skip: workerDto.getStartIndex(),
       take: workerDto.getMaxResult(),
-      order:{workerId:"DESC"}
+      order:{id:"DESC"}
     });
     return workerModel;
   }
@@ -81,7 +81,7 @@ export class WorkerDaoImpl implements WorkerDao {
     workerModel.createdDate = workerDto.getcreatedDate();
     workerModel.updatedDate = workerDto.getUpdatedDate();
     workerModel.status = workerDto.getStatus();
-    workerModel.landId = workerDto.getLandId();
+    workerModel.land.id = workerDto.getLandId();
   }
   prepareSearchObject(workerDto: WorkerDto): any {
     let searchObject: any = {};

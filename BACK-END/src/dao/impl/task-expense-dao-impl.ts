@@ -1,6 +1,6 @@
 import { Double, getConnection, Like } from "typeorm";
 import { TaskExpenseDto } from "../../dto/master/task-expense-dto";
-import { Status } from "../../enum/status";
+import { Status } from "../../enum/Status";
 import { TaskExpenseEntity } from "../../entity/master/task-expense-entity";
 import { WorkerStatus } from "../../enum/workerStatus";
 import { TaskExpenseDao } from "../task-expense-dao";
@@ -48,7 +48,7 @@ export class TaskExpenseDaoImpl implements TaskExpenseDao {
       where: searchObject,
       skip: taskExpenseDto.getStartIndex(),
       take: taskExpenseDto.getMaxResult(),
-      order:{taskExpenseId:"DESC"}
+      order:{id:"DESC"}
     });
     return taskExpenseModel;
   }
@@ -74,8 +74,8 @@ export class TaskExpenseDaoImpl implements TaskExpenseDao {
     taskExpenseModel.createdDate = taskExpenseDto.getcreatedDate();
     taskExpenseModel.updatedDate = taskExpenseDto.getUpdatedDate();
     taskExpenseModel.status = taskExpenseDto.getStatus();
-    taskExpenseModel.taskId = taskExpenseDto.getTaskId();
-    taskExpenseModel.expenseId = taskExpenseDto.getExpenseId();
+    taskExpenseModel.task.id = taskExpenseDto.getTaskId();
+    taskExpenseModel.expense.id = taskExpenseDto.getExpenseId();
   }
   prepareSearchObject(taskExpenseDto: TaskExpenseDto): any {
     let searchObject: any = {};

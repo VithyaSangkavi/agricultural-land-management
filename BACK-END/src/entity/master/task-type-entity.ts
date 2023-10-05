@@ -2,11 +2,12 @@ import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, Table } f
 import { Status } from "../../enum/Status";
 import { CropEntity } from "./crop-entity";
 import { TaskExpenseEntity } from "./task-expense-entity";
+import { TaskAssignedEntity } from "./task-assigned-entity";
 
 @Entity({
   name: "task",
 })
-export class TaskEntity {
+export class TaskTypeEntity {
   @PrimaryGeneratedColumn({name: "taskId"})
   id: number;
 
@@ -27,4 +28,7 @@ export class TaskEntity {
 
   @OneToMany(() => TaskExpenseEntity, (taskExpense) => taskExpense.id)
   taskExpense: TaskExpenseEntity
+
+  @OneToMany(() => TaskAssignedEntity, (taskAssigned) => taskAssigned.id)
+  taskAssigned: TaskAssignedEntity
 }

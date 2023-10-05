@@ -1,6 +1,6 @@
 import { getConnection, Like } from "typeorm";
 import { WorkAssignedDto } from "../../dto/master/work-assigned-dto";
-import { Status } from "../../enum/status";
+import { Status } from "../../enum/Status";
 import { WorkAssignedEntity } from "../../entity/master/work-assigned-entity";
 import { WorkerStatus } from "../../enum/workerStatus";
 import { WorkAssignedDao } from "../work-assigned-dao";
@@ -22,7 +22,7 @@ export class WorkAssignedDaoImpl implements WorkAssignedDao {
   }
   async update(workAssignedDto: WorkAssignedDto): Promise<WorkAssignedEntity> {
     let workAssignedRepo = getConnection().getRepository(WorkAssignedEntity);
-    let workAssignedModel = await workAssignedRepo.findOne(workAssignedDto.getAttendanceId());
+    let workAssignedModel = await workAssignedRepo.findOne(workAssignedDto.getAttendanceid());
     if (workAssignedModel) {
       this.prepareWorkAssignedModel(workAssignedModel, workAssignedDto);
       let updatedModel = await workAssignedRepo.save(workAssignedModel);
@@ -33,7 +33,7 @@ export class WorkAssignedDaoImpl implements WorkAssignedDao {
   }
   async delete(workAssignedDto: WorkAssignedDto): Promise<WorkAssignedEntity> {
     let workAssignedRepo = getConnection().getRepository(WorkAssignedEntity);
-    let workAssignedModel = await workAssignedRepo.findOne(workAssignedDto.getAttendanceId());
+    let workAssignedModel = await workAssignedRepo.findOne(workAssignedDto.getAttendanceid());
     if (workAssignedModel) {
       workAssignedModel.status = Status.Offline;
       let updatedModel = await workAssignedRepo.save(workAssignedModel);
@@ -49,7 +49,7 @@ export class WorkAssignedDaoImpl implements WorkAssignedDao {
       where: searchObject,
       skip: workAssignedDto.getStartIndex(),
       take: workAssignedDto.getMaxResult(),
-      order:{attendanceId:"DESC"}
+      order:{id:"DESC"}
     });
     return workAssignedModel;
   }
@@ -79,9 +79,9 @@ export class WorkAssignedDaoImpl implements WorkAssignedDao {
     workAssignedModel.updatedDate = workAssignedDto.getUpdatedDate();
     workAssignedModel.status = workAssignedDto.getStatus();
     workAssignedModel.taskStatus = workAssignedDto.getTaskStatus();
-    workAssignedModel.workerId = workAssignedDto.getworkerId();
-    workAssignedModel.taskId = workAssignedDto.getTaskId();
-    workAssignedModel.lotId = workAssignedDto.getLotId();
+    workAssignedModel.worker.id = workAssignedDto.getworkerId();
+    workAssignedModel.task.id = workAssignedDto.getTaskId();
+    workAssignedModel.lot.id = workAssignedDto.getLotId();
   }
   prepareSearchObject(workAssignedDto: WorkAssignedDto): any {
     let searchObject: any = {};

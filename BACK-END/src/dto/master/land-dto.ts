@@ -7,7 +7,7 @@ import { Double } from "typeorm";
 export class LandDto extends PaginationDto {
     private id: number;
     private landName: string;
-    private area: Double;
+    private area: number;
     private areaUOM: areaUOM;
     private city: string;
     private createdDate: Date;
@@ -59,11 +59,11 @@ export class LandDto extends PaginationDto {
         this.landName = landName;
     }
     
-    public getArea(): Double {
+    public getArea(): number {
         return this.area;
     }
     
-    public setArea(area: Double): void {
+    public setArea(area: number): void {
         this.area = area;
     }
 

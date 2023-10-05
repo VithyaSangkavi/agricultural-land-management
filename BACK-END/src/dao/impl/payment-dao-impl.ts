@@ -1,9 +1,9 @@
 import { getConnection, Like } from "typeorm";
 import { PaymentDto } from "../../dto/master/payment-dto";
-import { Status } from "../../enum/status";
+import { Status } from "../../enum/Status";
 import { PaymentEntity } from "../../entity/master/payment-entity";
 import { PaymentDao } from "../payment-dao";
-import { mStatus } from "../../enum/paymentType";
+import { paymentType } from "../../enum/paymentType";
 
 /**
  * payment data access layer
@@ -48,7 +48,7 @@ export class PaymentDaoImpl implements PaymentDao {
       where: searchObject,
       skip: paymentDto.getStartIndex(),
       take: paymentDto.getMaxResult(),
-      order:{paymentId:"DESC"}
+      order:{id:"DESC"}
     });
     return paymentModel;
   }
@@ -77,12 +77,12 @@ export class PaymentDaoImpl implements PaymentDao {
     paymentModel.createdDate = paymentDto.getcreatedDate();
     paymentModel.updatedDate = paymentDto.getUpdatedDate();
     paymentModel.status = paymentDto.getStatus();
-    paymentModel.workerId = paymentDto.getWorkerId();
+    paymentModel.worker.id = paymentDto.getWorkerId();
   }
   prepareSearchObject(paymentDto: PaymentDto): any {
     let searchObject: any = {};
 
-    searchObject.paymentType = mStatus.Daily;
+    searchObject.paymentType = paymentType.Daily;
 
     if (paymentDto.getBasePayment()) {
       searchObject.basePayment = Like("%" + paymentDto.getBasePayment() + "%");
