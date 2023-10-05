@@ -64,9 +64,9 @@ export class PaymentDaoImpl implements PaymentDao {
     return paymentModel;
   }
 
-  async findByName(paymentType: paymentType): Promise<PaymentEntity> {
+  async findByName(name: String): Promise<PaymentEntity> {
     let paymentRepo = getConnection().getRepository(PaymentEntity);
-    let paymentModel = await paymentRepo.findOne({ where: { paymentType: paymentType, status: Status.Online } });
+    let paymentModel = await paymentRepo.findOne({ where: { name: name, status: Status.Online } });
     return paymentModel;
   }
   async preparePaymentModel(paymentModel: PaymentEntity, paymentDto: PaymentDto) {
