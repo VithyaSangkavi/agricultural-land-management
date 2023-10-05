@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, Table } from "typeorm";
-import { Status } from "../../enum/status";
+import { Status } from "../../enum/Status";
 import { CropEntity } from "./crop-entity";
 import { TaskExpenseEntity } from "./task-expense-entity";
 import { TaskAssignedEntity } from "./task-assigned-entity";
