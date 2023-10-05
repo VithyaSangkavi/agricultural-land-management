@@ -1,5 +1,5 @@
 import { Column, Double, Entity, ManyToOne, PrimaryGeneratedColumn, Table } from "typeorm";
-import { Status } from "../../enum/status";
+import { Status } from "../../enum/Status";
 import { double } from "aws-sdk/clients/storagegateway";
 import { TaskTypeEntity } from "./task-type-entity";
 import { ExpensesEntity } from "./expense-entity";

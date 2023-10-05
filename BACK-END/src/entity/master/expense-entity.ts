@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Table } from "typeorm";
-import { Status } from "../../enum/status";
+import { Status } from "../../enum/Status";
 import { TaskExpenseEntity } from "./task-expense-entity";
 
 @Entity({
