@@ -1,4 +1,4 @@
-import { Double, getConnection, Like } from "typeorm";
+import { getConnection, Like } from "typeorm";
 import { TaskExpenseDto } from "../../dto/master/task-expense-dto";
 import { Status } from "../../enum/Status";
 import { TaskExpenseEntity } from "../../entity/master/task-expense-entity";
@@ -64,7 +64,7 @@ export class TaskExpenseDaoImpl implements TaskExpenseDao {
     return taskExpenseModel;
   }
 
-  async findByName(value: Double): Promise<TaskExpenseEntity> {
+  async findByName(value: number): Promise<TaskExpenseEntity> {
     let taskExpenseRepo = getConnection().getRepository(TaskExpenseEntity);
     let taskExpenseModel = await taskExpenseRepo.findOne({ where: { value: value, status: Status.Online } });
     return taskExpenseModel;
