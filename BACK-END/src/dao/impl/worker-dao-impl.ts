@@ -4,6 +4,7 @@ import { Status } from "../../enum/Status";
 import { WorkerEntity } from "../../entity/master/worker-entity";
 import { WorkerDao } from "../worker-dao";
 import { WorkerStatus } from "../../enum/workerStatus";
+import { LandEntity } from "../../entity/master/land-entity";
 
 /**
  * worker data access layer
@@ -69,6 +70,7 @@ export class WorkerDaoImpl implements WorkerDao {
     let workerModel = await workerRepo.findOne({ where: { name: name, status: Status.Online } });
     return workerModel;
   }
+
   async prepareWorkerModel(workerModel: WorkerEntity, workerDto: WorkerDto) {
     workerModel.name = workerDto.getName();
     workerModel.dob = workerDto.getDob();
@@ -78,9 +80,9 @@ export class WorkerDaoImpl implements WorkerDao {
     workerModel.phone = workerDto.getPhone();
     workerModel.address = workerDto.getAddress();
     workerModel.workerStatus = workerDto.getWorkerStatus();
-    workerModel.createdDate = workerDto.getcreatedDate();
-    workerModel.updatedDate = workerDto.getUpdatedDate();
-    workerModel.status = workerDto.getStatus();
+    workerModel.createdDate = new Date();
+    workerModel.updatedDate = new Date();
+    workerModel.status = Status.Online;
     workerModel.land.id = workerDto.getLandId();
   }
   prepareSearchObject(workerDto: WorkerDto): any {
