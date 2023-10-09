@@ -71,10 +71,10 @@ export class TaskTypeDaoImpl implements TaskTypeDao {
   }
   async prepareTaskModel(taskModel: TaskTypeEntity, taskDto: TaskTypeDto) {
     taskModel.taskName = taskDto.getTaskName();
-    taskModel.createdDate = taskDto.getcreatedDate();
-    taskModel.updatedDate = taskDto.getUpdatedDate();
-    taskModel.status = taskDto.getStatus();
-    taskModel.crop.id = taskDto.getCropId();
+    taskModel.createdDate = new Date();
+    taskModel.updatedDate = new Date();
+    taskModel.status = Status.Online;
+    //taskModel.crop.id = taskDto.getCropId();
   }
   prepareSearchObject(taskDto: TaskTypeDto): any {
     let searchObject: any = {};

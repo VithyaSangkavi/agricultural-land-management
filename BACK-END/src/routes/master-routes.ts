@@ -3,6 +3,7 @@ import express, { Router } from "express";
 var workerController = require("../controllers/worker-controller")
 var taskTypeController = require("../controllers/task-type-controller")
 var cropController = require("../controllers/crop-controller");
+var paymentController = require("../controllers/payment-controller")
 
 const auth = require("../middleware/auth-middleware");
 const router: Router = express.Router();
@@ -60,5 +61,12 @@ router.post("/taskUpdate", taskTypeController.update);
 router.post("/taskDelete", taskTypeController.delete);
 router.post("/taskFindAll", taskTypeController.findAll);
 router.get("/taskFindById", taskTypeController.findById);
+
+// payment routes
+router.post("/paymentSave", paymentController.save);
+router.post("/paymentupdate", paymentController.update);
+router.post("/paymentDelete", paymentController.delete);
+router.post("/paymentFindAll", paymentController.findAll);
+router.get("/paymentFindById", paymentController.findById);
 
 module.exports = router;

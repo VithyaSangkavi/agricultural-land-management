@@ -75,9 +75,9 @@ export class WorkAssignedDaoImpl implements WorkAssignedDao {
     workAssignedModel.units = workAssignedDto.getUnits();
     workAssignedModel.startDate = workAssignedDto.getStartDate();
     workAssignedModel.endDate = workAssignedDto.getEndDate();
-    workAssignedModel.createdDate = workAssignedDto.getcreatedDate();
-    workAssignedModel.updatedDate = workAssignedDto.getUpdatedDate();
-    workAssignedModel.status = workAssignedDto.getStatus();
+    workAssignedModel.createdDate = new Date();
+    workAssignedModel.updatedDate = new Date();
+    workAssignedModel.status = Status.Online;
     workAssignedModel.taskStatus = workAssignedDto.getTaskStatus();
     workAssignedModel.worker.id = workAssignedDto.getworkerId();
     workAssignedModel.task.id = workAssignedDto.getTaskId();
