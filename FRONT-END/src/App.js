@@ -17,7 +17,6 @@ import { submitSets } from './components/UiComponents/SubmitSets';
 import LazyLoading from './components/common_layouts/lazyloading';
 import RoleBasedRouting from './components/common_layouts/rolebaserouting';
 
-import LandingPage from './components/landingPage/landingpage';
 import SignInComponent from './components/signin/signin';
 import NoMatchComponent from './components/nomatch/nomatch';
 import ResetPassword from './components/resetPassword/ResetPassword';
@@ -108,10 +107,7 @@ class App extends React.Component {
           <RoleBasedRouting path="/confirmation"><ConfirmationPassword /></RoleBasedRouting>
 
           <RoleBasedRouting path="/dashboard" exact roles={[usrRoles.CM]}><DashboardComponent/></RoleBasedRouting>
-          <RoleBasedRouting path="/landing"><LandingPage handleLangObj={this.handleLangObj} langobj={this.props.langState}/></RoleBasedRouting>
-
           <RoleBasedRouting exact path="/"><InsertLand langobj={this.props.langState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
-
           <RoleBasedRouting><NoMatchComponent signedobj={this.props.signState} /></RoleBasedRouting>
         </Switch>
         

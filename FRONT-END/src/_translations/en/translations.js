@@ -1,7 +1,4 @@
 export const TRANSLATIONS_EN = {
-    letsmake:"Let's make your business",
-    moreprofit:"More Profitable",
-    createaccount:"Create new account with Planigo",
     getstart:"Get Started",
     support:"Support",
     toservice:"Terms of Service",

@@ -27,13 +27,13 @@ export default class resetPassword extends Component {
             <Col className="landing-overlay"></Col>
             <Col xs={12}>
                 <Container>
-                    <img src="assets/img/logo_o_inv.png" className="landing-logo" alt="planigo logo"/>
+                    <img src="assets/img/logo_o_inv.png" className="landing-logo" alt="logo"/>
                     <Col xs={12} md={5} className="signin-content float-right">
                         <Card>
                             <Card.Body>
                                 <Link to="/signin"><ArrowLeftIcon className="back-link" size={32}/></Link>
                                 <h3>Forgot account password</h3>
-                                <p>Enter Email Address used to register with Planigo.</p>
+                                <p>Enter Email Address used to register with.</p>
                                 <Form>
                                     <Form.Group controlId="formBasicEmail">
                                         <Form.Label>Email address</Form.Label>

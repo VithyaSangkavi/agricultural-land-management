@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Axios from 'axios';
 import '../land/insert_land.css';
 
 const InsertLand = () => {
@@ -8,7 +9,20 @@ const InsertLand = () => {
     const [city, setCity] = useState('');
 
     const handleSubmit = () => {
-        // Handle form submission here
+    const dataToSend = {
+        name,
+        area,
+        areaUom,
+        city,
+    };
+
+    Axios.post('http://localhost:8080/service/master/landSave', dataToSend)
+        .then((response) => {
+            console.log('Data sent successfully:', response.data);
+        })
+        .catch((error) => {
+            console.error('Error sending data:', error);
+        });
     };
 
     return (

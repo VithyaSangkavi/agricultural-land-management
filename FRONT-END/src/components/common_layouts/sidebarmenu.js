@@ -5,7 +5,6 @@ import { HomeIcon, } from '@primer/octicons-react';
 
 import { cversion } from '../../_services/common.service';
 
-//import planigologo from '../../assets/img/logo_wt.png';
 import placeuser from '../../assets/img/place_user.jpg';
 
 function SidebarMenu(props) {
@@ -19,11 +18,6 @@ function SidebarMenu(props) {
       return location.pathname.includes(cpath);
     }
 
-    const handleDropDownView = (evt, cid) => {
-      evt.target.classList.toggle("active");
-      document.getElementById(cid).classList.toggle("d-none");
-    }
-
     var cuserdetails = (props.signedobj!==null&&props.signedobj.signinDetails?props.signedobj.signinDetails:null);
     var ufname = (cuserdetails&&cuserdetails.userDto&&cuserdetails.userDto.fName?cuserdetails.userDto.fName:"");
     var ulname = (cuserdetails&&cuserdetails.userDto&&cuserdetails.userDto.lName?cuserdetails.userDto.lName:"");
@@ -32,7 +26,6 @@ function SidebarMenu(props) {
     return (
     <>{props.signedobj!==null&&props.signedobj.signinDetails?
     <Col className="sidebar-main">
-      {/* <img src={planigologo} alt="Planigo logo" /> */}
       <div className="userdetails-content" style={{height:"60px",background:"rgba(0,0,0,.1)"}}><span className="d-none d-sm-block"><Image src={placeuser} roundedCircle style={{height:"35px"}} /></span>
       <span style={{fontWeight:"600",marginRight:"20px",position:"absolute",marginLeft:"65px",marginTop:"16px",lineHeight:"15px",width:"100%",color:"#ccc"}}>{ufname+" "+ulname}
       <br/><small style={{fontSize:"11px"}}>Store Manager</small></span></div>

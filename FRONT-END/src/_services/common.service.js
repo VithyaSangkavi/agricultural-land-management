@@ -8,7 +8,7 @@ const pageLength = 10;
 const alertTimeout = 2500;
 const btnPressedKeyCode = 13;
 const persistRootName = "pgo";
-const usrRoles = {CM:"CHAIN_MANAGER",PA:"PLANIGO_ADMIN",SM:"STORE_MANAGER"};
+const usrRoles = {};
 
 function getPager(totalItems, currentPage, pageSize) {
     // calculate total pages
