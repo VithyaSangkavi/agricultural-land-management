@@ -73,9 +73,9 @@ export class LandDaoImpl implements LandDao {
     landModel.area = landDto.getArea();
     landModel.areaUOM = landDto.getareaUOM();
     landModel.city = landDto.getCity();
-    landModel.createdDate = landDto.getCreatedDate();
-    landModel.updatedDate = landDto.getUpdatedDate();
-    landModel.status = landDto.getStatus();
+    landModel.createdDate = new Date();
+    landModel.updatedDate = new Date();
+    landModel.status = Status.Online;
   }
   prepareSearchObject(landDto: LandDto): any {
     let searchObject: any = {};

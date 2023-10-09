@@ -2,7 +2,6 @@ import { LandEntity } from "../../entity/master/land-entity";
 import { PaginationDto } from "../pagination-dto";
 import { Status } from "../../enum/Status";
 import { areaUOM } from "../../enum/areaUOM";
-import { Double } from "typeorm";
 
 export class LandDto extends PaginationDto {
     private id: number;

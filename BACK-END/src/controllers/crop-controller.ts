@@ -9,9 +9,9 @@ exports.save = async (req: Request, res: Response, next: NextFunction) => {
     let cropDto = new CropDto();
     cropDto.filViaRequest(req.body);
 
-    //let cr = await cropService.save(cropDto);
+    let cr = await cropService.save(cropDto);
 
-    res.send("success");
+    res.send(cr);
   } catch (error) {
     next(error);
   }
