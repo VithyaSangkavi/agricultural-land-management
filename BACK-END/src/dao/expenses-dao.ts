@@ -7,4 +7,6 @@ export interface ExpensesDao {
     delete(expensesDto: ExpensesDto): Promise<ExpensesEntity>;
     findAll(expensesDto: ExpensesDto): Promise<ExpensesEntity[]>;
     findById(expenses_id: number): Promise<ExpensesEntity>;
+    findByName(expenseType: String): Promise<ExpensesEntity>;
+    findCount(departmentDto: ExpensesDto): Promise<number>;
 }
