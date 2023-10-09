@@ -74,10 +74,10 @@ export class PaymentDaoImpl implements PaymentDao {
     paymentModel.basePayment = paymentDto.getBasePayment();
     paymentModel.extraPayment = paymentDto.getExtraPayment();
     paymentModel.attendancePayment = paymentDto.getAttendancePayment();
-    paymentModel.createdDate = paymentDto.getcreatedDate();
-    paymentModel.updatedDate = paymentDto.getUpdatedDate();
-    paymentModel.status = paymentDto.getStatus();
-    paymentModel.worker.id = paymentDto.getWorkerId();
+    paymentModel.createdDate = new Date();
+    paymentModel.updatedDate = new Date();
+    paymentModel.status = Status.Online;
+    //paymentModel.worker.id = paymentDto.getWorkerId();
   }
   prepareSearchObject(paymentDto: PaymentDto): any {
     let searchObject: any = {};

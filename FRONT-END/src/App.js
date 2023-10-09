@@ -23,6 +23,7 @@ import NoMatchComponent from './components/nomatch/nomatch';
 import ResetPassword from './components/resetPassword/ResetPassword';
 import ConfirmationPassword from './components/resetPassword/ConfirmationPassword';
 import DashboardComponent from './components/dashboard/dashboard';
+import WorkerPage from './components/workerPage/workerpage';
 
 import { loginAction } from './actions/auth/login_action';
 import { languageAction } from './actions/auth/login_action';

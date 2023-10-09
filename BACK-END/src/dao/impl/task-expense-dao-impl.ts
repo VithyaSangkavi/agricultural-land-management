@@ -71,9 +71,9 @@ export class TaskExpenseDaoImpl implements TaskExpenseDao {
   }
   async prepareTaskExpenseModel(taskExpenseModel: TaskExpenseEntity, taskExpenseDto: TaskExpenseDto) {
     taskExpenseModel.value = taskExpenseDto.getValue();
-    taskExpenseModel.createdDate = taskExpenseDto.getcreatedDate();
-    taskExpenseModel.updatedDate = taskExpenseDto.getUpdatedDate();
-    taskExpenseModel.status = taskExpenseDto.getStatus();
+    taskExpenseModel.createdDate = new Date();
+    taskExpenseModel.updatedDate = new Date();
+    taskExpenseModel.status = Status.Online;
     taskExpenseModel.task.id = taskExpenseDto.getTaskId();
     taskExpenseModel.expense.id = taskExpenseDto.getExpenseId();
   }

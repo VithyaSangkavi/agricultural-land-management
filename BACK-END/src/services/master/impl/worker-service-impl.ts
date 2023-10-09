@@ -32,11 +32,12 @@ export class WorkerServiceImpl implements WorkerService {
       } else {
         return CommonResSupport.getValidationException("Worker Name Cannot Be null !");
       }
-
+      
       //check land id
       if(workerDto.getLandId() > 0){
- 
+          return CommonResSupport.getValidationException("Land with the specified ID does not exist!");
       }
+        
       // save new worker
       let newworker = await this.workerDao.save(workerDto);
       cr.setStatus(true);
