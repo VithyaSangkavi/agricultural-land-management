@@ -7,4 +7,6 @@ export interface IncomeDao {
     delete(incomeDto: IncomeDto): Promise<IncomeEntity>;
     findAll(incomeDto: IncomeDto): Promise<IncomeEntity[]>;
     findById(income_id: number): Promise<IncomeEntity>;
+    //findByName(: String): Promise<ExpensesEntity>;
+    //findCount(incomeDto: incomeDto): Promise<number>;
 }
