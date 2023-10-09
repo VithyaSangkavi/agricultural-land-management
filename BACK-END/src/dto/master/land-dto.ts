@@ -5,7 +5,7 @@ import { areaUOM } from "../../enum/areaUOM";
 
 export class LandDto extends PaginationDto {
     private id: number;
-    private landName: string;
+    private name: string;
     private area: number;
     private areaUOM: areaUOM;
     private city: string;
@@ -18,7 +18,7 @@ export class LandDto extends PaginationDto {
         if (body.id) {
             this.id = body.id;
         }
-        this.landName = body.landName;
+        this.name = body.name;
         this.area = body.area;
         this.city = body.city;
         this.areaUOM = body.areaUOM;
@@ -33,7 +33,7 @@ export class LandDto extends PaginationDto {
 
     filViaDbObject(LandModel: LandEntity) {
         this.id = LandModel.id;
-        this.landName = LandModel.landName;
+        this.name = LandModel.name;
         this.area = LandModel.area;
         this.city = LandModel.city;
         this.areaUOM = LandModel.areaUOM;
@@ -51,11 +51,11 @@ export class LandDto extends PaginationDto {
     }
     
     public getlandName(): string {
-        return this.landName;
+        return this.name;
     }
     
-    public setlandName(landName: string): void {
-        this.landName = landName;
+    public setlandName(name: string): void {
+        this.name = name;
     }
     
     public getArea(): number {

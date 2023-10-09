@@ -69,7 +69,7 @@ export class LandDaoImpl implements LandDao {
     return landModel;
   }
   async preparelandModel(landModel: LandEntity, landDto: LandDto) {
-    landModel.landName = landDto.getlandName();
+    landModel.name = landDto.getlandName();
     landModel.area = landDto.getArea();
     landModel.areaUOM = landDto.getareaUOM();
     landModel.city = landDto.getCity();

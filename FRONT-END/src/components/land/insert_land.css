@@ -1,0 +1,29 @@
+/* styles.css */
+
+.centered-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* This centers vertically */
+}
+
+.form-title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.input-field {
+    border: 1px solid #ccc;
+    padding: 8px;
+    margin: 8px 0;
+}
+
+.submit-button {
+    background-color: #6558f5;
+    width: 30%;
+    border-radius: 5%;
+    color: #fff;
+    padding: 8px;
+    cursor: pointer;
+}

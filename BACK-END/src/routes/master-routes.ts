@@ -1,6 +1,6 @@
 import express, { Router } from "express";
-//var cropController = require("../controllers/crop-controller");
 var landController = require("../controllers/land-controller");
+var workerController = require("../controllers/worker-controller");
 
 
 const auth = require("../middleware/auth-middleware");
@@ -29,10 +29,10 @@ router.post("/incomeFindAll", incomeController.findAll);
 router.get("/incomeFindById", incomeController.findById); */
 //
 router.post("/landSave", landController.save);
-/* router.post("/landUpdate", landController.update);
-router.post("/landDelete", landController.delete);
-router.post("/landFindAll", landController.findAll);
-router.get("/landFindById", landController.findById); */
+//router.post("/landUpdate", landController.update);
+//router.post("/landDelete", landController.delete);
+router.get("/landFindAll", landController.findAll);
+//router.get("/landFindById", landController.findById);
 //
 /* router.post("/lotSave", lotController.save);
 router.post("/lotUpdate", lotController.update);
@@ -48,10 +48,10 @@ router.post("/workerFindAll", workerController.findAll);
 router.get("/workerFindById", workerController.findById);
 
 // task-type routes
-router.post("/taskSave", taskTypeController.save);
+/* router.post("/taskSave", taskTypeController.save);
 router.post("/taskUpdate", taskTypeController.update);
 router.post("/taskDelete", taskTypeController.delete);
 router.post("/taskFindAll", taskTypeController.findAll);
-router.get("/taskFindById", taskTypeController.findById);
+router.get("/taskFindById", taskTypeController.findById); */
 
 module.exports = router;

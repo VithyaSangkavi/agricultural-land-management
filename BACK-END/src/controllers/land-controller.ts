@@ -16,3 +16,16 @@ exports.save = async (req: Request, res: Response, next: NextFunction) => {
     next(error);
   }
 };
+
+exports.findAll = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    let landDto = new LandDto();
+    landDto.filViaRequest(req.body);
+
+    let cr = await landService.find(landDto);
+
+    res.send(cr);
+  } catch (error) {
+    next(error);
+  }
+};
