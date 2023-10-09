@@ -1,12 +1,12 @@
-import { TaskDto } from "../dto/master/task-type-dto"
+import { TaskTypeDto } from "../dto/master/task-type-dto"
 import { TaskTypeEntity } from "../entity/master/task-type-entity";
 
 export interface TaskTypeDao {
-  save(taskDto: TaskDto): Promise<TaskTypeEntity>;
-  update(taskDto: TaskDto): Promise<TaskTypeEntity>;
-  delete(taskDto: TaskDto): Promise<TaskTypeEntity>;
-  findAll(taskDto: TaskDto): Promise<TaskTypeEntity[]>;
+  save(taskTypeDto: TaskTypeDto): Promise<TaskTypeEntity>;
+  update(taskTypeDto: TaskTypeDto): Promise<TaskTypeEntity>;
+  delete(taskTypeDto: TaskTypeDto): Promise<TaskTypeEntity>;
+  findAll(taskTypeDto: TaskTypeDto): Promise<TaskTypeEntity[]>;
   findById(taskId: number): Promise<TaskTypeEntity>;
   findByName(taskName: String): Promise<TaskTypeEntity>;
-  findCount(taskDto: TaskDto): Promise<number> ;
+  findCount(taskTypeDto: TaskTypeDto): Promise<number> ;
 }
