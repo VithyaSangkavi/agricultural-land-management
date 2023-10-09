@@ -1,13 +1,8 @@
 import express, { Router } from "express";
-<<<<<<< HEAD
 //var departmentController = require("../controllers/department-controller");
 var workerController = require("../controllers/worker-controller")
 var taskTypeController = require("../controllers/task-type-controller")
-=======
 var cropController = require("../controllers/crop-controller");
-
-
->>>>>>> b56cffcac05be3fcbec3499b3e1d4e8d6a8a6a91
 
 const auth = require("../middleware/auth-middleware");
 const router: Router = express.Router();
@@ -20,8 +15,6 @@ const router: Router = express.Router();
 // router.post("/departmentDelete", departmentController.delete);
 // router.post("/departmentFindAll", departmentController.findAll);
 // router.get("/departmentFindById", departmentController.findById);
-<<<<<<< HEAD
-=======
 
 //crop routes
 router.post("/cropSave", cropController.save);
@@ -53,7 +46,6 @@ router.post("/lotUpdate", lotController.update);
 router.post("/lotDelete", lotController.delete);
 router.post("/lotFindAll", lotController.findAll);
 router.get("/lotFindById", lotController.findById); */
->>>>>>> b56cffcac05be3fcbec3499b3e1d4e8d6a8a6a91
 
 // worker routes
 router.post("/workerSave", workerController.save);
