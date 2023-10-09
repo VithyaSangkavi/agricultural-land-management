@@ -1,2 +1,2 @@
-# planigo-fe
-Front-End changes of Planigo Project.
+# Structure_FE
+Front-End changes of Structure Project.

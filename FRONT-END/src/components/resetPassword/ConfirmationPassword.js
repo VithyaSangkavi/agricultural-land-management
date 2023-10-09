@@ -17,7 +17,7 @@ class ConfirmationPassword extends Component {
             <Col className="landing-overlay"></Col>
             <Col xs={12}>
                 <Container>
-                    <img src="assets/img/logo_o_inv.png" className="landing-logo" alt="planigo logo"/>
+                    <img src="assets/img/logo_o_inv.png" className="landing-logo" alt="logo"/>
                     <Col className="signin-content">
                         <div className="confirmebox">
                         <div className="MailSent">Email Confirmation Details Sent</div>

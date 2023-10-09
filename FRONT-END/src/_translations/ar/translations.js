@@ -1,7 +1,4 @@
 export const TRANSLATIONS_AR = {
-    letsmake:"دعونا نجعل عملك",
-    moreprofit:"أكثر ربحية",
-    createaccount:"قم بإنشاء حساب جديد مع Planigo",
     getstart:"البدء",
     support:"الدعم",
     toservice:"شروط الخدمة",

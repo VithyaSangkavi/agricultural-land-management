@@ -10,7 +10,7 @@ import { camelizeTxt } from '../../_services/common.service';
 //import NoteInfos from './NoteInfos';
 
 import placecomp from '../../assets/img/place_comp.jpg';
-import planigologo from '../../assets/img/logo_o.png';
+import mainlogo from '../../assets/img/logo_o.png';
 /* import placeuser from '../../assets/img/place_user.jpg'; */
 
 class NavbarTop extends React.Component {
@@ -54,7 +54,7 @@ class NavbarTop extends React.Component {
             <Navbar bg={this.props.dmode?"dark":"light"} variant={this.props.dmode?"dark":"light"}>
               <Col xs={2} style={{textAlign:"left"}}>
                 {/* <Navbar.Brand className="navbar-toggle"><ThreeBarsIcon size={20}/></Navbar.Brand> */}
-                <Navbar.Brand><span className="d-none d-sm-block"><img src={planigologo} alt="Planigo logo" /></span></Navbar.Brand>
+                <Navbar.Brand><span className="d-none d-sm-block"><img src={mainlogo} alt="Main logo" /></span></Navbar.Brand>
               </Col>
               <Col xs={10} style={{textAlign:"left"}}>
                 <Form inline style={{position:"absolute",right:"150px",top:"17px"}}>
