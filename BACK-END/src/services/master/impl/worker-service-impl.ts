@@ -5,6 +5,7 @@ import { WorkerDto } from "../../../dto/master/worker-dto";
 import { CommonResSupport } from "../../../support/common-res-sup";
 import { ErrorHandlerSup } from "../../../support/error-handler-sup";
 import { WorkerService } from "../worker-service";
+import { LandDto } from "../../../dto/master/land-dto";
 
 /**
  * worker service layer
@@ -32,6 +33,10 @@ export class WorkerServiceImpl implements WorkerService {
         return CommonResSupport.getValidationException("Worker Name Cannot Be null !");
       }
 
+      //check land id
+      if(workerDto.getLandId() > 0){
+ 
+      }
       // save new worker
       let newworker = await this.workerDao.save(workerDto);
       cr.setStatus(true);
