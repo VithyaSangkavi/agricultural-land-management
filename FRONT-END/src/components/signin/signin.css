@@ -1,5 +1,11 @@
 
-.signin-content{position: fixed;right: 10rem;height: auto;max-width: 590px;z-index: 9;min-width: 480px;top: 4rem;}
+.signin-content{height: auto;
+    max-width: 590px;
+    z-index: 9;
+    min-width: 480px;
+    top: 4rem;
+    margin: 0 auto;
+    float: none;}
 .signin-content.RTL{text-align: right;}
 .signin-content .card{border-radius: 0px;border:none;box-shadow: 0px 0px 10px rgba(0,0,0,0.2);box-shadow: 0px 0px 25px rgba(0,0,0,0.2);height: 100%;padding-bottom: 10rem;}
 body.d-mode .signin-content .card{background: #222c38;box-shadow: 0px 0px 10px rgb(0 0 0 / 20%);}
