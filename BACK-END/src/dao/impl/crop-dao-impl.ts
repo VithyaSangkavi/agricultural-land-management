@@ -70,9 +70,9 @@ export class CropDaoImpl implements CropDao {
   }
   async preparecropModel(cropModel: CropEntity, cropDto: CropDto) {
     cropModel.cropName = cropDto.getCropName();
-    cropModel.createdDate = cropDto.getCreatedDate();
-    cropModel.updatedDate = cropDto.getUpdatedDate();
-    cropModel.status = cropDto.getStatus();
+    cropModel.createdDate = new Date();
+    cropModel.updatedDate = new Date();
+    cropModel.status = Status.Online;
     cropModel.land.id = cropDto.getLandId();
   }
   prepareSearchObject(cropDto: CropDto): any {

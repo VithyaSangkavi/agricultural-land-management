@@ -7,4 +7,6 @@ export interface CropDao {
     delete(cropDto: CropDto): Promise<CropEntity>;
     findAll(cropDto: CropDto): Promise<CropEntity[]>;
     findById(crop_id: number): Promise<CropEntity>;
+    findByName(cropName: String): Promise<CropEntity>;
+    findCount(departmentDto: CropDto): Promise<number>;
 }

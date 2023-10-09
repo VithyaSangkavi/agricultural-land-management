@@ -7,4 +7,6 @@ export interface LandDao {
     delete(landDto: LandDto): Promise<LandEntity>;
     findAll(landDto: LandDto): Promise<LandEntity[]>;
     findById(land_id: number): Promise<LandEntity>;
+    findByName(landName: String): Promise<LandEntity>;
+    findCount(departmentDto: LandDto): Promise<number>;
 }
