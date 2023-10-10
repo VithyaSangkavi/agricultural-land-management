@@ -1,6 +1,7 @@
 import express, { Router } from "express";
 var landController = require("../controllers/land-controller");
 var workerController = require("../controllers/worker-controller");
+var lotController = require("../controllers/lot-controller");
 
 
 const auth = require("../middleware/auth-middleware");
@@ -34,19 +35,19 @@ router.post("/landSave", landController.save);
 router.get("/landFindAll", landController.findAll);
 //router.get("/landFindById", landController.findById);
 //
-/* router.post("/lotSave", lotController.save);
-router.post("/lotUpdate", lotController.update);
+router.post("/lotSave", lotController.save);
+/* router.post("/lotUpdate", lotController.update);
 router.post("/lotDelete", lotController.delete);
 router.post("/lotFindAll", lotController.findAll);
 router.get("/lotFindById", lotController.findById); */
 
 // worker routes
 router.post("/workerSave", workerController.save);
-router.post("/workerUpdate", workerController.update);
+/* router.post("/workerUpdate", workerController.update);
 router.post("/workerDelete", workerController.delete);
 router.post("/workerFindAll", workerController.findAll);
 router.get("/workerFindById", workerController.findById);
-
+ */
 // task-type routes
 /* router.post("/taskSave", taskTypeController.save);
 router.post("/taskUpdate", taskTypeController.update);

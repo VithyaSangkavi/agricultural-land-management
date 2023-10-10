@@ -3,17 +3,18 @@ import { LotDto } from "../../dto/master/lot-dto";
 import { Status } from "../../enum/Status";
 import { LotEntity } from "../../entity/master/lot-entity";
 import { LotDao } from "../lot-dao";
+import { LandEntity } from "../../entity/master/land-entity";
 
 /**
  * department data access layer
  * contain crud method
  */
 export class LotDaoImpl implements LotDao {
-  async save(lotDto: LotDto): Promise<LotEntity> {
+  async save(lotDto: LotDto, landModel: LandEntity): Promise<LotEntity> {
     let lotRepo = getConnection().getRepository(LotEntity);
     let lotModel = new LotEntity();
 
-    lotModel.status = Status.Online;
+    lotModel.land = landModel;
     this.preparelotModel(lotModel, lotDto);
     let savedDept = await lotRepo.save(lotModel);
     return savedDept;
@@ -72,10 +73,9 @@ export class LotDaoImpl implements LotDao {
     lotModel.lotName = lotDto.getLotName();
     lotModel.area = lotDto.getArea();
     lotModel.areaUOM = lotDto.getAreaUOM();
-    lotModel.createdDate = lotDto.getCreatedDate();
-    lotModel.updatedDate = lotDto.getUpdatedDate();
-    lotModel.status = lotDto.getStatus();
-    lotModel.land.id = lotDto.getLandId();
+    lotModel.createdDate = new Date();
+    lotModel.updatedDate = new Date();
+    lotModel.status = Status.Online;
   }
   prepareSearchObject(lotDto: LotDto): any {
     let searchObject: any = {};

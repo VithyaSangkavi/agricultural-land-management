@@ -26,7 +26,8 @@ import DashboardComponent from './components/dashboard/dashboard';
 import { loginAction } from './actions/auth/login_action';
 import { languageAction } from './actions/auth/login_action';
 
-import  InsertLand  from './components/land/insert_land';
+import InsertLand  from './components/land/insert_land';
+import ManageLands from './components/land/manage_lands';
 
 
 class App extends React.Component {
@@ -107,7 +108,7 @@ class App extends React.Component {
           <RoleBasedRouting path="/confirmation"><ConfirmationPassword /></RoleBasedRouting>
 
           <RoleBasedRouting path="/dashboard" exact roles={[usrRoles.CM]}><DashboardComponent/></RoleBasedRouting>
-          <RoleBasedRouting exact path="/"><InsertLand langobj={this.props.langState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
+          <RoleBasedRouting exact path="/"><ManageLands langobj={this.props.langState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
           <RoleBasedRouting><NoMatchComponent signedobj={this.props.signState} /></RoleBasedRouting>
         </Switch>
         

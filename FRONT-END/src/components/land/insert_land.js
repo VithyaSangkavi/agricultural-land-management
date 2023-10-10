@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Axios from 'axios';
+import axios from 'axios';
 import '../land/insert_land.css';
 
 const InsertLand = () => {
@@ -16,7 +16,7 @@ const InsertLand = () => {
         city,
     };
 
-    Axios.post('http://localhost:8080/service/master/landSave', dataToSend)
+    axios.post('http://localhost:8080/service/master/landSave', dataToSend)
         .then((response) => {
             console.log('Data sent successfully:', response.data);
         })
