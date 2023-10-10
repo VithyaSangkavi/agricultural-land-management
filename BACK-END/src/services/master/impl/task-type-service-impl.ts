@@ -17,7 +17,6 @@ export class TaskTypeServiceImpl implements TaskTypeService {
   taskTypeDao: TaskTypeDao = new TaskTypeDaoImpl();
   cropDao: CropDao = new CropDaoImpl();
 
-
   /**
    * save new taskType
    * @param taskTypeDto
@@ -27,15 +26,15 @@ export class TaskTypeServiceImpl implements TaskTypeService {
     let cr = new CommonResponse();
     try {
       // validation
-      if (taskTypeDto.getTaskName()) {
-        // check name already have
-        let nameTaskTypeMode = await this.taskTypeDao.findByName(taskTypeDto.getTaskName());
-        if (nameTaskTypeMode) {
-          return CommonResSupport.getValidationException("taskType Name Already In Use !");
-        }
-      } else {
-        return CommonResSupport.getValidationException("taskType Name Cannot Be null !");
-      }
+      // if (taskTypeDto.getTaskName()) {
+      //   // check name already have
+      //   let nameTaskTypeMode = await this.taskTypeDao.findByName(taskTypeDto.getTaskName());
+      //   if (nameTaskTypeMode) {
+      //     return CommonResSupport.getValidationException("taskType Name Already In Use !");
+      //   }
+      // } else {
+      //   return CommonResSupport.getValidationException("taskType Name Cannot Be null !");
+      // }
 
       //check crop id
       let cropModel: CropEntity = null;

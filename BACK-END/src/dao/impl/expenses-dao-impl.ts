@@ -57,9 +57,9 @@ export class ExpensesDaoImpl implements ExpensesDao {
     let expensesModel = await expensesRepo.count({ where: searchObject });
     return expensesModel;
   }
-  async findById(departmentId: number): Promise<ExpensesEntity> {
+  async findById(expenseId: number): Promise<ExpensesEntity> {
     let expensesRepo = getConnection().getRepository(ExpensesEntity);
-    let expensesModel = await expensesRepo.findOne(departmentId);
+    let expensesModel = await expensesRepo.findOne(expenseId);
     return expensesModel;
   }
 
