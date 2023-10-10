@@ -6,6 +6,9 @@ import { CommonResSupport } from "../../../support/common-res-sup";
 import { ErrorHandlerSup } from "../../../support/error-handler-sup";
 import { WorkerService } from "../worker-service";
 import { LandDto } from "../../../dto/master/land-dto";
+import { LandDao } from "../../../dao/land-dao";
+import { LandDaoImpl } from "../../../dao/impl/land-dao-impl";
+import { LandEntity } from "../../../entity/master/land-entity";
 
 /**
  * worker service layer
@@ -13,6 +16,7 @@ import { LandDto } from "../../../dto/master/land-dto";
  */
 export class WorkerServiceImpl implements WorkerService {
   workerDao: WorkerDao = new WorkerDaoImpl();
+  landDao: LandDao = new LandDaoImpl();
 
   /**
    * save new worker
@@ -34,12 +38,16 @@ export class WorkerServiceImpl implements WorkerService {
       }
       
       //check land id
+      let landModel:LandEntity = null;
       if(workerDto.getLandId() > 0){
-          return CommonResSupport.getValidationException("Land with the specified ID does not exist!");
+        landModel = await this.landDao.findById(workerDto.getLandId());
+      } else{ 
+        
+        return CommonResSupport.getValidationException("Land with the specified ID does not exist!");
       }
         
       // save new worker
-      let newworker = await this.workerDao.save(workerDto);
+      let newworker = await this.workerDao.save(workerDto, landModel);
       cr.setStatus(true);
     } catch (error) {
       cr.setStatus(false);

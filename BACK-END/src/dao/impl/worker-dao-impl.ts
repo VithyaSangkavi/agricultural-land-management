@@ -11,11 +11,11 @@ import { LandEntity } from "../../entity/master/land-entity";
  * contain crud method
  */
 export class WorkerDaoImpl implements WorkerDao {
-  async save(workerDto: WorkerDto): Promise<WorkerEntity> {
+  async save(workerDto: WorkerDto, landModel: LandEntity): Promise<WorkerEntity> {
     let workerRepo = getConnection().getRepository(WorkerEntity);
     let workerModel = new WorkerEntity();
 
-    workerModel.status = Status.Online;
+    workerModel.land = landModel;
     this.prepareWorkerModel(workerModel, workerDto);
     let savedWorker = await workerRepo.save(workerModel);
     return savedWorker;
@@ -83,7 +83,6 @@ export class WorkerDaoImpl implements WorkerDao {
     workerModel.createdDate = new Date();
     workerModel.updatedDate = new Date();
     workerModel.status = Status.Online;
-    workerModel.land.id = workerDto.getLandId();
   }
   prepareSearchObject(workerDto: WorkerDto): any {
     let searchObject: any = {};
