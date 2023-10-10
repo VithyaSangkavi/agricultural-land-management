@@ -5,6 +5,10 @@ import { PaymentDto } from "../../../dto/master/payment-dto";
 import { CommonResSupport } from "../../../support/common-res-sup";
 import { ErrorHandlerSup } from "../../../support/error-handler-sup";
 import { PaymentService } from "../payment-service";
+import { WorkerEntity } from "../../../entity/master/worker-entity";
+import { worker } from "cluster";
+import { WorkerDao } from "../../../dao/worker-dao";
+import { WorkerDaoImpl } from "../../../dao/impl/worker-dao-impl";
 
 /**
  * payment service layer
@@ -12,6 +16,7 @@ import { PaymentService } from "../payment-service";
  */
 export class PaymentServiceImpl implements PaymentService {
   paymentDao: PaymentDao = new PaymentDaoImpl();
+  workerDao: WorkerDao = new WorkerDaoImpl();
 
   /**
    * save new payment
@@ -32,8 +37,16 @@ export class PaymentServiceImpl implements PaymentService {
         return CommonResSupport.getValidationException("Payment type Cannot Be null !");
       }
 
+      //check worker id
+      let workerModel: WorkerEntity = null;
+      if(paymentDto.getWorkerId() > 0){
+        workerModel = await this.workerDao.findById(paymentDto.getWorkerId());
+      } else{ 
+        return CommonResSupport.getValidationException("Crop with the specified ID does not exist!");
+      }
+
       // save new payment
-      let newPayment = await this.paymentDao.save(paymentDto);
+      let newPayment = await this.paymentDao.save(paymentDto, workerModel);
       cr.setStatus(true);
     } catch (error) {
       cr.setStatus(false);
