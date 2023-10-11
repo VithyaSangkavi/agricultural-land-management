@@ -126,7 +126,7 @@ export class WorkerServiceImpl implements WorkerService {
       let workerDtoList = new Array();
       for (const workerModel of workers) {
         let workerDto = new WorkerDto();
-        workerDto.filViaDbObject(workerModel);
+        workerDto.filViaRequest(workerModel);
         workerDtoList.push(workerDto);
       }
       if (workerDto.getStartIndex() == 0) {
