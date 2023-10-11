@@ -1,0 +1,25 @@
+.worker-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .worker-card {
+    border: 1px solid #ccc;
+    padding: 16px;
+    margin: 10px;
+    width: 300px;
+    /* max-width: 300px; */
+    text-align: left;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .worker-card h3 {
+    font-size: 18px;
+    margin: 0;
+  }
+  
+  .worker-card p {
+    font-size: 14px;
+    margin: 10px 0 0;
+  }

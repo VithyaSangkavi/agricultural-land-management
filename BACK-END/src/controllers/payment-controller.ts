@@ -59,9 +59,9 @@ exports.update = async (req: Request, res: Response, next: NextFunction) => {
   
   exports.findById = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      let workerId = parseInt(req.query.workerId as string);
+      let paymentId = parseInt(req.query.paymentId as string);
   
-      let cr = await paymentService.findById(workerId);
+      let cr = await paymentService.findById(paymentId);
   
       res.send(cr);
     } catch (error) {

@@ -4,6 +4,9 @@ var workerController = require("../controllers/worker-controller")
 var taskTypeController = require("../controllers/task-type-controller")
 var cropController = require("../controllers/crop-controller");
 var paymentController = require("../controllers/payment-controller")
+var workAssignedController = require("../controllers/work-assigned-controller")
+var taskAssignedController = require("../controllers/task-assigned-controller")
+var taskExpenseController = require("../controllers/task-expense-controller")
 
 const auth = require("../middleware/auth-middleware");
 const router: Router = express.Router();
@@ -68,5 +71,26 @@ router.post("/paymentupdate", paymentController.update);
 router.post("/paymentDelete", paymentController.delete);
 router.post("/paymentFindAll", paymentController.findAll);
 router.get("/paymentFindById", paymentController.findById);
+
+// work-assigned routes
+router.post("/work-assigned-save", workAssignedController.save);
+router.post("/work-assigned-update", workAssignedController.update);
+router.post("/work-assigned-delete", workAssignedController.delete);
+router.post("/work-assigned-find-all", workAssignedController.findAll);
+router.get("/work-assigned-find-by-id", workAssignedController.findById);
+
+// task-assigned routes
+router.post("/task-assigned-save", taskAssignedController.save);
+router.post("/task-assigned-update", taskAssignedController.update);
+router.post("/task-assigned-delete", taskAssignedController.delete);
+router.post("/task-assigned-find-all", taskAssignedController.findAll);
+router.get("/task-assigned-find-by-id", taskAssignedController.findById);
+
+// task-expense routes
+router.post("/task-expense-save", taskExpenseController.save);
+router.post("/task-expense-update", taskExpenseController.update);
+router.post("/task-expense-delete", taskExpenseController.delete);
+router.post("/task-expense-find-all", taskExpenseController.findAll);
+router.get("/task-expense-find-by-id", taskExpenseController.findById);
 
 module.exports = router;
