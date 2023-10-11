@@ -1,8 +1,9 @@
 // App.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import {useHistory} from "react-router-dom";
-import './manageworkers.css'
+import { useHistory } from "react-router-dom";
+import './manageworkers.css';
+import Dropdown from 'react-bootstrap/Dropdown';
 
 function ManageWorkers() {
 
@@ -14,24 +15,24 @@ function ManageWorkers() {
 
   const history = useHistory();
 
-    useEffect(() => {
-      
-        axios.post('http://localhost:8081/service/master/workerFindAll').then((response) => {
-            setWorkers(response.data.extra);
-            console.log("Workers : ", response.data.extra);
+  useEffect(() => {
 
-        });
+    axios.post('http://localhost:8081/service/master/workerFindAll').then((response) => {
+      setWorkers(response.data.extra);
+      console.log("Workers : ", response.data.extra);
 
-        axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
-            setSelectedLand(response.data.extra);
-            console.log("Lands : ", response.data.extra);
+    });
 
-        });
-    }, []);
+    axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
+      setLands(response.data.extra);
+      console.log("Lands : ", response.data.extra);
 
-    const handleSearchChange = (event) => {
-        setSearchQuery(event.target.value);
-    };
+    });
+  }, []);
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
   const filteredWorkers = workers.filter((worker) =>
     worker.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -40,17 +41,20 @@ function ManageWorkers() {
     <div className="worker-app-screen">
       <h2>Worker Management</h2>
       <div>
-        <select
-          value={selectedLand}
-          onChange={(e) => setSelectedLand(e.target.value)}
-        >
-          <option value="">Select Land</option>
-          {lands.map((land) => (
-            <option key={land.id} value={land.id}>
-              {land.landName}
-            </option>
-          ))}
-        </select>
+
+        <Dropdown onSelect={(eventKey) => setSelectedLand(eventKey)}>
+          <Dropdown.Toggle variant="success" id="dropdown-land">
+            {selectedLand ? lands.find((land) => land.id === selectedLand)?.landName : 'Select Land'}
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            {lands.map((land) => (
+              <Dropdown.Item key={land.id} eventKey={land.id}>
+                {land.landName}
+              </Dropdown.Item>
+            ))}
+          </Dropdown.Menu>
+        </Dropdown>
+        <br/>
       </div>
       <div>
         <input
