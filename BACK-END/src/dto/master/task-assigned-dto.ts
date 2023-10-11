@@ -18,8 +18,8 @@ export class TaskAssignedDto extends PaginationDto {
     this.startDate = body.startDate;
     this.endDate = body.endDate;
     this.status= body.status;
-    this.landId = body.task.id;
-    this.taskId = body.expense.id;
+    this.landId = body.landId;
+    this.taskId = body.taskId;
 
     if (body.startIndex && body.maxResult) {
       this.setStartIndex(body.startIndex);

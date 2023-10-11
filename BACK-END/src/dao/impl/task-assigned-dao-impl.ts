@@ -4,17 +4,20 @@ import { Status } from "../../enum/Status";
 import { TaskAssignedEntity } from "../../entity/master/task-assigned-entity";
 import { WorkerStatus } from "../../enum/workerStatus";
 import { TaskAssignedDao } from "../task-assigned-dao";
+import { LandEntity } from "../../entity/master/land-entity";
+import { TaskTypeEntity } from "../../entity/master/task-type-entity";
 
 /**
  * task-expense data access layer
  * contain crud method
  */
 export class TaskAssignedDaoImpl implements TaskAssignedDao {
-  async save(taskAssignedDto: TaskAssignedDto): Promise<TaskAssignedEntity> {
+  async save(taskAssignedDto: TaskAssignedDto, landModel: LandEntity, taskTypeModel: TaskTypeEntity): Promise<TaskAssignedEntity> {
     let taskAssignedRepo = getConnection().getRepository(TaskAssignedEntity);
     let taskAssignedModel = new TaskAssignedEntity();
 
-    taskAssignedModel.status = Status.Online;
+    taskAssignedModel.land = landModel;
+    taskAssignedModel.task = taskTypeModel;
     this.preparetaskAssignedModel(taskAssignedModel, taskAssignedDto);
     let savedTask = await taskAssignedRepo.save(taskAssignedModel);
     return savedTask;
@@ -64,18 +67,16 @@ export class TaskAssignedDaoImpl implements TaskAssignedDao {
     return taskAssignedModel;
   }
 
-//   async findByName(value: number): Promise<TaskAssignedEntity> {
-//     let taskAssignedRepo = getConnection().getRepository(TaskAssignedEntity);
-//     let taskAssignedModel = await taskAssignedRepo.findOne({ where: { value: value, status: Status.Online } });
-//     return taskAssignedModel;
-//   }
+  async findByName(status: Status): Promise<TaskAssignedEntity> {
+    let taskAssignedRepo = getConnection().getRepository(TaskAssignedEntity);
+    let taskAssignedModel = await taskAssignedRepo.findOne({ where: { status: status} });
+    return taskAssignedModel;
+  }
 
   async preparetaskAssignedModel(taskAssignedModel: TaskAssignedEntity, taskAssignedDto: TaskAssignedDto) {
     taskAssignedModel.startDate = taskAssignedDto.getStartDate();
     taskAssignedModel.endDate = taskAssignedDto.getEndDate();
     taskAssignedModel.status = taskAssignedDto.getStatus();
-    taskAssignedModel.land.id = taskAssignedDto.getLandId();
-    taskAssignedModel.task.id = taskAssignedDto.getTaskId();
   }
   prepareSearchObject(taskAssignedDto: TaskAssignedDto): any {
     let searchObject: any = {};

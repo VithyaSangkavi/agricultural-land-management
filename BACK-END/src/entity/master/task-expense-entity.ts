@@ -23,8 +23,8 @@ export class TaskExpenseEntity {
   @Column({ type: "enum" ,enum:Status,default:Status.Online})
   status: Status;
 
-  @ManyToOne(()=> TaskTypeEntity, (task) => task.id)
-  task: TaskTypeEntity;
+  @ManyToOne(()=> TaskTypeEntity, (taskType) => taskType.id)
+  taskType: TaskTypeEntity;
 
   @ManyToOne(()=> ExpensesEntity, (expense) => expense.id)
   expense: ExpensesEntity;

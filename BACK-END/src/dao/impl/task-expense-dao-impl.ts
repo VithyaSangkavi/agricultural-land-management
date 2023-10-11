@@ -4,17 +4,20 @@ import { Status } from "../../enum/Status";
 import { TaskExpenseEntity } from "../../entity/master/task-expense-entity";
 import { WorkerStatus } from "../../enum/workerStatus";
 import { TaskExpenseDao } from "../task-expense-dao";
+import { TaskTypeEntity } from "../../entity/master/task-type-entity";
+import { ExpensesEntity } from "../../entity/master/expense-entity";
 
 /**
  * task-expense data access layer
  * contain crud method
  */
 export class TaskExpenseDaoImpl implements TaskExpenseDao {
-  async save(taskExpenseDto: TaskExpenseDto): Promise<TaskExpenseEntity> {
+  async save(taskExpenseDto: TaskExpenseDto, taskTypeModel: TaskTypeEntity, expenseModel: ExpensesEntity): Promise<TaskExpenseEntity> {
     let taskExpenseRepo = getConnection().getRepository(TaskExpenseEntity);
     let taskExpenseModel = new TaskExpenseEntity();
 
-    taskExpenseModel.status = Status.Online;
+    taskExpenseModel.taskType = taskTypeModel;
+    taskExpenseModel.expense = expenseModel;
     this.prepareTaskExpenseModel(taskExpenseModel, taskExpenseDto);
     let savedTask = await taskExpenseRepo.save(taskExpenseModel);
     return savedTask;
@@ -74,8 +77,6 @@ export class TaskExpenseDaoImpl implements TaskExpenseDao {
     taskExpenseModel.createdDate = new Date();
     taskExpenseModel.updatedDate = new Date();
     taskExpenseModel.status = Status.Online;
-    taskExpenseModel.task.id = taskExpenseDto.getTaskId();
-    taskExpenseModel.expense.id = taskExpenseDto.getExpenseId();
   }
   prepareSearchObject(taskExpenseDto: TaskExpenseDto): any {
     let searchObject: any = {};
