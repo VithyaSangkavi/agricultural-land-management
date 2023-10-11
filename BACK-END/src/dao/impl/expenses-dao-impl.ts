@@ -70,9 +70,9 @@ export class ExpensesDaoImpl implements ExpensesDao {
   }
   async prepareExpensesModel(expensesModel: ExpensesEntity, expensesDto: ExpensesDto) {
     expensesModel.expenseType = expensesDto.getExpenseType();
-    expensesModel.createdDate = expensesDto.getCreatedDate();
-    expensesModel.updatedDate = expensesDto.getUpdatedDate();
-    expensesModel.status = expensesDto.getStatus();
+    expensesModel.createdDate = new Date();
+    expensesModel.updatedDate = new Date();
+    expensesModel.status = Status.Online;
   }
   prepareSearchObject(expensesDto: ExpensesDto): any {
     let searchObject: any = {};

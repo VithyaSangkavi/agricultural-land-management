@@ -12,7 +12,7 @@ export class LotEntity {
     id: number;
 
     @Column()
-    lotName: string;
+    name: string;
 
     @Column({type: "double"})
     area: number;

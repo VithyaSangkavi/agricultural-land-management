@@ -28,6 +28,10 @@ import { languageAction } from './actions/auth/login_action';
 
 import InsertLand  from './components/land/insert_land';
 import ManageLands from './components/land/manage_lands';
+import InsertLot from './components/lot/insert_lot';
+import ManageLots from './components/lot/manage_lot';
+import MenuButtons from './components/common_layouts/menubuttons';
+import Login from './components/login/login';
 
 
 class App extends React.Component {
@@ -107,8 +111,15 @@ class App extends React.Component {
           <RoleBasedRouting path="/resetPassword"><ResetPassword /></RoleBasedRouting>
           <RoleBasedRouting path="/confirmation"><ConfirmationPassword /></RoleBasedRouting>
 
+          <RoleBasedRouting path="/insertlot"><InsertLot /></RoleBasedRouting>
+          <RoleBasedRouting path="/managelands"><ManageLands /></RoleBasedRouting>
+          <RoleBasedRouting path="/managelots"><ManageLots /></RoleBasedRouting>
+          <RoleBasedRouting path="/insertland"><InsertLand /></RoleBasedRouting>
+
+
+
           <RoleBasedRouting path="/dashboard" exact roles={[usrRoles.CM]}><DashboardComponent/></RoleBasedRouting>
-          <RoleBasedRouting exact path="/"><ManageLands langobj={this.props.langState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
+          <RoleBasedRouting exact path="/"><MenuButtons langobj={this.props.langState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
           <RoleBasedRouting><NoMatchComponent signedobj={this.props.signState} /></RoleBasedRouting>
         </Switch>
         

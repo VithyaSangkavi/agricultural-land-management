@@ -5,16 +5,16 @@ import { Link, useHistory  } from 'react-router-dom';
 import '../land/manage_lands.css';
 
 
-const ManageLand = () => {
+const ManageLot = () => {
     const [data, setData] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const history = useHistory();
 
 
     useEffect(() => {
-        axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
+        axios.get('http://localhost:8080/service/master/lotFindAll').then((response) => {
             setData(response.data.extra);
-            console.log("Lands : ", response.data.extra);
+            console.log("Lots : ", response.data.extra);
 
         });
     }, []);
@@ -33,7 +33,7 @@ const ManageLand = () => {
 
 
     return (
-        <div className='manageLands'>
+        <div className='manageLots'>
             <div className='search'>
                 <input
                     type="text"
@@ -58,4 +58,4 @@ const ManageLand = () => {
 
 };
 
-export default ManageLand;
+export default ManageLot;

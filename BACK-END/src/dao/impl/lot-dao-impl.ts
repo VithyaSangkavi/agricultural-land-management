@@ -70,7 +70,7 @@ export class LotDaoImpl implements LotDao {
     return lotModel;
   }
   async preparelotModel(lotModel: LotEntity, lotDto: LotDto) {
-    lotModel.lotName = lotDto.getLotName();
+    lotModel.name = lotDto.getLotName();
     lotModel.area = lotDto.getArea();
     lotModel.areaUOM = lotDto.getAreaUOM();
     lotModel.createdDate = new Date();
@@ -83,22 +83,22 @@ export class LotDaoImpl implements LotDao {
       searchObject.name = Like("%" + lotDto.getLotName() + "%");
     }
     if (lotDto.getArea()) {
-        searchObject.name = Like("%" + lotDto.getArea() + "%");
+        searchObject.area = Like("%" + lotDto.getArea() + "%");
     }
     if (lotDto.getAreaUOM()) {
-        searchObject.name = Like("%" + lotDto.getAreaUOM() + "%");
+        searchObject.areaUOM = Like("%" + lotDto.getAreaUOM() + "%");
     }
     if (lotDto.getCreatedDate()) {
-      searchObject.color = Like("%" + lotDto.getCreatedDate() + "%");
+      searchObject.createdDate = Like("%" + lotDto.getCreatedDate() + "%");
     }
     if (lotDto.getUpdatedDate()) {
-      searchObject.color = Like("%" + lotDto.getUpdatedDate() + "%");
+      searchObject.updatedDate = Like("%" + lotDto.getUpdatedDate() + "%");
     }
     
     searchObject.status = Status.Online;
     
     if (lotDto.getLandId()) {
-      searchObject.color = Like("%" + lotDto.getLandId() + "%");
+      searchObject.landId = Like("%" + lotDto.getLandId() + "%");
     }
     return searchObject;
   }

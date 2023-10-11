@@ -5,7 +5,7 @@ import { areaUOM } from "../../enum/areaUOM";
 
 export class LotDto extends PaginationDto {
     private id: number;
-    private lotName: string;
+    private name: string;
     private area: number;
     private areaUOM: areaUOM;
     private createdDate: Date;
@@ -18,28 +18,30 @@ export class LotDto extends PaginationDto {
         if (body.id) {
             this.id = body.id;
         }
-        this.lotName = body.lotName;
+        this.landId = body.landId;
+        this.name = body.name;
         this.area = body.area;
         this.areaUOM = body.areaUOM;
         this.createdDate = body.createdDate;
         this.updatedDate = body.updatedDate;
         this.status = body.status;
-        this.landId = body.land.id;
+       
+
         if (body.startIndex && body.maxResult) {
             this.setStartIndex(body.startIndex);
             this.setMaxResult(body.maxResult);
         }
     }
 
-    filViaDbObject(LotModel: LotEntity) {
-        this.id = LotModel.id;
-        this.lotName = LotModel.lotName;
-        this.area = LotModel.area;
-        this.areaUOM = LotModel.areaUOM;
-        this.createdDate = LotModel.createdDate;
-        this.updatedDate = LotModel.updatedDate;
-        this.status = LotModel.status
-        this.landId = LotModel.land.id;
+    filViaDbObject(lotModel: LotEntity) {
+        this.id = lotModel.id;
+        this.name = lotModel.name;
+        this.area = lotModel.area;
+        this.areaUOM = lotModel.areaUOM;
+        this.createdDate = lotModel.createdDate;
+        this.updatedDate = lotModel.updatedDate;
+        this.status = lotModel.status
+        this.landId = lotModel.land.id;
     }
 
     public getLotId(): number {
@@ -51,11 +53,11 @@ export class LotDto extends PaginationDto {
     }
 
     public getLotName(): string {
-        return this.lotName;
+        return this.name;
     }
 
-    public setLotName(lotName: string): void {
-        this.lotName = lotName;
+    public setLotName(name: string): void {
+        this.name = name;
     }
 
     public getArea(): number {

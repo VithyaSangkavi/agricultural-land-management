@@ -127,12 +127,8 @@ export class LotServiceImpl implements LotService {
       let lotDtoList = new Array();
       for (const lotModel of lots) {
         let lotDto = new LotDto();
-        lotDto.filViaDbObject(lotModel);
+        lotDto.filViaRequest(lotModel);
         lotDtoList.push(lotDto);
-      }
-      if (lotDto.getStartIndex() == 0) {
-        let count = await this.lotDao.findCount(lotDto);
-        cr.setCount(count);
       }
       cr.setStatus(true);
       cr.setExtra(lotDtoList);
