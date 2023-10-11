@@ -23,6 +23,8 @@ import ResetPassword from './components/resetPassword/ResetPassword';
 import ConfirmationPassword from './components/resetPassword/ConfirmationPassword';
 import DashboardComponent from './components/dashboard/dashboard';
 import WorkerPage from './components/workerPage/workerpage';
+import AddTaskType from './components/taskType/addTaskType';
+import ManageWorkers from './components/workerPage/manageworkers';
 
 import { loginAction } from './actions/auth/login_action';
 import { languageAction } from './actions/auth/login_action';
@@ -104,9 +106,12 @@ class App extends React.Component {
         <Switch>
           <RoleBasedRouting path="/resetPassword"><ResetPassword /></RoleBasedRouting>
           <RoleBasedRouting path="/confirmation"><ConfirmationPassword /></RoleBasedRouting>
+          <RoleBasedRouting path="/add"><ConfirmationPassword /></RoleBasedRouting>
 
           <RoleBasedRouting path="/dashboard" exact roles={[usrRoles.CM]}><DashboardComponent/></RoleBasedRouting>
-          <RoleBasedRouting exact path="/"><SignInComponent langobj={this.props.langState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
+         
+          <RoleBasedRouting exact path="/"><ManageWorkers langobj={this.props.langState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
+          <RoleBasedRouting exact path="/addTask"><AddTaskType langobj={this.props.langState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
           <RoleBasedRouting><NoMatchComponent signedobj={this.props.signState} /></RoleBasedRouting>
         </Switch>
         

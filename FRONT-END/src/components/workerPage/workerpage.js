@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
+import Axios from 'axios';
 import './workerpage.css';
+import { submitCollection } from '../../_services/submit.service';
+import { submitSets } from '../UiComponents/SubmitSets';
+import { alertService } from '../../_services/alert.service';
 
 const WorkerPage = () => {
   const [showBasicDetails, setShowBasicDetails] = useState(true);
+
   const [name, setName] = useState('');
   const [dob, setDob] = useState('');
   const [nic, setNic] = useState('');
@@ -12,13 +17,64 @@ const WorkerPage = () => {
   const [address, setAddress] = useState('');
   const [workerStatus, setWorkerStatus] = useState('');
 
+  const [paymentType, setPaymentType] = useState('');
+  const [basePayment, setBasePayment] = useState('');
+  const [extraPayment, setExtraPayment] = useState('');
+  const [attendancePayment, setAttendancePayment] = useState('');
+
 
   const toggleView = () => {
     setShowBasicDetails(!showBasicDetails);
   };
 
-  const handleAddClick = () => {
-    
+  //Add Worker
+  const handleAddWorker = () => {
+    const addWorker = {
+      name,
+      dob,
+      nic,
+      gender,
+      joinedDate,
+      phone,
+      address,
+      workerStatus
+    };
+
+    // submitSets(submitCollection.saveworker, addWorker, false)
+    //   .then(res => {
+    //     if (res && res.status) {
+    //       alertService.success("Worker added successfully")
+    //     } else {
+    //       alertService.error("Adding worker failed")
+    //     }
+    //   })
+
+    Axios.post('http://localhost:8081/service/master/workerSave', addWorker)
+        .then((response) => {
+            console.log('Worker added successfully:', response.data);
+        })
+        .catch((error) => {
+            console.error('Error adding worker:', error);
+        });
+  };
+
+  //Add Payment
+  const handleAddPayment = () => {
+    const addPayment = {
+      paymentType,
+      basePayment,
+      extraPayment,
+      attendancePayment
+    };
+
+    submitSets(submitCollection.savepayment, addPayment, false)
+      .then(res => {
+        if (res && res.status) {
+          alertService.success("Payment added successfully")
+        } else {
+          alertService.error("Adding payment failed")
+        }
+      })
   };
 
   return (
@@ -31,6 +87,7 @@ const WorkerPage = () => {
           Finance
         </button>
       </div>
+      <br />
       <div className="content">
         {showBasicDetails ? (
           <div className="basic-details">
@@ -45,14 +102,14 @@ const WorkerPage = () => {
               type="text"
               value={dob}
               onChange={(e) => setDob(e.target.value)}
-              placeholder="Date of Birth"
+              placeholder="DOB"
               className="input-field"
             />
             <input
               type="text"
               value={nic}
               onChange={(e) => setNic(e.target.value)}
-              placeholder="NIC"
+              placeholder="NIC/ID"
               className="input-field"
             />
             <select
@@ -60,7 +117,7 @@ const WorkerPage = () => {
               onChange={(e) => setGender(e.target.value)}
               className="input-field"
             >
-              <option value="">Select Gender</option>
+              <option value="">Gender</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
             </select>
@@ -90,17 +147,52 @@ const WorkerPage = () => {
               onChange={(e) => setWorkerStatus(e.target.value)}
               className="input-field"
             >
-              <option value="">Select Worker Status</option>
+              <option value="">Status</option>
               <option value="Active">Active</option>
-              <option value="Inactive">Inactive</option>
+              <option value="Inactive">Retired</option>
+              <option value="Inactive">Fired</option>
+              <option value="Inactive">Temporary Stopped</option>
             </select>
-            <button className="add-button" onClick={handleAddClick}>
+            <button className="add-button" onClick={handleAddWorker}>
               Add
             </button>
           </div>
         ) : (
           <div className="finance">
-            <h2>Finance</h2>
+            <select
+              value={paymentType}
+              onChange={(e) => setPaymentType(e.target.value)}
+              className="input-field"
+            >
+              <option value="">Monthly/Daily pay</option>
+              <option value="Active">Monthly</option>
+              <option value="Inactive">Daily</option>
+            </select>
+            <input
+              type="text"
+              value={basePayment}
+              onChange={(e) => setBasePayment(e.target.value)}
+              placeholder="Base Payment"
+              className="input-field"
+            />
+            <input
+              type="text"
+              value={extraPayment}
+              onChange={(e) => setExtraPayment(e.target.value)}
+              placeholder="Extra Kg Pay"
+              className="input-field"
+            />
+            <input
+              type="text"
+              value={attendancePayment}
+              onChange={(e) => setAttendancePayment(e.target.value)}
+              placeholder="Attendance Pay"
+              className="input-field"
+            />
+            <br /> <br /> <br />
+            <button className="add-button" onClick={handleAddPayment}>
+              Add
+            </button>
           </div>
         )}
       </div>
