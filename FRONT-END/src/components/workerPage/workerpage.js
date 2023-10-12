@@ -79,6 +79,7 @@ const WorkerPage = () => {
 
   return (
     <div className="worker-app-screen">
+      <p className='main-heading'>Worker Registration</p>
       <div className="toggle-container">
         <button className={`toggle-button ${showBasicDetails ? 'active' : ''}`} onClick={toggleView}>
           Basic Details
