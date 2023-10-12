@@ -52,11 +52,11 @@ router.get("/incomeFindAll", incomeController.findAll);
 
 // worker routes
 router.post("/workerSave", workerController.save);
-/* router.post("/workerUpdate", workerController.update);
+router.post("/workerUpdate", workerController.update);
 router.post("/workerDelete", workerController.delete);
 router.post("/workerFindAll", workerController.findAll);
 router.get("/workerFindById", workerController.findById);
- */
+
 // task-type routes
 /* router.post("/taskSave", taskTypeController.save);
 router.post("/taskUpdate", taskTypeController.update);

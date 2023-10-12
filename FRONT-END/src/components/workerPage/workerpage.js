@@ -4,6 +4,7 @@ import './workerpage.css';
 import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
 import { alertService } from '../../_services/alert.service';
+import Footer from '../footer/footer';
 
 const WorkerPage = () => {
   const [showBasicDetails, setShowBasicDetails] = useState(true);
@@ -78,6 +79,7 @@ const WorkerPage = () => {
   };
 
   return (
+    
     <div className="worker-app-screen">
       <p className='main-heading'>Worker Registration</p>
       <div className="toggle-container">
@@ -88,7 +90,6 @@ const WorkerPage = () => {
           Finance
         </button>
       </div>
-      <br />
       <div className="content">
         {showBasicDetails ? (
           <div className="basic-details">
@@ -197,7 +198,9 @@ const WorkerPage = () => {
           </div>
         )}
       </div>
+      <Footer/>
     </div>
+   
   );
 };
 

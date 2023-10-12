@@ -23,10 +23,9 @@ function ManageWorkers() {
 
     });
 
-    axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
+    axios.get('http://localhost:8081/service/master/landFindAll').then((response) => {
       setLands(response.data.extra);
       console.log("Lands : ", response.data.extra);
-
     });
   }, []);
 
@@ -37,6 +36,7 @@ function ManageWorkers() {
     worker.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+
   return (
     <div className="worker-app-screen">
       <h2>Worker Management</h2>
@@ -44,17 +44,19 @@ function ManageWorkers() {
 
         <Dropdown onSelect={(eventKey) => setSelectedLand(eventKey)}>
           <Dropdown.Toggle variant="success" id="dropdown-land">
-            {selectedLand ? lands.find((land) => land.id === selectedLand)?.landName : 'Select Land'}
+            select Land
           </Dropdown.Toggle>
           <Dropdown.Menu>
             {lands.map((land) => (
-              <Dropdown.Item key={land.id} eventKey={land.id}>
-                {land.landName}
+               <div key={land.id} >
+              <Dropdown.Item>
+                {land.name}
               </Dropdown.Item>
+              </div>
             ))}
           </Dropdown.Menu>
         </Dropdown>
-        <br/>
+        <br />
       </div>
       <div>
         <input
