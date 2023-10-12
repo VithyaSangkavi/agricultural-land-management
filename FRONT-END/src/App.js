@@ -123,7 +123,14 @@ class App extends React.Component {
 
 
           <RoleBasedRouting path="/dashboard" exact roles={[usrRoles.CM]}><DashboardComponent/></RoleBasedRouting>
+
           <RoleBasedRouting exact path="/"><Login langobj={this.props.langState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
+
+          <RoleBasedRouting exact path="/"><WorkerPage langobj={this.props.langState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
+          <RoleBasedRouting exact path="/addTask"><AddTaskType langobj={this.props.langState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
+          
+          <RoleBasedRouting exact path="/manageWorkers"><ManageWorkers langobj={this.props.langState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
+
           <RoleBasedRouting><NoMatchComponent signedobj={this.props.signState} /></RoleBasedRouting>
         </Switch>
         
