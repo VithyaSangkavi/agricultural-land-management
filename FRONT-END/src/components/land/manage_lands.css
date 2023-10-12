@@ -1,0 +1,22 @@
+.manageLands {
+    padding-top: 10%;
+    padding-bottom: 10%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Vertically center the content */
+    align-items: center; /* Horizontally center the content */
+    height:100hv;
+    
+  }
+
+.manageLands .divWithBorder {
+    border: 1px solid rgb(104, 101, 101);
+    border-radius: 5%;
+    padding: 10px;
+    width: 200px; 
+    margin: 10px; 
+  }
+
+.manageLands .search {
+    margin-bottom: 10%;
+}

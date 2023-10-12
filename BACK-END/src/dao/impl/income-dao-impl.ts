@@ -3,17 +3,19 @@ import { IncomeDto } from "../../dto/master/income-dto";
 import { Status } from "../../enum/Status";
 import { IncomeEntity } from "../../entity/master/income-entity";
 import { IncomeDao } from "../income-dao";
+import { LandEntity } from "../../entity/master/land-entity";
 
 /**
  * department data access layer
  * contain crud method
  */
 export class IncomeDaoImpl implements IncomeDao {
-  async save(incomeDto: IncomeDto): Promise<IncomeEntity> {
+  async save(incomeDto: IncomeDto, landModel:LandEntity): Promise<IncomeEntity> {
     let incomeRepo = getConnection().getRepository(IncomeEntity);
     let incomeModel = new IncomeEntity();
 
-    incomeModel.status = Status.Online;
+    incomeModel.land = landModel;
+    
     this.prepareincomeModel(incomeModel, incomeDto);
     let savedDept = await incomeRepo.save(incomeModel);
     return savedDept;
@@ -71,10 +73,9 @@ export class IncomeDaoImpl implements IncomeDao {
   async prepareincomeModel(incomeModel: IncomeEntity, incomeDto: IncomeDto) {
     incomeModel.month = incomeDto.getMonth();
     incomeModel.price = incomeDto.getPrice();
-    incomeModel.createdDate = incomeDto.getCreatedDate();
-    incomeModel.updatedDate = incomeDto.getUpdatedDate();
-    incomeModel.status = incomeDto.getStatus();
-    incomeModel.land.id = incomeDto.getLandId();
+    incomeModel.createdDate = new Date();
+    incomeModel.updatedDate = new Date();
+    incomeModel.status = Status.Online
   }
   prepareSearchObject(incomeDto: IncomeDto): any {
     let searchObject: any = {};

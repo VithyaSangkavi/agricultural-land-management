@@ -11,7 +11,7 @@ exports.save = async (req: Request, res: Response, next: NextFunction) => {
 
     let cr = await cropService.save(cropDto);
 
-    res.send("success");
+    res.send(cr);
   } catch (error) {
     next(error);
   }

@@ -1,7 +1,10 @@
 import { CommonResponse } from "../../../common/dto/common-response";
 import { CropDao } from "../../../dao/crop-dao";
 import { CropDaoImpl } from "../../../dao/impl/crop-dao-impl";
+import { LandDaoImpl } from "../../../dao/impl/land-dao-impl";
+import { LandDao } from "../../../dao/land-dao";
 import { CropDto } from "../../../dto/master/crop-dto";
+import { LandEntity } from "../../../entity/master/land-entity";
 import { CommonResSupport } from "../../../support/common-res-sup";
 import { ErrorHandlerSup } from "../../../support/error-handler-sup";
 import { CropService } from "../crop-service";
@@ -12,6 +15,7 @@ import { CropService } from "../crop-service";
  */
 export class CropServiceImpl implements CropService {
   cropDao: CropDao = new CropDaoImpl();
+  landDao: LandDao = new LandDaoImpl();
 
   /**
    * save new crop
@@ -32,8 +36,17 @@ export class CropServiceImpl implements CropService {
         return CommonResSupport.getValidationException("Crop Name Cannot Be null !");
       }
 
+      //check land id
+      let landModel:LandEntity = null;
+      if(cropDto.getLandId() > 0){
+        landModel = await this.landDao.findById(cropDto.getLandId());
+      } else{ 
+
+        return CommonResSupport.getValidationException("Land with the specified ID does not exist!");
+      }
+
       // save new crop
-      let newCrop = await this.cropDao.save(cropDto);
+      let newCrop = await this.cropDao.save(cropDto, landModel);
       cr.setStatus(true);
     } catch (error) {
       cr.setStatus(false);

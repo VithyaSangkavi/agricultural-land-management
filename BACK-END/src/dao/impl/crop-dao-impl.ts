@@ -3,17 +3,19 @@ import { CropDto } from "../../dto/master/crop-dto";
 import { Status } from "../../enum/Status";
 import { CropEntity } from "../../entity/master/crop-entity";
 import { CropDao } from "../crop-dao";
+import { LandEntity } from "../../entity/master/land-entity";
 
 /**
  * department data access layer
  * contain crud method
  */
 export class CropDaoImpl implements CropDao {
-  async save(cropDto: CropDto): Promise<CropEntity> {
+  async save(cropDto: CropDto, landModel:LandEntity): Promise<CropEntity> {
     let cropRepo = getConnection().getRepository(CropEntity);
     let cropModel = new CropEntity();
 
-    cropModel.status = Status.Online;
+    cropModel.land = landModel;
+
     this.preparecropModel(cropModel, cropDto);
     let savedDept = await cropRepo.save(cropModel);
     return savedDept;
@@ -73,7 +75,6 @@ export class CropDaoImpl implements CropDao {
     cropModel.createdDate = new Date();
     cropModel.updatedDate = new Date();
     cropModel.status = Status.Online;
-    cropModel.land.id = cropDto.getLandId();
   }
   prepareSearchObject(cropDto: CropDto): any {
     let searchObject: any = {};
