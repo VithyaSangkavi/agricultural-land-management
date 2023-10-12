@@ -5,6 +5,11 @@ import { LotDto } from "../../../dto/master/lot-dto";
 import { CommonResSupport } from "../../../support/common-res-sup";
 import { ErrorHandlerSup } from "../../../support/error-handler-sup";
 import { LotService } from "../lot-service";
+import { LandDao } from "../../../dao/land-dao";
+import { LandDaoImpl } from "../../../dao/impl/land-dao-impl";
+import { LandEntity } from "../../../entity/master/land-entity";
+
+
 
 /**lot
  * lot service layer
@@ -12,6 +17,7 @@ import { LotService } from "../lot-service";
  */
 export class LotServiceImpl implements LotService {
   lotDao: LotDao = new LotDaoImpl();
+  landDao: LandDao = new LandDaoImpl();
 
   /**
    * save new lot
@@ -32,8 +38,17 @@ export class LotServiceImpl implements LotService {
         return CommonResSupport.getValidationException("Lot Name Cannot Be null !");
       }
 
+      //check land id
+      let landModel:LandEntity = null;
+      if(lotDto.getLandId() > 0){
+        landModel = await this.landDao.findById(lotDto.getLandId());
+      } else{ 
+
+        return CommonResSupport.getValidationException("Land with the specified ID does not exist!");
+      }
+
       // save new lot
-      let newLot = await this.lotDao.save(lotDto);
+      let newLot = await this.lotDao.save(lotDto, landModel);
       cr.setStatus(true);
     } catch (error) {
       cr.setStatus(false);
@@ -112,12 +127,8 @@ export class LotServiceImpl implements LotService {
       let lotDtoList = new Array();
       for (const lotModel of lots) {
         let lotDto = new LotDto();
-        lotDto.filViaDbObject(lotModel);
+        lotDto.filViaRequest(lotModel);
         lotDtoList.push(lotDto);
-      }
-      if (lotDto.getStartIndex() == 0) {
-        let count = await this.lotDao.findCount(lotDto);
-        cr.setCount(count);
       }
       cr.setStatus(true);
       cr.setExtra(lotDtoList);

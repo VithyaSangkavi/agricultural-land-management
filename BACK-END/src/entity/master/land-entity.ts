@@ -16,7 +16,7 @@ export class LandEntity {
     id: number;
 
     @Column()
-    landName: string;
+    name: string;
 
     @Column({type: "double"})
     area: number;

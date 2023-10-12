@@ -1,8 +1,9 @@
 import { CropDto } from "../dto/master/crop-dto";
 import { CropEntity } from "../entity/master/crop-entity";
+import { LandEntity } from "../entity/master/land-entity";
 
 export interface CropDao {
-    save(cropDto: CropDto): Promise<CropEntity>;
+    save(cropDto: CropDto, landModel: LandEntity): Promise<CropEntity>;
     update(cropDto: CropDto): Promise<CropEntity>;
     delete(cropDto: CropDto): Promise<CropEntity>;
     findAll(cropDto: CropDto): Promise<CropEntity[]>;

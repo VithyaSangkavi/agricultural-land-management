@@ -6,8 +6,7 @@ import { validateSets } from '../components/UiComponents/ValidateSets';
 const submitCollection = {
     checkstat: { ptype: "GET", url: basePath+"/service/system/Health", queryparam: false, data: false },
     signin:{ ptype: "POST", url: basePath+"/service/login/signIn", queryparam: false, data: true },
-    saveworker:{ ptype: "POST", url: basePath+"/service/master/workerSave", queryparam: false, data: true },
-    savepayment:{ ptype: "POST", url: basePath+"/service/master/paymentSave", queryparam: false, data: true },
+    saveland: { ptype: "POST", url: basePath+"/service/master/landSave", queryparam: false, data:true },
 }
 
 const autoClose = true;

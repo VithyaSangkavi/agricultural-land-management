@@ -30,6 +30,13 @@ import SideNavPage from './components/sideNav/SideNavPage';
 import { loginAction } from './actions/auth/login_action';
 import { languageAction } from './actions/auth/login_action';
 
+import InsertLand  from './components/land/insert_land';
+import ManageLands from './components/land/manage_lands';
+import InsertLot from './components/lot/insert_lot';
+import ManageLots from './components/lot/manage_lot';
+import MenuButtons from './components/common_layouts/menubuttons';
+import Login from './components/login/login';
+
 
 class App extends React.Component {
   _isMounted = false;
@@ -109,14 +116,27 @@ class App extends React.Component {
           <RoleBasedRouting path="/confirmation"><ConfirmationPassword /></RoleBasedRouting>
           <RoleBasedRouting path="/add"><ConfirmationPassword /></RoleBasedRouting>
 
+          <RoleBasedRouting path="/insertlot"><InsertLot /></RoleBasedRouting>
+          <RoleBasedRouting path="/managelands"><ManageLands /></RoleBasedRouting>
+          <RoleBasedRouting path="/managelots"><ManageLots /></RoleBasedRouting>
+          <RoleBasedRouting path="/insertland"><InsertLand /></RoleBasedRouting>
+
+
+
           <RoleBasedRouting path="/dashboard" exact roles={[usrRoles.CM]}><DashboardComponent/></RoleBasedRouting>
-         
+
+          <RoleBasedRouting exact path="/"><Login langobj={this.props.langState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
+
           <RoleBasedRouting exact path="/"><WorkerPage langobj={this.props.langState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
           <RoleBasedRouting exact path="/addTask"><AddTaskType langobj={this.props.langState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
           
           <RoleBasedRouting exact path="/manageWorkers"><ManageWorkers langobj={this.props.langState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
+<<<<<<< HEAD
           <RoleBasedRouting exact path="/sideNavPage"><SideNavPage langobj={this.props.langState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
           
+=======
+
+>>>>>>> b025943933c8d203d03c9817cb5425d9b41ca1cf
           <RoleBasedRouting><NoMatchComponent signedobj={this.props.signState} /></RoleBasedRouting>
         </Switch>
         

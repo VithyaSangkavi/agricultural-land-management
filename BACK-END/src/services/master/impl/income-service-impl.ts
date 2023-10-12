@@ -5,6 +5,9 @@ import { IncomeDto } from "../../../dto/master/income-dto";
 import { CommonResSupport } from "../../../support/common-res-sup";
 import { ErrorHandlerSup } from "../../../support/error-handler-sup";
 import { IncomeService } from "../income-service";
+import { LandDao } from "../../../dao/land-dao";
+import { LandDaoImpl } from "../../../dao/impl/land-dao-impl";
+import { LandEntity } from "../../../entity/master/land-entity";
 
 /**income
  * income service layer
@@ -12,6 +15,7 @@ import { IncomeService } from "../income-service";
  */
 export class IncomeServiceImpl implements IncomeService {
   incomeDao: IncomeDao = new IncomeDaoImpl();
+  landDao: LandDao = new LandDaoImpl();
 
   /**
    * save new income
@@ -22,8 +26,17 @@ export class IncomeServiceImpl implements IncomeService {
     let cr = new CommonResponse();
     try {
 
+      //check land id
+      let landModel: LandEntity = null;
+      if (incomeDto.getLandId() > 0) {
+        landModel = await this.landDao.findById(incomeDto.getLandId());
+      } else {
+
+        return CommonResSupport.getValidationException("Land with the specified ID does not exist!");
+      }
+
       // save new income
-      let newIncome = await this.incomeDao.save(incomeDto);
+      let newIncome = await this.incomeDao.save(incomeDto, landModel);
       cr.setStatus(true);
     } catch (error) {
       cr.setStatus(false);
@@ -40,7 +53,7 @@ export class IncomeServiceImpl implements IncomeService {
   async update(incomeDto: IncomeDto): Promise<CommonResponse> {
     let cr = new CommonResponse();
     try {
-    
+
       // update income
       let updateIncome = await this.incomeDao.update(incomeDto);
       if (updateIncome) {

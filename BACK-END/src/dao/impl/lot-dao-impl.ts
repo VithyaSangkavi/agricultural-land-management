@@ -3,17 +3,18 @@ import { LotDto } from "../../dto/master/lot-dto";
 import { Status } from "../../enum/Status";
 import { LotEntity } from "../../entity/master/lot-entity";
 import { LotDao } from "../lot-dao";
+import { LandEntity } from "../../entity/master/land-entity";
 
 /**
  * department data access layer
  * contain crud method
  */
 export class LotDaoImpl implements LotDao {
-  async save(lotDto: LotDto): Promise<LotEntity> {
+  async save(lotDto: LotDto, landModel: LandEntity): Promise<LotEntity> {
     let lotRepo = getConnection().getRepository(LotEntity);
     let lotModel = new LotEntity();
 
-    lotModel.status = Status.Online;
+    lotModel.land = landModel;
     this.preparelotModel(lotModel, lotDto);
     let savedDept = await lotRepo.save(lotModel);
     return savedDept;
@@ -69,13 +70,12 @@ export class LotDaoImpl implements LotDao {
     return lotModel;
   }
   async preparelotModel(lotModel: LotEntity, lotDto: LotDto) {
-    lotModel.lotName = lotDto.getLotName();
+    lotModel.name = lotDto.getLotName();
     lotModel.area = lotDto.getArea();
     lotModel.areaUOM = lotDto.getAreaUOM();
-    lotModel.createdDate = lotDto.getCreatedDate();
-    lotModel.updatedDate = lotDto.getUpdatedDate();
-    lotModel.status = lotDto.getStatus();
-    lotModel.land.id = lotDto.getLandId();
+    lotModel.createdDate = new Date();
+    lotModel.updatedDate = new Date();
+    lotModel.status = Status.Online;
   }
   prepareSearchObject(lotDto: LotDto): any {
     let searchObject: any = {};
@@ -83,22 +83,22 @@ export class LotDaoImpl implements LotDao {
       searchObject.name = Like("%" + lotDto.getLotName() + "%");
     }
     if (lotDto.getArea()) {
-        searchObject.name = Like("%" + lotDto.getArea() + "%");
+        searchObject.area = Like("%" + lotDto.getArea() + "%");
     }
     if (lotDto.getAreaUOM()) {
-        searchObject.name = Like("%" + lotDto.getAreaUOM() + "%");
+        searchObject.areaUOM = Like("%" + lotDto.getAreaUOM() + "%");
     }
     if (lotDto.getCreatedDate()) {
-      searchObject.color = Like("%" + lotDto.getCreatedDate() + "%");
+      searchObject.createdDate = Like("%" + lotDto.getCreatedDate() + "%");
     }
     if (lotDto.getUpdatedDate()) {
-      searchObject.color = Like("%" + lotDto.getUpdatedDate() + "%");
+      searchObject.updatedDate = Like("%" + lotDto.getUpdatedDate() + "%");
     }
     
     searchObject.status = Status.Online;
     
     if (lotDto.getLandId()) {
-      searchObject.color = Like("%" + lotDto.getLandId() + "%");
+      searchObject.landId = Like("%" + lotDto.getLandId() + "%");
     }
     return searchObject;
   }

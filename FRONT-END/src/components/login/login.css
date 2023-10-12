@@ -1,0 +1,28 @@
+.parent-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.parent-container .login-container {
+    width: 300px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(131, 2, 191, 0.1);
+    text-align: center;
+
+}
+
+.parent-container .login-container h2 {
+    margin-bottom: 20px;
+    color: #6558f5;
+}
+
+.parent-container .login-container button {
+    margin-top: 10%;
+    background-color: #6558f5;
+    border: none;
+}
