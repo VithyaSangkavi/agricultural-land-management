@@ -25,6 +25,7 @@ import DashboardComponent from './components/dashboard/dashboard';
 import WorkerPage from './components/workerPage/workerpage';
 import AddTaskType from './components/taskType/addTaskType';
 import ManageWorkers from './components/workerPage/manageworkers';
+import SideNavPage from './components/sideNav/SideNavPage';
 
 import { loginAction } from './actions/auth/login_action';
 import { languageAction } from './actions/auth/login_action';
@@ -114,6 +115,8 @@ class App extends React.Component {
           <RoleBasedRouting exact path="/addTask"><AddTaskType langobj={this.props.langState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
           
           <RoleBasedRouting exact path="/manageWorkers"><ManageWorkers langobj={this.props.langState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
+          <RoleBasedRouting exact path="/sideNavPage"><SideNavPage langobj={this.props.langState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
+          
           <RoleBasedRouting><NoMatchComponent signedobj={this.props.signState} /></RoleBasedRouting>
         </Switch>
         

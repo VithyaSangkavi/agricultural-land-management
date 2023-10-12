@@ -1,0 +1,25 @@
+/* Add this to your CSS file */
+.sidenav {
+    width: 250px; /* Set the width of the side navigation */
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%; /* Full height */
+    background-color: #333;
+    padding: 20px;
+    color: #fff;
+  }
+  
+  .sidenav h1 {
+    margin-bottom: 20px;
+  }
+  
+  .sidenav ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .sidenav li {
+    margin-bottom: 10px;
+  }
+  
