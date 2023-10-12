@@ -1,9 +1,11 @@
 import { Double } from "typeorm";
 import { TaskExpenseDto } from "../dto/master/task-expense-dto";
 import { TaskExpenseEntity } from "../entity/master/task-expense-entity";
+import { TaskTypeEntity } from "../entity/master/task-type-entity";
+import { ExpensesEntity } from "../entity/master/expense-entity";
 
 export interface TaskExpenseDao {
-  save(taskExpenseDto: TaskExpenseDto): Promise<TaskExpenseEntity>;
+  save(taskExpenseDto: TaskExpenseDto, taskTypeModel: TaskTypeEntity, expenseModel: ExpensesEntity): Promise<TaskExpenseEntity>;
   update(taskExpenseDto: TaskExpenseDto): Promise<TaskExpenseEntity>;
   delete(taskExpenseDto: TaskExpenseDto): Promise<TaskExpenseEntity>;
   findAll(taskExpenseDto: TaskExpenseDto): Promise<TaskExpenseEntity[]>;

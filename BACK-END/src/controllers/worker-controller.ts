@@ -46,6 +46,7 @@ exports.update = async (req: Request, res: Response, next: NextFunction) => {
   
   exports.findAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
+      console.log('Reached the /workerFindAll endpoint');
       let workerDto = new WorkerDto();
       workerDto.filViaRequest(req.body);
   

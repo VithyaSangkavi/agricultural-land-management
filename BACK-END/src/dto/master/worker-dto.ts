@@ -34,7 +34,7 @@ export class WorkerDto extends PaginationDto {
     this.createdDate = body.createdDate;
     this.updatedDate = body.updatedDate;
     this.status= body.status;
-    this.landId = body.landId;
+    this.landId = body.land;
 
 
     if (body.startIndex && body.maxResult) {

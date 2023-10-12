@@ -59,9 +59,9 @@ exports.update = async (req: Request, res: Response, next: NextFunction) => {
   
   exports.findById = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      let workerId = parseInt(req.query.workerId as string);
+      let taskId = parseInt(req.query.taskId as string);
   
-      let cr = await taskTypeService.findById(workerId);
+      let cr = await taskTypeService.findById(taskId);
   
       res.send(cr);
     } catch (error) {

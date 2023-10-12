@@ -5,17 +5,24 @@ import { WorkAssignedEntity } from "../../entity/master/work-assigned-entity";
 import { WorkerStatus } from "../../enum/workerStatus";
 import { WorkAssignedDao } from "../work-assigned-dao";
 import { TaskStatus } from "../../enum/taskStatus";
+import { WorkerEntity } from "../../entity/master/worker-entity";
+import { TaskTypeEntity } from "../../entity/master/task-type-entity";
+import { LotEntity } from "../../entity/master/lot-entity";
+import { TaskAssignedEntity } from "../../entity/master/task-assigned-entity";
 
 /**
  * work-assigned data access layer
  * contain crud method
  */
 export class WorkAssignedDaoImpl implements WorkAssignedDao {
-  async save(workAssignedDto: WorkAssignedDto): Promise<WorkAssignedEntity> {
+  async save(workAssignedDto: WorkAssignedDto, workerModel: WorkerEntity, taskTypeModel: TaskTypeEntity, lotModel: LotEntity, taskAssignedModel: TaskAssignedEntity): Promise<WorkAssignedEntity> {
     let workAssignedRepo = getConnection().getRepository(WorkAssignedEntity);
     let workAssignedModel = new WorkAssignedEntity();
 
-    workAssignedModel.status = Status.Online;
+    workAssignedModel.worker = workerModel;
+    workAssignedModel.task = taskTypeModel;
+    workAssignedModel.lot = lotModel;
+    workAssignedModel.taskAssigned = taskAssignedModel;
     this.prepareWorkAssignedModel(workAssignedModel, workAssignedDto);
     let savedWorkAssigned = await workAssignedRepo.save(workAssignedModel);
     return savedWorkAssigned;
@@ -75,13 +82,10 @@ export class WorkAssignedDaoImpl implements WorkAssignedDao {
     workAssignedModel.units = workAssignedDto.getUnits();
     workAssignedModel.startDate = workAssignedDto.getStartDate();
     workAssignedModel.endDate = workAssignedDto.getEndDate();
-    workAssignedModel.createdDate = workAssignedDto.getcreatedDate();
-    workAssignedModel.updatedDate = workAssignedDto.getUpdatedDate();
-    workAssignedModel.status = workAssignedDto.getStatus();
+    workAssignedModel.createdDate = new Date();
+    workAssignedModel.updatedDate = new Date();
+    workAssignedModel.status = Status.Online;
     workAssignedModel.taskStatus = workAssignedDto.getTaskStatus();
-    workAssignedModel.worker.id = workAssignedDto.getworkerId();
-    workAssignedModel.task.id = workAssignedDto.getTaskId();
-    workAssignedModel.lot.id = workAssignedDto.getLotId();
   }
   prepareSearchObject(workAssignedDto: WorkAssignedDto): any {
     let searchObject: any = {};

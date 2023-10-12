@@ -4,17 +4,18 @@ import { Status } from "../../enum/Status";
 import { PaymentEntity } from "../../entity/master/payment-entity";
 import { PaymentDao } from "../payment-dao";
 import { paymentType } from "../../enum/paymentType";
+import { WorkerEntity } from "../../entity/master/worker-entity";
 
 /**
  * payment data access layer
  * contain crud method
  */
 export class PaymentDaoImpl implements PaymentDao {
-  async save(paymentDto: PaymentDto): Promise<PaymentEntity> {
+  async save(paymentDto: PaymentDto, workerModel: WorkerEntity): Promise<PaymentEntity> {
     let paymentRepo = getConnection().getRepository(PaymentEntity);
     let paymentModel = new PaymentEntity();
 
-    paymentModel.status = Status.Online;
+    paymentModel.worker = workerModel;
     this.preparePaymentModel(paymentModel, paymentDto);
     let savedWorker = await paymentRepo.save(paymentModel);
     return savedWorker;
@@ -74,10 +75,9 @@ export class PaymentDaoImpl implements PaymentDao {
     paymentModel.basePayment = paymentDto.getBasePayment();
     paymentModel.extraPayment = paymentDto.getExtraPayment();
     paymentModel.attendancePayment = paymentDto.getAttendancePayment();
-    paymentModel.createdDate = paymentDto.getcreatedDate();
-    paymentModel.updatedDate = paymentDto.getUpdatedDate();
-    paymentModel.status = paymentDto.getStatus();
-    paymentModel.worker.id = paymentDto.getWorkerId();
+    paymentModel.createdDate = new Date();
+    paymentModel.updatedDate = new Date();
+    paymentModel.status = Status.Online;
   }
   prepareSearchObject(paymentDto: PaymentDto): any {
     let searchObject: any = {};

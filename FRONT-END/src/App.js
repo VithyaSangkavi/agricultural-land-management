@@ -22,6 +22,9 @@ import NoMatchComponent from './components/nomatch/nomatch';
 import ResetPassword from './components/resetPassword/ResetPassword';
 import ConfirmationPassword from './components/resetPassword/ConfirmationPassword';
 import DashboardComponent from './components/dashboard/dashboard';
+import WorkerPage from './components/workerPage/workerpage';
+import AddTaskType from './components/taskType/addTaskType';
+import ManageWorkers from './components/workerPage/manageworkers';
 
 import { loginAction } from './actions/auth/login_action';
 import { languageAction } from './actions/auth/login_action';
@@ -110,6 +113,7 @@ class App extends React.Component {
         <Switch>
           <RoleBasedRouting path="/resetPassword"><ResetPassword /></RoleBasedRouting>
           <RoleBasedRouting path="/confirmation"><ConfirmationPassword /></RoleBasedRouting>
+          <RoleBasedRouting path="/add"><ConfirmationPassword /></RoleBasedRouting>
 
           <RoleBasedRouting path="/insertlot"><InsertLot /></RoleBasedRouting>
           <RoleBasedRouting path="/managelands"><ManageLands /></RoleBasedRouting>

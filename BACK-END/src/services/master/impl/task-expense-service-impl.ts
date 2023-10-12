@@ -5,6 +5,12 @@ import { TaskExpenseDto } from "../../../dto/master/task-expense-dto";
 import { CommonResSupport } from "../../../support/common-res-sup";
 import { ErrorHandlerSup } from "../../../support/error-handler-sup";
 import { TaskExpenseService } from "../task-expense-service";
+import { TaskTypeDao } from "../../../dao/task-type-dao";
+import { TaskTypeDaoImpl } from "../../../dao/impl/task-type-dao-impl";
+import { ExpensesDao } from "../../../dao/expenses-dao";
+import { ExpensesDaoImpl } from "../../../dao/impl/expenses-dao-impl";
+import { TaskTypeEntity } from "../../../entity/master/task-type-entity";
+import { ExpensesEntity } from "../../../entity/master/expense-entity";
 
 /**
  * taskExpense service layer
@@ -12,6 +18,8 @@ import { TaskExpenseService } from "../task-expense-service";
  */
 export class TaskExpenseServiceImpl implements TaskExpenseService {
   taskExpenseDao: TaskExpenseDao = new TaskExpenseDaoImpl();
+  taskTypeDao: TaskTypeDao = new TaskTypeDaoImpl();
+  expenseDao: ExpensesDao = new ExpensesDaoImpl();
 
   /**
    * save new taskExpense
@@ -21,19 +29,35 @@ export class TaskExpenseServiceImpl implements TaskExpenseService {
   async save(taskExpenseDto: TaskExpenseDto): Promise<CommonResponse> {
     let cr = new CommonResponse();
     try {
-      // validation
-      if (taskExpenseDto.getTaskExpenseId()) {
-        // check name already have
-        let nameTaskExpenseMode = await this.taskExpenseDao.findByName(taskExpenseDto.getTaskExpenseId());
-        if (nameTaskExpenseMode) {
-          return CommonResSupport.getValidationException("taskExpense Name Already In Use !");
-        }
-      } else {
-        return CommonResSupport.getValidationException("taskExpense Name Cannot Be null !");
+      // // validation
+      // if (taskExpenseDto.getTaskExpenseId()) {
+      //   // check name already have
+      //   let nameTaskExpenseMode = await this.taskExpenseDao.findByName(taskExpenseDto.getTaskExpenseId());
+      //   if (nameTaskExpenseMode) {
+      //     return CommonResSupport.getValidationException("taskExpense Name Already In Use !");
+      //   }
+      // } else {
+      //   return CommonResSupport.getValidationException("taskExpense Name Cannot Be null !");
+      // }
+
+      //check task type id
+      let taskTypeModel: TaskTypeEntity = null;
+      if(taskExpenseDto.getTaskId() > 0){
+        taskTypeModel = await this.taskTypeDao.findById(taskExpenseDto.getTaskId());
+      } else{ 
+        return CommonResSupport.getValidationException("Task type with the specified ID does not exist!");
       }
 
+       //check expense id
+       let expenseModel: ExpensesEntity = null;
+       if(taskExpenseDto.getExpenseId() > 0){
+         expenseModel = await this.expenseDao.findById(taskExpenseDto.getExpenseId());
+       } else{ 
+         return CommonResSupport.getValidationException("Expense with the specified ID does not exist!");
+       }
+
       // save new taskExpense
-      let newtaskExpense = await this.taskExpenseDao.save(taskExpenseDto);
+      let newtaskExpense = await this.taskExpenseDao.save(taskExpenseDto, taskTypeModel, expenseModel);
       cr.setStatus(true);
     } catch (error) {
       cr.setStatus(false);
