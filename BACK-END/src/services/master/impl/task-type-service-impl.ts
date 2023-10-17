@@ -120,11 +120,13 @@ export class TaskTypeServiceImpl implements TaskTypeService {
     let cr = new CommonResponse();
     try {
       // find taskType
+      console.log('Reached task service')
       let taskTypes = await this.taskTypeDao.findAll(taskTypeDto);
+      console.log(taskTypes)
       let taskTypeDtoList = new Array();
       for (const taskTypeModel of taskTypes) {
         let taskTypeDto = new TaskTypeDto();
-        taskTypeDto.filViaDbObject(taskTypeModel);
+        taskTypeDto.filViaRequest(taskTypeModel);
         taskTypeDtoList.push(taskTypeDto);
       }
       if (taskTypeDto.getStartIndex() == 0) {

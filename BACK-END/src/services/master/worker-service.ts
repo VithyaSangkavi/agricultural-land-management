@@ -7,4 +7,5 @@ export interface WorkerService {
   delete(workerDto: WorkerDto): Promise<CommonResponse>;
   find(workerDto: WorkerDto): Promise<CommonResponse>;
   findById(workerId: number): Promise<CommonResponse>;
+  findByLandId(landId: number): Promise<CommonResponse>;
 }
