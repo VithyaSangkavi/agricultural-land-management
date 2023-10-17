@@ -1,9 +1,9 @@
-// App.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useHistory } from "react-router-dom";
 import './manageworkers.css';
 import Dropdown from 'react-bootstrap/Dropdown';
+import Footer from '../footer/footer';
 
 function ManageWorkers() {
 
@@ -39,14 +39,13 @@ function ManageWorkers() {
 
   return (
     <div className="worker-app-screen">
-      <h2>Worker Management</h2>
-      <div>
-
-        <Dropdown onSelect={(eventKey) => setSelectedLand(eventKey)}>
-          <Dropdown.Toggle variant="success" id="dropdown-land">
-            select Land
+      <p className='main-heading'>Worker Management</p>
+      <div className='drop-down-container'>
+        <Dropdown onSelect={(eventKey) => setSelectedLand(eventKey)} className='custom-dropdown'>
+          <Dropdown.Toggle className='drop-down' id="dropdown-land">
+            Select Land
           </Dropdown.Toggle>
-          <Dropdown.Menu>
+          <Dropdown.Menu className='drop-down-menu'>
             {lands.map((land) => (
                <div key={land.id} >
               <Dropdown.Item>
@@ -60,6 +59,7 @@ function ManageWorkers() {
       </div>
       <div>
         <input
+        className='search-field'
           type="text"
           placeholder="Search Workers"
           value={searchQuery}
@@ -74,6 +74,7 @@ function ManageWorkers() {
           </div>
         ))}
       </div>
+      <Footer/>
     </div>
   );
 }
