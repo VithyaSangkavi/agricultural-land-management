@@ -1,19 +1,42 @@
-import React from 'react';
+import Container from 'react-bootstrap/Container';
+import Navbar from 'react-bootstrap/Navbar';
 import './SideNavPage.css'
+import Footer from '../footer/footer';
 
-const SideNavPage = () => {
+function SideNavBar() {
   return (
-    <div className="sidenav">
-      <h1>Side Navigation</h1>
-      <ul>
-        <li>Item 1</li>
-        <li>Item 2</li>
-        <li>Item 3</li>
-        <li>Item 4</li>
-        {/* Add more list items as needed */}
-      </ul>
-    </div>
+    <div className='side-nav-screen'>
+      <p className='main-heading'>WELCOME</p>
+      <Navbar className="side-nav-menu">
+        <Container>
+          <Navbar.Brand href="/addWorker">Worker Registration</Navbar.Brand>
+        </Container>
+      </Navbar>
+      <br />
+      <Navbar className="side-nav-menu">
+        <Container>
+          <Navbar.Brand href='#'>Land Registration</Navbar.Brand>
+        </Container>
+      </Navbar>
+      <br />
+      <Navbar className="side-nav-menu">
+        <Container>
+          <Navbar.Brand href="#home">
+            Lot Insertion
+          </Navbar.Brand>
+        </Container>
+      </Navbar>
+      <br />
+      <Navbar className="side-nav-menu">
+        <Container>
+          <Navbar.Brand href="#home">
+            Crop
+          </Navbar.Brand>
+        </Container>
+      </Navbar>
+      <Footer />
+    </div >
   );
-};
+}
 
-export default SideNavPage;
+export default SideNavBar;
