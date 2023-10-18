@@ -6,6 +6,7 @@ import { submitSets } from '../UiComponents/SubmitSets';
 import { alertService } from '../../_services/alert.service';
 import Footer from '../footer/footer';
 import { Form, Button, Container, Col, Row, Card } from 'react-bootstrap';
+import { useHistory } from "react-router-dom";
 
 const WorkerPage = () => {
   const [showBasicDetails, setShowBasicDetails] = useState(true);
@@ -18,12 +19,18 @@ const WorkerPage = () => {
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
   const [workerStatus, setWorkerStatus] = useState('');
+  const storedLandData = localStorage.getItem('selectedLandIdWorker');
+
+  const landData = JSON.parse(storedLandData);
+  const landId = landData.landId;
+  console.log('Land ID:', landId);
 
   const [paymentType, setPaymentType] = useState('');
   const [basePayment, setBasePayment] = useState('');
   const [extraPayment, setExtraPayment] = useState('');
   const [attendancePayment, setAttendancePayment] = useState('');
 
+  const history = useHistory();
 
   const toggleView = () => {
     setShowBasicDetails(!showBasicDetails);
@@ -39,7 +46,8 @@ const WorkerPage = () => {
       joinedDate,
       phone,
       address,
-      workerStatus
+      workerStatus,
+      landId
     };
 
     // submitSets(submitCollection.saveworker, addWorker, false)
@@ -53,7 +61,9 @@ const WorkerPage = () => {
 
     Axios.post('http://localhost:8081/service/master/workerSave', addWorker)
       .then((response) => {
+        console.log("get land id: ", landId)
         console.log('Worker added successfully:', response.data);
+        history.push('/manageWorkers')
       })
       .catch((error) => {
         console.error('Error adding worker:', error);

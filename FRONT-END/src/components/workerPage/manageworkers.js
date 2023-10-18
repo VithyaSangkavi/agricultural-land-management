@@ -9,6 +9,8 @@ function ManageWorkers() {
 
   const [lands, setLands] = useState([]);
   const [selectedLand, setSelectedLand] = useState('');
+  const [selectedLandId, setSelectedLandId] = useState('');
+
 
   const [searchQuery, setSearchQuery] = useState('');
   const [workers, setWorkers] = useState([]);
@@ -36,30 +38,51 @@ function ManageWorkers() {
     worker.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const AddWorker = () => {
+    history.push('/addWorker')
+  }
+
+  const handleSelectLand = (eventKey) => {
+    setSelectedLand(eventKey); 
+
+    axios.post(`http://localhost:8081/service/master/findLandIdByName?name=${eventKey}`)
+      .then((response) => {
+        const landIdWorker = response.data.extra;
+
+        localStorage.setItem('selectedLandIdWorker', JSON.stringify(landIdWorker));
+
+        console.log("Stored Land ID: ", landIdWorker);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
+  
 
   return (
     <div className="worker-app-screen">
       <p className='main-heading'>Worker Management</p>
       <div className='drop-down-container'>
-        <Dropdown onSelect={(eventKey) => setSelectedLand(eventKey)} className='custom-dropdown'>
-          <Dropdown.Toggle className='drop-down' id="dropdown-land">
-            Select Land
+      <Dropdown onSelect={handleSelectLand} className='custom-dropdown'>
+      <Dropdown.Toggle className='drop-down' id="dropdown-land">
+            {selectedLand || 'Select Land'}
           </Dropdown.Toggle>
-          <Dropdown.Menu className='drop-down-menu'>
-            {lands.map((land) => (
-               <div key={land.id} >
-              <Dropdown.Item>
-                {land.name}
-              </Dropdown.Item>
-              </div>
-            ))}
-          </Dropdown.Menu>
-        </Dropdown>
+        <Dropdown.Menu className='drop-down-menu'>
+          {lands.map((land) => (
+            <div key={land.id}>
+              <Dropdown.Item eventKey={land.name}>{land.name}</Dropdown.Item>
+            </div>
+          ))}
+        </Dropdown.Menu>
+      </Dropdown>
         <br />
+        <button className="add-worker-button" onClick={AddWorker}>
+        Add Worker
+      </button>
       </div>
       <div>
         <input
-        className='search-field'
+          className='search-field'
           type="text"
           placeholder="Search Workers"
           value={searchQuery}
@@ -74,7 +97,9 @@ function ManageWorkers() {
           </div>
         ))}
       </div>
-      <Footer/>
+      <br/>
+
+      <Footer />
     </div>
   );
 }
