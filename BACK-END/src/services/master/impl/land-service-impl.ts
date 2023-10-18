@@ -151,4 +151,28 @@ export class LandServiceImpl implements LandService {
     }
     return cr;
   }
+
+  async findLandIdByName(name: string): Promise<CommonResponse> {
+    const cr = new CommonResponse();
+  
+    try {
+      const land = await this.landDao.findByName(name);
+  
+      if (land) {
+        // Return only the land ID
+        cr.setStatus(true);
+        cr.setExtra({ landId: land.id });
+      } else {
+        cr.setStatus(false);
+        cr.setExtra({ error: 'Land not found' });
+      }
+    } catch (error) {
+      cr.setStatus(false);
+      cr.setExtra(error);
+      ErrorHandlerSup.handleError(error);
+    }
+  
+    return cr;
+  }
+  
 }
