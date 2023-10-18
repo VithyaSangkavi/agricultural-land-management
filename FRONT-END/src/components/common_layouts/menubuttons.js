@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-const MenuButton = () => {
+const MenuButton = (props) => {
     const history = useHistory();
 
     const AddLot = () => {
@@ -21,6 +21,9 @@ const MenuButton = () => {
 
     return (
         <div className="centered-container">
+            asdasdasdasdasd
+{console.log(props.signedobj)}
+{console.log("Print this message")}
 
             <button onClick={ManageLot}>
                 Manage Lot

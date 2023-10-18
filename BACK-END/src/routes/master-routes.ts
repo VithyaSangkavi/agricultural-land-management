@@ -1,4 +1,9 @@
 import express, { Router } from "express";
+import { login } from "../controllers/user-controller";
+import { authenticateToken } from "../middleware/auth-middleware";
+
+
+
 var landController = require("../controllers/land-controller");
 var workerController = require("../controllers/worker-controller");
 var lotController = require("../controllers/lot-controller");
@@ -6,11 +11,14 @@ var cropController = require("../controllers/crop-controller");
 var expenseController = require("../controllers/expense-controller");
 var incomeController = require("../controllers/income-controller");
 
-
-const auth = require("../middleware/auth-middleware");
 const router: Router = express.Router();
-// add authentication middleware
-//router.use(auth);
+
+
+
+
+router.post("/login", login);
+
+
 
 
 //crop routes

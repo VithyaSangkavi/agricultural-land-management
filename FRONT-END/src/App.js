@@ -86,6 +86,7 @@ class App extends React.Component {
 
   handleSignObj = (cobj) => {
     this.props.setSigninObj(cobj);
+    console.log("test : ", cobj)
   }
 
   handleLangObj = (cobj) => {
@@ -115,11 +116,14 @@ class App extends React.Component {
           <RoleBasedRouting path="/managelands"><ManageLands /></RoleBasedRouting>
           <RoleBasedRouting path="/managelots"><ManageLots /></RoleBasedRouting>
           <RoleBasedRouting path="/insertland"><InsertLand /></RoleBasedRouting>
+          <RoleBasedRouting path="/menubuttons"><MenuButtons signedobj={this.props.signState}/></RoleBasedRouting>
 
 
 
-          <RoleBasedRouting path="/dashboard" exact roles={[usrRoles.CM]}><DashboardComponent/></RoleBasedRouting>
-          <RoleBasedRouting exact path="/"><MenuButtons langobj={this.props.langState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
+
+
+          {/* <RoleBasedRouting path="/dashboard" exact roles={[usrRoles.CM]}><DashboardComponent/></RoleBasedRouting> */}
+          <RoleBasedRouting  path="/"><Login handleSignObj={this.handleSignObj}/></RoleBasedRouting>
           <RoleBasedRouting><NoMatchComponent signedobj={this.props.signState} /></RoleBasedRouting>
         </Switch>
         
