@@ -26,7 +26,7 @@ export class PaymentDto extends PaginationDto {
     this.createdDate = body.createdDate;
     this.updatedDate = body.updatedDate;
     this.status= body.status;
-    this.workerId = body.worker.id;
+    this.workerId = body.workerId;
 
     if (body.startIndex && body.maxResult) {
       this.setStartIndex(body.startIndex);

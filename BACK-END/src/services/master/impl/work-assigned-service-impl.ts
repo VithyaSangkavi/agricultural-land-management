@@ -5,6 +5,18 @@ import { WorkAssignedDto } from "../../../dto/master/work-assigned-dto";
 import { CommonResSupport } from "../../../support/common-res-sup";
 import { ErrorHandlerSup } from "../../../support/error-handler-sup";
 import { WorkAssignedService } from "../work-assigned-service";
+import { WorkerDao } from "../../../dao/worker-dao";
+import { WorkerDaoImpl } from "../../../dao/impl/worker-dao-impl";
+import { TaskTypeDao } from "../../../dao/task-type-dao";
+import { TaskTypeDaoImpl } from "../../../dao/impl/task-type-dao-impl";
+import { LotDao } from "../../../dao/lot-dao";
+import { LotDaoImpl } from "../../../dao/impl/lot-dao-impl";
+import { TaskAssignedDao } from "../../../dao/task-assigned-dao";
+import { TaskAssignedDaoImpl } from "../../../dao/impl/task-assigned-dao-impl";
+import { WorkerEntity } from "../../../entity/master/worker-entity";
+import { TaskTypeEntity } from "../../../entity/master/task-type-entity";
+import { LotEntity } from "../../../entity/master/lot-entity";
+import { TaskAssignedEntity } from "../../../entity/master/task-assigned-entity";
 
 /**
  * workAssigned service layer
@@ -12,6 +24,10 @@ import { WorkAssignedService } from "../work-assigned-service";
  */
 export class WorkAssignedServiceImpl implements WorkAssignedService {
   workAssignedDao: WorkAssignedDao = new WorkAssignedDaoImpl();
+  workerDao: WorkerDao = new WorkerDaoImpl();
+  taskTypeDao: TaskTypeDao = new TaskTypeDaoImpl();
+  lotDao: LotDao = new LotDaoImpl();
+  taskAssignedDao: TaskAssignedDao = new TaskAssignedDaoImpl();
 
   /**
    * save new workAssigned
@@ -21,19 +37,41 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
   async save(workAssignedDto: WorkAssignedDto): Promise<CommonResponse> {
     let cr = new CommonResponse();
     try {
-      // validation
-      if (workAssignedDto.getTaskStatus()) {
-        // check name already have
-        let quantityWorkAssignedMode = await this.workAssignedDao.findByName(workAssignedDto.getTaskStatus());
-        if (quantityWorkAssignedMode) {
-          return CommonResSupport.getValidationException("workAssigned Name Already In Use !");
-        }
-      } else {
-        return CommonResSupport.getValidationException("workAssigned Name Cannot Be null !");
-      }
+       //check worker id
+       let workerModel: WorkerEntity = null;
+       if(workAssignedDto.getworkerId() > 0){
+         workerModel = await this.workerDao.findById(workAssignedDto.getworkerId());
+       } else{ 
+         return CommonResSupport.getValidationException("Worker with the specified ID does not exist!");
+       }
+
+       //check task type id
+       let taskTypeModel: TaskTypeEntity = null;
+       if(workAssignedDto.getTaskId() > 0){
+         taskTypeModel = await this.taskTypeDao.findById(workAssignedDto.getTaskId());
+       } else{ 
+         return CommonResSupport.getValidationException("Task type with the specified ID does not exist!");
+       }
+
+       
+       //check lot id
+       let lotModel: LotEntity = null;
+       if(workAssignedDto.getLotId() > 0){
+         lotModel = await this.lotDao.findById(workAssignedDto.getLotId());
+       } else{ 
+         return CommonResSupport.getValidationException("Lot with the specified ID does not exist!");
+       }
+       
+       //check task type id
+       let taskAssignedModel: TaskAssignedEntity = null;
+       if(workAssignedDto.getTaskId() > 0){
+         taskAssignedModel = await this.taskAssignedDao.findById(workAssignedDto.getTaskAssignedId());
+       } else{ 
+         return CommonResSupport.getValidationException("Assigned task with the specified ID does not exist!");
+       }
 
       // save new workAssigned
-      let newworkAssigned = await this.workAssignedDao.save(workAssignedDto);
+      let newworkAssigned = await this.workAssignedDao.save(workAssignedDto, workerModel, taskTypeModel, lotModel, taskAssignedModel);
       cr.setStatus(true);
     } catch (error) {
       cr.setStatus(false);

@@ -1,8 +1,9 @@
 import { WorkerDto } from "../dto/master/worker-dto";
+import { LandEntity } from "../entity/master/land-entity";
 import { WorkerEntity } from "../entity/master/worker-entity";
 
 export interface WorkerDao {
-  save(workerDto: WorkerDto): Promise<WorkerEntity>;
+  save(workerDto: WorkerDto, landModel: LandEntity): Promise<WorkerEntity>;
   update(workerDto: WorkerDto): Promise<WorkerEntity>;
   delete(workerDto: WorkerDto): Promise<WorkerEntity>;
   findAll(workerDto: WorkerDto): Promise<WorkerEntity[]>;

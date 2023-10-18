@@ -5,6 +5,9 @@ import { TaskTypeDto } from "../../../dto/master/task-type-dto";
 import { CommonResSupport } from "../../../support/common-res-sup";
 import { ErrorHandlerSup } from "../../../support/error-handler-sup";
 import { TaskTypeService } from "../task-type-service";
+import { CropEntity } from "../../../entity/master/crop-entity";
+import { CropDao } from "../../../dao/crop-dao";
+import { CropDaoImpl } from "../../../dao/impl/crop-dao-impl";
 
 /**
  * taskType service layer
@@ -12,6 +15,7 @@ import { TaskTypeService } from "../task-type-service";
  */
 export class TaskTypeServiceImpl implements TaskTypeService {
   taskTypeDao: TaskTypeDao = new TaskTypeDaoImpl();
+  cropDao: CropDao = new CropDaoImpl();
 
   /**
    * save new taskType
@@ -22,18 +26,26 @@ export class TaskTypeServiceImpl implements TaskTypeService {
     let cr = new CommonResponse();
     try {
       // validation
-      if (taskTypeDto.getTaskName()) {
-        // check name already have
-        let nameTaskTypeMode = await this.taskTypeDao.findByName(taskTypeDto.getTaskName());
-        if (nameTaskTypeMode) {
-          return CommonResSupport.getValidationException("taskType Name Already In Use !");
-        }
-      } else {
-        return CommonResSupport.getValidationException("taskType Name Cannot Be null !");
+      // if (taskTypeDto.getTaskName()) {
+      //   // check name already have
+      //   let nameTaskTypeMode = await this.taskTypeDao.findByName(taskTypeDto.getTaskName());
+      //   if (nameTaskTypeMode) {
+      //     return CommonResSupport.getValidationException("taskType Name Already In Use !");
+      //   }
+      // } else {
+      //   return CommonResSupport.getValidationException("taskType Name Cannot Be null !");
+      // }
+
+      //check crop id
+      let cropModel: CropEntity = null;
+      if(taskTypeDto.getCropId() > 0){
+        cropModel = await this.cropDao.findById(taskTypeDto.getCropId());
+      } else{ 
+        return CommonResSupport.getValidationException("Crop with the specified ID does not exist!");
       }
 
       // save new taskType
-      let newtaskType = await this.taskTypeDao.save(taskTypeDto);
+      let newtaskType = await this.taskTypeDao.save(taskTypeDto, cropModel);
       cr.setStatus(true);
     } catch (error) {
       cr.setStatus(false);

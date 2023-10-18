@@ -4,17 +4,18 @@ import { Status } from "../../enum/Status";
 import { TaskTypeEntity } from "../../entity/master/task-type-entity";
 import { WorkerStatus } from "../../enum/workerStatus";
 import { TaskTypeDao } from "../task-type-dao";
+import { CropEntity } from "../../entity/master/crop-entity";
 
 /**
  * task data access layer
  * contain crud method
  */
 export class TaskTypeDaoImpl implements TaskTypeDao {
-  async save(taskDto: TaskTypeDto): Promise<TaskTypeEntity> {
+  async save(taskDto: TaskTypeDto, cropModel: CropEntity): Promise<TaskTypeEntity> {
     let taskRepo = getConnection().getRepository(TaskTypeEntity);
     let taskModel = new TaskTypeEntity();
 
-    taskModel.status = Status.Online;
+    taskModel.crop = cropModel;
     this.prepareTaskModel(taskModel, taskDto);
     let savedTask = await taskRepo.save(taskModel);
     return savedTask;
@@ -71,10 +72,9 @@ export class TaskTypeDaoImpl implements TaskTypeDao {
   }
   async prepareTaskModel(taskModel: TaskTypeEntity, taskDto: TaskTypeDto) {
     taskModel.taskName = taskDto.getTaskName();
-    taskModel.createdDate = taskDto.getcreatedDate();
-    taskModel.updatedDate = taskDto.getUpdatedDate();
-    taskModel.status = taskDto.getStatus();
-    taskModel.crop.id = taskDto.getCropId();
+    taskModel.createdDate = new Date();
+    taskModel.updatedDate = new Date();
+    taskModel.status = Status.Online;
   }
   prepareSearchObject(taskDto: TaskTypeDto): any {
     let searchObject: any = {};

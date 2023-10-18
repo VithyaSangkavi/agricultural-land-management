@@ -17,6 +17,7 @@ export class WorkAssignedDto extends PaginationDto {
   private workerId: number;
   private taskId: number;
   private lotId: number;
+  private taskAssignedId: number;
 
   filViaRequest(body) {
     
@@ -31,9 +32,10 @@ export class WorkAssignedDto extends PaginationDto {
     this.updatedDate = body.updatedDate;
     this.status= body.status;
     this.taskStatus = body.taskStatus;
-    this.workerId = body.worker.id;
-    this.taskId = body.task.id;
-    this.lotId = body.lot.id;
+    this.workerId = body.workerId;
+    this.taskId = body.taskId;
+    this.lotId = body.lotId;
+    this.taskAssignedId = body.taskAssignedId;
 
 
     if (body.startIndex && body.maxResult) {
@@ -55,6 +57,7 @@ export class WorkAssignedDto extends PaginationDto {
     this.workerId = workAssignedModel.worker.id;
     this.taskId = workAssignedModel.task.id;
     this.lotId = workAssignedModel.lot.id;  
+    this.taskAssignedId = workAssignedModel.taskAssigned.id;
   }
 
   public getAttendanceid(): number {
@@ -151,6 +154,14 @@ export class WorkAssignedDto extends PaginationDto {
 
   public setLotId(lotId: number): void {
     this.lotId = lotId;
+  }
+
+  public getTaskAssignedId(): number {
+    return this.taskAssignedId;
+  }
+
+  public setTaskAssignedId(taskAssignedId: number): void {
+    this.taskAssignedId = taskAssignedId;
   }
   
 }
