@@ -11,15 +11,15 @@ export class TaskTypeDto extends PaginationDto {
   private cropId: number;
 
   filViaRequest(body) {
-    
+
     if (body.id) {
       this.id = body.id;
     }
     this.taskName = body.taskName;
     this.createdDate = body.createdDate;
     this.updatedDate = body.updatedDate;
-    this.status= body.status;
-    this.cropId = body.cropId;
+    this.status = body.status;
+    this.cropId = body.crop;
 
     if (body.startIndex && body.maxResult) {
       this.setStartIndex(body.startIndex);
@@ -33,7 +33,7 @@ export class TaskTypeDto extends PaginationDto {
     this.createdDate = TaskModel.createdDate;
     this.updatedDate = TaskModel.updatedDate;
     this.status = TaskModel.status;
-    this.cropId = TaskModel.crop.id;  
+    this.cropId = TaskModel.crop.id;
   }
 
   public getTaskTypeId(): number {

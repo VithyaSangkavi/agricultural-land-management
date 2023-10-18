@@ -5,6 +5,7 @@ import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
 import { alertService } from '../../_services/alert.service';
 import Footer from '../footer/footer';
+import { Form, Button, Container, Col, Row, Card } from 'react-bootstrap';
 
 const WorkerPage = () => {
   const [showBasicDetails, setShowBasicDetails] = useState(true);
@@ -51,12 +52,12 @@ const WorkerPage = () => {
     //   })
 
     Axios.post('http://localhost:8081/service/master/workerSave', addWorker)
-        .then((response) => {
-            console.log('Worker added successfully:', response.data);
-        })
-        .catch((error) => {
-            console.error('Error adding worker:', error);
-        });
+      .then((response) => {
+        console.log('Worker added successfully:', response.data);
+      })
+      .catch((error) => {
+        console.error('Error adding worker:', error);
+      });
   };
 
   //Add Payment
@@ -79,7 +80,7 @@ const WorkerPage = () => {
   };
 
   return (
-    
+
     <div className="worker-app-screen">
       <p className='main-heading'>Worker Registration</p>
       <div className="toggle-container">
@@ -191,16 +192,18 @@ const WorkerPage = () => {
               placeholder="Attendance Pay"
               className="input-field"
             />
-            <br /> <br /> <br />
+
             <button className="add-button" onClick={handleAddPayment}>
               Add
             </button>
           </div>
         )}
       </div>
-      <Footer/>
+      <div className='footer-alignment'>
+        <Footer />
+      </div>
     </div>
-   
+
   );
 };
 

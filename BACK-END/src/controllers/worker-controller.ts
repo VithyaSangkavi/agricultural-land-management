@@ -69,4 +69,16 @@ exports.update = async (req: Request, res: Response, next: NextFunction) => {
       next(error);
     }
   };
+
+  exports.findByLandId = async(req: Request, res: Response) => {
+    try {
+      const landId = Number(req.query.landId); // Extract the landId from the request query parameters
+      console.log('Received landId:', landId);
+      const result = await workerService.findByLandId(landId);
+      res.json(result);
+    } catch (error) {
+      // Handle errors and send an error response if needed
+      res.status(500).json({ error: 'An error occurred' });
+    }
+  }
   

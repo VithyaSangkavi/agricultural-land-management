@@ -46,6 +46,7 @@ exports.update = async (req: Request, res: Response, next: NextFunction) => {
   
   exports.findAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
+      console.log('Reached the /taskFindAll endpoint');
       let taskTypeDto = new TaskTypeDto();
       taskTypeDto.filViaRequest(req.body);
   
