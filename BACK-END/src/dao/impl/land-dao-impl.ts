@@ -57,9 +57,9 @@ export class LandDaoImpl implements LandDao {
     let landModel = await landRepo.count({ where: searchObject });
     return landModel;
   }
-  async findById(departmentId: number): Promise<LandEntity> {
+  async findById(landId: number): Promise<LandEntity> {
     let landRepo = getConnection().getRepository(LandEntity);
-    let landModel = await landRepo.findOne(departmentId);
+    let landModel = await landRepo.findOne(landId);
     return landModel;
   }
 

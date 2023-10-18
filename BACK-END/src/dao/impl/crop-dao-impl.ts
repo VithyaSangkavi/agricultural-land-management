@@ -59,9 +59,9 @@ export class CropDaoImpl implements CropDao {
     let cropModel = await cropRepo.count({ where: searchObject });
     return cropModel;
   }
-  async findById(departmentId: number): Promise<CropEntity> {
+  async findById(cropId: number): Promise<CropEntity> {
     let cropRepo = getConnection().getRepository(CropEntity);
-    let cropModel = await cropRepo.findOne(departmentId);
+    let cropModel = await cropRepo.findOne(cropId);
     return cropModel;
   }
 

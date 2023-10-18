@@ -19,7 +19,7 @@ export class WorkerDto extends PaginationDto {
   private landId: number;
 
   filViaRequest(body) {
-    
+
     if (body.id) {
       this.id = body.id;
     }
@@ -33,8 +33,8 @@ export class WorkerDto extends PaginationDto {
     this.workerStatus = body.workerStatus;
     this.createdDate = body.createdDate;
     this.updatedDate = body.updatedDate;
-    this.status= body.status;
-    this.landId = body.land;
+    this.status = body.status;
+    this.landId = body.landId;
 
 
     if (body.startIndex && body.maxResult) {
@@ -56,7 +56,7 @@ export class WorkerDto extends PaginationDto {
     this.createdDate = workerModel.createdDate;
     this.updatedDate = workerModel.updatedDate;
     this.status = workerModel.status;
-    this.landId = workerModel.land.id;  
+    this.landId = workerModel.land.id;
   }
 
   public getWorkerId(): number {
