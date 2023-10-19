@@ -40,7 +40,7 @@ export const findLandIdByName = async (req: Request, res: Response, next: NextFu
 
     const response = await landService.findLandIdByName(name);
 
-    res.json(response); // Respond with the CommonResponse object
+    res.json(response); 
   } catch (error) {
     next(error);
   }
