@@ -65,6 +65,10 @@
     background-color: #7273d6;
   }
 
+  .worker-app-screen .input-field{
+    text-align: left;
+  }
+
   .input-field::placeholder {
     text-align: left;
   }

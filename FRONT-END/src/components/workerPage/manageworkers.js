@@ -9,8 +9,6 @@ function ManageWorkers() {
 
   const [lands, setLands] = useState([]);
   const [selectedLand, setSelectedLand] = useState('');
-  const [selectedLandId, setSelectedLandId] = useState('');
-
 
   const [searchQuery, setSearchQuery] = useState('');
   const [workers, setWorkers] = useState([]);
@@ -22,7 +20,6 @@ function ManageWorkers() {
     axios.post('http://localhost:8081/service/master/workerFindAll').then((response) => {
       setWorkers(response.data.extra);
       console.log("Workers : ", response.data.extra);
-
     });
 
     axios.get('http://localhost:8081/service/master/landFindAll').then((response) => {
@@ -58,6 +55,9 @@ function ManageWorkers() {
       });
   };
   
+  const handleWorkerCardClick = (worker) => {
+    history.push('/addWorker', { basicDetails: worker });
+  };
 
   return (
     <div className="worker-app-screen">
@@ -91,7 +91,8 @@ function ManageWorkers() {
       </div>
       <div className="worker-list">
         {filteredWorkers.map((worker) => (
-          <div key={worker.id} className="worker-card">
+          <div key={worker.id} className="worker-card"
+          onClick={() => handleWorkerCardClick(worker)}>
             <h3>Name: {worker.name}</h3>
             <p>Phone: {worker.phone}</p>
           </div>

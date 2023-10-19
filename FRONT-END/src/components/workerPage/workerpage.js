@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
 import './workerpage.css';
 import { submitCollection } from '../../_services/submit.service';
@@ -6,25 +6,28 @@ import { submitSets } from '../UiComponents/SubmitSets';
 import { alertService } from '../../_services/alert.service';
 import Footer from '../footer/footer';
 import { Form, Button, Container, Col, Row, Card } from 'react-bootstrap';
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 
 const WorkerPage = () => {
+  const location = useLocation();
+  const { basicDetails } = location.state;
   const [showBasicDetails, setShowBasicDetails] = useState(true);
 
-  const [name, setName] = useState('');
-  const [dob, setDob] = useState('');
-  const [nic, setNic] = useState('');
-  const [gender, setGender] = useState('');
-  const [joinedDate, setJoinedDate] = useState(null);
-  const [phone, setPhone] = useState('');
-  const [address, setAddress] = useState('');
-  const [workerStatus, setWorkerStatus] = useState('');
+  const [name, setName] = useState(basicDetails.name || '');
+  const [dob, setDob] = useState(basicDetails.dob || '');
+  const [nic, setNic] = useState(basicDetails.nic || '');
+  const [gender, setGender] = useState(basicDetails.gender || '');
+  const [joinedDate, setJoinedDate] = useState(basicDetails.joinedDate || null);
+  const [phone, setPhone] = useState(basicDetails.phone || '');
+  const [address, setAddress] = useState(basicDetails.address || '');
+  const [workerStatus, setWorkerStatus] = useState(basicDetails.workerStatus || '');
   const storedLandData = localStorage.getItem('selectedLandIdWorker');
 
   const landData = JSON.parse(storedLandData);
   const landId = landData.landId;
   console.log('Land ID:', landId);
 
+  const [workerId, setWorkerId] = useState(basicDetails.id || -1);
   const [paymentType, setPaymentType] = useState('');
   const [basePayment, setBasePayment] = useState('');
   const [extraPayment, setExtraPayment] = useState('');
@@ -35,6 +38,11 @@ const WorkerPage = () => {
   const toggleView = () => {
     setShowBasicDetails(!showBasicDetails);
   };
+
+  useEffect(() => {
+    // Log the basicDetails when the component mounts
+    console.log('Basic Details:', basicDetails);
+  }, [basicDetails]);
 
   //Add Worker
   const handleAddWorker = () => {
@@ -70,23 +78,35 @@ const WorkerPage = () => {
       });
   };
 
+
   //Add Payment
   const handleAddPayment = () => {
     const addPayment = {
+      workerId,
       paymentType,
       basePayment,
       extraPayment,
       attendancePayment
     };
 
-    submitSets(submitCollection.savepayment, addPayment, false)
-      .then(res => {
-        if (res && res.status) {
-          alertService.success("Payment added successfully")
-        } else {
-          alertService.error("Adding payment failed")
-        }
-      })
+    // submitSets(submitCollection.savepayment, addPayment, false)
+    //   .then(res => {
+    //     if (res && res.status) {
+    //       alertService.success("Payment added successfully")
+    //     } else {
+    //       alertService.error("Adding payment failed")
+    //     }
+    //   })
+
+    Axios.post('http://localhost:8081/service/master/paymentSave', addPayment)
+    .then((response) => {
+      console.log("worker id: ", workerId)
+      console.log('Payment added successfully:', response.data);
+      history.push('/manageWorkers')
+    })
+    .catch((error) => {
+      console.error('Error adding payment:', error);
+    });
   };
 
   return (
@@ -101,7 +121,7 @@ const WorkerPage = () => {
           Finance
         </button>
       </div>
-      <div className="content">
+      <div className="content"> 
         {showBasicDetails ? (
           <div className="basic-details">
             <input
@@ -154,7 +174,7 @@ const WorkerPage = () => {
               onChange={(e) => setAddress(e.target.value)}
               placeholder="Address"
               className="input-field"
-            />
+            /> 
             <select
               value={workerStatus}
               onChange={(e) => setWorkerStatus(e.target.value)}
@@ -178,8 +198,8 @@ const WorkerPage = () => {
               className="input-field"
             >
               <option value="">Monthly/Daily pay</option>
-              <option value="Active">Monthly</option>
-              <option value="Inactive">Daily</option>
+              <option value="monthly">Monthly</option>
+              <option value="daily">Daily</option>
             </select>
             <input
               type="text"
