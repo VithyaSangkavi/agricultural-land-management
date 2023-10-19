@@ -1,5 +1,4 @@
 import express, { Router } from "express";
-import { login } from "../controllers/user-controller";
 import { authenticateToken } from "../middleware/auth-middleware";
 
 
@@ -10,13 +9,14 @@ var lotController = require("../controllers/lot-controller");
 var cropController = require("../controllers/crop-controller");
 var expenseController = require("../controllers/expense-controller");
 var incomeController = require("../controllers/income-controller");
+var userController = require("../controllers/user-controller");
 
 const router: Router = express.Router();
 
 
 
 
-router.post("/login", login);
+router.post("/login", userController.login);
 
 
 

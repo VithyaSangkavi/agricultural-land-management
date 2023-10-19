@@ -8,7 +8,7 @@ const submitCollection = {
     signin:{ ptype: "POST", url: basePath+"/service/login/signIn", queryparam: false, data: true },
     saveland: { ptype: "POST", url: basePath+"/service/master/landSave", queryparam: false, data:true },
 
-    login: { ptype: "POST", url: basePath+"/service/master/login", queryparam: false, data:true, auth: true },
+    login: { ptype: "POST", url: basePath+"/service/master/login", queryparam: false, data:true },
 }
 
 const autoClose = true;

@@ -22,8 +22,7 @@ const InsertLand = () => {
             city,
         };
 
-        submitSets(submitCollection.saveland, dataToSend, false)
-            .then(res => {
+        submitSets(submitCollection.saveland, dataToSend, false).then(res => {
                 if (res && res.status) {
                     alertService.success("Data sent successfully!")
                 } else {

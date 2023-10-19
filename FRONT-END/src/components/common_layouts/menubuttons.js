@@ -16,7 +16,6 @@ const MenuButton = (props) => {
     const ManageLand = () => {
         history.push('/managelands');
     };
-    
 
 
     return (

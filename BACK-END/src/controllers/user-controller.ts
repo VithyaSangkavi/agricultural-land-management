@@ -51,25 +51,23 @@ export const login = (req: Request, res: Response) => {
 
 
 
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { UserDto } from '../dto/master/user-dto';
-import { UserService } from '../services/master/user-service';
 import { UserServiceImpl } from '../services/master/impl/user-service-impl';
 
-const userService: UserService = new UserServiceImpl();
+let userService = new UserServiceImpl();
 
-export const login = async (req: Request, res: Response) => {
-
-  const userDto = new UserDto();
+exports.login = async (req: Request, res: Response, next: NextFunction) => {
+try{
+  let userDto = new UserDto();
   userDto.filViaRequest(req.body);
 
-  const response = await userService.login(userDto);
+  let cr = await userService.login(userDto);
 
-  if (response.getStatus()) {
-    res.status(200).json(response.getExtra());
-  } else {
-    res.status(401).json(response.getExtra());
-  }
+  res.send(cr);
+} catch (error) {
+  next(error);
+}
 };
 
 
