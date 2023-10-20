@@ -110,8 +110,6 @@ class App extends React.Component {
           </div></div>
         )} />
 
-        {/* <NavbarTop dmode={this.state.dmode} signedobj={this.props.signState} handleSignObj={this.handleSignObj} dmodeToggle={this.dmodeToggle}/> */}
-        {/* <SidebarMenu dmode={this.state.dmode} signedobj={this.props.signState}/> */}
         <LazyLoading setProdList={this.props.setProdList}/>
         <Switch>
           <RoleBasedRouting path="/resetPassword"><ResetPassword /></RoleBasedRouting>
@@ -128,7 +126,6 @@ class App extends React.Component {
 
 
 
-          {/* <RoleBasedRouting path="/dashboard" exact roles={[usrRoles.CM]}><DashboardComponent/></RoleBasedRouting> */}
           <RoleBasedRouting exact path="/"><Login handleSignObj={this.handleSignObj}/></RoleBasedRouting>
           <RoleBasedRouting><NoMatchComponent signedobj={this.props.signState} /></RoleBasedRouting>
         </Switch>
