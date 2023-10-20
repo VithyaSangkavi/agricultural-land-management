@@ -27,22 +27,22 @@ export class PaymentServiceImpl implements PaymentService {
     let cr = new CommonResponse();
     try {
       // validation
-      if (paymentDto.getPaymentType()) {
-        // check name already have
-        let typePaymentMode = await this.paymentDao.findByName(paymentDto.getPaymentType());
-        if (typePaymentMode) {
-          return CommonResSupport.getValidationException("Payment type Already In Use !");
-        }
-      } else {
-        return CommonResSupport.getValidationException("Payment type Cannot Be null !");
-      }
+      // if (paymentDto.getPaymentType()) {
+      //   // check name already have
+      //   let typePaymentMode = await this.paymentDao.findByName(paymentDto.getPaymentType());
+      //   if (typePaymentMode) {
+      //     return CommonResSupport.getValidationException("Payment type Already In Use !");
+      //   }
+      // } else {
+      //   return CommonResSupport.getValidationException("Payment type Cannot Be null !");
+      // }
 
       //check worker id
       let workerModel: WorkerEntity = null;
       if(paymentDto.getWorkerId() > 0){
         workerModel = await this.workerDao.findById(paymentDto.getWorkerId());
       } else{ 
-        return CommonResSupport.getValidationException("Crop with the specified ID does not exist!");
+        return CommonResSupport.getValidationException("Worker with the specified ID does not exist!");
       }
 
       // save new payment

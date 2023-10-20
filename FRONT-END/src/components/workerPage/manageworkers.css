@@ -57,3 +57,42 @@
 .worker-app-screen .search-field {
   margin-left: 20px;
 }
+
+/* .add-worker-button {
+  padding: 8px 16px;
+  background-color: #6558f5;
+  color: #fff;
+  width: 90%;
+  margin-left: 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.add-worker-button:hover {
+  background-color: #7273d6;
+} */
+
+/* Styling for the Add Worker button */
+.add-worker-button {
+  background-color: #6558f5; 
+  color: #fff; 
+  padding: 10px 20px;
+  border: none; 
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100%
+  /* Optional: Add more styles for hover and focus states */
+}
+
+.add-worker-button:hover {
+  background-color: #0056b3; /* Change background color on hover */
+}
+
+.add-worker-button:focus {
+  outline: none; /* Remove the focus outline */
+}
+
+/* Optional: You can adjust the styles based on your design preferences */

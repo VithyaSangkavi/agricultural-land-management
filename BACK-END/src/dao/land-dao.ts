@@ -1,3 +1,4 @@
+import { promises } from "fs";
 import { LandDto } from "../dto/master/land-dto";
 import { LandEntity } from "../entity/master/land-entity";
 
@@ -9,4 +10,5 @@ export interface LandDao {
     findById(land_id: number): Promise<LandEntity>;
     findByName(landName: String): Promise<LandEntity>;
     findCount(departmentDto: LandDto): Promise<number>;
+    findLandIdByName(name: String): Promise<number>;
 }

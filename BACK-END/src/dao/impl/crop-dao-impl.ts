@@ -59,9 +59,9 @@ export class CropDaoImpl implements CropDao {
     let cropModel = await cropRepo.count({ where: searchObject });
     return cropModel;
   }
-  async findById(departmentId: number): Promise<CropEntity> {
+  async findById(cropId: number): Promise<CropEntity> {
     let cropRepo = getConnection().getRepository(CropEntity);
-    let cropModel = await cropRepo.findOne(departmentId);
+    let cropModel = await cropRepo.findOne(cropId);
     return cropModel;
   }
 
@@ -70,6 +70,20 @@ export class CropDaoImpl implements CropDao {
     let cropModel = await cropRepo.findOne({ where: { name: name, status: Status.Online } });
     return cropModel;
   }
+
+  async findCropIdByLandId(landId: number): Promise<number | null> {
+    let cropRepo = getConnection().getRepository(CropEntity);
+    let cropModel = await cropRepo.findOne({
+      where: { land: landId, status: Status.Online },
+    });
+  
+    if (cropModel) {
+      return cropModel.id;
+    }
+  
+    return null;
+  }
+  
   async preparecropModel(cropModel: CropEntity, cropDto: CropDto) {
     cropModel.cropName = cropDto.getCropName();
     cropModel.createdDate = new Date();
