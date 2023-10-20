@@ -10,7 +10,7 @@ import { useHistory, useLocation } from "react-router-dom";
 
 const WorkerPage = () => {
   const location = useLocation();
-  const { basicDetails } = location.state;
+  const basicDetails = location.state ? location.state.basicDetails : {};
   const [showBasicDetails, setShowBasicDetails] = useState(true);
 
   const [name, setName] = useState(basicDetails.name || '');
