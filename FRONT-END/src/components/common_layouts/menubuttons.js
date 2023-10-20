@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-const MenuButton = () => {
+const MenuButton = (props) => {
     const history = useHistory();
 
     const AddLot = () => {
@@ -16,7 +16,10 @@ const MenuButton = () => {
     const ManageLand = () => {
         history.push('/managelands');
     };
-    
+    const logout = () => {
+        history.push('/');
+    };
+
 
 
     return (
@@ -32,6 +35,10 @@ const MenuButton = () => {
 
             <button onClick={ManageLand}>
                 Manage Land
+            </button>
+
+            <button onClick={logout}>
+                Logout
             </button>
             
         </div>

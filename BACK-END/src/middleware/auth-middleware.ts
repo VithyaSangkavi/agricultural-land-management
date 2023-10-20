@@ -1,27 +1,22 @@
-import express, { Response } from "express";
+import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
+import { AppConfigurationsDto } from '../common/dto/app-configuration-dto';
 
+const appConfigurations = new AppConfigurationsDto();
+const secretKey = appConfigurations.getJwtSecret();
 
-/**
- * authentication middle ware
- */
+export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
+  const token = req.header('Authorization');
 
-module.exports = async (req: express.Request, res: express.Response, next) => {
-  // check token and headers
+  if (!token) {
+    return res.status(401).json({ message: 'Unauthorized: Missing token' });
+  }
+
   try {
-    // // check authorization
-    // if (req.headers.authorization) {
-    //   let token = req.headers.authorization.split(" ")[1];
-
-    //   // check valid token
-    //   let loginUserInfo: LoginUserInfo = jwtHelper.verifyJwt(token);
-      
-    //   req.body.loginUserInfoJWT = loginUserInfo;
-    //   next();
-    // } else {
-    //   res.sendStatus(401);
-    // }
-    next()
+    const decoded = jwt.verify(token, secretKey); 
+    req.user = decoded;
+    next();
   } catch (error) {
-    res.sendStatus(401);
+    res.status(403).json({ message: 'Forbidden: Invalid token' });
   }
 };

@@ -36,6 +36,7 @@ import InsertLot from './components/lot/insert_lot';
 import ManageLots from './components/lot/manage_lot';
 import MenuButtons from './components/common_layouts/menubuttons';
 import Login from './components/login/login';
+import Alerts from './components/common_layouts/Alerts';
 
 
 class App extends React.Component {
@@ -90,6 +91,7 @@ class App extends React.Component {
 
   handleSignObj = (cobj) => {
     this.props.setSigninObj(cobj);
+    console.log("test : ", cobj)
   }
 
   handleLangObj = (cobj) => {
@@ -102,14 +104,13 @@ class App extends React.Component {
     //console.log(isRTL);
     return (
       <div className="App" dir={isRTL}>
+        <Alerts/>
         <Detector  polling={{interval: 10000}} render={({ online }) => (
           <div className="netdown-main"><div className={"alert alert-dark netdown-warning "+(online ? "d-none" : "show-warning")}>
             You are currently {online ? "online" : "offline"}
           </div></div>
         )} />
 
-        <NavbarTop dmode={this.state.dmode} signedobj={this.props.signState} handleSignObj={this.handleSignObj} dmodeToggle={this.dmodeToggle}/>
-        <SidebarMenu dmode={this.state.dmode} signedobj={this.props.signState}/>
         <LazyLoading setProdList={this.props.setProdList}/>
         <Switch>
           <RoleBasedRouting path="/resetPassword"><ResetPassword /></RoleBasedRouting>
@@ -120,6 +121,15 @@ class App extends React.Component {
           <RoleBasedRouting path="/managelands"><ManageLands /></RoleBasedRouting>
           <RoleBasedRouting path="/managelots"><ManageLots /></RoleBasedRouting>
           <RoleBasedRouting path="/insertland"><InsertLand /></RoleBasedRouting>
+
+          <RoleBasedRouting path="/menubuttons"> <MenuButtons signedobj={this.props.signState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
+
+
+
+
+
+          <RoleBasedRouting exact path="/"><Login handleSignObj={this.handleSignObj}/></RoleBasedRouting>
+
           <RoleBasedRouting path="/addWorker"><WorkerPage /></RoleBasedRouting>
           <RoleBasedRouting path="/manageWorkers"><ManageWorkers /></RoleBasedRouting>
           <RoleBasedRouting path="/addTask"><AddTaskType /></RoleBasedRouting>
@@ -131,6 +141,7 @@ class App extends React.Component {
 
          
           <RoleBasedRouting exact path="/sideNavPage"><SideNavPage langobj={this.props.langState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
+
 
           <RoleBasedRouting><NoMatchComponent signedobj={this.props.signState} /></RoleBasedRouting>
         </Switch>
