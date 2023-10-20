@@ -24,6 +24,10 @@ export class CommonResponse {
     this.status = status;
   }
 
+  public getStatus(): Boolean {
+    return this.status;
+  }
+
   public getCode(): String {
     return this.code;
   }

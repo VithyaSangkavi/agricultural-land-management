@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Col, Dropdown, Form, Navbar } from 'react-bootstrap';
 import { CommentIcon, BellIcon, GearIcon, CircleIcon, MoonIcon, ChevronRightIcon } from '@primer/octicons-react';
 
-import Alerts from './Alerts';
+// import Alerts from './Alerts';
 import { logoutAction } from '../../actions/auth/login_action';
 import { camelizeTxt } from '../../_services/common.service';
 //import NoteInfos from './NoteInfos';
@@ -48,7 +48,7 @@ class NavbarTop extends React.Component {
       var ulname = (cuserdetails&&cuserdetails.userDto&&cuserdetails.userDto.lName?cuserdetails.userDto.lName:""); */
 
       return (
-        <><Alerts/> {/* <NoteInfos/> */}
+        <> {/* <NoteInfos/> */}
         {this.props.signedobj!==null&&this.props.signedobj.signinDetails?
           <Col className="navbar-main">
             <Navbar bg={this.props.dmode?"dark":"light"} variant={this.props.dmode?"dark":"light"}>
