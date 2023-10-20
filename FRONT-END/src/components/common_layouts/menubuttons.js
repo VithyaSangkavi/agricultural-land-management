@@ -16,13 +16,14 @@ const MenuButton = (props) => {
     const ManageLand = () => {
         history.push('/managelands');
     };
+    const logout = () => {
+        history.push('/');
+    };
+
 
 
     return (
         <div className="centered-container">
-            asdasdasdasdasd
-{console.log(props.signedobj)}
-{console.log("Print this message")}
 
             <button onClick={ManageLot}>
                 Manage Lot
@@ -34,6 +35,10 @@ const MenuButton = (props) => {
 
             <button onClick={ManageLand}>
                 Manage Land
+            </button>
+
+            <button onClick={logout}>
+                Logout
             </button>
             
         </div>

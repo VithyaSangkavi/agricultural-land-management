@@ -24,7 +24,9 @@ const InsertLand = () => {
 
         submitSets(submitCollection.saveland, dataToSend, false).then(res => {
                 if (res && res.status) {
+
                     alertService.success("Data sent successfully!")
+
                 } else {
                     alertService.error("Data sent failed!")
                 }

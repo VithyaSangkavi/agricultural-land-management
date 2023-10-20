@@ -20,26 +20,25 @@ function Login(props) {
                 password,
             };
 
-            const res = await submitSets(submitCollection.login, dataToSend);
+            submitSets(submitCollection.login, dataToSend, false).then(res => {
 
-            console.log(res)
+                console.log("response : ", res)
 
+                if (res && res.status) {
 
-            if(res.message==='Login successful'){
+                    alertService.success('Login Successful');
 
-                alertService.success('Login Successful');
+                    props.handleSignObj(res);
 
-                props.handleSignObj(res);
-                
-                history.push('/menubuttons');
-            }
-            else{
+                    history.push('/menubuttons');
+                }
+                else {
 
-                alertService.error('Login Failed');
-            }
-          
-                // Login successful
-             
+                    alertService.error('Login Failed');
+                }
+
+            });
+
         } catch (error) {
             console.error('An error occurred during login:', error);
             alertService.error('An error occurred during login. Please try again later.');
