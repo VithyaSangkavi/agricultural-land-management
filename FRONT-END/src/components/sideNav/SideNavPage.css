@@ -1,0 +1,39 @@
+.side-nav-screen {
+  max-width: 360px;
+  margin: 0 auto;
+  /* padding: 16px; */
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  background-color: #fff;
+  height: 700px;
+}
+
+.side-nav-screen .side-nav-menu {
+  background-color: #fff;
+  border: 1px solid #6558f5;
+}
+
+.side-nav-screen .main-heading {
+  background-color: #6558f5;
+  color: white;
+  padding: 2px;
+  margin-bottom: 20px;
+  font: bold;
+  font-size: 25px;
+  text-align: center;
+}
+
+.side-nav-screen .navbar-brand {
+  color: black;
+  border: 2px;
+  font-weight: bold;
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.side-nav-screen .navbar-brand:hover {
+  color: #6558f5;
+}
+
+.side-nav-screen .container{
+  padding: 0;
+}

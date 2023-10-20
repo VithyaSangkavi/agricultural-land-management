@@ -2,7 +2,6 @@ import { getConnection, Like } from "typeorm";
 import { TaskTypeDto } from "../../dto/master/task-type-dto";
 import { Status } from "../../enum/Status";
 import { TaskTypeEntity } from "../../entity/master/task-type-entity";
-import { WorkerStatus } from "../../enum/workerStatus";
 import { TaskTypeDao } from "../task-type-dao";
 import { CropEntity } from "../../entity/master/crop-entity";
 
@@ -81,7 +80,6 @@ export class TaskTypeDaoImpl implements TaskTypeDao {
     if (taskDto.getTaskName()) {
       searchObject.taskName = Like("%" + taskDto.getTaskName() + "%");
     }
-    searchObject.workerStatus = WorkerStatus.Active;
     if (taskDto.getcreatedDate()) {
         searchObject.createdDate = Like("%" + taskDto.getcreatedDate() + "%");
     }

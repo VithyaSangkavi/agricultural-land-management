@@ -1,7 +1,7 @@
 .worker-app-screen {
     max-width: 360px; 
     margin: 0 auto;
-    padding: 16px;
+    /* padding: 16px; */
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
     background-color: #fff;
     height: 700px;
@@ -13,7 +13,7 @@
     margin-bottom: 16px;
   }
   
-  .toggle-button {
+  .worker-app-screen .toggle-button {
     flex: 1;
     padding: 8px;
     text-align: center;
@@ -23,8 +23,8 @@
     transition: background-color 0.3s;
   }
   
-  .toggle-button.active {
-    background-color: #007bff;
+  .worker-app-screen .toggle-button.active {
+    background-color: #6558f5;
     color: #fff;
   }
   
@@ -32,7 +32,7 @@
 
   }
   
-  .basic-details,
+  .worker-app-screen .basic-details,
   .finance {
     display: flex;
     flex-direction: column;
@@ -40,7 +40,7 @@
   }
   
   .worker-app-screen .input-field {
-    width: 70%;
+    width: 90%;
     padding: 8px;
     margin-bottom: 16px;
     border: 1px solid #ccc;
@@ -49,18 +49,19 @@
     font-size: 16px;
   }
   
-  .add-button {
+  .worker-app-screen .add-button {
     padding: 8px 16px;
-    background-color: #007bff;
+    background-color: #6558f5;
     color: #fff;
+    width: 90%;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s;
   }
   
-  .add-button:hover {
-    background-color: #0056b3;
+  .worker-app-screen .add-button:hover {
+    background-color: #7273d6;
   }
 
   .input-field::placeholder {
@@ -71,7 +72,16 @@
     text-align-last: left;
   }
   
+ .worker-app-screen .main-heading{
+    background-color: #6558f5;
+    color: white;
+    padding: 10px;
+    margin-bottom: 20px;
+    font: bold;
+    font-size: large;
+  }
   
-  
-  
+  .footer-alignment{
+    margin-bottom: 0;
+  }
   

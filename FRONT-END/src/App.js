@@ -25,6 +25,7 @@ import DashboardComponent from './components/dashboard/dashboard';
 import WorkerPage from './components/workerPage/workerpage';
 import AddTaskType from './components/taskType/addTaskType';
 import ManageWorkers from './components/workerPage/manageworkers';
+import SideNavPage from './components/sideNav/SideNavPage';
 
 import { loginAction } from './actions/auth/login_action';
 import { languageAction } from './actions/auth/login_action';
@@ -120,6 +121,7 @@ class App extends React.Component {
           <RoleBasedRouting path="/managelands"><ManageLands /></RoleBasedRouting>
           <RoleBasedRouting path="/managelots"><ManageLots /></RoleBasedRouting>
           <RoleBasedRouting path="/insertland"><InsertLand /></RoleBasedRouting>
+
           <RoleBasedRouting path="/menubuttons"> <MenuButtons signedobj={this.props.signState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
 
 
@@ -127,6 +129,20 @@ class App extends React.Component {
 
 
           <RoleBasedRouting exact path="/"><Login handleSignObj={this.handleSignObj}/></RoleBasedRouting>
+
+          <RoleBasedRouting path="/addWorker"><WorkerPage /></RoleBasedRouting>
+          <RoleBasedRouting path="/manageWorkers"><ManageWorkers /></RoleBasedRouting>
+          <RoleBasedRouting path="/addTask"><AddTaskType /></RoleBasedRouting>
+
+
+          <RoleBasedRouting path="/dashboard" exact roles={[usrRoles.CM]}><DashboardComponent/></RoleBasedRouting>
+
+          <RoleBasedRouting exact path="/"><ManageWorkers langobj={this.props.langState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
+
+         
+          <RoleBasedRouting exact path="/sideNavPage"><SideNavPage langobj={this.props.langState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
+
+
           <RoleBasedRouting><NoMatchComponent signedobj={this.props.signState} /></RoleBasedRouting>
         </Switch>
         
