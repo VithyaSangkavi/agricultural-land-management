@@ -17,6 +17,7 @@ const router: Router = express.Router();
 
 //crop routes
 router.post("/cropSave", cropController.save);
+router.get('/cropFindByLandId/:landId', cropController.findCropIdByLandId);
 /* router.post("/cropUpdate", cropController.update);
 router.post("/cropDelete", cropController.delete);
 router.post("/cropFindAll", cropController.findAll);
