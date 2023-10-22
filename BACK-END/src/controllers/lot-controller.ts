@@ -29,3 +29,16 @@ exports.findAll = async (req: Request, res: Response, next: NextFunction) => {
     next(error);
   }
 };
+
+exports.findByLandId = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    let lotDto = new LotDto();
+    lotDto.filViaRequest(req.body);
+
+    let cr = await lotService.find(lotDto);
+
+    res.send(cr);
+  } catch (error) {
+    next(error);
+  }
+};

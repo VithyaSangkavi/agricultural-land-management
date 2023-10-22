@@ -52,6 +52,11 @@ export class LotDaoImpl implements LotDao {
     });
     return lotModel;
   }
+  async findByLandId(landId: number): Promise<LotEntity[]> {
+    let lotRepo = getConnection().getRepository(LotEntity);
+    let lotModel = await lotRepo.find({where: {landId:landId, status: Status.Online}});
+    return lotModel;
+  }
   async findCount(lotDto: LotDto): Promise<number> {
     let lotRepo = getConnection().getRepository(LotEntity);
     let searchObject: any = this.prepareSearchObject(lotDto);

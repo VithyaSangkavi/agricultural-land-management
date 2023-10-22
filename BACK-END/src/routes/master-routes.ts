@@ -50,6 +50,7 @@ router.post("/lotSave", lotController.save);
 //router.post("/lotUpdate", lotController.update);
 //router.post("/lotDelete", lotController.delete);
 router.get("/lotFindAll", lotController.findAll);
+router.get("/lotFindByLandId/:id", lotController.findAll);
 //router.get("/lotFindById", lotController.findById);
 
 router.post("/incomeSave", incomeController.save);

@@ -139,6 +139,28 @@ export class LotServiceImpl implements LotService {
     }
     return cr;
   }
+  async findByLandId(landId: number): Promise<CommonResponse> {
+    let cr = new CommonResponse();
+    try {
+      // find lot
+      let lots = await this.lotDao.findByLandId(landId);
+
+      let lotDtoList = new Array();
+      for (const lotModel of lots) {
+        let lotDto = new LotDto();
+        lotDto.filViaRequest(lotModel);
+        lotDtoList.push(lotDto);
+      }
+
+      cr.setStatus(true);
+      cr.setExtra(lotDtoList);
+    } catch (error) {
+      cr.setStatus(false);
+      cr.setExtra(error);
+      ErrorHandlerSup.handleError(error);
+    }
+    return cr;
+  }
   /**
    * find lot by id
    * @param lotId
@@ -162,4 +184,6 @@ export class LotServiceImpl implements LotService {
     }
     return cr;
   }
+
+  
 }
