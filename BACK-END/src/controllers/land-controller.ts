@@ -29,3 +29,19 @@ exports.findAll = async (req: Request, res: Response, next: NextFunction) => {
     next(error);
   }
 };
+
+export const findLandIdByName = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const name = req.query.name as string;
+
+    if (!name) {
+      return res.status(400).json({ error: 'Land name is required as a query parameter' });
+    }
+
+    const response = await landService.findLandIdByName(name);
+
+    res.json(response); 
+  } catch (error) {
+    next(error);
+  }
+};

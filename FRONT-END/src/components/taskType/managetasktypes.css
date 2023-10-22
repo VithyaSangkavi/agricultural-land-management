@@ -1,0 +1,92 @@
+.task-app-screen {
+  position: relative;
+  max-width: 360px; 
+  margin: 0 auto;
+  /* padding: 16px; */
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  background-color: #fff;
+  /* height: 700px; */
+  min-height: 100vh;
+}
+
+.task-list {
+  flex-grow: 1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .task-card {
+    border: 1px solid #ccc;
+    padding: 16px;
+    margin: 10px;
+    width: 90%;
+    /* max-width: 300px; */
+    text-align: left;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .task-card p {
+    font-size: 14px;
+    margin: 10px 0 0;
+  }
+
+  .drop-down{
+    padding: 10px;
+    background-color: #6558f5;
+    width: 100%;
+  }
+
+  .drop-down:hover{
+    padding: 10px;
+    background-color: #bab6ef;
+    width: 100%;
+  }
+
+  .drop-down-menu{
+    padding: 10px;
+    background-color: white;
+    width: 100%;
+  }
+
+  .drop-down-menu:hover{
+    padding: 10px;
+    background-color: #bab6ef;
+    width: 100%;
+  }
+
+  .drop-down-container{
+    padding: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  .task-app-screen .search-field{
+    margin-left: 20px;
+  }
+
+.task-app-screen .custom-dropdown .dropdown-toggle:active,
+.task-app-screen .custom-dropdown .dropdown-toggle:focus {
+  background-color: #6558f5; 
+  box-shadow: none;
+}
+
+.add-task-type-button {
+  background-color: #6558f5; 
+  color: #fff; 
+  padding: 10px 20px;
+  border: none; 
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100%
+  /* Optional: Add more styles for hover and focus states */
+}
+
+.add-task-type-button:hover {
+  background-color: #0056b3; /* Change background color on hover */
+}
+
+.add-task-type-button:focus {
+  outline: none; /* Remove the focus outline */
+}

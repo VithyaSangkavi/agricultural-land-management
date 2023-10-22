@@ -27,15 +27,15 @@ export class WorkerServiceImpl implements WorkerService {
     let cr = new CommonResponse();
     try {
       // validation
-      if (workerDto.getName()) {
-        // check name already have
-        let nameWorkerMode = await this.workerDao.findByName(workerDto.getName());
-        if (nameWorkerMode) {
-          return CommonResSupport.getValidationException("Worker Name Already In Use !");
-        }
-      } else {
-        return CommonResSupport.getValidationException("Worker Name Cannot Be null !");
-      }
+      // if (workerDto.getName()) {
+      //   // check name already have
+      //   let nameWorkerMode = await this.workerDao.findByName(workerDto.getName());
+      //   if (nameWorkerMode) {
+      //     return CommonResSupport.getValidationException("Worker Name Already In Use !");
+      //   }
+      // } else {
+      //   return CommonResSupport.getValidationException("Worker Name Cannot Be null !");
+      // }
       
       //check land id
       let landModel:LandEntity = null;

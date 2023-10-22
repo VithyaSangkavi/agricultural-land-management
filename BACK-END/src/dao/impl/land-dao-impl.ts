@@ -57,9 +57,9 @@ export class LandDaoImpl implements LandDao {
     let landModel = await landRepo.count({ where: searchObject });
     return landModel;
   }
-  async findById(departmentId: number): Promise<LandEntity> {
+  async findById(landId: number): Promise<LandEntity> {
     let landRepo = getConnection().getRepository(LandEntity);
-    let landModel = await landRepo.findOne(departmentId);
+    let landModel = await landRepo.findOne(landId);
     return landModel;
   }
 
@@ -68,6 +68,22 @@ export class LandDaoImpl implements LandDao {
     let landModel = await landRepo.findOne({ where: { name: name, status: Status.Online } });
     return landModel;
   }
+
+  async findLandIdByName(name: string): Promise<number | null> {
+    try {
+      const landRepo = getConnection().getRepository(LandEntity);
+      const landModel = await landRepo.findOne({
+        where: { name, status: Status.Online }, // Assuming you have a status field
+        select: ['id'], // Select only the 'id' field
+      });
+  
+      return landModel ? landModel.id : null;
+    } catch (error) {
+      console.error('Error finding land ID:', error);
+      return null;
+    }
+  }
+
   async preparelandModel(landModel: LandEntity, landDto: LandDto) {
     landModel.name = landDto.getlandName();
     landModel.area = landDto.getArea();

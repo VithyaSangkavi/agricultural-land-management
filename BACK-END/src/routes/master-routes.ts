@@ -1,28 +1,23 @@
 import express, { Router } from "express";
 import { authenticateToken } from "../middleware/auth-middleware";
 
-
-
 var landController = require("../controllers/land-controller");
 var workerController = require("../controllers/worker-controller");
 var lotController = require("../controllers/lot-controller");
 var cropController = require("../controllers/crop-controller");
 var expenseController = require("../controllers/expense-controller");
 var incomeController = require("../controllers/income-controller");
+var taskTypeController = require("../controllers/task-type-controller");
+var paymentController = require("../controllers/payment-controller")
 var userController = require("../controllers/user-controller");
 
 const router: Router = express.Router();
 
-
-
-
 router.post("/login", userController.login);
-
-
-
 
 //crop routes
 router.post("/cropSave", cropController.save);
+router.get('/cropFindByLandId/:landId', cropController.findCropIdByLandId);
 /* router.post("/cropUpdate", cropController.update);
 router.post("/cropDelete", cropController.delete);
 router.post("/cropFindAll", cropController.findAll);
@@ -45,6 +40,7 @@ router.post("/landSave", landController.save);
 //router.post("/landDelete", landController.delete);
 router.get("/landFindAll", landController.findAll);
 //router.get("/landFindById", landController.findById);
+router.post('/findLandIdByName', landController.findLandIdByName);
 //
 router.post("/lotSave", lotController.save);
 //router.post("/lotUpdate", lotController.update);
@@ -65,14 +61,21 @@ router.post("/workerUpdate", workerController.update);
 router.post("/workerDelete", workerController.delete);
 router.post("/workerFindAll", workerController.findAll);
 router.get("/workerFindById", workerController.findById);
+router.get('/findByLandId', workerController.findByLandId);
+
 
 // task-type routes
-/* router.post("/taskSave", taskTypeController.save);
+router.post("/taskSave", taskTypeController.save);
 router.post("/taskUpdate", taskTypeController.update);
 router.post("/taskDelete", taskTypeController.delete);
 router.post("/taskFindAll", taskTypeController.findAll);
-router.get("/taskFindById", taskTypeController.findById); */
+router.get("/taskFindById", taskTypeController.findById);
 
-
+// payment routes
+router.post("/paymentSave", paymentController.save);
+// router.post("/taskUpdate", taskTypeController.update);
+// router.post("/taskDelete", taskTypeController.delete);
+// router.post("/taskFindAll", taskTypeController.findAll);
+// router.get("/taskFindById", taskTypeController.findById);
 
 module.exports = router;

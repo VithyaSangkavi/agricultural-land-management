@@ -24,6 +24,7 @@ import ConfirmationPassword from './components/resetPassword/ConfirmationPasswor
 import DashboardComponent from './components/dashboard/dashboard';
 import WorkerPage from './components/workerPage/workerpage';
 import AddTaskType from './components/taskType/addTaskType';
+import ManageTaskTypes from './components/taskType/managetasktypes';
 import ManageWorkers from './components/workerPage/manageworkers';
 import SideNavPage from './components/sideNav/SideNavPage';
 
@@ -132,20 +133,17 @@ class App extends React.Component {
 
           <RoleBasedRouting path="/addWorker"><WorkerPage /></RoleBasedRouting>
           <RoleBasedRouting path="/manageWorkers"><ManageWorkers /></RoleBasedRouting>
-          <RoleBasedRouting path="/addTask"><AddTaskType /></RoleBasedRouting>
-
+          <RoleBasedRouting path="/addTaskType"><AddTaskType /></RoleBasedRouting>
+          <RoleBasedRouting path="/manageTaskType"><ManageTaskTypes /></RoleBasedRouting>
+          <RoleBasedRouting path="/sideNavPage"><SideNavPage /></RoleBasedRouting>
 
           <RoleBasedRouting path="/dashboard" exact roles={[usrRoles.CM]}><DashboardComponent/></RoleBasedRouting>
 
-          <RoleBasedRouting exact path="/"><ManageWorkers langobj={this.props.langState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
-
-         
-          <RoleBasedRouting exact path="/sideNavPage"><SideNavPage langobj={this.props.langState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
+          <RoleBasedRouting exact path="/"><ManageTaskTypes langobj={this.props.langState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
 
 
           <RoleBasedRouting><NoMatchComponent signedobj={this.props.signState} /></RoleBasedRouting>
         </Switch>
-        
       </div> 
     );  
   }

@@ -19,7 +19,7 @@ export class TaskTypeDto extends PaginationDto {
     this.createdDate = body.createdDate;
     this.updatedDate = body.updatedDate;
     this.status = body.status;
-    this.cropId = body.crop;
+    this.cropId = body.cropId;
 
     if (body.startIndex && body.maxResult) {
       this.setStartIndex(body.startIndex);
