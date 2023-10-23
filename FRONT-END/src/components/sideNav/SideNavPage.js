@@ -23,6 +23,10 @@ function SideNavBar() {
     history.push('/addTaskType');
   };
 
+  const AddExpenseType = () => {
+    history.push('/addExpenseType');
+  };
+
   return (
     <div className='side-nav-screen'>
       <p className='main-heading'>WELCOME</p>
@@ -56,8 +60,8 @@ function SideNavBar() {
       <br />
       <Navbar className="side-nav-menu">
         <Container>
-          <Navbar.Brand href="#home">
-            Crop
+          <Navbar.Brand onClick={AddExpenseType}>
+            Add Expense Type
           </Navbar.Brand>
         </Container>
       </Navbar>

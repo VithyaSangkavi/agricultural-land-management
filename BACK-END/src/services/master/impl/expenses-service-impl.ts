@@ -108,9 +108,9 @@ export class ExpensesServiceImpl implements ExpensesService {
     let cr = new CommonResponse();
     try {
       // find expenses
-      let expensess = await this.expensesDao.findAll(expensesDto);
+      let expenses = await this.expensesDao.findAll(expensesDto);
       let expensesDtoList = new Array();
-      for (const expensesModel of expensess) {
+      for (const expensesModel of expenses) {
         let expensesDto = new ExpensesDto();
         expensesDto.filViaDbObject(expensesModel);
         expensesDtoList.push(expensesDto);
