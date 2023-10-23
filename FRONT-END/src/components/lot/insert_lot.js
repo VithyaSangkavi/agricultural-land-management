@@ -25,52 +25,16 @@ const InsertLot = () => {
             landId: landId,
         };
 
-        axios.post('http://localhost:8080/service/master/lotSave', dataToSend)
-            .then((response) => {
-                console.log('Data sent successfully:', response.data);
-                console.log(submitCollection.savelot)
+        submitSets(submitCollection.savelot, dataToSend, false).then(res => {
+            if (res && res.status) {
+                console.log('Data sent successfully:', res.data);
                 alertService.success("Data sent successfully!")
-            })
-            .catch((error) => {
-                console.error('Error sending data:', error);
+            } else {
                 alertService.error("Error sending data");
-            });
-    };
+            };
+        });
+    }
 
-    /* return (
-        <div className="centered-container">
-            <h2>Add Land</h2>
-            
-            <input
-                className="input-field"
-                placeholder="Land Name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-            />
-
-            <input
-                className="input-field"
-                placeholder="Land Area"
-                value={area}
-                onChange={(e) => setArea(e.target.value)}
-            />
-
-            <select
-                className="input-field"
-                value={areaUom}
-                onChange={(e) => setAreaUom(e.target.value)}
-            >
-                <option value="">Select Area UOM</option>
-                <option value="acre">Acre</option>
-                <option value="perch">Perch</option>
-            </select>
-
-
-            <button className="submit-button" onClick={handleSubmit}>
-                ADD
-            </button>
-        </div>
-    ); */
     return (
         <div className="AddLandCard">
             <Container className="container">
