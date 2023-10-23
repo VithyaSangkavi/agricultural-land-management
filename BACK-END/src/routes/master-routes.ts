@@ -46,12 +46,14 @@ router.post("/lotSave", lotController.save);
 //router.post("/lotUpdate", lotController.update);
 //router.post("/lotDelete", lotController.delete);
 router.get("/lotFindAll", lotController.findAll);
+router.get("/lotFindByLandId/:landId", lotController.findByLandId);
 //router.get("/lotFindById", lotController.findById);
 
 router.post("/incomeSave", incomeController.save);
 //router.post("/incomeUpdate", incomeController.update);
 //router.post("/incomeDelete", incomeController.delete);
 router.get("/incomeFindAll", incomeController.findAll);
+router.get("/incomeFindByLandId/:landId", incomeController.findByLandId);
 //router.get("/incomeFindById", incomeController.findById);
 
 // worker routes

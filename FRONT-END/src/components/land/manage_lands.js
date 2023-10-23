@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Link, useHistory } from 'react-router-dom';
 import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
-import { Container, Row, Col, Form, FormControl } from 'react-bootstrap';
+import { Container, Row, Col, Form, FormControl, Button, Card } from 'react-bootstrap';
 
 
 import '../land/manage_lands.css';
@@ -40,30 +40,50 @@ const ManageLand = () => {
     });
 
     const handleAddLotClick = () => {
-        history.push('/insertLot');
+        history.push('/insertland');
     };
 
 
     return (
         <Container className='manageLands'>
-            <Row>
+            <Row className='mb-4'>
+                <Col>
+                    <h2>Manage Lands</h2>
+                </Col>
+            </Row>
+
+            <Row className='mb-4'>
                 <Col className='search'>
-                    <Form>
+                    <Form inline>
                         <FormControl
                             type='text'
-                            placeholder='Search'
+                            placeholder='Search Lands'
+                            className='mr-sm-2'
                             value={searchQuery}
                             onChange={handleSearchChange}
                         />
+                        
                     </Form>
+                </Col>
+                <Col className='text-right'>
+                    <Button variant="primary" onClick={handleAddLotClick}>
+                        Add New Lot
+                    </Button>
                 </Col>
             </Row>
 
             <Row>
                 {filteredData.map((item) => (
-                    <Col key={item.id} md={4} sm={6} xs={12} className='divWithBorder'>
-                        <p>{item.name}</p>
-                        <p>{item.city}</p>
+                    <Col key={item.id} md={4} sm={6} xs={12} className='mb-4'>
+                        <Card>
+                            <Card.Body>
+                                <Card.Title>{item.name}</Card.Title>
+                                <Card.Text>
+                                    City: {item.city}
+                                </Card.Text>
+                                
+                            </Card.Body>
+                        </Card>
                     </Col>
                 ))}
             </Row>

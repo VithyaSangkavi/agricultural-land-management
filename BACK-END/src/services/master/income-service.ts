@@ -7,4 +7,6 @@ export interface IncomeService {
     delete(incomeDto: IncomeDto): Promise<CommonResponse>;
     find(incomeDto: IncomeDto): Promise<CommonResponse>;
     findById(income_id: number): Promise<CommonResponse>;
+    findByLandId(land: string): Promise<CommonResponse>;
+
 }
