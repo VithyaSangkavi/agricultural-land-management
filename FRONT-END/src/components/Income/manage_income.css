@@ -1,0 +1,41 @@
+.manageLots {
+    background-color: #f7f7f7;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.manageLots h2 {
+    font-weight: bold;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.mb-4 {
+    margin-bottom: 1.5rem !important;
+}
+
+.filter, .search {
+    margin-bottom: 20px;
+}
+
+.filter label, .search label {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.divWithBorder {
+    border: 1px solid #e7e7e7;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #fff;
+}
+
+.card {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}

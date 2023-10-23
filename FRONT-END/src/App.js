@@ -36,6 +36,9 @@ import ManageLands from './components/land/manage_lands';
 import InsertLot from './components/lot/insert_lot';
 import ManageLots from './components/lot/manage_lot';
 import MenuButtons from './components/common_layouts/menubuttons';
+import InsertIncome from './components/Income/manage_income';
+
+
 import Login from './components/login/login';
 import Alerts from './components/common_layouts/Alerts';
 
@@ -122,6 +125,7 @@ class App extends React.Component {
           <RoleBasedRouting path="/managelands"><ManageLands /></RoleBasedRouting>
           <RoleBasedRouting path="/managelots"><ManageLots /></RoleBasedRouting>
           <RoleBasedRouting path="/insertland"><InsertLand /></RoleBasedRouting>
+          <RoleBasedRouting path="/insertIncome"><InsertIncome /></RoleBasedRouting>
 
           <RoleBasedRouting path="/menubuttons"> <MenuButtons signedobj={this.props.signState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
 

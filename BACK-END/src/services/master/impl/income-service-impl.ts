@@ -140,4 +140,25 @@ export class IncomeServiceImpl implements IncomeService {
     }
     return cr;
   }
+
+  async findByLandId(land: string): Promise<CommonResponse> {
+    let cr = new CommonResponse();
+    try{
+      let incomes = await this.incomeDao.findByLandId(land);
+      let incomeDtoList = new Array();
+      for (const incomeModel of incomes) {
+        let incomeDto = new IncomeDto();
+        incomeDto.filViaRequest(incomeModel);
+        incomeDtoList.push(incomeDto);
+      }
+      cr.setStatus(true);
+      cr.setExtra(incomeDtoList);
+    }catch(error){
+      cr.setStatus(false);
+      cr.setExtra(error);
+      ErrorHandlerSup.handleError(error);
+    }
+    return cr
+    
+  }
 }

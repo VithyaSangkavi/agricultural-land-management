@@ -32,13 +32,9 @@ exports.findAll = async (req: Request, res: Response, next: NextFunction) => {
 
 exports.findByLandId = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    let lotDto = new LotDto();
-    lotDto.filViaRequest(req.body);
-
-    let cr = await lotService.find(lotDto);
-
-    res.send(cr);
+      const lots = await lotService.findByLandId(req.params.landId);
+      res.json(lots);
   } catch (error) {
-    next(error);
+      next(error);
   }
 };

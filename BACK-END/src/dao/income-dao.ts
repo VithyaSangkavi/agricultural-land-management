@@ -10,4 +10,6 @@ export interface IncomeDao {
     findById(income_id: number): Promise<IncomeEntity>;
     findByName(incomeDto: String): Promise<IncomeEntity>;
     findCount(incomeDto: IncomeDto): Promise<number>;
+    findByLandId(land: string): Promise<IncomeEntity[]>;
+
 }

@@ -9,6 +9,6 @@ export interface LotDao {
     findAll(lotDto: LotDto): Promise<LotEntity[]>;
     findById(lot_id: number): Promise<LotEntity>;
     findByName(lotName: String): Promise<LotEntity>;
-    findByLandId(landId: number): Promise<LotEntity[]>;
+    findByLandId(land: string): Promise<LotEntity[]>;
     findCount(lotDto: LotDto): Promise<number>;
 }

@@ -29,3 +29,12 @@ exports.findAll = async (req: Request, res: Response, next: NextFunction) => {
     next(error);
   }
 };
+
+exports.findByLandId = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+      const income = await incomeService.findByLandId(req.params.landId);
+      res.json(income);
+  } catch (error) {
+      next(error);
+  }
+};
