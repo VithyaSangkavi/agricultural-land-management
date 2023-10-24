@@ -82,15 +82,15 @@ export class TaskAssignedDaoImpl implements TaskAssignedDao {
     let searchObject: any = {};
 
     if (taskAssignedDto.getStartDate()) {
-        searchObject.createdDate = Like("%" + taskAssignedDto.getStartDate() + "%");
+        searchObject.startDate = Like("%" + taskAssignedDto.getStartDate() + "%");
     }
     if (taskAssignedDto.getEndDate()) {
-        searchObject.updatedDate = Like("%" + taskAssignedDto.getEndDate() + "%");
+        searchObject.endDate = Like("%" + taskAssignedDto.getEndDate() + "%");
     }
     searchObject.status = Status.Online;
 
     if (taskAssignedDto.getLandId()) {
-        searchObject.expenseId = Like("%" + taskAssignedDto.getLandId() + "%");
+        searchObject.landId = Like("%" + taskAssignedDto.getLandId() + "%");
     }
     if (taskAssignedDto.getTaskId()) {
         searchObject.taskId = Like("%" + taskAssignedDto.getTaskId() + "%");

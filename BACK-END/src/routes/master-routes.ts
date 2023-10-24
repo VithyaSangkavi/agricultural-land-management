@@ -11,6 +11,7 @@ var taskTypeController = require("../controllers/task-type-controller");
 var paymentController = require("../controllers/payment-controller")
 var userController = require("../controllers/user-controller");
 var taskAssignedController = require('../controllers/task-assigned-controller')
+var taskExpenseController = require('../controllers/task-expense-controller')
 
 const router: Router = express.Router();
 
@@ -80,7 +81,14 @@ router.post("/paymentSave", paymentController.save);
 router.post("/task-assigned-save", taskAssignedController.save);
 // router.post("/taskUpdate", taskTypeController.update);
 // router.post("/taskDelete", taskTypeController.delete);
-// router.post("/taskFindAll", taskTypeController.findAll);
+router.post("/taskAssignedFindAll", taskAssignedController.findAll);
+// router.get("/taskFindById", taskTypeController.findById);
+
+// task-expense routes
+router.post("/task-expense-save", taskExpenseController.save);
+// router.post("/taskUpdate", taskTypeController.update);
+// router.post("/taskDelete", taskTypeController.delete);
+//router.post("/taskexpenseFindAll", taskExpenseController.findAll);
 // router.get("/taskFindById", taskTypeController.findById);
 
 module.exports = router;
