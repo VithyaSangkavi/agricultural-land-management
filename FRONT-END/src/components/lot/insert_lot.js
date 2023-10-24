@@ -27,7 +27,6 @@ const InsertLot = () => {
 
         submitSets(submitCollection.savelot, dataToSend, false).then(res => {
             if (res && res.status) {
-                console.log('Data sent successfully:', res.data);
                 alertService.success("Data sent successfully!")
             } else {
                 alertService.error("Error sending data");

@@ -30,12 +30,12 @@ export class IncomeDto extends PaginationDto {
 
     filViaDbObject(incomeModel: IncomeEntity) {
         this.id = incomeModel.id;
-        this.landId = incomeModel.landId;
         this.month = incomeModel.month;
         this.price = incomeModel.price;
         this.createdDate = incomeModel.createdDate;
         this.updatedDate = incomeModel.updatedDate;
         this.status = incomeModel.status
+        this.landId = incomeModel.land.id;
     }
 
     public getIncomeId(): number {
@@ -44,14 +44,6 @@ export class IncomeDto extends PaginationDto {
 
     public setIncomeId(id: number): void {
         this.id = id;
-    }
-
-    public getLandId(): number {
-        return this.landId;
-    }
-
-    public setLandId(landId: number): void {
-        this.landId = landId;
     }
 
     public getMonth(): string {
@@ -91,5 +83,12 @@ export class IncomeDto extends PaginationDto {
 
     public setStatus(status: Status): void {
         this.status = status;
+    }
+    public getLandId(): number {
+        return this.landId;
+    }
+
+    public setLandId(landId: number): void {
+        this.landId = landId;
     }
 }
