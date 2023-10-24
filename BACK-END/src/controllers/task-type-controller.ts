@@ -70,3 +70,31 @@ exports.update = async (req: Request, res: Response, next: NextFunction) => {
     }
   };
   
+ exports.findTaskNameById = async (req, res, next) => {
+    try {
+      const { taskId } = req.params;
+      const taskName = await taskTypeService.findTaskNameById(taskId);
+      if (!taskName) {
+        return res.status(404).json({ message: 'Task not found' });
+      }
+      res.json({ taskName });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  exports.findTaskNameById = async (req, res, next) => {
+    try {
+      const taskId = parseInt(req.query.taskId as string);
+  
+      if (isNaN(taskId)) {
+        return res.status(400).json({ error: 'Task ID is required as a query parameter' });
+      }
+  
+      const response = await taskTypeService.findTaskNameById(taskId);
+  
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  };

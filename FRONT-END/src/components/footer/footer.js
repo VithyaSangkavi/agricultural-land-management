@@ -14,6 +14,10 @@ const Footer = () => {
         history.push('/sideNavPage')
     };
 
+    const clickHome = () => {
+        history.push('/home')
+    }
+
     return (
         <div className='app-screen'>
             <div className='footer-app-screen'>
@@ -23,7 +27,7 @@ const Footer = () => {
                         <FontAwesomeIcon icon={faBars} size="2x" onClick={toggleSideNav} />
                     </div>
                     <div className="footer-icon">
-                        <FontAwesomeIcon icon={faHome} size="2x" />
+                        <FontAwesomeIcon icon={faHome} size="2x" onClick={clickHome} />
                     </div>
                     <div className="footer-icon">
                         <FontAwesomeIcon icon={faChartPie} size="2x" />

@@ -38,9 +38,9 @@ export class TaskTypeServiceImpl implements TaskTypeService {
 
       //check crop id
       let cropModel: CropEntity = null;
-      if(taskTypeDto.getCropId() > 0){
+      if (taskTypeDto.getCropId() > 0) {
         cropModel = await this.cropDao.findById(taskTypeDto.getCropId());
-      } else{ 
+      } else {
         return CommonResSupport.getValidationException("Crop with the specified ID does not exist!");
       }
 
@@ -163,6 +163,34 @@ export class TaskTypeServiceImpl implements TaskTypeService {
       cr.setExtra(error);
       ErrorHandlerSup.handleError(error);
     }
+    return cr;
+  }
+
+  /**
+   * Find a task name by task ID
+   * @param taskId Task ID
+   * @returns CommonResponse containing the task name
+   */
+  async findTaskNameById(taskId) {
+    const cr = new CommonResponse();
+
+    try {
+      const taskType = await this.taskTypeDao.findById(taskId);
+
+      if (taskType) {
+        // Return only the taskName
+        cr.setStatus(true);
+        cr.setExtra({ taskName: taskType.taskName });
+      } else {
+        cr.setStatus(false);
+        cr.setExtra({ error: 'Task not found' });
+      }
+    } catch (error) {
+      cr.setStatus(false);
+      cr.setExtra(error);
+      ErrorHandlerSup.handleError(error);
+    }
+
     return cr;
   }
 }

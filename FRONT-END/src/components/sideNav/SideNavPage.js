@@ -19,12 +19,12 @@ function SideNavBar() {
     history.push('/insertlot');
   };
 
-  const AddTaskType = () => {
-    history.push('/addTaskType');
+  const ManageTaskType = () => {
+    history.push('/manageTaskType');
   };
 
-  const AddExpenseType = () => {
-    history.push('/addExpenseType');
+  const ManageExpenseType = () => {
+    history.push('/manageExpenseType');
   };
 
   return (
@@ -52,16 +52,16 @@ function SideNavBar() {
       <br />
       <Navbar className="side-nav-menu">
         <Container>
-          <Navbar.Brand onClick={AddTaskType}>
-            Add Task Type
+          <Navbar.Brand onClick={ManageTaskType}>
+            Manage Task Type
           </Navbar.Brand>
         </Container>
       </Navbar>
       <br />
       <Navbar className="side-nav-menu">
         <Container>
-          <Navbar.Brand onClick={AddExpenseType}>
-            Add Expense Type
+          <Navbar.Brand onClick={ManageExpenseType}>
+            Manage Expense Type
           </Navbar.Brand>
         </Container>
       </Navbar>
