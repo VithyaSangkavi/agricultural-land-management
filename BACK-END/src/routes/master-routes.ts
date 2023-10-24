@@ -10,6 +10,7 @@ var incomeController = require("../controllers/income-controller");
 var taskTypeController = require("../controllers/task-type-controller");
 var paymentController = require("../controllers/payment-controller")
 var userController = require("../controllers/user-controller");
+var taskAssignedController = require('../controllers/task-assigned-controller')
 
 const router: Router = express.Router();
 
@@ -66,9 +67,17 @@ router.post("/taskUpdate", taskTypeController.update);
 router.post("/taskDelete", taskTypeController.delete);
 router.post("/taskFindAll", taskTypeController.findAll);
 router.get("/taskFindById", taskTypeController.findById);
+router.get('/findTaskNameById', taskTypeController.findTaskNameById);
 
 // payment routes
 router.post("/paymentSave", paymentController.save);
+// router.post("/taskUpdate", taskTypeController.update);
+// router.post("/taskDelete", taskTypeController.delete);
+// router.post("/taskFindAll", taskTypeController.findAll);
+// router.get("/taskFindById", taskTypeController.findById);
+
+// task-assigned routes
+router.post("/task-assigned-save", taskAssignedController.save);
 // router.post("/taskUpdate", taskTypeController.update);
 // router.post("/taskDelete", taskTypeController.delete);
 // router.post("/taskFindAll", taskTypeController.findAll);

@@ -77,13 +77,13 @@ export class ExpensesDaoImpl implements ExpensesDao {
   prepareSearchObject(expensesDto: ExpensesDto): any {
     let searchObject: any = {};
     if (expensesDto.getExpenseType()) {
-      searchObject.name = Like("%" + expensesDto.getExpenseType() + "%");
+      searchObject.expenseType = Like("%" + expensesDto.getExpenseType() + "%");
     }
     if (expensesDto.getCreatedDate()) {
-      searchObject.color = Like("%" + expensesDto.getCreatedDate() + "%");
+      searchObject.createdDate = Like("%" + expensesDto.getCreatedDate() + "%");
     }
     if (expensesDto.getUpdatedDate()) {
-      searchObject.color = Like("%" + expensesDto.getUpdatedDate() + "%");
+      searchObject.updatedDate = Like("%" + expensesDto.getUpdatedDate() + "%");
     }
     
     searchObject.status = Status.Online;

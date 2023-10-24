@@ -43,7 +43,10 @@ import UpdateIncome from './components/Income/update_income';
 
 import Login from './components/login/login';
 import Alerts from './components/common_layouts/Alerts';
-
+import AddExpenseType from './components/expenseType/add-expense-type';
+import ManageExpenseTypes from './components/expenseType/manage-expense-type';
+import Home from './components/home/home';
+import AddTask from './components/Task/add-task'
 
 class App extends React.Component {
   _isMounted = false;
@@ -132,22 +135,19 @@ class App extends React.Component {
           <RoleBasedRouting path="/updateIncome/:incomeId"><UpdateIncome /></RoleBasedRouting>
 
           <RoleBasedRouting path="/menubuttons"> <MenuButtons signedobj={this.props.signState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
-
-
-
-
-
-          <RoleBasedRouting exact path="/"><Login handleSignObj={this.handleSignObj}/></RoleBasedRouting>
-
           <RoleBasedRouting path="/addWorker"><WorkerPage /></RoleBasedRouting>
           <RoleBasedRouting path="/manageWorkers"><ManageWorkers /></RoleBasedRouting>
           <RoleBasedRouting path="/addTaskType"><AddTaskType /></RoleBasedRouting>
           <RoleBasedRouting path="/manageTaskType"><ManageTaskTypes /></RoleBasedRouting>
           <RoleBasedRouting path="/sideNavPage"><SideNavPage /></RoleBasedRouting>
+          <RoleBasedRouting path="/addExpenseType"><AddExpenseType /></RoleBasedRouting>
+          <RoleBasedRouting path="/manageExpenseType"><ManageExpenseTypes /></RoleBasedRouting>
+          <RoleBasedRouting path="/home"><Home /></RoleBasedRouting>
+          <RoleBasedRouting path="/addTask"><AddTask /></RoleBasedRouting>
 
           <RoleBasedRouting path="/dashboard" exact roles={[usrRoles.CM]}><DashboardComponent/></RoleBasedRouting>
 
-          <RoleBasedRouting exact path="/"><ManageTaskTypes langobj={this.props.langState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
+          <RoleBasedRouting exact path="/"><ManageWorkers langobj={this.props.langState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
 
 
           <RoleBasedRouting><NoMatchComponent signedobj={this.props.signState} /></RoleBasedRouting>
