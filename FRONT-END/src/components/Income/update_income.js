@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, useParams } from 'react-router-dom'; // Import useLocation
+import { useLocation, useParams, useHistory } from 'react-router-dom'; // Import useLocation
 import axios from 'axios';
 import '../lot/insert_lot.css';
+import Footer from '../footer/footer';
 import { submitCollection } from '../../_services/submit.service';
 import { Form, Button, Container, Col, Row, Card } from 'react-bootstrap';
 import { submitSets } from '../UiComponents/SubmitSets';
@@ -9,6 +10,7 @@ import { alertService } from '../../_services/alert.service';
 
 const UpdateIncome = () => {
     const { incomeId } = useParams();
+    const history = useHistory();
 
     const [price, setValue] = useState('');
     const [data, setData] = useState([]);
@@ -25,7 +27,7 @@ const UpdateIncome = () => {
                 alertService.error("No Lots");
             };
         });
-    },[incomeId]);
+    }, [incomeId]);
 
     const handleSubmit = () => {
         const dataToSend = {
@@ -33,13 +35,16 @@ const UpdateIncome = () => {
         };
 
         console.log(dataToSend);
-
+        let sendobjoriginal = JSON.parse(JSON.stringify(submitCollection.updateprice));
         let sendobj = submitCollection.updateprice;
         sendobj.url = (sendobj.url + '/' + incomeId);
 
         submitSets(submitCollection.updateprice, dataToSend, true).then(res => {
+            console.log(sendobjoriginal);
+            sendobj.url = sendobjoriginal.url
             if (res && res.status) {
                 alertService.success("Price Updated successfully!")
+                history.push("/manageIncome")
             } else {
                 alertService.error("Error updating price");
             };
@@ -101,6 +106,9 @@ const UpdateIncome = () => {
                         </Card>
                     </Col>
                 </Row>
+                <div className='footer-alignment'>
+                    <Footer />
+                </div>
             </Container>
         </div>
     );

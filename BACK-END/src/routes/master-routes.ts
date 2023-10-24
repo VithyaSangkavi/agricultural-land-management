@@ -29,27 +29,23 @@ router.post("/expenseSave", expenseController.save);
 //router.post("/expenseDelete", expenseController.delete);
 router.get("/expenseFindAll", expenseController.findAll);
 //router.get("/expenseFindById", expenseController.findById);
+
 //
 router.post("/incomeSave", incomeController.save);
 router.put("/updatePrice/:incomeId", incomeController.updatePrice);
-// router.post("/incomeDelete", incomeController.delete);
 router.get("/incomeFindAll", incomeController.findAll);
 router.get("/incomeFindById/:incomeId", incomeController.findById);
 router.get("/incomeFindByLandId/:landId", incomeController.findByLandId);
+
 //
 router.post("/landSave", landController.save);
-//router.post("/landUpdate", landController.update);
-//router.post("/landDelete", landController.delete);
 router.get("/landFindAll", landController.findAll);
-//router.get("/landFindById", landController.findById);
 router.post('/findLandIdByName', landController.findLandIdByName);
+
 //
 router.post("/lotSave", lotController.save);
-//router.post("/lotUpdate", lotController.update);
-//router.post("/lotDelete", lotController.delete);
 router.get("/lotFindAll", lotController.findAll);
 router.get("/lotFindByLandId/:landId", lotController.findByLandId);
-//router.get("/lotFindById", lotController.findById);
 
 
 // worker routes

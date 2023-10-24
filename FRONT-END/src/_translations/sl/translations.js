@@ -1,4 +1,4 @@
-export const TRANSLATIONS_EN = {
+export const TRANSLATIONS_SL = {
     // getstart:"Get Started",
     // support:"Support",
     // toservice:"Terms of Service",
@@ -15,5 +15,5 @@ export const TRANSLATIONS_EN = {
     // noaccyet: "Not have an account yet?",
     // cnewacc: "Create New Account",
 
-    loginname: "Login",
+    loginname: "ඇතුල් වන්න",
 };

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom'; // Import useLocation
 import axios from 'axios';
 import '../lot/insert_lot.css';
+import Footer from '../footer/footer';
 import { submitCollection } from '../../_services/submit.service';
 import { Form, Button, Container, Col, Row, Card } from 'react-bootstrap';
 import { submitSets } from '../UiComponents/SubmitSets';
@@ -89,6 +90,9 @@ const InsertIncome = () => {
                         </Card>
                     </Col>
                 </Row>
+                <div className='footer-alignment'>
+                <Footer />
+            </div>
             </Container>
         </div>
     );
