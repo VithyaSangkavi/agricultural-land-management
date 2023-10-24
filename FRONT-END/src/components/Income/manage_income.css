@@ -1,7 +1,26 @@
+#app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.content-wrapper {
+    flex: 1;
+    overflow-y: auto;
+}
+
 .manageLots {
     background-color: #f7f7f7;
     padding: 20px;
     border-radius: 10px;
+}
+
+.manageLots {
+    background-color: #f7f7f7;
+    padding: 20px;
+    border-radius: 10px;
+    flex: 1 0 auto;
+
 }
 
 .manageLots h2 {
@@ -15,11 +34,13 @@
     margin-bottom: 1.5rem !important;
 }
 
-.filter, .search {
+.filter,
+.search {
     margin-bottom: 20px;
 }
 
-.filter label, .search label {
+.filter label,
+.search label {
     font-weight: bold;
     margin-right: 10px;
 }
@@ -41,12 +62,13 @@
 }
 
 .custom-link {
-    text-decoration: none; 
-    color: inherit; 
+    text-decoration: none;
+    color: inherit;
 }
 
 .custom-link:hover {
     text-decoration: none;
 }
-
-  
+.footer-alignment {
+    flex-shrink: 0; 
+  }

@@ -5,6 +5,7 @@ import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
 import { alertService } from '../../_services/alert.service';
 import '../land/insert_land.css';
+import Footer from '../footer/footer';
 
 const InsertLand = () => {
     const history = useHistory();
@@ -23,14 +24,14 @@ const InsertLand = () => {
         };
 
         submitSets(submitCollection.saveland, dataToSend, false).then(res => {
-                if (res && res.status) {
+            if (res && res.status) {
 
-                    alertService.success("Data sent successfully!")
+                alertService.success("Data sent successfully!")
 
-                } else {
-                    alertService.error("Data sent failed!")
-                }
-            })
+            } else {
+                alertService.error("Data sent failed!")
+            }
+        })
     };
 
     const handleViewLandsClick = () => {
@@ -106,7 +107,11 @@ const InsertLand = () => {
                         </Card>
                     </Col>
                 </Row>
+                <div className='footer-alignment'>
+                    <Footer />
+                </div>
             </Container>
+
         </div>
     );
 };

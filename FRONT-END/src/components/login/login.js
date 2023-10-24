@@ -30,7 +30,7 @@ function Login(props) {
 
                     props.handleSignObj(res);
 
-                    history.push('/menubuttons');
+                    history.push('/home');
                 }
                 else {
 

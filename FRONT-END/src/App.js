@@ -27,6 +27,7 @@ import AddTaskType from './components/taskType/addTaskType';
 import ManageTaskTypes from './components/taskType/managetasktypes';
 import ManageWorkers from './components/workerPage/manageworkers';
 import SideNavPage from './components/sideNav/SideNavPage';
+import Navbar from './components/navBar/navbar';
 
 import { loginAction } from './actions/auth/login_action';
 import { languageAction } from './actions/auth/login_action';
@@ -133,6 +134,7 @@ class App extends React.Component {
           <RoleBasedRouting path="/manageIncome"><ManageIncome /></RoleBasedRouting>
           <RoleBasedRouting path="/insertIncome"><InsertIncome /></RoleBasedRouting>
           <RoleBasedRouting path="/updateIncome/:incomeId"><UpdateIncome /></RoleBasedRouting>
+          <RoleBasedRouting path="navbar"><Navbar /></RoleBasedRouting>
 
           <RoleBasedRouting path="/menubuttons"> <MenuButtons signedobj={this.props.signState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
           <RoleBasedRouting path="/addWorker"><WorkerPage /></RoleBasedRouting>
@@ -147,7 +149,7 @@ class App extends React.Component {
 
           <RoleBasedRouting path="/dashboard" exact roles={[usrRoles.CM]}><DashboardComponent/></RoleBasedRouting>
 
-          <RoleBasedRouting exact path="/"><ManageWorkers langobj={this.props.langState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
+          <RoleBasedRouting exact path="/"><Login langobj={this.props.langState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
 
 
           <RoleBasedRouting><NoMatchComponent signedobj={this.props.signState} /></RoleBasedRouting>

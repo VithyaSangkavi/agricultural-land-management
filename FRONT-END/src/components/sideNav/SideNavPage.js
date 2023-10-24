@@ -11,12 +11,12 @@ function SideNavBar() {
     history.push('/manageWorkers');
   };
 
-  const AddLand = () => {
-    history.push('/insertland');
+  const ManageLand = () => {
+    history.push('/managelands');
   };
 
-  const AddLot = () => {
-    history.push('/insertlot');
+  const ManageLot = () => {
+    history.push('/managelots');
   };
 
   const ManageTaskType = () => {
@@ -26,6 +26,11 @@ function SideNavBar() {
   const ManageExpenseType = () => {
     history.push('/manageExpenseType');
   };
+
+  const ManageIncome = () => {
+    history.push('/manageIncome');
+  };
+
 
   return (
     <div className='side-nav-screen'>
@@ -38,14 +43,14 @@ function SideNavBar() {
       <br />
       <Navbar className="side-nav-menu">
         <Container>
-          <Navbar.Brand onClick={AddLand}>Land Registration</Navbar.Brand>
+          <Navbar.Brand onClick={ManageLand}>Manage Lands</Navbar.Brand>
         </Container>
       </Navbar>
       <br />
       <Navbar className="side-nav-menu">
         <Container>
-          <Navbar.Brand onClick={AddLot}>
-            Lot Insertion
+          <Navbar.Brand onClick={ManageLot}>
+            Manage Lot
           </Navbar.Brand>
         </Container>
       </Navbar>
@@ -54,6 +59,14 @@ function SideNavBar() {
         <Container>
           <Navbar.Brand onClick={ManageTaskType}>
             Manage Task Type
+          </Navbar.Brand>
+        </Container>
+      </Navbar>
+      <br />
+      <Navbar className="side-nav-menu">
+        <Container>
+          <Navbar.Brand onClick={ManageIncome}>
+            Manage Income
           </Navbar.Brand>
         </Container>
       </Navbar>
