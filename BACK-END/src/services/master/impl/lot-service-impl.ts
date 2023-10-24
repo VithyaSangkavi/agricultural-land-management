@@ -39,10 +39,10 @@ export class LotServiceImpl implements LotService {
       }
 
       //check land id
-      let landModel:LandEntity = null;
-      if(lotDto.getLandId() > 0){
+      let landModel: LandEntity = null;
+      if (lotDto.getLandId() > 0) {
         landModel = await this.landDao.findById(lotDto.getLandId());
-      } else{ 
+      } else {
 
         return CommonResSupport.getValidationException("Land with the specified ID does not exist!");
       }
@@ -139,6 +139,26 @@ export class LotServiceImpl implements LotService {
     }
     return cr;
   }
+  async findByLandId(land: string): Promise<CommonResponse> {
+    let cr = new CommonResponse();
+    try{
+      let lots = await this.lotDao.findByLandId(land);
+      let lotDtoList = new Array();
+      for (const lotModel of lots) {
+        let lotDto = new LotDto();
+        lotDto.filViaRequest(lotModel);
+        lotDtoList.push(lotDto);
+      }
+      cr.setStatus(true);
+      cr.setExtra(lotDtoList);
+    }catch(error){
+      cr.setStatus(false);
+      cr.setExtra(error);
+      ErrorHandlerSup.handleError(error);
+    }
+    return cr
+    
+  }
   /**
    * find lot by id
    * @param lotId
@@ -162,4 +182,6 @@ export class LotServiceImpl implements LotService {
     }
     return cr;
   }
+
+
 }

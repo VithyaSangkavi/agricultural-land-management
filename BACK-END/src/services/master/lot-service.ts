@@ -7,4 +7,5 @@ export interface LotService {
     delete(lotDto: LotDto): Promise<CommonResponse>;
     find(lotDto: LotDto): Promise<CommonResponse>;
     findById(lot_id: number): Promise<CommonResponse>;
+    findByLandId(land: string): Promise<CommonResponse>;
 }

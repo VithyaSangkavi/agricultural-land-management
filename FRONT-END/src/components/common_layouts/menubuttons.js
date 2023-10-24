@@ -16,6 +16,9 @@ const MenuButton = (props) => {
     const ManageLand = () => {
         history.push('/managelands');
     };
+    const InsertIncome = () => {
+        history.push('/manageIncome');
+    };
     const logout = () => {
         history.push('/');
     };
@@ -37,10 +40,14 @@ const MenuButton = (props) => {
                 Manage Land
             </button>
 
+            <button onClick={InsertIncome}>
+                Insert Income
+            </button>
+
             <button onClick={logout}>
                 Logout
             </button>
-            
+
         </div>
     );
 };

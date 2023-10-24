@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
-import '../lot/manage_lot.css';
+import { useHistory, Link } from 'react-router-dom';
+import '../Income/manage_income.css';
 import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
 import { Container, Row, Col, Form, FormControl, Card } from 'react-bootstrap';
-import { alertService } from '../../_services/alert.service';
 
-
-
-const ManageLot = () => {
+function ManageIncome() {
     const [data, setData] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedLandId, setSelectedLandId] = useState('');
     const [landNames, setLandNames] = useState([]);
+
     const history = useHistory();
 
 
@@ -36,27 +34,19 @@ const ManageLot = () => {
     useEffect(() => {
         console.log("selected land : ", selectedLandId);
 
-        submitSets(submitCollection.managelot, "/"+selectedLandId, true).then(res => {
-            if (res && res.status) {
-                setData(res.extra);
-            } else {
-                alertService.error("No Lots");
-            };
-        });
-
-      /*   if (selectedLandId) {
-            axios.get(`http://localhost:8080/service/master/lotFindByLandId/${selectedLandId}`).then((res) => {
+        if (selectedLandId) {
+            axios.get(`http://localhost:8080/service/master/incomeFindByLandId/${selectedLandId}`).then((res) => {
                 setData(res.data.extra);
                 console.log(res.data.extra);
             });
         } else {
             setData([]);
-        } */
+        }
     }, [selectedLandId]);
 
-    const redirectToInsertLot = () => {
+    const redirectToInsertIncome = () => {
         history.push({
-            pathname: '/insertlot',
+            pathname: '/insertincome',
             state: { landId: selectedLandId }
         });
     };
@@ -66,7 +56,7 @@ const ManageLot = () => {
         <Container className='manageLots'>
             <Row className='mb-4'>
                 <Col>
-                    <h2>Manage Lots</h2>
+                    <h2>Manage Income</h2>
                 </Col>
             </Row>
 
@@ -98,28 +88,30 @@ const ManageLot = () => {
             </Row>
 
             <Row>
-                {data.map((lot) => (
-                    <Col key={lot.id} md={4} sm={6} xs={12} className='mb-4'>
-                        <Card>
-                            <Card.Body>
-                                <Card.Title>{lot.name}</Card.Title>
-                                <Card.Text>
-                                    Area: {lot.area} {lot.areaUOM}
-                                </Card.Text>
-                            </Card.Body>
-                        </Card>
+                {data.map((income) => (
+                    <Col key={income.id} md={4} sm={6} xs={12} className='mb-4'>
+                            <Link to={`/updateIncome/${income.id}`} className="custom-link">
+                                <Card>
+                                    <Card.Body>
+                                        <Card.Title>{income.month}</Card.Title>
+                                        <Card.Text>
+                                            Price: {income.price}
+                                        </Card.Text>
+                                    </Card.Body>
+                                </Card>
+                            </Link>
                     </Col>
                 ))}
             </Row>
             <Row className='mt-4'>
                 <Col>
-                    <button className="btn btn-primary" onClick={redirectToInsertLot}>
-                        Add New Lot
+                    <button className="btn btn-primary" onClick={redirectToInsertIncome}>
+                        Add Income
                     </button>
                 </Col>
             </Row>
         </Container>
     );
-};
+}
 
-export default ManageLot;
+export default ManageIncome

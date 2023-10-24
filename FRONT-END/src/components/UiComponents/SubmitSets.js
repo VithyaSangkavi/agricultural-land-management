@@ -5,6 +5,7 @@ import {errorHandler} from '../../_services/submit.service';
 import { store } from '../../store/store';
 
 async function submitSets (callstat,cobj,showalerts, newheaders){
+    // console.log(callstat,cobj,showalerts, newheaders);
     const csubObj = callstat; 
 
     //get signin object
@@ -15,7 +16,7 @@ async function submitSets (callstat,cobj,showalerts, newheaders){
 
     if(csubObj !== undefined && Object.keys(csubObj).length > 0){
         try {
-            var res = await axios({method: csubObj.ptype,url: csubObj.url+(csubObj.queryparam&&cobj?cobj:""),data: (csubObj.ptype!=="GET"?cobj:""),headers:coheaders});
+            var res = await axios({method: csubObj.ptype,url: csubObj.url+(csubObj.ptype === "GET" && csubObj.queryparam&&cobj?cobj:""),data: (csubObj.ptype!=="GET"?cobj:""),headers:coheaders});
             if(res.status === 200){
                 //alertService.success("Data loaded", { autoClose, keepAfterRouteChange });
                 return (res.data!==undefined?res.data:false);

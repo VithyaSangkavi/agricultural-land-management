@@ -48,8 +48,13 @@ export class LotDaoImpl implements LotDao {
       where: searchObject,
       skip: lotDto.getStartIndex(),
       take: lotDto.getMaxResult(),
-      order:{id:"DESC"}
+      order: { id: "DESC" }
     });
+    return lotModel;
+  }
+  async findByLandId(land: string): Promise<LotEntity[]> {
+    const lotRepository = getConnection().getRepository(LotEntity);
+    let lotModel = await lotRepository.find({ where: { land: land } });
     return lotModel;
   }
   async findCount(lotDto: LotDto): Promise<number> {
@@ -83,10 +88,10 @@ export class LotDaoImpl implements LotDao {
       searchObject.name = Like("%" + lotDto.getLotName() + "%");
     }
     if (lotDto.getArea()) {
-        searchObject.area = Like("%" + lotDto.getArea() + "%");
+      searchObject.area = Like("%" + lotDto.getArea() + "%");
     }
     if (lotDto.getAreaUOM()) {
-        searchObject.areaUOM = Like("%" + lotDto.getAreaUOM() + "%");
+      searchObject.areaUOM = Like("%" + lotDto.getAreaUOM() + "%");
     }
     if (lotDto.getCreatedDate()) {
       searchObject.createdDate = Like("%" + lotDto.getCreatedDate() + "%");
@@ -94,9 +99,9 @@ export class LotDaoImpl implements LotDao {
     if (lotDto.getUpdatedDate()) {
       searchObject.updatedDate = Like("%" + lotDto.getUpdatedDate() + "%");
     }
-    
+
     searchObject.status = Status.Online;
-    
+
     if (lotDto.getLandId()) {
       searchObject.landId = Like("%" + lotDto.getLandId() + "%");
     }

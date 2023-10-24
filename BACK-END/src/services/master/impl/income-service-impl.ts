@@ -50,18 +50,17 @@ export class IncomeServiceImpl implements IncomeService {
    * @param incomeDto
    * @returns
    */
-  async update(incomeDto: IncomeDto): Promise<CommonResponse> {
+  async updatePrice(incomeId: number, newPrice: number): Promise<CommonResponse> {
     let cr = new CommonResponse();
     try {
+      const updatedIncome = await this.incomeDao.updatePrice(incomeId, newPrice);
 
-      // update income
-      let updateIncome = await this.incomeDao.update(incomeDto);
-      if (updateIncome) {
-        cr.setStatus(true);
-      } else {
-        cr.setStatus(false);
-        cr.setExtra("Income Not Found !");
-      }
+      let updatedIncomeDto = new IncomeDto();
+      updatedIncomeDto.filViaRequest(updatedIncome);
+
+      cr.setStatus(true);
+      cr.setExtra(updatedIncomeDto);
+
     } catch (error) {
       cr.setStatus(false);
       cr.setExtra(error);
@@ -122,22 +121,44 @@ export class IncomeServiceImpl implements IncomeService {
    * @param incomeId
    * @returns
    */
-  async findById(incomeId: number): Promise<CommonResponse> {
+  async findById(income_id: number): Promise<CommonResponse> {
     let cr = new CommonResponse();
     try {
-      // find income
-      let income = await this.incomeDao.findById(incomeId);
+      const income = await this.incomeDao.findById(income_id);
+
 
       let incomeDto = new IncomeDto();
-      incomeDto.filViaDbObject(income);
-
+      incomeDto.filViaRequest(income);
       cr.setStatus(true);
       cr.setExtra(incomeDto);
+
+
     } catch (error) {
       cr.setStatus(false);
       cr.setExtra(error);
       ErrorHandlerSup.handleError(error);
     }
     return cr;
+  }
+
+  async findByLandId(land: number): Promise<CommonResponse> {
+    let cr = new CommonResponse();
+    try {
+      let incomes = await this.incomeDao.findByLandId(land);
+      let incomeDtoList = new Array();
+      for (const incomeModel of incomes) {
+        let incomeDto = new IncomeDto();
+        incomeDto.filViaRequest(incomeModel);
+        incomeDtoList.push(incomeDto);
+      }
+      cr.setStatus(true);
+      cr.setExtra(incomeDtoList);
+    } catch (error) {
+      cr.setStatus(false);
+      cr.setExtra(error);
+      ErrorHandlerSup.handleError(error);
+    }
+    return cr
+
   }
 }

@@ -1,0 +1,42 @@
+.AddLandCard {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.AddLandCard .card-container {
+    width: 100%;
+    max-width: 500px;
+}
+
+.AddLandCard .card-title {
+    background-color: #6558f5;
+    color: #fff;
+    font-weight: bold;
+}
+
+.AddLandCard .input-field {
+    border: 1px solid #ccc;
+    padding: 8px;
+    margin: 8px 0;
+}
+
+.AddLandCard .submit-button {
+    background-color: #6558f5;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.AddLandCard .form-label {
+    font-weight: bold;
+}
+
+.AddLandCard .container {
+    margin-top: 20px;
+}
