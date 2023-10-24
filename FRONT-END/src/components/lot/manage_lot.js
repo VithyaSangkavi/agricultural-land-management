@@ -5,6 +5,8 @@ import '../lot/manage_lot.css';
 import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
 import { Container, Row, Col, Form, FormControl, Card } from 'react-bootstrap';
+import { alertService } from '../../_services/alert.service';
+
 
 
 const ManageLot = () => {
@@ -34,14 +36,22 @@ const ManageLot = () => {
     useEffect(() => {
         console.log("selected land : ", selectedLandId);
 
-        if (selectedLandId) {
+        submitSets(submitCollection.managelot, "/"+selectedLandId, true).then(res => {
+            if (res && res.status) {
+                setData(res.extra);
+            } else {
+                alertService.error("No Lots");
+            };
+        });
+
+      /*   if (selectedLandId) {
             axios.get(`http://localhost:8080/service/master/lotFindByLandId/${selectedLandId}`).then((res) => {
                 setData(res.data.extra);
                 console.log(res.data.extra);
             });
         } else {
             setData([]);
-        }
+        } */
     }, [selectedLandId]);
 
     const redirectToInsertLot = () => {

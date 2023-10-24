@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import '../Income/manage_income.css';
 import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
@@ -44,12 +44,12 @@ function ManageIncome() {
         }
     }, [selectedLandId]);
 
-    // const redirectToInsertLot = () => {
-    //     history.push({
-    //         pathname: '/insertincome',
-    //         state: { landId: selectedLandId }
-    //     });
-    // };
+    const redirectToInsertIncome = () => {
+        history.push({
+            pathname: '/insertincome',
+            state: { landId: selectedLandId }
+        });
+    };
 
 
     return (
@@ -90,24 +90,26 @@ function ManageIncome() {
             <Row>
                 {data.map((income) => (
                     <Col key={income.id} md={4} sm={6} xs={12} className='mb-4'>
-                        <Card>
-                            <Card.Body>
-                                <Card.Title>{income.name}</Card.Title>
-                                <Card.Text>
-                                    Area: {income.area} {income.areaUOM}
-                                </Card.Text>
-                            </Card.Body>
-                        </Card>
+                            <Link to={`/updateIncome/${income.id}`} className="custom-link">
+                                <Card>
+                                    <Card.Body>
+                                        <Card.Title>{income.month}</Card.Title>
+                                        <Card.Text>
+                                            Price: {income.price}
+                                        </Card.Text>
+                                    </Card.Body>
+                                </Card>
+                            </Link>
                     </Col>
                 ))}
             </Row>
-            {/* <Row className='mt-4'>
+            <Row className='mt-4'>
                 <Col>
-                    <button className="btn btn-primary" onClick={redirectToInsertLot}>
-                        Add New Lot
+                    <button className="btn btn-primary" onClick={redirectToInsertIncome}>
+                        Add Income
                     </button>
                 </Col>
-            </Row> */}
+            </Row>
         </Container>
     );
 }

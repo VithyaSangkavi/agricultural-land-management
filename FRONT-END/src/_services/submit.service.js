@@ -8,6 +8,11 @@ const submitCollection = {
     signin:{ ptype: "POST", url: basePath+"/service/login/signIn", queryparam: false, data: true },
     saveland: { ptype: "POST", url: basePath+"/service/master/landSave", queryparam: false, data:true, auth: true },
     manageland: { ptype: "GET", url: basePath+"/service/master/landFindAll", queryparam: false, data:true, auth: true },
+    savelot: { ptype: "POST", url: basePath+"/service/master/lotSave", queryparam: false, data:true, auth: true },
+    saveincome: { ptype: "POST", url: basePath+"/service/master/incomeSave", queryparam: false, data:true, auth: true },
+    managelot: { ptype: "GET", url: basePath+"/service/master/lotFindByLandId", queryparam: true, data:true, auth: true },
+    getincomebyid: { ptype: "GET", url: basePath+"/service/master/incomeFindById", queryparam: true, data:true, auth: true },
+    updateprice: { ptype: "PUT", url: basePath+"/service/master/updatePrice", queryparam: true, data:true, auth: true },
 
     login: { ptype: "POST", url: basePath+"/service/master/login", queryparam: false, data:true },
 }

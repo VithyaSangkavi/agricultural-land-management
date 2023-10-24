@@ -30,10 +30,11 @@ router.get("/expenseFindAll", expenseController.findAll);
 //router.get("/expenseFindById", expenseController.findById);
 //
 router.post("/incomeSave", incomeController.save);
-/* router.post("/incomeUpdate", incomeController.update);
-router.post("/incomeDelete", incomeController.delete);
-router.post("/incomeFindAll", incomeController.findAll);
-router.get("/incomeFindById", incomeController.findById); */
+router.put("/updatePrice/:incomeId", incomeController.updatePrice);
+// router.post("/incomeDelete", incomeController.delete);
+router.get("/incomeFindAll", incomeController.findAll);
+router.get("/incomeFindById/:incomeId", incomeController.findById);
+router.get("/incomeFindByLandId/:landId", incomeController.findByLandId);
 //
 router.post("/landSave", landController.save);
 //router.post("/landUpdate", landController.update);
@@ -49,12 +50,6 @@ router.get("/lotFindAll", lotController.findAll);
 router.get("/lotFindByLandId/:landId", lotController.findByLandId);
 //router.get("/lotFindById", lotController.findById);
 
-router.post("/incomeSave", incomeController.save);
-//router.post("/incomeUpdate", incomeController.update);
-//router.post("/incomeDelete", incomeController.delete);
-router.get("/incomeFindAll", incomeController.findAll);
-router.get("/incomeFindByLandId/:landId", incomeController.findByLandId);
-//router.get("/incomeFindById", incomeController.findById);
 
 // worker routes
 router.post("/workerSave", workerController.save);
