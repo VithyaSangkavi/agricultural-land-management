@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
+import Footer from '../footer/footer';
 import '../lot/manage_lot.css';
+import Navbar from '../navBar/navbar';
 import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
 import { Container, Row, Col, Form, FormControl, Card } from 'react-bootstrap';
@@ -12,58 +14,50 @@ import { alertService } from '../../_services/alert.service';
 const ManageLot = () => {
     const [data, setData] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
-    const [selectedLandId, setSelectedLandId] = useState('');
-    const [landNames, setLandNames] = useState([]);
+    const [selectedLandId, setSelectedLandId] = useState('1');
+    const [selectedLanguage, setSelectedLanguage] = useState('english');
     const history = useHistory();
 
 
-    useEffect(() => {
-        submitSets(submitCollection.manageland, false).then((res) => {
-            setLandNames(res.extra);
-        });
-    }, [data]);
 
     const handleSearchChange = (event) => {
         setSearchQuery(event.target.value);
     };
 
-    const handleLandChange = (event) => {
-        const newSelectedLandId = event.target.value;
-        setSelectedLandId(newSelectedLandId);
-    };
 
 
     useEffect(() => {
-        console.log("selected land : ", selectedLandId);
+        console.log("selected land on managelot: ", selectedLandId);
 
-        submitSets(submitCollection.managelot, "/"+selectedLandId, true).then(res => {
+        submitSets(submitCollection.managelot, "/" + selectedLandId, true).then(res => {
             if (res && res.status) {
                 setData(res.extra);
-            } else {
-                alertService.error("No Lots");
-            };
+            }
         });
-
-      /*   if (selectedLandId) {
-            axios.get(`http://localhost:8080/service/master/lotFindByLandId/${selectedLandId}`).then((res) => {
-                setData(res.data.extra);
-                console.log(res.data.extra);
-            });
-        } else {
-            setData([]);
-        } */
     }, [selectedLandId]);
 
+
     const redirectToInsertLot = () => {
-        history.push({
-            pathname: '/insertlot',
-            state: { landId: selectedLandId }
-        });
+        if (!selectedLandId) {
+            alertService.error("Select Land");
+        } else {
+            history.push({
+                pathname: '/insertlot',
+                state: { landId: selectedLandId }
+            });
+        }
     };
 
 
     return (
         <Container className='manageLots'>
+            <Navbar
+                selectedLandId={selectedLandId}
+                onLandChange={setSelectedLandId}
+                selectedLanguage={selectedLanguage}
+                onLanguageChange={setSelectedLanguage}
+            />
+            <br />
             <Row className='mb-4'>
                 <Col>
                     <h2>Manage Lots</h2>
@@ -81,19 +75,6 @@ const ManageLot = () => {
                             onChange={handleSearchChange}
                         />
                     </Form>
-                </Col>
-                <Col md={6}>
-                    <Form.Group>
-                        <Form.Label>Filter by Land:</Form.Label>
-                        <Form.Control as="select" value={selectedLandId} onChange={handleLandChange}>
-                            <option value="">All Lands</option>
-                            {landNames.map((land) => (
-                                <option key={land.id} value={land.id}>
-                                    {land.name}
-                                </option>
-                            ))}
-                        </Form.Control>
-                    </Form.Group>
                 </Col>
             </Row>
 
@@ -118,6 +99,9 @@ const ManageLot = () => {
                     </button>
                 </Col>
             </Row>
+            <div>
+                <Footer />
+            </div>
         </Container>
     );
 };

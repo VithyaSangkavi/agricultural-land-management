@@ -7,6 +7,7 @@ import { Container, Row, Col, Form, FormControl, Button, Card } from 'react-boot
 
 
 import '../land/manage_lands.css';
+import Footer from '../footer/footer';
 
 
 const ManageLand = () => {
@@ -45,6 +46,7 @@ const ManageLand = () => {
 
 
     return (
+        <div>
         <Container className='manageLands'>
             <Row className='mb-4'>
                 <Col>
@@ -87,7 +89,11 @@ const ManageLand = () => {
                     </Col>
                 ))}
             </Row>
+            <div className='footer-alignment'>
+                <Footer />
+            </div>
         </Container>
+        </div>
     );
 
 
