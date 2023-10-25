@@ -1,78 +1,77 @@
-#app {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    background-color: aqua;
-}
 
-.incomenavbar {
-    padding-top: 8%;
+
+.manageincome .incomenavbar {
+    padding-top: 4%;
     padding-left: 5%;
-    background-color: #e02525;
+    padding-bottom: 0.5rem;
 }
 
-.content-wrapper {
+
+.manageincome .content-wrapper {
     flex: 1;
     overflow-y: auto;
 }
 
-.manageLots {
-    background-color: #e02525;
+.manageincome .manageLots {
     padding: 20px;
     border-radius: 10px;
     flex: 1 0 auto;
 
 }
 
-.manageLots h2 {
+.manageincome .manageLots h2 {
     font-weight: bold;
     border-bottom: 2px solid #ddd;
     padding-bottom: 10px;
     margin-bottom: 20px;
 }
 
-.mb-4 {
+.manageincome .mb-4 {
     margin-bottom: 1.5rem !important;
 }
 
-.filter,
-.search {
+.manageincome .filter,
+.manageincome .search {
     margin-bottom: 20px;
 }
 
-.filter label,
-.search label {
+.manageincome .filter label,
+.manageincome .search label {
     font-weight: bold;
     margin-right: 10px;
 }
 
-.divWithBorder {
+.manageincome .divWithBorder {
     border: 1px solid #e7e7e7;
     padding: 10px;
     border-radius: 10px;
     background-color: #fff;
 }
 
-.card {
+.manageincome .card {
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.card:hover {
+.manageincome .card:hover {
     transform: scale(1.02);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
 
-.custom-link {
+.manageincome .custom-link {
     text-decoration: none;
     color: inherit;
 }
 
-.custom-link:hover {
+.manageincome .custom-link:hover {
     text-decoration: none;
 }
 
-.footer-alignment {
+.manageincome .footer-alignment {
     flex-shrink: 0;
 }
+.manageincome .AddIncome{
+    margin-top: 0.5rem;
+}
+
 
 

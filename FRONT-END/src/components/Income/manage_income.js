@@ -50,7 +50,7 @@ function ManageIncome() {
 
 
     return (
-        <div>
+        <div className='manageincome'>
             <div className='incomenavbar'>
                 <Navbar
                     selectedLandId={selectedLandId}

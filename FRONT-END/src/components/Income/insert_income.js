@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom'; // Import useLocation
 import axios from 'axios';
-import '../lot/insert_lot.css';
+import '../Income/insert_income.css';
 import Footer from '../footer/footer';
 import Navbar from '../navBar/navbar';
 import { submitCollection } from '../../_services/submit.service';
@@ -17,15 +17,15 @@ const InsertIncome = () => {
     const [selectedLanguage, setSelectedLanguage] = useState('english');
 
 
-    const location = useLocation();
+ /*    const location = useLocation();
     const landId = location.state?.landId;  // Grab landId from state data
-    console.log(landId);
+    console.log(landId); */
 
     const handleSubmit = () => {
         const dataToSend = {
             month,
             price,
-            landId: landId,
+            landId: selectedLandId,
         };
 
         console.log(dataToSend);
@@ -40,7 +40,7 @@ const InsertIncome = () => {
     }
 
     return (
-        <div>
+        <div className='insertincome'>
             <div className='incomenavbar'>
                 <Navbar
                     selectedLandId={selectedLandId}

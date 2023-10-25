@@ -89,9 +89,7 @@ const ManageLand = () => {
                     </Col>
                 ))}
             </Row>
-            <div className='footer-alignment'>
-                <Footer />
-            </div>
+        
         </Container>
         </div>
     );

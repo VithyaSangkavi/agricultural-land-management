@@ -1,32 +1,34 @@
-.inserlot .lotnavbar{
-    padding-top: 8%;
+.insertincome .incomenavbar {
+    padding-top: 4%; 
     padding-left: 5%;
+    margin-bottom: 0; 
 }
-.inserlot .AddLandCard {
+.insertincome .AddLandCard {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    margin-top: -80px;
 }
 
-.inserlot .AddLandCard .inserlot .card-container {
+.insertincome .AddLandCard .insertincome .card-container {
     width: 100%;
     max-width: 500px;
 }
 
-.inserlot .AddLandCard .inserlot .card-title {
+.insertincome .AddLandCard .insertincome .card-title {
     background-color: #6558f5;
     color: #fff;
     font-weight: bold;
 }
 
-.inserlot .AddLandCard .inserlot .input-field {
+.insertincome .AddLandCard .insertincome .input-field {
     border: 1px solid #ccc;
     padding: 8px;
     margin: 8px 0;
 }
 
-.inserlot .AddLandCard .inserlot .submit-button {
+.insertincome .AddLandCard .insertincome .submit-button {
     background-color: #6558f5;
     color: #fff;
     border: none;
@@ -37,11 +39,11 @@
     margin-top: 10px;
 }
 
-.inserlot .AddLandCard .inserlot .form-label {
+.insertincome .AddLandCard .insertincome .form-label {
     font-weight: bold;
 }
 
-.AddLandCard .container {
+.insertincome .AddLandCard .insertincome .container {
     margin-top: 0px;
     margin-bottom: 40px;
 }
