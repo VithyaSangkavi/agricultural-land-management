@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useHistory, Link } from 'react-router-dom';
 import '../Income/manage_income.css';
 import Footer from '../footer/footer';
+import Navbar from '../navBar/navbar';
 import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
 import { Container, Row, Col, Form, FormControl, Card } from 'react-bootstrap';
@@ -11,26 +12,20 @@ import { Container, Row, Col, Form, FormControl, Card } from 'react-bootstrap';
 function ManageIncome() {
     const [data, setData] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
-    const [selectedLandId, setSelectedLandId] = useState('');
     const [landNames, setLandNames] = useState([]);
+    const [selectedLandId, setSelectedLandId] = useState('1');
+    const [selectedLanguage, setSelectedLanguage] = useState('english');
+
 
     const history = useHistory();
 
 
-    useEffect(() => {
-        submitSets(submitCollection.manageland, false).then((res) => {
-            setLandNames(res.extra);
-        });
-    }, [data]);
+
 
     const handleSearchChange = (event) => {
         setSearchQuery(event.target.value);
     };
 
-    const handleLandChange = (event) => {
-        const newSelectedLandId = event.target.value;
-        setSelectedLandId(newSelectedLandId);
-    };
 
 
     useEffect(() => {
@@ -55,9 +50,16 @@ function ManageIncome() {
 
 
     return (
-        <div id='app'>
-            <div className="content-wrapper">
-
+        <div>
+            <div className='incomenavbar'>
+                <Navbar
+                    selectedLandId={selectedLandId}
+                    onLandChange={setSelectedLandId}
+                    selectedLanguage={selectedLanguage}
+                    onLanguageChange={setSelectedLanguage}
+                />
+            </div>
+            <div className='AddIncome'>
                 <Container className='manageLots'>
                     <Row className='mb-4'>
                         <Col>
@@ -76,19 +78,6 @@ function ManageIncome() {
                                     onChange={handleSearchChange}
                                 />
                             </Form>
-                        </Col>
-                        <Col md={6}>
-                            <Form.Group>
-                                <Form.Label>Filter by Land:</Form.Label>
-                                <Form.Control as="select" value={selectedLandId} onChange={handleLandChange}>
-                                    <option value="">All Lands</option>
-                                    {landNames.map((land) => (
-                                        <option key={land.id} value={land.id}>
-                                            {land.name}
-                                        </option>
-                                    ))}
-                                </Form.Control>
-                            </Form.Group>
                         </Col>
                     </Row>
 
@@ -116,11 +105,8 @@ function ManageIncome() {
                         </Col>
                     </Row>
                 </Container>
+            </div>
 
-            </div>
-            <div className='footer-alignment'>
-                <Footer />
-            </div>
         </div>
 
     );

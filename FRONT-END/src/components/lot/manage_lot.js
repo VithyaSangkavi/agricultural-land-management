@@ -99,9 +99,7 @@ const ManageLot = () => {
                     </button>
                 </Col>
             </Row>
-            <div>
-                <Footer />
-            </div>
+         
         </Container>
     );
 };

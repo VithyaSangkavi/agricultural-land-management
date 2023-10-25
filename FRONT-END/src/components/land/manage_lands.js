@@ -69,7 +69,7 @@ const ManageLand = () => {
                 </Col>
                 <Col className='text-right'>
                     <Button variant="primary" onClick={handleAddLotClick}>
-                        Add New Lot
+                        Add New Land
                     </Button>
                 </Col>
             </Row>

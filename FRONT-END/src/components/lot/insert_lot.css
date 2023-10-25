@@ -1,3 +1,7 @@
+.lotnavbar{
+    padding-top: 8%;
+    padding-left: 5%;
+}
 .AddLandCard {
     display: flex;
     justify-content: center;
@@ -38,5 +42,6 @@
 }
 
 .AddLandCard .container {
-    margin-top: 20px;
+    margin-top: 0px;
+    margin-bottom: 40px;
 }
