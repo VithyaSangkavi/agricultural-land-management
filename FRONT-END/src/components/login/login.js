@@ -5,6 +5,14 @@ import { useHistory } from 'react-router-dom';
 import { alertService } from '../../_services/alert.service';
 import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
+import { Col, Row } from 'react-bootstrap';
+import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
+import { Dropdown, DropdownButton } from 'react-bootstrap';
+import i18n from "i18next";
+import { connect } from "react-redux";
+import { withTranslation } from "react-i18next";
+import { languageAction } from '../../actions/auth/login_action';
+
 
 function Login(props) {
     const history = useHistory();
@@ -45,41 +53,78 @@ function Login(props) {
         }
     };
 
+    const handleLanguageChange = (lang) => {
+        i18n.changeLanguage(lang);
+        props.setLangObj({ languageDetails: { code: lang } });
+    };
+
+
+
+
 
     return (
-        <div className="parent-container">
-            <div className="login-container">
-                <h2>Login</h2>
+        <div className="parent-container position-relative">
+            <div className="position-absolute top-0 end-0 mt-2 me-2">
+                <DropdownButton
+                    id="dropdown-language"
+                    title={<FaLanguage />}
+                    onSelect={handleLanguageChange}
+                    variant="secondary"
+                >
+                    <Dropdown.Item eventKey="en">
+                        <FaGlobeAmericas /> English
+                    </Dropdown.Item>
+                    <Dropdown.Item eventKey="sl">
+                        <FaGlobeAmericas /> Sinhala
+                    </Dropdown.Item>
+                </DropdownButton>
+            </div>
+
+            <div className="login-container mx-auto mt-5">
+                <h2 className="text-center mb-4">{props.t('loginname')}</h2>
                 <Form onSubmit={handleSubmit}>
-                    <Form.Group controlId="formBasicEmail">
-                        <Form.Label>Email address</Form.Label>
+                    <Form.Group controlId="formBasicEmail" className="mb-3">
+                        <Form.Label>{props.t('email')}</Form.Label>
                         <Form.Control
                             type="email"
-                            placeholder="Enter email"
+                            placeholder={props.t('enteremail')}
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                         />
                     </Form.Group>
 
-                    <Form.Group controlId="formBasicPassword">
-                        <Form.Label>Password</Form.Label>
+                    <Form.Group controlId="formBasicPassword" className="mb-3">
+                        <Form.Label>{props.t('password')}</Form.Label>
                         <Form.Control
                             type="password"
-                            placeholder="Password"
+                            placeholder={props.t('enterpassword')}
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
                     </Form.Group>
 
-                    <Button variant="primary" type="submit">
-                        Submit
-                    </Button>
+                    <div className="text-center">
+                        <Button variant="primary" type="submit">
+                            {props.t('submit')}
+                        </Button>
+                    </div>
                 </Form>
             </div>
         </div>
     );
+
+
 }
 
-export default Login;
+const mapStateToProps = state => ({
+    langState: state.languageReducer
+});
+
+const mapDispatchToProps = dispatch => ({
+    setLangObj: (payload) => dispatch(languageAction(payload))
+});
+
+export default withTranslation()(connect(mapStateToProps, mapDispatchToProps)(Login));
+
 
 

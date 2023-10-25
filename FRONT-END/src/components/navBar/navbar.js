@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
 import { Form, Row, Col } from 'react-bootstrap';
+import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
+import { Dropdown, DropdownButton } from 'react-bootstrap';
 import '../navBar/navbar.css'
 
 
@@ -13,7 +15,7 @@ function Navbar({ selectedLandId, onLandChange, selectedLanguage, onLanguageChan
         submitSets(submitCollection.manageland, false).then((res) => {
             setLandNames(res.extra);
         });
-    },[]);
+    }, []);
 
     const handleLandChange = (event) => {
         onLandChange(event.target.value);
@@ -45,10 +47,18 @@ function Navbar({ selectedLandId, onLandChange, selectedLanguage, onLanguageChan
                 <Col xs={6}>
                     <Form.Group className="mb-0">
                         <Form.Label>Language:</Form.Label>
-                        <Form.Control as="select" value={selectedLanguage} onChange={handleLanguageChange} className="custom-select">
-                            <option value="english">English</option>
-                            <option value="sinhala">Sinhala</option>
-                        </Form.Control>
+                        <DropdownButton
+                            id="dropdown-language"
+                            title={<FaLanguage />}
+                            onSelect={handleLanguageChange}
+                        >
+                            <Dropdown.Item eventKey="english">
+                                <FaGlobeAmericas /> English
+                            </Dropdown.Item>
+                            <Dropdown.Item eventKey="sinhala">
+                                <FaGlobeAmericas /> Sinhala
+                            </Dropdown.Item>
+                        </DropdownButton>
                     </Form.Group>
                 </Col>
             </Row>

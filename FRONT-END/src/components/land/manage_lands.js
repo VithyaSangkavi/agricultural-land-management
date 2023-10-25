@@ -69,7 +69,7 @@ const ManageLand = () => {
                 </Col>
                 <Col className='text-right'>
                     <Button variant="primary" onClick={handleAddLotClick}>
-                        Add New Lot
+                        Add New Land
                     </Button>
                 </Col>
             </Row>
@@ -89,9 +89,7 @@ const ManageLand = () => {
                     </Col>
                 ))}
             </Row>
-            <div className='footer-alignment'>
-                <Footer />
-            </div>
+        
         </Container>
         </div>
     );

@@ -136,6 +136,7 @@ class App extends React.Component {
           <RoleBasedRouting path="/insertIncome"><InsertIncome /></RoleBasedRouting>
           <RoleBasedRouting path="/updateIncome/:incomeId"><UpdateIncome /></RoleBasedRouting>
           <RoleBasedRouting path="navbar"><Navbar /></RoleBasedRouting>
+          <RoleBasedRouting path="/signin"><SignInComponent /></RoleBasedRouting>
 
           <RoleBasedRouting path="/menubuttons"> <MenuButtons signedobj={this.props.signState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
           <RoleBasedRouting path="/addWorker"><WorkerPage /></RoleBasedRouting>

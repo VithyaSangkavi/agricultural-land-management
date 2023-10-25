@@ -4,20 +4,20 @@
   border-radius: 10px;
 }
 
-.manageLands h2 {
+.manageLands .manageLands h2 {
   font-weight: bold;
 }
 
-.search {
+.manageLands .search {
   margin-bottom: 20px;
 }
 
-.divWithBorder {
+.manageLands .divWithBorder {
   border: 1px solid #e7e7e7;
   padding: 10px;
   border-radius: 10px;
 }
 
-.mb-4 {
+.manageLands .mb-4 {
   margin-bottom: 1.5rem !important;
 }
