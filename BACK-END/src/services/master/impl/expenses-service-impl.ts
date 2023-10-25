@@ -149,6 +149,33 @@ export class ExpensesServiceImpl implements ExpensesService {
       cr.setExtra(error);
       ErrorHandlerSup.handleError(error);
     }
-    return cr;
+    return cr; 
   }
+
+  /**
+ * Find the expenseId by expenseType
+ * @param expenseType - The type of the expense to search for
+ * @returns A CommonResponse containing the found expenseId, or an error message if not found
+ */
+async findIdByType(expenseType: string): Promise<CommonResponse> {
+  let cr = new CommonResponse();
+  try {
+    // Find the expenseId by expenseType
+    const expenseId = await this.expensesDao.findIdByType(expenseType);
+
+    if (expenseId !== null) {
+      cr.setStatus(true); 
+      cr.setExtra(expenseId);
+    } else {
+      cr.setStatus(false);
+      cr.setExtra(`Expense with type ${expenseType} not found.`);
+    }
+  } catch (error) {
+    cr.setStatus(false);
+    cr.setExtra(error);
+    ErrorHandlerSup.handleError(error);
+  }
+  return cr;
+}
+
 }

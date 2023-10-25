@@ -7,4 +7,5 @@ export interface ExpensesService {
     delete(expensesDto: ExpensesDto): Promise<CommonResponse>;
     find(expensesDto: ExpensesDto): Promise<CommonResponse>;
     findById(expenses_id: number): Promise<CommonResponse>;
+    findIdByType(expenseType: string): Promise<CommonResponse>;
 }
