@@ -30,6 +30,8 @@ router.post("/expenseSave", expenseController.save);
 //router.post("/expenseDelete", expenseController.delete);
 router.get("/expenseFindAll", expenseController.findAll);
 //router.get("/expenseFindById", expenseController.findById);
+router.get('/find-by-type', expenseController.findIdByType);
+
 //
 router.post("/incomeSave", incomeController.save);
 router.put("/updatePrice/:incomeId", incomeController.updatePrice);

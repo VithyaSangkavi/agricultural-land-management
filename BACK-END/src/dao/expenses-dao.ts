@@ -9,4 +9,5 @@ export interface ExpensesDao {
     findById(expenses_id: number): Promise<ExpensesEntity>;
     findByName(expenseType: String): Promise<ExpensesEntity>;
     findCount(departmentDto: ExpensesDto): Promise<number>;
+    findIdByType(expenseType: string): Promise<number | null>;
 }
