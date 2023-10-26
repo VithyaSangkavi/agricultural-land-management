@@ -90,3 +90,21 @@
 .manage-task-app-screen .add-button:hover {
   background-color: #7273d6;
 }
+
+.add-small{
+  width: 20%;
+  color: #fff;
+  background-color: #6558f5;
+  border: none;
+}
+
+.kg-input-container {
+  display: flex;
+  align-items: center;
+}
+
+.kg-input {
+  display: flex;
+  align-items: center;
+  margin-right: 10px; /* Adjust the margin as needed to control spacing */
+}

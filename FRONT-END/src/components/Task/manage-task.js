@@ -4,12 +4,16 @@ import Footer from '../footer/footer';
 import { useHistory } from "react-router-dom";
 import DatePicker from 'react-datepicker';
 import './manage-task.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+
 
 const ManageTask = () => {
-
     const history = useHistory();
+
     const taskId = localStorage.getItem('TaskIDFromTaskAssigned')
     const startDate = localStorage.getItem('StartDate');
+
     const [taskName, setTaskName] = useState('');
     const [selectedView, setSelectedView] = useState('tasks');
     const [workerNames, setWorkerNames] = useState([]);
@@ -18,76 +22,207 @@ const ManageTask = () => {
     const [selectedExpenseType, setSelectedExpenseType] = useState('');
     const [value, setValue] = useState('');
     const [expenseId, setExpenseId] = useState('');
-
     const [selectedWorkersList, setSelectedWorkersList] = useState([]);
+    const [kgValues, setKgValues] = useState('');
+    //const [workerId, setWorkerId] = useState('');
+    const taskAssignedId = 1;
+    const lotId = 1;
+    const [quantity, setQuantity] = useState('');
 
-    useEffect(() => {
-        // console.log('Get task id from task assigned table : ', taskId);
+    const [workers, setWorkers] = useState([]);
 
+
+    // useEffect(() => {
+    //     // console.log('Get task id from task assigned table : ', taskId);
+
+    //     axios.get(`http://localhost:8081/service/master/findTaskNameById/?taskId=${taskId}`)
+    //         .then((response) => {
+    //             setTaskName(response.data.extra.taskName);
+    //         })
+    //         .catch((error) => {
+    //             //console.error('Error fetching task name:', error);
+    //         });
+
+    //     axios
+    //         .post('http://localhost:8081/service/master/workerFindAll')
+    //         .then((response) => {
+    //             const workerNamesArray = response.data.extra.map((worker) => worker.name);
+    //             setWorkerNames(workerNamesArray);
+    //             //console.log(workerNames)
+    //         })
+    //         .catch((error) => {
+    //             //console.error('Error fetching worker names:', error);
+    //         });
+
+    //     axios
+    //         .get('http://localhost:8081/service/master/expenseFindAll')
+    //         .then((response) => {
+    //             const expenseTypeArrays = response.data.extra.map((expense) => expense.expenseType);
+    //             setExpenseTypes(expenseTypeArrays);
+    //             //console.log(expenseTypes)
+    //         })
+    //         .catch((error) => {
+    //            // console.error('Error fetching worker names:', error);
+    //         });
+    // })
+
+    const fetchTaskName = () => {
         axios.get(`http://localhost:8081/service/master/findTaskNameById/?taskId=${taskId}`)
             .then((response) => {
                 setTaskName(response.data.extra.taskName);
             })
             .catch((error) => {
-                console.error('Error fetching task name:', error);
+                // Handle error
             });
+    };
 
-        axios
-            .post('http://localhost:8081/service/master/workerFindAll')
+    const fetchWorkerNames = () => {
+        axios.post('http://localhost:8081/service/master/workerFindAll')
             .then((response) => {
                 const workerNamesArray = response.data.extra.map((worker) => worker.name);
                 setWorkerNames(workerNamesArray);
-                //console.log(workerNames)
             })
             .catch((error) => {
-                console.error('Error fetching worker names:', error);
+                // Handle error
             });
+    };
 
-        axios
-            .get('http://localhost:8081/service/master/expenseFindAll')
+    const fetchExpenseTypes = () => {
+        axios.get('http://localhost:8081/service/master/expenseFindAll')
             .then((response) => {
                 const expenseTypeArrays = response.data.extra.map((expense) => expense.expenseType);
                 setExpenseTypes(expenseTypeArrays);
-                //console.log(expenseTypes)
             })
             .catch((error) => {
-                console.error('Error fetching worker names:', error);
+                // Handle error
             });
-    })
+    };
+
+    useEffect(() => {
+        fetchTaskName();
+        fetchWorkerNames();
+        fetchExpenseTypes();
+    }, []);
 
     const handleAddSelectedWorker = () => {
-        if (selectedWorker) {
-            setSelectedWorkersList([...selectedWorkersList, selectedWorker]);
-            setSelectedWorker('');
+
+        if (taskName === 'Pluck') {
+            console.log('Pluck task')
+            if (selectedWorker) {
+                setSelectedWorkersList([...selectedWorkersList, selectedWorker]);
+                setSelectedWorker('');
+                console.log('selected worker: ', selectedWorker);
+                localStorage.setItem('selectedWorker', selectedWorker);
+            }
+        } else {
+            if (selectedWorker) {
+                setSelectedWorkersList([...selectedWorkersList, selectedWorker]);
+                setSelectedWorker('');
+                console.log('selected worker: ', selectedWorker);
+
+                axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${selectedWorker}`)
+                    .then((response) => {
+                        const workerId = response.data.extra.workerId
+                        // setWorkerId(storeWorkerId);
+                        console.log('Worker ID :', workerId);
+
+                        const addWorkAssigned = {
+                            startDate,
+                            workerId,
+                            taskId,
+                            taskAssignedId,
+                            lotId
+                        }
+
+                        axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
+                            .then((response) => {
+                                console.log('Work assigned added successfully:', response.data);
+
+                            })
+                            .catch((error) => {
+                                console.error('Error adding work assigned:', error);
+                            });
+                    })
+                    .catch((error) => {
+                        console.error('Error getting worker id:', error);
+                    });
+            }
+
         }
+
     }
 
+    // add task expense
     const handleAddTaskExpense = () => {
 
+        //get expense id according to the expense type
         axios
-        .get(`http://localhost:8081/service/master/find-by-type?expenseType=${selectedExpenseType}`)
-        .then((response) => {
-          const expenseId = response.data.expenseId;
-          setExpenseId(expenseId); 
-    
-          const addTaskExpense = {
-            value,
-            taskId,
-            expenseId,
-          };
-    
-          axios.post('http://localhost:8081/service/master/task-expense-save', addTaskExpense)
+            .get(`http://localhost:8081/service/master/find-by-type?expenseType=${selectedExpenseType}`)
             .then((response) => {
-              console.log('Task expense added successfully:', response.data);
-              history.push('/manageWorkers');
+                const expenseId = response.data.expenseId;
+                setExpenseId(expenseId);
+
+                const addTaskExpense = {
+                    value,
+                    taskId,
+                    expenseId,
+                };
+
+                //save task expense 
+                axios.post('http://localhost:8081/service/master/task-expense-save', addTaskExpense)
+                    .then((response) => {
+                        console.log('Task expense added successfully:', response.data);
+                        history.push('/home');
+                    })
+                    .catch((error) => {
+                        // console.error('Error adding task expense:', error);
+                    });
             })
             .catch((error) => {
-              console.error('Error adding task expense:', error);
+                //console.error('Error fetching expense id:', error);
             });
-        })
-        .catch((error) => {
-          console.error('Error fetching expense id:', error);
-        });
+    }
+
+    const handleKgChange = (e, index) => {
+        const updatedKgValues = [...kgValues];
+        updatedKgValues[index] = e.target.value;
+        setKgValues(updatedKgValues);
+        setQuantity(updatedKgValues);
+    };
+
+    const addQuantity = () => {
+
+        const selectedWorker = localStorage.getItem('selectedWorker');
+        console.log('selected worker: ', selectedWorker);
+
+        axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${selectedWorker}`)
+            .then((response) => {
+                const workerId = response.data.extra.workerId
+                // setWorkerId(storeWorkerId);
+                console.log('Worker ID :', workerId);
+
+                const addWorkAssigned = {
+                    quantity,
+                    startDate,
+                    workerId,
+                    taskId,
+                    taskAssignedId,
+                    lotId
+                }
+
+                axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
+                    .then((response) => {
+                        console.log('Work assigned added successfully:', response.data);
+
+                    })
+                    .catch((error) => {
+                        console.error('Error adding work assigned:', error);
+                    });
+            })
+            .catch((error) => {
+                console.error('Error getting worker id:', error);
+            });
+
     }
 
     return (
@@ -126,22 +261,40 @@ const ManageTask = () => {
                         >
                             <option value="">Select a worker</option>
                             {workerNames.map((workerName) => (
-                                <option key={workerName} value={workerName}>
+                                <option key={workers.name} value={workerName}>
                                     {workerName}
                                 </option>
                             ))}
                         </select>
-                        <button onClick={handleAddSelectedWorker}>Add</button>
+                        <button className='add-small' onClick={handleAddSelectedWorker}>Add</button>
                     </div>
                     {selectedWorkersList.length > 0 && (
                         <div>
-                            <p>
-                                {selectedWorkersList.map((worker, index) => (
-                                    <p key={index}>{worker}</p>
-                                ))}
-                            </p>
+                            {selectedWorkersList.map((worker, index) => (
+                                <div key={index} className="worker-container">
+                                    <p>{worker}</p>
+                                    {taskName === 'Pluck' && (
+                                        <div className="kg-input-container">
+                                            <div className="kg-input">
+                                                <input
+                                                    type="text"
+                                                    placeholder="Number of kg"
+                                                    value={kgValues[index] || ''}
+                                                    onChange={(e) => handleKgChange(e, index)}
+                                                    className="dropdown-input"
+                                                />
+                                                <span className="add-kg-icon">
+                                                    <FontAwesomeIcon icon={faPlus} onClick={addQuantity} />
+                                                </span>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
                         </div>
                     )}
+
+                    <button className="add-button">Assign Work</button>
                 </div>
             )}
 

@@ -11,4 +11,5 @@ export interface WorkerDao {
   findByName(name: String): Promise<WorkerEntity>;
   findCount(workerDto: WorkerDto): Promise<number> ;
   findByLandId(landId: number): Promise<WorkerEntity[]>;
+  findWorkerIdByName(name: String): Promise<number>;
 }

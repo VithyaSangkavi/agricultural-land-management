@@ -88,16 +88,6 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
   async update(workAssignedDto: WorkAssignedDto): Promise<CommonResponse> {
     let cr = new CommonResponse();
     try {
-      // validation
-      if (workAssignedDto.getTaskStatus()) {
-        // check name already have
-        let quantityWorkAssignedMode = await this.workAssignedDao.findByName(workAssignedDto.getTaskStatus());
-        if (quantityWorkAssignedMode && quantityWorkAssignedMode.id != workAssignedDto.getAttendanceid()) {
-          return CommonResSupport.getValidationException("workAssigned Name Already In Use !");
-        }
-      } else {
-        return CommonResSupport.getValidationException("workAssigned Name Cannot Be null !");
-      }
 
       // update workAssigned
       let updateWorkAssigned = await this.workAssignedDao.update(workAssignedDto);

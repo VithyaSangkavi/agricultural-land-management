@@ -12,6 +12,7 @@ var paymentController = require("../controllers/payment-controller")
 var userController = require("../controllers/user-controller");
 var taskAssignedController = require('../controllers/task-assigned-controller')
 var taskExpenseController = require('../controllers/task-expense-controller')
+var workAssignedController = require('../controllers/work-assigned-controller')
 
 const router: Router = express.Router();
 
@@ -57,6 +58,7 @@ router.post("/workerDelete", workerController.delete);
 router.post("/workerFindAll", workerController.findAll);
 router.get("/workerFindById", workerController.findById);
 router.get('/findByLandId', workerController.findByLandId);
+router.post('/findWorkerIdByName', workerController.findWorkerIdByName);
 
 
 // task-type routes
@@ -87,5 +89,9 @@ router.post("/task-expense-save", taskExpenseController.save);
 // router.post("/taskDelete", taskTypeController.delete);
 //router.post("/taskexpenseFindAll", taskExpenseController.findAll);
 // router.get("/taskFindById", taskTypeController.findById);
+
+// work-assigned routes
+router.post("/work-assigned-save", workAssignedController.save);
+router.post("/work-assigned-update", workAssignedController.update);
 
 module.exports = router;

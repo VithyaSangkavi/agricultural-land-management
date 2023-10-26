@@ -187,4 +187,28 @@ export class WorkerServiceImpl implements WorkerService {
     }
     return cr;
   }
+
+  async findWorkerIdByName(name: string): Promise<CommonResponse> {
+    const cr = new CommonResponse();
+  
+    try {
+      const worker = await this.workerDao.findByName(name);
+  
+      if (worker) {
+        // Return only the worker ID
+        cr.setStatus(true);
+        cr.setExtra({ workerId: worker.id });
+      } else {
+        cr.setStatus(false);
+        cr.setExtra({ error: 'worker not found' });
+      }
+    } catch (error) {
+      cr.setStatus(false);
+      cr.setExtra(error);
+      ErrorHandlerSup.handleError(error);
+    }
+  
+    return cr;
+  }
+  
 }
