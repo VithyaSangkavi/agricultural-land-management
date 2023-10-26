@@ -83,6 +83,21 @@ export class WorkerDaoImpl implements WorkerDao {
     return workers;
   }  
 
+  async findWorkerIdByName(name: string): Promise<number | null> {
+    try {
+      const workerRepo = getConnection().getRepository(LandEntity);
+      const workerModel = await workerRepo.findOne({
+        where: { name, status: Status.Online }, 
+        select: ['id'], 
+      });
+  
+      return workerModel ? workerModel.id : null;
+    } catch (error) {
+      console.error('Error finding worker ID:', error);
+      return null;
+    }
+  }
+
   async prepareWorkerModel(workerModel: WorkerEntity, workerDto: WorkerDto) {
     workerModel.name = workerDto.getName();
     workerModel.dob = workerDto.getDob();

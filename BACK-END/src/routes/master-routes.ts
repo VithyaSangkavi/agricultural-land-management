@@ -57,6 +57,7 @@ router.post("/workerDelete", workerController.delete);
 router.post("/workerFindAll", workerController.findAll);
 router.get("/workerFindById", workerController.findById);
 router.get('/findByLandId', workerController.findByLandId);
+router.post('/findWorkerIdByName', workerController.findWorkerIdByName);
 
 
 // task-type routes

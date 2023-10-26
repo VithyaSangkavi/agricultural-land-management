@@ -82,3 +82,19 @@ exports.update = async (req: Request, res: Response, next: NextFunction) => {
     }
   }
   
+  export const findWorkerIdByName = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const name = req.query.name as string;
+  
+      if (!name) {
+        return res.status(400).json({ error: 'Worker name is required as a query parameter' });
+      }
+  
+      const response = await workerService.findWorkerIdByName(name);
+  
+      res.json(response); 
+    } catch (error) {
+      next(error);
+    }
+  };
+  
