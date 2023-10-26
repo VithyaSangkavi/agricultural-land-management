@@ -7,6 +7,7 @@ import Navbar from '../navBar/navbar';
 import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
 import { Container, Row, Col, Form, FormControl, Card } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 
 
 function ManageIncome() {
@@ -14,12 +15,17 @@ function ManageIncome() {
     const [searchQuery, setSearchQuery] = useState('');
     const [landNames, setLandNames] = useState([]);
     const [selectedLandId, setSelectedLandId] = useState('1');
-    const [selectedLanguage, setSelectedLanguage] = useState('english');
+    const [selectedLanguage, setSelectedLanguage] = useState('en');
 
+    const { t, i18n } = useTranslation();
 
     const history = useHistory();
 
-
+    useEffect(() => {
+        console.log("Trying to change language to:", selectedLanguage);
+        i18n.changeLanguage(selectedLanguage);
+        console.log("Language should be changed now.");
+    }, [selectedLanguage]);
 
 
     const handleSearchChange = (event) => {
@@ -63,7 +69,7 @@ function ManageIncome() {
                 <Container className='manageLots'>
                     <Row className='mb-4'>
                         <Col>
-                            <h2>Manage Income</h2>
+                            <h2>{t('manageincome')}</h2>
                         </Col>
                     </Row>
 
@@ -72,7 +78,7 @@ function ManageIncome() {
                             <Form inline>
                                 <FormControl
                                     type='text'
-                                    placeholder='Search Lots'
+                                    placeholder={t('search')}
                                     className='mr-sm-2'
                                     value={searchQuery}
                                     onChange={handleSearchChange}
@@ -89,7 +95,7 @@ function ManageIncome() {
                                         <Card.Body>
                                             <Card.Title>{income.month}</Card.Title>
                                             <Card.Text>
-                                                Price: {income.price}
+                                            {t('price')}: {income.price}
                                             </Card.Text>
                                         </Card.Body>
                                     </Card>
@@ -100,7 +106,7 @@ function ManageIncome() {
                     <Row className='mt-4'>
                         <Col>
                             <button className="btn btn-primary" onClick={redirectToInsertIncome}>
-                                Add Income
+                            {t('addincome')}
                             </button>
                         </Col>
                     </Row>

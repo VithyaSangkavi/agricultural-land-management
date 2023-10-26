@@ -8,6 +8,7 @@ import { submitCollection } from '../../_services/submit.service';
 import { Form, Button, Container, Col, Row, Card } from 'react-bootstrap';
 import { submitSets } from '../UiComponents/SubmitSets';
 import { alertService } from '../../_services/alert.service';
+import { useTranslation } from 'react-i18next';
 
 const UpdateIncome = () => {
     const { incomeId } = useParams();
@@ -19,6 +20,13 @@ const UpdateIncome = () => {
     const [selectedLandId, setSelectedLandId] = useState('');
     const [selectedLanguage, setSelectedLanguage] = useState('english');
 
+    const { t, i18n} = useTranslation();
+
+    useEffect(() => {
+        console.log("Trying to change language to:", selectedLanguage);
+        i18n.changeLanguage(selectedLanguage);
+        console.log("Language should be changed now.");
+    }, [selectedLanguage]);
 
     useEffect(() => {
 
@@ -95,20 +103,20 @@ const UpdateIncome = () => {
                     <Row className="justify-content-center">
                         <Col sm={6}>
                             <Card className="card-container">
-                                <Card.Header className="card-title">Update Income</Card.Header>
+                                <Card.Header className="card-title">{t('updateincome')}</Card.Header>
                                 <Card.Body>
                                     <Form>
                                         <Form.Group controlId="month">
-                                            <Form.Label className="form-label">Month</Form.Label>
+                                            <Form.Label className="form-label">{t('month')}</Form.Label>
                                             <Form.Control
                                                 className="input-field"
                                                 type="text"
-                                                placeholder="Lot Name"
+                                                placeholder={t('month')}
                                                 value={data.month}
                                             />
                                         </Form.Group>
                                         <Form.Group controlId="value">
-                                            <Form.Label className="form-label">Value</Form.Label>
+                                            <Form.Label className="form-label">{t('price')}</Form.Label>
                                             <Form.Control
                                                 className="input-field"
                                                 type="text"
@@ -122,7 +130,7 @@ const UpdateIncome = () => {
                                             variant="primary"
                                             onClick={handleSubmit}
                                         >
-                                            Update
+                                            {t('update')}
                                         </Button>
                                     </Form>
                                 </Card.Body>

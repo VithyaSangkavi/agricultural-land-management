@@ -44,4 +44,5 @@
 .AddLandCard .container {
     margin-top: 0px;
     margin-bottom: 40px;
+    margin-left: -10px;
 }

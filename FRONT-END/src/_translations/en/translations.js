@@ -23,4 +23,13 @@ export const TRANSLATIONS_EN = {
     lot: "Lot",
     addlot: "Add Lot",
     area: "Area",
+
+    addlots: "Add Lots",
+
+    manageincome: "Manage Income",
+    price: "Value",
+    addincome: "Add Income",
+    month: "Month",
+    updateincome: "Update Income",
+    update: "Update",
 };

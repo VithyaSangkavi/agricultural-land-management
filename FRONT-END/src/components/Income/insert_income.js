@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom'; // Import useLocation
 import axios from 'axios';
 import '../Income/insert_income.css';
@@ -8,6 +8,7 @@ import { submitCollection } from '../../_services/submit.service';
 import { Form, Button, Container, Col, Row, Card } from 'react-bootstrap';
 import { submitSets } from '../UiComponents/SubmitSets';
 import { alertService } from '../../_services/alert.service';
+import { useTranslation } from 'react-i18next';
 
 const InsertIncome = () => {
 
@@ -16,10 +17,14 @@ const InsertIncome = () => {
     const [selectedLandId, setSelectedLandId] = useState('1');
     const [selectedLanguage, setSelectedLanguage] = useState('english');
 
+    const { t, i18n } = useTranslation();
 
- /*    const location = useLocation();
-    const landId = location.state?.landId;  // Grab landId from state data
-    console.log(landId); */
+
+    useEffect(() => {
+        console.log("Trying to change language to:", selectedLanguage);
+        i18n.changeLanguage(selectedLanguage);
+        console.log("Language should be changed now.");
+    }, [selectedLanguage]);
 
     const handleSubmit = () => {
         const dataToSend = {
@@ -55,19 +60,19 @@ const InsertIncome = () => {
                     <Row className="justify-content-center">
                         <Col sm={6}>
                             <Card className="card-container">
-                                <Card.Header className="card-title">Add Income</Card.Header>
+                                <Card.Header className="card-title">{t('addincome')}</Card.Header>
                                 <Card.Body>
                                     <Form>
                                         <Form.Group controlId="month">
-                                            <Form.Label className="form-label">Month</Form.Label>
+                                            <Form.Label className="form-label">{t('month')}</Form.Label>
                                             <Form.Control
                                                 className="input-field"
                                                 as="Select"
-                                                placeholder="Lot Name"
+                                                placeholder=""
                                                 value={month}
                                                 onChange={(e) => setMonth(e.target.value)}
                                             >
-                                                <option value="">Select Month</option>
+                                                <option value="">{t('select')}</option>
                                                 <option value="January">January</option>
                                                 <option value="February">February</option>
                                                 <option value="March">March</option>
@@ -83,11 +88,11 @@ const InsertIncome = () => {
                                             </Form.Control>
                                         </Form.Group>
                                         <Form.Group controlId="value">
-                                            <Form.Label className="form-label">Value</Form.Label>
+                                            <Form.Label className="form-label">{t('price')}</Form.Label>
                                             <Form.Control
                                                 className="input-field"
                                                 type="text"
-                                                placeholder="Value"
+                                                placeholder={t('price')}
                                                 value={price}
                                                 onChange={(e) => setValue(e.target.value)}
                                             />
@@ -97,7 +102,7 @@ const InsertIncome = () => {
                                             variant="primary"
                                             onClick={handleSubmit}
                                         >
-                                            ADD
+                                            {t('add')}
                                         </Button>
                                     </Form>
                                 </Card.Body>

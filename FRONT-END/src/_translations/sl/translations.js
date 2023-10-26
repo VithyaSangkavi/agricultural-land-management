@@ -24,5 +24,12 @@ export const TRANSLATIONS_SL = {
     addlot: "කොටස් එකතු කරන්න",
     area: "ප්රදේශය",
 
+    addlots: "කොටස් එකතු කරන්න",
 
+    manageincome: "ආදායම් ලැයිස්තුව",
+    price: "අගය",
+    addincome: "ආදායම් එකතු කරන්න",
+    month: "මාසය",
+    updateincome: "ආදායම් යාවත්කාලීන කිරීම",
+    update: "යාවත්කාලීන කරන්න",
 };
