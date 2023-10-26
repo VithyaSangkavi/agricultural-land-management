@@ -14,8 +14,8 @@ export class WorkAssignedEntity {
   @PrimaryGeneratedColumn({name: "workAssignedId"})
   id: number;
 
-  @Column({type : "double"})
-  quantity: number;
+  @Column({type : "double", nullable: true})
+  quantity: number | null;
 
   @Column({ type: "enum" , enum: Units, default: Units.Gram})
   units: Units
@@ -23,8 +23,8 @@ export class WorkAssignedEntity {
   @Column()
   startDate: Date;
 
-  @Column()
-  endDate: Date;
+  @Column({ nullable: true })
+  endDate: Date | null;
 
   @Column()
   createdDate: Date;
@@ -35,7 +35,7 @@ export class WorkAssignedEntity {
   @Column({ type: "enum" ,enum:Status,default:Status.Online})
   status: Status;
 
-  @Column({ type: "enum" ,enum:TaskStatus,default:TaskStatus.Completed})
+  @Column({ type: "enum" ,enum:TaskStatus,default:TaskStatus.Ongoing})
   taskStatus: TaskStatus;
 
   @ManyToOne(()=> WorkerEntity, (worker) => worker.id)

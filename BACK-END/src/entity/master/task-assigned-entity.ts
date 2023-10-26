@@ -15,8 +15,8 @@ export class TaskAssignedEntity {
     @Column()
     startDate: Date;
 
-    @Column()
-    endDate: Date;
+    @Column({ nullable: true })
+    endDate: Date | null;
     
     @Column({ type: "enum", enum:Status, default: Status.Online})
     status: Status;

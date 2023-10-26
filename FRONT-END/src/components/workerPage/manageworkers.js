@@ -59,6 +59,11 @@ function ManageWorkers() {
     history.push('/addWorker', { basicDetails: worker });
   };
 
+  const filteredWorkersByLandId = workers.filter((worker) => {
+    const landIdWorker = localStorage.getItem('selectedLandIdWorker')
+    return landIdWorker === '' || worker.landId === landIdWorker;
+  });
+
   return (
     <div className="worker-app-screen">
       <p className='main-heading'>Worker Management</p>
