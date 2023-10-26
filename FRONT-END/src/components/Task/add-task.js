@@ -12,11 +12,16 @@ const AddTask = () => {
   const [taskName, setTaskName] = useState('');
   const [taskNames, setTaskNames] = useState([]);
   const [initialSelectedValue, setInitialSelectedValue] = useState('');
-  const [selectedDate, setSelectedDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [selectedDate, setSelectedDate] = useState();
+  const [endDate, setEndDate] = useState(null);
+  const landId = localStorage.getItem('SelectedLandId')
+  const selectedTaskId = localStorage.getItem('selectedTaskId');
+  const taskId = selectedTaskId;
+  const startDate = selectedDate;
 
   useEffect(() => {
-    const selectedTaskId = localStorage.getItem('selectedTaskId');
+    console.log('get land id: ', landId);
+    console.log('get task id: ', selectedTaskId);
 
     axios.get(`http://localhost:8081/service/master/findTaskNameById/?taskId=${selectedTaskId}`)
       .then((response) => {
@@ -42,19 +47,24 @@ const AddTask = () => {
   }, []);
 
   //add task type
-  const handleAddTask = () => {
-    const addTask = {
-      selectedDate,
-      endDate
+  const handleAddTaskAssigned = () => {
+    const addTaskAssigned = {
+      startDate,
+      endDate,
+      landId,
+      taskId
     };
 
-    axios.post('http://localhost:8081/service/master/taskSave', addTask)
+    axios.post('http://localhost:8081/service/master/task-assigned-save', addTaskAssigned)
       .then((response) => {
-        console.log('Task type added successfully:', response.data);
-        history.push('/manageTaskType')
+        console.log('Task assigned added successfully:', response.data);
+        console.log('Task id to be stored: ', taskId)
+        localStorage.setItem('TaskIDFromTaskAssigned', taskId);
+        localStorage.setItem('StartDate', startDate);
+        history.push('/manageTask')
       })
       .catch((error) => {
-        console.error('Error adding task type:', error);
+        console.error('Error adding task assigned:', error);
       });
   };
 
@@ -79,7 +89,7 @@ const AddTask = () => {
         dateFormat="MM/dd/yyyy" // Define the date format
       />
       <br/> <br/>
-       <button className="add-button" onClick={handleAddTask}>
+       <button className="add-button" onClick={handleAddTaskAssigned}>
               Add Task
             </button>
       <div className='footer-alignment'>

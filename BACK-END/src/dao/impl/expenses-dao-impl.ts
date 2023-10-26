@@ -68,6 +68,13 @@ export class ExpensesDaoImpl implements ExpensesDao {
     let expensesModel = await expensesRepo.findOne({ where: { name: name, status: Status.Online } });
     return expensesModel;
   }
+
+  async findIdByType(expenseType: string): Promise<number | null> {
+    let expensesRepo = getConnection().getRepository(ExpensesEntity);
+    const expensesModel = await expensesRepo.findOne({ where: { expenseType: expenseType, status: Status.Online } });
+    return expensesModel ? expensesModel.id : null;
+  }
+
   async prepareExpensesModel(expensesModel: ExpensesEntity, expensesDto: ExpensesDto) {
     expensesModel.expenseType = expensesDto.getExpenseType();
     expensesModel.createdDate = new Date();

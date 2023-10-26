@@ -122,11 +122,11 @@ export class TaskAssignedServiceImpl implements TaskAssignedService {
     let cr = new CommonResponse();
     try {
       // find taskAssigned
-      let taskAssigneds = await this.taskAssignedDao.findAll(taskAssignedDto);
+      let taskAssigned = await this.taskAssignedDao.findAll(taskAssignedDto);
       let taskAssignedDtoList = new Array();
-      for (const taskAssignedModel of taskAssigneds) {
+      for (const taskAssignedModel of taskAssigned) {
         let taskAssignedDto = new TaskAssignedDto();
-        taskAssignedDto.filViaDbObject(taskAssignedModel);
+        taskAssignedDto.filViaRequest(taskAssignedModel);
         taskAssignedDtoList.push(taskAssignedDto);
       }
       if (taskAssignedDto.getStartIndex() == 0) {
