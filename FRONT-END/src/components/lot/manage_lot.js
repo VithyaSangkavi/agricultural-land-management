@@ -8,6 +8,8 @@ import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
 import { Container, Row, Col, Form, FormControl, Card } from 'react-bootstrap';
 import { alertService } from '../../_services/alert.service';
+import { useTranslation } from 'react-i18next';
+
 
 
 
@@ -15,8 +17,11 @@ const ManageLot = () => {
     const [data, setData] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedLandId, setSelectedLandId] = useState('1');
-    const [selectedLanguage, setSelectedLanguage] = useState('english');
+    const [selectedLanguage, setSelectedLanguage] = useState('sl');
     const history = useHistory();
+
+    const { t, i18n } = useTranslation();
+
 
 
 
@@ -24,9 +29,16 @@ const ManageLot = () => {
         setSearchQuery(event.target.value);
     };
 
+    useEffect(() => {
+        console.log("Trying to change language to:", selectedLanguage);
+        i18n.changeLanguage(selectedLanguage);
+        console.log("Language should be changed now.");
+    }, [selectedLanguage]);
+    
 
 
     useEffect(() => {
+        i18n.changeLanguage(selectedLanguage);
         console.log("selected land on managelot: ", selectedLandId);
 
         submitSets(submitCollection.managelot, "/" + selectedLandId, true).then(res => {
@@ -46,21 +58,19 @@ const ManageLot = () => {
                 state: { landId: selectedLandId }
             });
         }
-    };
-
+    };   
 
     return (
         <Container className='manageLots'>
             <Navbar
                 selectedLandId={selectedLandId}
                 onLandChange={setSelectedLandId}
-                selectedLanguage={selectedLanguage}
                 onLanguageChange={setSelectedLanguage}
             />
             <br />
             <Row className='mb-4'>
                 <Col>
-                    <h2>Manage Lots</h2>
+                    <h2>{t('managelots')}</h2>
                 </Col>
             </Row>
 
@@ -69,7 +79,7 @@ const ManageLot = () => {
                     <Form inline>
                         <FormControl
                             type='text'
-                            placeholder='Search Lots'
+                            placeholder={t('search')}
                             className='mr-sm-2'
                             value={searchQuery}
                             onChange={handleSearchChange}
@@ -85,7 +95,7 @@ const ManageLot = () => {
                             <Card.Body>
                                 <Card.Title>{lot.name}</Card.Title>
                                 <Card.Text>
-                                    Area: {lot.area} {lot.areaUOM}
+                                {t('area')}: {lot.area} {lot.areaUOM}
                                 </Card.Text>
                             </Card.Body>
                         </Card>
@@ -95,11 +105,11 @@ const ManageLot = () => {
             <Row className='mt-4'>
                 <Col>
                     <button className="btn btn-primary" onClick={redirectToInsertLot}>
-                        Add New Lot
+                    {t('addlot')}
                     </button>
                 </Col>
             </Row>
-         
+
         </Container>
     );
 };

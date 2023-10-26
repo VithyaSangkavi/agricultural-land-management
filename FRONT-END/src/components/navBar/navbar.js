@@ -8,7 +8,7 @@ import '../navBar/navbar.css'
 
 
 
-function Navbar({ selectedLandId, onLandChange, selectedLanguage, onLanguageChange }) {
+function Navbar({ selectedLandId, onLandChange, onLanguageChange, }) {
     const [landNames, setLandNames] = useState([]);
 
     useEffect(() => {
@@ -22,10 +22,10 @@ function Navbar({ selectedLandId, onLandChange, selectedLanguage, onLanguageChan
 
     };
 
-    const handleLanguageChange = (event) => {
-        onLanguageChange(event.target.value);
-
+    const handleLanguageChange = (languageKey) => {
+        onLanguageChange(languageKey);
     };
+    
 
     return (
         <nav>
@@ -52,10 +52,10 @@ function Navbar({ selectedLandId, onLandChange, selectedLanguage, onLanguageChan
                             title={<FaLanguage />}
                             onSelect={handleLanguageChange}
                         >
-                            <Dropdown.Item eventKey="english">
+                            <Dropdown.Item eventKey="en">
                                 <FaGlobeAmericas /> English
                             </Dropdown.Item>
-                            <Dropdown.Item eventKey="sinhala">
+                            <Dropdown.Item eventKey="sl">
                                 <FaGlobeAmericas /> Sinhala
                             </Dropdown.Item>
                         </DropdownButton>

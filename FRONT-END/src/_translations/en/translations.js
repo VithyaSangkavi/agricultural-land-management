@@ -6,5 +6,21 @@ export const TRANSLATIONS_EN = {
     enteremail: "Enter Email Address",
     submit: "Submit",
 
-    
+    managelands: "Manage Lands",
+    addnewland: "Add New Land",
+    search: "Search",
+    city: "City",
+
+    addland: "Add Land",
+    name: "Name",
+    landarea: "Land Area",
+    select: "Select",
+    arce: "Arce",
+    perch: "Perch",
+    add: "Add",
+
+    managelots: "Manage Lots",
+    lot: "Lot",
+    addlot: "Add Lot",
+    area: "Area",
 };
