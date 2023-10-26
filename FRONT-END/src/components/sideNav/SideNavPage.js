@@ -33,52 +33,55 @@ function SideNavBar() {
 
 
   return (
-    <div className='side-nav-screen'>
-      <p className='main-heading'>WELCOME</p>
-      <Navbar className="side-nav-menu">
-        <Container>
-          <Navbar.Brand onClick={ManageWorkers}>Worker Management</Navbar.Brand>
-        </Container>
-      </Navbar>
-      <br />
-      <Navbar className="side-nav-menu">
-        <Container>
-          <Navbar.Brand onClick={ManageLand}>Manage Lands</Navbar.Brand>
-        </Container>
-      </Navbar>
-      <br />
-      <Navbar className="side-nav-menu">
-        <Container>
-          <Navbar.Brand onClick={ManageLot}>
-            Manage Lot
-          </Navbar.Brand>
-        </Container>
-      </Navbar>
-      <br />
-      <Navbar className="side-nav-menu">
-        <Container>
-          <Navbar.Brand onClick={ManageTaskType}>
-            Manage Task Type
-          </Navbar.Brand>
-        </Container>
-      </Navbar>
-      <br />
-      <Navbar className="side-nav-menu">
-        <Container>
-          <Navbar.Brand onClick={ManageIncome}>
-            Manage Income
-          </Navbar.Brand>
-        </Container>
-      </Navbar>
-      <br />
-      <Navbar className="side-nav-menu">
-        <Container>
-          <Navbar.Brand onClick={ManageExpenseType}>
-            Manage Expense Type
-          </Navbar.Brand>
-        </Container>
-      </Navbar>
-    </div >
+      <div className='side-nav-screen'>
+        <p className='main-heading'>WELCOME</p>
+        <Navbar className="side-nav-menu">
+          <Container>
+            <Navbar.Brand onClick={ManageWorkers}>Worker Management</Navbar.Brand>
+          </Container>
+        </Navbar>
+        <br />
+        <Navbar className="side-nav-menu">
+          <Container>
+            <Navbar.Brand onClick={ManageLand}>Manage Lands</Navbar.Brand>
+          </Container>
+        </Navbar>
+        <br />
+        <Navbar className="side-nav-menu">
+          <Container>
+            <Navbar.Brand onClick={ManageLot}>
+              Manage Lot
+            </Navbar.Brand>
+          </Container>
+        </Navbar>
+        <br />
+        <Navbar className="side-nav-menu">
+          <Container>
+            <Navbar.Brand onClick={ManageTaskType}>
+              Manage Task Type
+            </Navbar.Brand>
+          </Container>
+        </Navbar>
+        <br />
+        <Navbar className="side-nav-menu">
+          <Container>
+            <Navbar.Brand onClick={ManageIncome}>
+              Manage Income
+            </Navbar.Brand>
+          </Container>
+        </Navbar>
+        <br />
+        <Navbar className="side-nav-menu">
+          <Container>
+            <Navbar.Brand onClick={ManageExpenseType}>
+              Manage Expense Type
+            </Navbar.Brand>
+          </Container>
+        </Navbar>
+        <div className='footer-alignment'>
+        <Footer />
+      </div>
+      </div >
   );
 }
 
