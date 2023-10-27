@@ -7,8 +7,14 @@ import { alertService } from '../../_services/alert.service';
 import Footer from '../footer/footer';
 import { Form, Button, Container, Col, Row, Card } from 'react-bootstrap';
 import { useHistory, useLocation } from "react-router-dom";
+import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
+import { Dropdown, DropdownButton } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 
 const WorkerPage = () => {
+  
+  const { t, i18n } = useTranslation();
+  
   const location = useLocation();
   const basicDetails = location.state ? location.state.basicDetails : {};
   const [showBasicDetails, setShowBasicDetails] = useState(true);
@@ -99,20 +105,39 @@ const WorkerPage = () => {
     //   })
 
     Axios.post('http://localhost:8081/service/master/paymentSave', addPayment)
-    .then((response) => {
-      console.log("worker id: ", workerId)
-      console.log('Payment added successfully:', response.data);
-      history.push('/manageWorkers')
-    })
-    .catch((error) => {
-      console.error('Error adding payment:', error);
-    });
+      .then((response) => {
+        console.log("worker id: ", workerId)
+        console.log('Payment added successfully:', response.data);
+        history.push('/manageWorkers')
+      })
+      .catch((error) => {
+        console.error('Error adding payment:', error);
+      });
+  };
+
+  const handleLanguageChange = (lang) => {
+    i18n.changeLanguage(lang);
   };
 
   return (
 
     <div className="worker-app-screen">
       <p className='main-heading'>Worker Registration</p>
+      <div className="position-absolute top-0 end-0 mt-2 me-2">
+        <DropdownButton
+          id="dropdown-language"
+          title={<FaLanguage />}
+          onSelect={handleLanguageChange}
+          variant="secondary"
+        >
+          <Dropdown.Item eventKey="en">
+            <FaGlobeAmericas /> English
+          </Dropdown.Item>
+          <Dropdown.Item eventKey="sl">
+            <FaGlobeAmericas /> Sinhala
+          </Dropdown.Item>
+        </DropdownButton>
+      </div>
       <div className="toggle-container">
         <button className={`toggle-button ${showBasicDetails ? 'active' : ''}`} onClick={toggleView}>
           Basic Details
@@ -121,7 +146,7 @@ const WorkerPage = () => {
           Finance
         </button>
       </div>
-      <div className="content"> 
+      <div className="content">
         {showBasicDetails ? (
           <div className="basic-details">
             <input
@@ -174,7 +199,7 @@ const WorkerPage = () => {
               onChange={(e) => setAddress(e.target.value)}
               placeholder="Address"
               className="input-field"
-            /> 
+            />
             <select
               value={workerStatus}
               onChange={(e) => setWorkerStatus(e.target.value)}

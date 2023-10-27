@@ -31,48 +31,13 @@ const ManageTask = () => {
 
     const [workers, setWorkers] = useState([]);
 
-
-    // useEffect(() => {
-    //     // console.log('Get task id from task assigned table : ', taskId);
-
-    //     axios.get(`http://localhost:8081/service/master/findTaskNameById/?taskId=${taskId}`)
-    //         .then((response) => {
-    //             setTaskName(response.data.extra.taskName);
-    //         })
-    //         .catch((error) => {
-    //             //console.error('Error fetching task name:', error);
-    //         });
-
-    //     axios
-    //         .post('http://localhost:8081/service/master/workerFindAll')
-    //         .then((response) => {
-    //             const workerNamesArray = response.data.extra.map((worker) => worker.name);
-    //             setWorkerNames(workerNamesArray);
-    //             //console.log(workerNames)
-    //         })
-    //         .catch((error) => {
-    //             //console.error('Error fetching worker names:', error);
-    //         });
-
-    //     axios
-    //         .get('http://localhost:8081/service/master/expenseFindAll')
-    //         .then((response) => {
-    //             const expenseTypeArrays = response.data.extra.map((expense) => expense.expenseType);
-    //             setExpenseTypes(expenseTypeArrays);
-    //             //console.log(expenseTypes)
-    //         })
-    //         .catch((error) => {
-    //            // console.error('Error fetching worker names:', error);
-    //         });
-    // })
-
     const fetchTaskName = () => {
         axios.get(`http://localhost:8081/service/master/findTaskNameById/?taskId=${taskId}`)
             .then((response) => {
                 setTaskName(response.data.extra.taskName);
             })
             .catch((error) => {
-                // Handle error
+                //console.error('Error fetching task name:', error);
             });
     };
 
@@ -83,7 +48,7 @@ const ManageTask = () => {
                 setWorkerNames(workerNamesArray);
             })
             .catch((error) => {
-                // Handle error
+                //console.error('Error fetching worker names:', error);
             });
     };
 
@@ -94,7 +59,7 @@ const ManageTask = () => {
                 setExpenseTypes(expenseTypeArrays);
             })
             .catch((error) => {
-                // Handle error
+                // console.error('Error fetching expenses:', error);
             });
     };
 

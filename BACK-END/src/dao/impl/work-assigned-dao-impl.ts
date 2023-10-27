@@ -9,6 +9,8 @@ import { WorkerEntity } from "../../entity/master/worker-entity";
 import { TaskTypeEntity } from "../../entity/master/task-type-entity";
 import { LotEntity } from "../../entity/master/lot-entity";
 import { TaskAssignedEntity } from "../../entity/master/task-assigned-entity";
+import { IWorkerAssignedInfoFromDao } from "../../types/worker-assignedt-types";
+import { log } from "util";
 
 /**
  * work-assigned data access layer
@@ -49,21 +51,50 @@ export class WorkAssignedDaoImpl implements WorkAssignedDao {
       return null;
     }
   }
-  async findAll(workAssignedDto: WorkAssignedDto): Promise<WorkAssignedEntity[]> {
+  async findAll(landId: number): Promise<IWorkerAssignedInfoFromDao[]> {
     let workAssignedRepo = getConnection().getRepository(WorkAssignedEntity);
-    let searchObject: any = this.prepareSearchObject(workAssignedDto);
-    let workAssignedModel = await workAssignedRepo.find({
-      where: searchObject,
-      skip: workAssignedDto.getStartIndex(),
-      take: workAssignedDto.getMaxResult(),
-      order:{id:"DESC"}
+
+    const query = workAssignedRepo
+      .createQueryBuilder("workerAssiged")
+      .innerJoin("workerAssiged.lot", "lot")
+      .innerJoin("lot.land", "land")
+      .where("land.id = :landID", { landID: landId });
+
+      query.select(["land.id as landID", "land.name as landName"]);
+
+    const result = await query.getRawMany();
+    //const result = await query.getMany();
+
+    const workerAssigedInfo: IWorkerAssignedInfoFromDao[] = result.map((i) => {
+      return {
+        landID: i.landID,
+        landName: i.landName
+      }
     });
-    return workAssignedModel;
+
+    console.log(workerAssigedInfo);
+    
+
+    return workerAssigedInfo;
+    
+
+    // const result = await query.getMany();
+
+    console.log(query.getSql());
+    
+
+    return result;
+    
+    // let workAssignedModel = await workAssignedRepo.find({
+    //   where: {lot:{land:{id: landId}}},
+    //   relations: [
+    //     "lot", "land"
+    //   ]});
+    // return workAssignedModel;
   }
-  async findCount(workAssignedDto: WorkAssignedDto): Promise<number> {
+  async findCount(landId: number): Promise<number> {
     let workAssignedRepo = getConnection().getRepository(WorkAssignedEntity);
-    let searchObject: any = this.prepareSearchObject(workAssignedDto);
-    let workAssignedModel = await workAssignedRepo.count({ where: searchObject });
+    let workAssignedModel = await workAssignedRepo.count({ where: { lot: { land: { id: landId } } } });
     return workAssignedModel;
   }
   async findById(workerId: number): Promise<WorkAssignedEntity> {
@@ -107,6 +138,7 @@ export class WorkAssignedDaoImpl implements WorkAssignedDao {
     if (workAssignedDto.getUpdatedDate()) {
         searchObject.updatedDate = Like("%" + workAssignedDto.getUpdatedDate() + "%");
     }
+
     searchObject.status = Status.Online;
     
     searchObject.taskStatus = TaskStatus.Completed;
