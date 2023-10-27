@@ -36,18 +36,18 @@ export class LandEntity {
     @Column({ type: "enum", enum:Status, default: Status.Online})
     status: Status;
 
-    @OneToMany(() => LotEntity, (lot) => lot.id)
-    lot: LotEntity
+    @OneToMany(() => LotEntity, (lot) => lot.land)
+    lot: LotEntity[];
 
-    @OneToMany(() => CropEntity, (crop) => crop.id)
-    crop: CropEntity
+    @OneToMany(() => CropEntity, (crop) => crop.land)
+    crop: CropEntity[];
 
-    @OneToMany(() => WorkerEntity, (worker) => worker.id)
-    worker: WorkerEntity
+    @OneToMany(() => WorkerEntity, (worker) => worker.land)
+    worker: WorkerEntity[];
 
-    @OneToMany(() => IncomeEntity, (income) => income.id)
-    income: IncomeEntity
+    @OneToMany(() => IncomeEntity, (income) => income.land)
+    income: IncomeEntity[];
 
-    @OneToMany(() => TaskAssignedEntity, (taskAssigned) => taskAssigned.id)
-    taskAssigned: TaskAssignedEntity
+    @OneToMany(() => TaskAssignedEntity, (taskAssigned) => taskAssigned.land)
+    taskAssigned: TaskAssignedEntity[];
 }

@@ -1,4 +1,4 @@
-import { Column, Double, Entity, ManyToOne, PrimaryGeneratedColumn, Table } from "typeorm";
+import { Column, Double, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Table } from "typeorm";
 import { Status } from "../../enum/Status";
 import { Units } from "../../enum/units";
 import { TaskStatus } from "../../enum/taskStatus";
@@ -11,13 +11,13 @@ import { TaskAssignedEntity } from "./task-assigned-entity";
   name: "work-assigned",
 })
 export class WorkAssignedEntity {
-  @PrimaryGeneratedColumn({name: "workAssignedId"})
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column({type : "double", nullable: true})
   quantity: number | null;
 
-  @Column({ type: "enum" , enum: Units, default: Units.Gram})
+  @Column({ type: "enum" , enum: Units, default: Units.KiloGram})
   units: Units
 
   @Column()
@@ -38,15 +38,18 @@ export class WorkAssignedEntity {
   @Column({ type: "enum" ,enum:TaskStatus,default:TaskStatus.Ongoing})
   taskStatus: TaskStatus;
 
-  @ManyToOne(()=> WorkerEntity, (worker) => worker.id)
+  @ManyToOne(()=> WorkerEntity, (worker) => worker.workAssigned)
+  @JoinColumn({ name: "workerId" })
   worker: WorkerEntity;
 
-  @ManyToOne(()=> TaskTypeEntity, (task) => task.id)
+  @ManyToOne(()=> TaskTypeEntity, (task) => task.workAssigned)
+  @JoinColumn({ name: "taskId" })
   task: TaskTypeEntity;
 
-  @ManyToOne(()=> LotEntity, (lot) => lot.id)
+  @ManyToOne(()=> LotEntity, (lot) => lot.workAssiged)
+  @JoinColumn({ name: "lotId" })
   lot: LotEntity;
 
-  @ManyToOne(()=> TaskAssignedEntity, (taskAssigned) => taskAssigned.id)
-  taskAssigned: TaskAssignedEntity;
+  @ManyToOne(()=> TaskAssignedEntity, (taskAssigned) => taskAssigned.workAssigned)
+  taskAssigned: TaskAssignedEntity[];
 }

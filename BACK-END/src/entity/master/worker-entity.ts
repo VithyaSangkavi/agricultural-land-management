@@ -1,8 +1,9 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, Table } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Table } from "typeorm";
 import { Status } from "../../enum/Status";
 import { WorkerStatus } from "../../enum/workerStatus";
 import { PaymentEntity } from "./payment-entity";
 import { LandEntity } from "./land-entity";
+import { WorkAssignedEntity } from "./work-assigned-entity";
 
 @Entity({
   name: "worker",
@@ -45,9 +46,13 @@ export class WorkerEntity {
   status: Status;
 
   //fk
-  @ManyToOne(()=> LandEntity, (land) => land.id)
+  @ManyToOne(()=> LandEntity, (land) => land.worker)
+  @JoinColumn({ name: "landId" })
   land: LandEntity;
 
-  @OneToMany(() => PaymentEntity, (payment) => payment.id)
-  payment: PaymentEntity
+  @OneToMany(() => PaymentEntity, (payment) => payment.worker)
+  payment: PaymentEntity[];
+  
+  @OneToMany(() => WorkAssignedEntity, (workAssigned) => workAssigned.worker)
+  workAssigned: WorkAssignedEntity[];
 }
