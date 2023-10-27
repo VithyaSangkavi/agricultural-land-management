@@ -51,5 +51,6 @@ export class WorkAssignedEntity {
   lot: LotEntity;
 
   @ManyToOne(()=> TaskAssignedEntity, (taskAssigned) => taskAssigned.workAssigned)
-  taskAssigned: TaskAssignedEntity[];
+  @JoinColumn({name: "taskAssignedId"})
+  taskAssigned: TaskAssignedEntity;
 }
