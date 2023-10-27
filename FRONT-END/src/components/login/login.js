@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import '../login/login.css';
 import { useHistory } from 'react-router-dom';
 import { alertService } from '../../_services/alert.service';
 import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
-import { Col, Row } from 'react-bootstrap';
 import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import i18n from "i18next";
@@ -63,8 +62,8 @@ function Login(props) {
 
 
     return (
-        <div className="parent-container position-relative">
-            <div className="position-absolute top-0 end-0 mt-2 me-2">
+        <div className="parent-container">
+            <div className="language-selector position-absolute top-0 end-0 mt-2 me-2">
                 <DropdownButton
                     id="dropdown-language"
                     title={<FaLanguage />}
@@ -90,6 +89,7 @@ function Login(props) {
                             placeholder={props.t('enteremail')}
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
+                            className="input-field"
                         />
                     </Form.Group>
 
@@ -100,11 +100,12 @@ function Login(props) {
                             placeholder={props.t('enterpassword')}
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            className="input-field"
                         />
                     </Form.Group>
 
                     <div className="text-center">
-                        <Button variant="primary" type="submit">
+                        <Button variant="primary" type="submit" className="login-button">
                             {props.t('submit')}
                         </Button>
                     </div>

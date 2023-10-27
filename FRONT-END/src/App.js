@@ -8,9 +8,6 @@ import i18n from "i18next";
 import { withTranslation } from "react-i18next";
 import "./_translations/i18n";
 
-import NavbarTop from './components/common_layouts/navbartop';
-import SidebarMenu from './components/common_layouts/sidebarmenu';
-
 import { submitCollection } from './_services/submit.service';
 import { usrRoles } from './_services/common.service';
 import { submitSets } from './components/UiComponents/SubmitSets';

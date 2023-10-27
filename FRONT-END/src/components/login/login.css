@@ -1,28 +1,44 @@
-.parent-container{
+.parent-container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    background-color: #f6f6f6;  /* Light background for contrast */
 }
 
 .parent-container .login-container {
-    width: 300px;
-    padding: 20px;
+    width: 90vw; /* Use viewport width for responsiveness */
+    max-width: 350px; /* Limit the width for very large screens */
+    padding: 2rem; /* Use 'rem' for better scaling */
     border: 1px solid #ddd;
-    border-radius: 5px;
+    border-radius: 15px; /* Rounded corners */
     background-color: #fff;
-    box-shadow: 0 0 10px rgba(131, 2, 191, 0.1);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     text-align: center;
-
+    margin: 1rem; /* Some space from edges on smaller screens */
 }
 
 .parent-container .login-container h2 {
-    margin-bottom: 20px;
+    margin-bottom: 1rem;
     color: #6558f5;
+    font-size: 1.5rem; /* Slightly larger font */
+}
+
+.parent-container .login-container form {
+    margin-top: 1rem;
 }
 
 .parent-container .login-container button {
-    margin-top: 10%;
+    margin-top: 1rem;
     background-color: #6558f5;
     border: none;
+    border-radius: 10px; /* Rounded corners */
+    padding: 0.5rem 1rem; /* Padding for touch comfort */
+    color: #ffffff; /* White text color */
+    transition: background-color 0.3s ease; /* Smooth color transition */
+}
+
+.parent-container .login-container button:hover,
+.parent-container .login-container button:active {
+    background-color: #5346c7; /* Darken button on hover/active */
 }

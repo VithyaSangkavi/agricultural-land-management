@@ -73,7 +73,7 @@ const ManageLand = () => {
                     </Dropdown.Item>
                 </DropdownButton>
             </div>
-        <Container className='manageLands'>
+            <Container className='manageLands'>
             <Row className='mb-4'>
                 <Col>
                     <h2>{t('managelands')}</h2>
@@ -85,17 +85,16 @@ const ManageLand = () => {
                     <Form inline>
                         <FormControl
                             type='text'
-                            placeholder={t('searchland')}
+                            placeholder={t('search')}
                             className='mr-sm-2'
                             value={searchQuery}
                             onChange={handleSearchChange}
                         />
-                        
                     </Form>
                 </Col>
                 <Col className='text-right'>
                     <Button variant="primary" onClick={handleAddLotClick}>
-                    {t('addnewland')}
+                        {t('addnewland')}
                     </Button>
                 </Col>
             </Row>
