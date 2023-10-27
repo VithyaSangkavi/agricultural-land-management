@@ -132,21 +132,24 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
    * find all workAssigneds
    * @returns
    */
-  async find(workAssignedDto: WorkAssignedDto): Promise<CommonResponse> {
+  async find(landId: number): Promise<CommonResponse> {
     let cr = new CommonResponse();
     try {
       // find workAssigned
-      let workAssigneds = await this.workAssignedDao.findAll(workAssignedDto);
+      let workAssigneds = await this.workAssignedDao.findAll(landId);
+
       let workAssignedDtoList = new Array();
+
       for (const workAssignedModel of workAssigneds) {
         let workAssignedDto = new WorkAssignedDto();
-        workAssignedDto.filViaDbObject(workAssignedModel);
+        
+        workAssignedDto.fillViaResponse(workAssignedModel);
         workAssignedDtoList.push(workAssignedDto);
       }
-      if (workAssignedDto.getStartIndex() == 0) {
-        let count = await this.workAssignedDao.findCount(workAssignedDto);
+      
+        let count = await this.workAssignedDao.findCount(landId);
         cr.setCount(count);
-      }
+      
       cr.setStatus(true);
       cr.setExtra(workAssignedDtoList);
     } catch (error) {
@@ -168,7 +171,7 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
       let workAssigned = await this.workAssignedDao.findById(workAssignedId);
 
       let workAssignedDto = new WorkAssignedDto();
-      workAssignedDto.filViaDbObject(workAssigned);
+      workAssignedDto.fillViaDbObject(workAssigned);
 
       cr.setStatus(true);
       cr.setExtra(workAssignedDto);

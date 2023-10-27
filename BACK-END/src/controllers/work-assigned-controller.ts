@@ -46,10 +46,10 @@ exports.update = async (req: Request, res: Response, next: NextFunction) => {
   
   exports.findAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      let workAssignedDto = new WorkAssignedDto();
-      workAssignedDto.filViaRequest(req.body);
+
+      const landID = req.query.landId;
   
-      let cr = await workAssignedService.find(workAssignedDto);
+      let cr = await workAssignedService.find(landID);
   
       res.send(cr);
     } catch (error) {

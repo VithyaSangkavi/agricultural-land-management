@@ -93,5 +93,6 @@ router.post("/task-expense-save", taskExpenseController.save);
 // work-assigned routes
 router.post("/work-assigned-save", workAssignedController.save);
 router.post("/work-assigned-update", workAssignedController.update);
+router.post("/work-assigned-findAll", workAssignedController.findAll);
 
 module.exports = router;
