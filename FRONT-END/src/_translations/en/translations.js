@@ -32,4 +32,40 @@ export const TRANSLATIONS_EN = {
     month: "Month",
     updateincome: "Update Income",
     update: "Update",
+
+    //worker registration
+    workerregistration: 'Worker Registration',
+    basicdetails: 'Basic Details',
+    finance: 'Finance',
+    gender: 'Gender',
+    male: 'Male',
+    female: 'Female',
+    joineddate: 'Joined Date',
+    phone: 'Phone',
+    address: 'Address',
+    status: 'Status',
+    active: 'Active',
+    retired: 'Retired',
+    fired: 'Fired',
+    temporarystopped: 'Temporary Stopped',
+    addworker: 'Add Worker',
+
+    //save payment
+    monthlydailypay : 'Monthly / Daily Pay',
+    monthly : 'Monthly',
+    daily : 'Daily',
+    basepayment : 'Base Payment',
+    extraPayment : 'Extra Kg Pay',
+    attendancepayment: 'Attendance Payment',
+    addworkerpayment: 'Add Worker Payment',
+
+    //manage workers
+    workermanagement: 'Worker Management',
+    selectland: 'Select Land',
+    searchworkers: 'Search Workers',
+
+    //side nav menu
+    welcome: 'WELCOME',
+    managetasktype: 'Manage Task Type',
+    manageexpensetype: 'Manage Expense Type'
 };

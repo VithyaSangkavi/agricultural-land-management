@@ -12,9 +12,9 @@ import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
 const WorkerPage = () => {
-  
+
   const { t, i18n } = useTranslation();
-  
+
   const location = useLocation();
   const basicDetails = location.state ? location.state.basicDetails : {};
   const [showBasicDetails, setShowBasicDetails] = useState(true);
@@ -122,7 +122,7 @@ const WorkerPage = () => {
   return (
 
     <div className="worker-app-screen">
-      <p className='main-heading'>Worker Registration</p>
+      <p className='main-heading'>{t('workerregistration')}</p>
       <div className="position-absolute top-0 end-0 mt-2 me-2">
         <DropdownButton
           id="dropdown-language"
@@ -140,10 +140,10 @@ const WorkerPage = () => {
       </div>
       <div className="toggle-container">
         <button className={`toggle-button ${showBasicDetails ? 'active' : ''}`} onClick={toggleView}>
-          Basic Details
+          {t('basicdetails')}
         </button>
         <button className={`toggle-button ${showBasicDetails ? '' : 'active'}`} onClick={toggleView}>
-          Finance
+          {t('finance')}
         </button>
       </div>
       <div className="content">
@@ -153,7 +153,7 @@ const WorkerPage = () => {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Name"
+              placeholder={t('name')}
               className="input-field"
             />
             <input
@@ -175,29 +175,29 @@ const WorkerPage = () => {
               onChange={(e) => setGender(e.target.value)}
               className="input-field"
             >
-              <option value="">Gender</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
+              <option value="">{t('gender')}</option>
+              <option value="Male">{t('male')}</option>
+              <option value="Female">{t('female')}</option>
             </select>
             <input
               type="text"
               value={joinedDate}
               onChange={(e) => setJoinedDate(e.target.value)}
-              placeholder="Joined Date"
+              placeholder={t('joineddate')}
               className="input-field"
             />
             <input
               type="text"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              placeholder="Phone"
+              placeholder={t('phone')}
               className="input-field"
             />
             <input
               type="text"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
-              placeholder="Address"
+              placeholder={t('address')}
               className="input-field"
             />
             <select
@@ -205,14 +205,14 @@ const WorkerPage = () => {
               onChange={(e) => setWorkerStatus(e.target.value)}
               className="input-field"
             >
-              <option value="">Status</option>
-              <option value="Active">Active</option>
-              <option value="Inactive">Retired</option>
-              <option value="Inactive">Fired</option>
-              <option value="Inactive">Temporary Stopped</option>
+              <option value="">{t('status')}</option>
+              <option value="Active">{t('active')}</option>
+              <option value="Inactive">{t('retired')}</option>
+              <option value="Inactive">{t('fired')}</option>
+              <option value="Inactive">{t('temporarystopped')}</option>
             </select>
             <button className="add-button" onClick={handleAddWorker}>
-              Add
+              {t('addworker')}
             </button>
           </div>
         ) : (
@@ -222,34 +222,34 @@ const WorkerPage = () => {
               onChange={(e) => setPaymentType(e.target.value)}
               className="input-field"
             >
-              <option value="">Monthly/Daily pay</option>
-              <option value="monthly">Monthly</option>
-              <option value="daily">Daily</option>
+              <option value="">{t('monthlydailypay')}</option>
+              <option value="monthly">{t('monthly')}</option>
+              <option value="daily">{t('daily')}</option>
             </select>
             <input
               type="text"
               value={basePayment}
               onChange={(e) => setBasePayment(e.target.value)}
-              placeholder="Base Payment"
+              placeholder={t('basepayment')}
               className="input-field"
             />
             <input
               type="text"
               value={extraPayment}
               onChange={(e) => setExtraPayment(e.target.value)}
-              placeholder="Extra Kg Pay"
+              placeholder={t('extrapayment')}
               className="input-field"
             />
             <input
               type="text"
               value={attendancePayment}
               onChange={(e) => setAttendancePayment(e.target.value)}
-              placeholder="Attendance Pay"
+              placeholder={t('attendancepayment')}
               className="input-field"
             />
 
             <button className="add-button" onClick={handleAddPayment}>
-              Add
+            {t('addworkerpayment')}
             </button>
           </div>
         )}
