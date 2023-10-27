@@ -72,20 +72,6 @@ const UpdateIncome = () => {
             };
         });
 
-
-        /* axios
-        .put(`http://localhost:8080/service/master/updatePrice/${incomeId}`, dataToSend)
-        .then((response) => {
-            if (response.data && response.data.status) {
-                alertService.success("Price Updated successfully!");
-            } else {
-                alertService.error("Error updating price");
-            }
-        })
-        .catch((error) => {
-            console.error("Error updating price:", error);
-            alertService.error("Error updating price");
-        }); */
     }
 
     return (

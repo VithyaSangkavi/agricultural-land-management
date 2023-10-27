@@ -1,41 +1,75 @@
 .manageLots {
-    background-color: #f7f7f7;
-    padding: 20px;
-    border-radius: 10px;
+    background-color: #f0f0f7;
+    padding: 30px 50px; 
+    border-radius: 15px;
+    background-image: radial-gradient(circle, #f0f0f7, #c5c1d8);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Added a soft shadow for depth */
 }
 
-.manageLots .manageLots h2 {
-    font-weight: bold;
-    border-bottom: 2px solid #ddd;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
+.manageLots h2 {
+    font-weight: 600; 
+    border-bottom: 3px solid #6b52ae; 
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+    color: #6b52ae;
+    font-size: 24px; /* Slightly larger font size for better hierarchy */
 }
 
 .manageLots .mb-4 {
-    margin-bottom: 1.5rem !important;
+    margin-bottom: 20px !important;
 }
 
 .manageLots .filter, .manageLots .search {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 .manageLots .filter label, .manageLots .search label {
-    font-weight: bold;
-    margin-right: 10px;
+    font-weight: 600; /* Consistent with the h2 */
+    margin-right: 15px;
+    font-size: 16px; /* A bit larger for readability */
 }
 
 .manageLots .divWithBorder {
-    border: 1px solid #e7e7e7;
-    padding: 10px;
-    border-radius: 10px;
-    background-color: #fff;
+    border: 1px solid #ded9e2;
+    padding: 15px;
+    border-radius: 12px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
 
 .manageLots .card {
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.3s, box-shadow 0.3s; /* Smoothed out transitions */
+    border: none;
+    border-radius: 10px; /* Rounded corners for the cards */
+    background: linear-gradient(145deg, #ffffff, #e9e7f2);
+    padding: 20px; /* Additional padding inside the card */
+    overflow: hidden; 
 }
 
 .manageLots .card:hover {
-    transform: scale(1.02);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px); /* A slight upward movement for hover effect */
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+.manageLots .btn-primary {
+    background: linear-gradient(135deg, #ec407a, #ff659c);
+    border: none;
+    border-radius: 50px;
+    color: #fff;
+    padding: 10px 25px; 
+    letter-spacing: 1px; 
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.manageLots .btn-primary:hover {
+    background: linear-gradient(135deg, #ff659c, #ec407a);
+    transform: translateY(-2px); /* Slight lift on hover */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+.manageLots .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Distribute space inside card equally */
 }
