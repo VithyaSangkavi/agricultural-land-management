@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, Table } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, Table } from "typeorm";
 import { Status } from "../../enum/Status";
 import { LandEntity } from "./land-entity";
 import { TaskTypeEntity } from "./task-type-entity";
@@ -23,9 +23,10 @@ export class CropEntity {
     @Column({ type: "enum", enum:Status, default: Status.Online})
     status: Status;
 
-    @ManyToOne(() => LandEntity, (land) => land.id)
+    @ManyToOne(() => LandEntity, (land) => land.crop)
+    @JoinColumn({ name: "landId" })
     land: LandEntity
 
-    @OneToMany(() => TaskTypeEntity, (task) => task.id)
-    task: TaskTypeEntity
+    @OneToMany(() => TaskTypeEntity, (task) => task.crop)
+    task: TaskTypeEntity[];
 }

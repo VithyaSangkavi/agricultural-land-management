@@ -1,4 +1,4 @@
-import { Column, Double, Entity, ManyToOne, PrimaryGeneratedColumn, Table } from "typeorm";
+import { Column, Double, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Table } from "typeorm";
 import { Status } from "../../enum/Status";
 import { LandEntity } from "./land-entity";
 
@@ -25,9 +25,10 @@ export class IncomeEntity {
     @Column({ type: "enum", enum:Status, default: Status.Online})
     status: Status;
 
-    @Column()
-    landId: number;
+    // @Column()
+    // landId: number;
 
-    @ManyToOne(() => LandEntity, (land) => land.id)
-    land: LandEntity
+    @ManyToOne(() => LandEntity, (land) => land.income)
+    @JoinColumn({ name: "landId" })
+    land: LandEntity;
 }

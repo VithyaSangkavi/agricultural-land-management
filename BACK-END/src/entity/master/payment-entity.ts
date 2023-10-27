@@ -32,6 +32,7 @@ export class PaymentEntity {
     @Column({ type: "enum", enum:Status, default: Status.Online})
     status: Status;
 
-    @ManyToOne(()=> WorkerEntity, (worker) => worker.id)
+    @ManyToOne(()=> WorkerEntity, (worker) => worker.payment)
+    @JoinColumn({ name: "workerId" })
     worker: WorkerEntity;
 }
