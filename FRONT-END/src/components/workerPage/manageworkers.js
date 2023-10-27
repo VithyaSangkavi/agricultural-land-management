@@ -2,10 +2,14 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useHistory } from "react-router-dom";
 import './manageworkers.css';
-import Dropdown from 'react-bootstrap/Dropdown';
 import Footer from '../footer/footer';
+import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
+import { Dropdown, DropdownButton } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 
 function ManageWorkers() {
+  
+  const { t, i18n } = useTranslation();
 
   const [lands, setLands] = useState([]);
   const [selectedLand, setSelectedLand] = useState('');
@@ -64,13 +68,32 @@ function ManageWorkers() {
     return landIdWorker === '' || worker.landId === landIdWorker;
   });
 
+  const handleLanguageChange = (lang) => {
+    i18n.changeLanguage(lang);
+  };
+
   return (
     <div className="worker-app-screen">
-      <p className='main-heading'>Worker Management</p>
+      <p className='main-heading'>{t('workermanagement')}</p>
+      <div className="position-absolute top-0 end-0 mt-2 me-2">
+        <DropdownButton
+          id="dropdown-language"
+          title={<FaLanguage />}
+          onSelect={handleLanguageChange}
+          variant="secondary"
+        >
+          <Dropdown.Item eventKey="en">
+            <FaGlobeAmericas /> English
+          </Dropdown.Item>
+          <Dropdown.Item eventKey="sl">
+            <FaGlobeAmericas /> Sinhala
+          </Dropdown.Item>
+        </DropdownButton>
+      </div>
       <div className='drop-down-container'>
       <Dropdown onSelect={handleSelectLand} className='custom-dropdown'>
       <Dropdown.Toggle className='drop-down' id="dropdown-land">
-            {selectedLand || 'Select Land'}
+            {selectedLand || t('selectland')}
           </Dropdown.Toggle>
         <Dropdown.Menu className='drop-down-menu'>
           {lands.map((land) => (
@@ -82,14 +105,14 @@ function ManageWorkers() {
       </Dropdown>
         <br />
         <button className="add-worker-button" onClick={AddWorker}>
-        Add Worker
+        {t('addworker')}
       </button>
       </div>
       <div>
         <input
           className='search-field'
           type="text"
-          placeholder="Search Workers"
+          placeholder={t('searchworkers')}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -98,8 +121,8 @@ function ManageWorkers() {
         {filteredWorkers.map((worker) => (
           <div key={worker.id} className="worker-card"
           onClick={() => handleWorkerCardClick(worker)}>
-            <h3>Name: {worker.name}</h3>
-            <p>Phone: {worker.phone}</p>
+            <h3>{t('name')}: {worker.name}</h3>
+            <p>{t('phone')}: {worker.phone}</p>
           </div>
         ))}
       </div>
