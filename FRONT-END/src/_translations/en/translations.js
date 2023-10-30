@@ -67,5 +67,22 @@ export const TRANSLATIONS_EN = {
     //side nav menu
     welcome: 'WELCOME',
     managetasktype: 'Manage Task Type',
-    manageexpensetype: 'Manage Expense Type'
+    manageexpensetype: 'Manage Expense Type',
+
+    //manage task type
+    tasktypemanagement: 'Task Type Management',
+    addtasktype: 'Add Task Type',
+    tasktype: 'Task Type',
+    searchtasktypes: 'Search Task Types',
+
+    //save task type
+    tasktypename: 'Task Type Name',
+
+    //add expense type
+    addexpensetype: 'Add Expense Type',
+    expensetype: 'Expense Type',
+
+    //manage expense type
+    expensetypemanagement: 'Expense Type Management',
+    searchexpensetypes: 'Search Expense Types',
 };

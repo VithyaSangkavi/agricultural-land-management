@@ -5,13 +5,16 @@
 }
 
 .worker-card {
-  border: 1px solid #ccc;
+  /* border: 1px solid #ccc; */
   padding: 16px;
   margin: 10px;
   width: 90%;
   /* max-width: 300px; */
   text-align: left;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  border-radius: 20px;
 }
 
 .worker-card h3 {
@@ -26,7 +29,8 @@
 
 .drop-down {
   padding: 10px;
-  background-color: #6558f5;
+  background-color: #0e4f20;
+  border: none;
   width: 100%;
 }
 
@@ -44,13 +48,13 @@
 
 .drop-down-menu:hover{
   padding: 10px;
-  background-color: #bab6ef;
+  background-color: #a5dbb4;
   width: 100%;
 }
 
 .worker-app-screen .custom-dropdown .dropdown-toggle:active,
 .worker-app-screen .custom-dropdown .dropdown-toggle:focus {
-  background-color: #6558f5;
+  background-color: #0e4f20;
   box-shadow: none;
 }
 
@@ -76,7 +80,7 @@
 
 /* Styling for the Add Worker button */
 .add-worker-button {
-  background-color: #6558f5; 
+  background-color: #0e4f20; 
   color: #fff; 
   padding: 10px 20px;
   border: none; 
@@ -88,7 +92,7 @@
 }
 
 .add-worker-button:hover {
-  background-color: #0056b3; /* Change background color on hover */
+  background-color: #007922; /* Change background color on hover */
 }
 
 .add-worker-button:focus {

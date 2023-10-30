@@ -80,7 +80,7 @@ const AddTask = () => {
           ))}
         </select>
       </div>
-      <br/>
+      <br />
       <DatePicker
         selected={selectedDate}
         onChange={(date) => setSelectedDate(date)} // Set the selected date
@@ -88,10 +88,11 @@ const AddTask = () => {
         placeholderText="Start Date" // Set the placeholder text
         dateFormat="MM/dd/yyyy" // Define the date format
       />
-      <br/> <br/>
-       <button className="add-button" onClick={handleAddTaskAssigned}>
-              Add Task
-            </button>
+      <br /> <br />
+      <button className="add-button" onClick={handleAddTaskAssigned}>
+        Add Task
+      </button>
+      <br />
       <div className='footer-alignment'>
         <Footer />
       </div>

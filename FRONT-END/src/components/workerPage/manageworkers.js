@@ -8,7 +8,7 @@ import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
 function ManageWorkers() {
-  
+
   const { t, i18n } = useTranslation();
 
   const [lands, setLands] = useState([]);
@@ -44,7 +44,7 @@ function ManageWorkers() {
   }
 
   const handleSelectLand = (eventKey) => {
-    setSelectedLand(eventKey); 
+    setSelectedLand(eventKey);
 
     axios.post(`http://localhost:8081/service/master/findLandIdByName?name=${eventKey}`)
       .then((response) => {
@@ -58,7 +58,7 @@ function ManageWorkers() {
         console.error("Error fetching data:", error);
       });
   };
-  
+
   const handleWorkerCardClick = (worker) => {
     history.push('/addWorker', { basicDetails: worker });
   };
@@ -91,22 +91,22 @@ function ManageWorkers() {
         </DropdownButton>
       </div>
       <div className='drop-down-container'>
-      <Dropdown onSelect={handleSelectLand} className='custom-dropdown'>
-      <Dropdown.Toggle className='drop-down' id="dropdown-land">
+        <Dropdown onSelect={handleSelectLand} className='custom-dropdown'>
+          <Dropdown.Toggle className='drop-down' id="dropdown-land">
             {selectedLand || t('selectland')}
           </Dropdown.Toggle>
-        <Dropdown.Menu className='drop-down-menu'>
-          {lands.map((land) => (
-            <div key={land.id}>
-              <Dropdown.Item eventKey={land.name}>{land.name}</Dropdown.Item>
-            </div>
-          ))}
-        </Dropdown.Menu>
-      </Dropdown>
+          <Dropdown.Menu className='drop-down-menu'>
+            {lands.map((land) => (
+              <div key={land.id}>
+                <Dropdown.Item eventKey={land.name}>{land.name}</Dropdown.Item>
+              </div>
+            ))}
+          </Dropdown.Menu>
+        </Dropdown>
         <br />
         <button className="add-worker-button" onClick={AddWorker}>
-        {t('addworker')}
-      </button>
+          {t('addworker')}
+        </button>
       </div>
       <div>
         <input
@@ -120,15 +120,16 @@ function ManageWorkers() {
       <div className="worker-list">
         {filteredWorkers.map((worker) => (
           <div key={worker.id} className="worker-card"
-          onClick={() => handleWorkerCardClick(worker)}>
+            onClick={() => handleWorkerCardClick(worker)}>
             <h3>{t('name')}: {worker.name}</h3>
             <p>{t('phone')}: {worker.phone}</p>
           </div>
         ))}
       </div>
-      <br/>
-
-      <Footer />
+      <br />
+      <div className='footer-alignment'>
+        <Footer />
+      </div>
     </div>
   );
 }
