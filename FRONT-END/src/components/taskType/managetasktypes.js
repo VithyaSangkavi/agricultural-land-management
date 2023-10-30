@@ -129,7 +129,10 @@ function ManageTaskTypes() {
           </div>
         ))}
       </div>
-      <Footer />
+      <br/>
+      <div className='footer-alignment'>
+        <Footer />
+      </div>
     </div>
   );
 }

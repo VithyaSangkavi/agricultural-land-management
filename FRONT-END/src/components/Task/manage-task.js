@@ -288,6 +288,7 @@ const ManageTask = () => {
                     <button className="add-button" onClick={handleAddTaskExpense}>Add Task Expense</button>
                 </div>
             )}
+            <br/>
             <div className='footer-alignment'>
                 <Footer />
             </div>

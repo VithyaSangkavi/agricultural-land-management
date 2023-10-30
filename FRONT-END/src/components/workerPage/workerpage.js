@@ -6,6 +6,7 @@ import { submitSets } from '../UiComponents/SubmitSets';
 import { alertService } from '../../_services/alert.service';
 import Footer from '../footer/footer';
 import { Form, Button, Container, Col, Row, Card } from 'react-bootstrap';
+import DatePicker from 'react-datepicker';
 import { useHistory, useLocation } from "react-router-dom";
 import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
@@ -163,6 +164,14 @@ const WorkerPage = () => {
               placeholder="DOB"
               className="input-field"
             />
+            {/* <DatePicker
+              selected={joinedDate}
+              onChange={(date) => setJoinedDate(date)}
+              className="input-dates"
+              placeholderText={t('Joined Date')}
+              dateFormat="MM/dd/yyyy"
+            /> */}
+
             <input
               type="text"
               value={nic}
@@ -186,6 +195,13 @@ const WorkerPage = () => {
               placeholder={t('joineddate')}
               className="input-field"
             />
+            {/* <DatePicker
+              selected={joinedDate}
+              onChange={(date) => setJoinedDate(date)}
+              className="input-dates"
+              placeholderText={t('joineddate')} // Use the translated placeholder text
+              dateFormat="MM/dd/yyyy"
+            /> */}
             <input
               type="text"
               value={phone}
@@ -214,6 +230,7 @@ const WorkerPage = () => {
             <button className="add-button" onClick={handleAddWorker}>
               {t('addworker')}
             </button>
+            <br />
           </div>
         ) : (
           <div className="finance">
@@ -249,8 +266,9 @@ const WorkerPage = () => {
             />
 
             <button className="add-button" onClick={handleAddPayment}>
-            {t('addworkerpayment')}
+              {t('addworkerpayment')}
             </button>
+            <br />
           </div>
         )}
       </div>

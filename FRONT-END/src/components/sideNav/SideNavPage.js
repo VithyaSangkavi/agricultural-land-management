@@ -98,7 +98,7 @@ function SideNavBar() {
           </Navbar.Brand>
         </Container>
       </Navbar>
-      <br />
+      <br /> 
       <Navbar className="side-nav-menu">
         <Container>
           <Navbar.Brand onClick={ManageExpenseType}>
@@ -106,6 +106,7 @@ function SideNavBar() {
           </Navbar.Brand>
         </Container>
       </Navbar>
+      <br/>
       <div className='footer-alignment'>
         <Footer />
       </div>

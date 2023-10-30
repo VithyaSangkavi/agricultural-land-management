@@ -98,6 +98,7 @@ function ManageExpenseTypes() {
             <p>{t('expensetype')}: {expense.expenseType}</p>
           </div>
         ))}
+        <br/>
       </div>
       <Footer />
     </div>

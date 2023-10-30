@@ -65,8 +65,9 @@ const AddExpenseType = () => {
           <br />
           <button className="add-button" onClick={handleAddExpense}>
             {t('add')}
-          </button>
+          </button> 
         </div>
+         <br/> <br/> <br/> 
         <div className='footer-alignment'>
           <Footer />
         </div>
