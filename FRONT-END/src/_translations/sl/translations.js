@@ -68,4 +68,21 @@ export const TRANSLATIONS_SL = {
     welcome: 'සාදරයෙන් පිළිගනිමු',
     managetasktype: 'කාර්ය වර්ගය කළමනාකරණය ',
     manageexpensetype: 'වියදම් වර්ගය කළමනාකරණය',
+
+     //manage task type
+     tasktypemanagement: 'කාර්ය වර්ගය කළමනාකරණය',
+     addtasktype: 'කාර්ය වර්ගය එකතු කරන්න',
+     tasktype: 'කාර්ය වර්ගය',
+     searchtasktypes: 'සෙවුම් කාර්ය වර්ග',
+
+     //save task type
+     tasktypename: 'කාර්ය වර්ගය නම',
+     
+    //add expense type
+    addexpensetype: 'වියදම් වර්ගය එකතු කරන්න',
+    expensetype: 'වියදම් වර්ගය',
+
+    //manage expense type
+    expensetypemanagement: 'වියදම් ආකාරයේ කළමනාකරණය',
+    searchexpensetypes: 'සෙවුම් වියදම් වර්ග',
 };

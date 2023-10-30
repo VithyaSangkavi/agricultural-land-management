@@ -2,10 +2,14 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useHistory } from "react-router-dom";
 import './manage-expense-type.css';
-import Dropdown from 'react-bootstrap/Dropdown';
 import Footer from '../footer/footer';
+import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
+import { Dropdown, DropdownButton } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 
 function ManageExpenseTypes() {
+
+  const { t, i18n } = useTranslation();
 
   const [lands, setLands] = useState([]);
   const [selectedLand, setSelectedLand] = useState('');
@@ -39,13 +43,32 @@ function ManageExpenseTypes() {
     history.push('/addExpenseType')
   }
 
+  const handleLanguageChange = (lang) => {
+    i18n.changeLanguage(lang);
+  };
+
   return (
     <div className="expense-app-screen">
-      <p className='main-heading'>Task Management</p>
+      <p className='main-heading'>{t('expensetypemanagement')}</p>
+      <div className="position-absolute top-0 end-0 mt-2 me-2">
+        <DropdownButton
+          id="dropdown-language"
+          title={<FaLanguage />}
+          onSelect={handleLanguageChange}
+          variant="secondary"
+        >
+          <Dropdown.Item eventKey="en">
+            <FaGlobeAmericas /> English
+          </Dropdown.Item>
+          <Dropdown.Item eventKey="sl">
+            <FaGlobeAmericas /> Sinhala
+          </Dropdown.Item>
+        </DropdownButton>
+      </div>
       <div className='drop-down-container'>
         <Dropdown className='custom-dropdown'>
           <Dropdown.Toggle className='drop-down' id="dropdown-land">
-            {selectedLand || 'Select Land'}
+            {selectedLand || t('selectland')}
           </Dropdown.Toggle>
           <Dropdown.Menu className='drop-down-menu'>
             {lands.map((land) => (
@@ -57,14 +80,14 @@ function ManageExpenseTypes() {
         </Dropdown>
         <br />
         <button className="add-expense-type-button" onClick={AddExpenseType}>
-          Add Expense Type
+          {t('addexpensetype')}
         </button>
       </div>
       <div>
         <input
           className='search-field'
           type="text"
-          placeholder="Search Expense Types"
+          placeholder={t('searchexpensetypes')}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -72,7 +95,7 @@ function ManageExpenseTypes() {
       <div className="expense-list">
         {filteredTasks.map((expense) => (
           <div key={expense.id} className="expense-card">
-            <p>Expense Type: {expense.expenseType}</p>
+            <p>{t('expensetype')}: {expense.expenseType}</p>
           </div>
         ))}
       </div>

@@ -197,7 +197,7 @@ const ManageTask = () => {
                 <p> {taskName} task - </p>
                 <p> From - {startDate} </p>
             </div>
-
+            <br />
             <div className="toggle-container">
                 <button
                     onClick={() => setSelectedView('tasks')}
