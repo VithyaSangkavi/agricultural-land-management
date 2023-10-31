@@ -74,7 +74,7 @@ const WorkerPage = () => {
     //     }
     //   })
 
-    Axios.post('http://localhost:8081/service/master/workerSave', addWorker)
+    Axios.post('http://localhost:8080/service/master/workerSave', addWorker)
       .then((response) => {
         console.log("get land id: ", landId)
         console.log('Worker added successfully:', response.data);
@@ -105,19 +105,15 @@ const WorkerPage = () => {
     //     }
     //   })
 
-    Axios.post('http://localhost:8081/service/master/paymentSave', addPayment)
-      .then((response) => {
-        console.log("worker id: ", workerId)
-        console.log('Payment added successfully:', response.data);
-        history.push('/manageWorkers')
-      })
-      .catch((error) => {
-        console.error('Error adding payment:', error);
-      });
-  };
-
-  const handleLanguageChange = (lang) => {
-    i18n.changeLanguage(lang);
+    Axios.post('http://localhost:8080/service/master/paymentSave', addPayment)
+    .then((response) => {
+      console.log("worker id: ", workerId)
+      console.log('Payment added successfully:', response.data);
+      history.push('/manageWorkers')
+    })
+    .catch((error) => {
+      console.error('Error adding payment:', error);
+    });
   };
 
   return (
@@ -136,6 +132,7 @@ const WorkerPage = () => {
           </Dropdown.Menu>
         </Dropdown>
       </div>
+
       <div className="toggle-container">
         <button className={`toggle-button ${showBasicDetails ? 'active' : ''}`} onClick={toggleView}>
           {t('basicdetails')}

@@ -33,22 +33,7 @@ export const TRANSLATIONS_SL = {
     updateincome: "ආදායම් යාවත්කාලීන කිරීම",
     update: "යාවත්කාලීන කරන්න",
 
-    //worker registration
-    workerregistration: 'සේවක ලියාපදිංචිය',
-    basicdetails: 'මූලික විස්තර',
-    finance: 'මූල්ය',
-    gender: 'ස්ත්රී පුරුෂ භාවය',
-    male: 'පිරිමි',
-    female: 'ගැහැණු',
-    joineddate: 'සම්බන්ධ වූ දිනය',
-    phone: 'දුරකථන අංකය',
-    address: 'ලිපිනය',
-    status: 'තත්ත්වය',
-    active: 'ක්රියාකාරී',
-    retired: 'විශ්‍රාමිකයි',
-    fired: 'තනතුරින් පහකලා',
-    temporarystopped: 'තාවකාලිකව නතර කර ඇත',
-    addworker: 'සේවකයා එකතු කරන්න',
+    welcome: "ආයුබෝවන්",
 
     //save payment
     monthlydailypay: 'මාසික / දෛනික ගෙවීම',
@@ -102,4 +87,5 @@ export const TRANSLATIONS_SL = {
     //add task
     startdate: 'ආරම්භක දිනය',
     addtask: 'කාර්යය එක් කරන්න',
+
 };

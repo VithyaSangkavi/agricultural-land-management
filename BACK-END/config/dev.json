@@ -1,12 +1,12 @@
 {
   "server": {
-    "port": "8081",
+    "port": "8080",
     "ip": "127.0.0.1"
   },
   "db": {
     "host": "localhost",
     "userName": "root",
-    "password": "Vithya24",
+    "password": "1234",
     "db":"agri-management",
     "port":"3306"
   },

@@ -95,12 +95,7 @@ export class CropDaoImpl implements CropDao {
     if (cropDto.getCropName()) {
       searchObject.name = Like("%" + cropDto.getCropName() + "%");
     }
-    if (cropDto.getCreatedDate()) {
-      searchObject.color = Like("%" + cropDto.getCreatedDate() + "%");
-    }
-    if (cropDto.getUpdatedDate()) {
-      searchObject.color = Like("%" + cropDto.getUpdatedDate() + "%");
-    }
+  
     
     searchObject.status = Status.Online;
     

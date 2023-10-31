@@ -87,18 +87,6 @@ export class LotDaoImpl implements LotDao {
     if (lotDto.getLotName()) {
       searchObject.name = Like("%" + lotDto.getLotName() + "%");
     }
-    if (lotDto.getArea()) {
-      searchObject.area = Like("%" + lotDto.getArea() + "%");
-    }
-    if (lotDto.getAreaUOM()) {
-      searchObject.areaUOM = Like("%" + lotDto.getAreaUOM() + "%");
-    }
-    if (lotDto.getCreatedDate()) {
-      searchObject.createdDate = Like("%" + lotDto.getCreatedDate() + "%");
-    }
-    if (lotDto.getUpdatedDate()) {
-      searchObject.updatedDate = Like("%" + lotDto.getUpdatedDate() + "%");
-    }
 
     searchObject.status = Status.Online;
 

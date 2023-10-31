@@ -7,4 +7,5 @@ export interface WorkAssignedService {
   delete(workAssignedDto: WorkAssignedDto): Promise<CommonResponse>;
   find(landId: number): Promise<CommonResponse>;
   findById(attendanceId: number): Promise<CommonResponse>;
+  getOngoingTasksWithTaskNames(): Promise<CommonResponse>;
 }
