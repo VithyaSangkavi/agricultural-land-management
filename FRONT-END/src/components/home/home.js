@@ -2,10 +2,13 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useHistory } from "react-router-dom";
 import './home.css';
-import Dropdown from 'react-bootstrap/Dropdown';
 import Footer from '../footer/footer';
+import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
+import { Dropdown, DropdownButton } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 
 function Home() {
+    const [t, i18n] = useTranslation();
 
     const [lands, setLands] = useState([]);
     const [selectedLand, setSelectedLand] = useState('');
@@ -21,22 +24,22 @@ function Home() {
     const history = useHistory();
 
     useEffect(() => {
-        axios.post('http://localhost:8080/service/master/taskAssignedFindAll').then((response) => {
+        axios.post('http://localhost:8081/service/master/taskAssignedFindAll').then((response) => {
             setTaskAssigned(response.data);
             console.log("Task Assigned: ", response.data);
         });
 
-        axios.post('http://localhost:8080/service/master/taskFindAll').then((response) => {
+        axios.post('http://localhost:8081/service/master/taskFindAll').then((response) => {
             setTask(response.data.extra);
             console.log("Tasks : ", response.data.extra);
         });
 
-        axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
+        axios.get('http://localhost:8081/service/master/landFindAll').then((response) => {
             setLands(response.data.extra);
             console.log("Lands : ", response.data.extra);
         });
 
-        axios.get('http://localhost:8080/service/master/ongoing-tasks-with-names').then((response) => {
+        axios.get('http://localhost:8081/service/master/ongoing-tasks-with-names').then((response) => {
             setOngoingTasks(response.data.extra);
             console.log("Ongoing tasks : ", response.data.extra);
         });
@@ -58,7 +61,7 @@ function Home() {
     const handleSelectedLand = (eventkey) => {
         setSelectedLand(eventkey);
 
-        axios.post(`http://localhost:8080/service/master/findLandIdByName?name=${eventkey}`)
+        axios.post(`http://localhost:8081/service/master/findLandIdByName?name=${eventkey}`)
             .then((response) => {
                 const landIdTask = response.data.extra;
                 const taskLand = JSON.stringify(landIdTask);
@@ -79,13 +82,29 @@ function Home() {
         ? taskAssigned.filter((task) => task.taskAssignedId)
         : [];
 
+    const handleLanguageChange = (lang) => {
+        i18n.changeLanguage(lang);
+    };
 
     return (
         <div className="home-app-screen">
+            <p className='main-heading'>{t('home')}</p>
+            <div className="position-absolute top-0 end-0 mt-2 me-2">
+                <Dropdown alignRight onSelect={handleLanguageChange}>
+                    <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                        <FaGlobeAmericas style={{ color: 'white' }} />
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu>
+                        <Dropdown.Item eventKey="en">English</Dropdown.Item>
+                        <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
+            </div>
             <div className='drop-down-container'>
                 <Dropdown onSelect={handleSelectedLand} className='custom-dropdown'>
                     <Dropdown.Toggle className='drop-down' id="dropdown-land">
-                        {selectedLand || 'Select Land'}
+                        {selectedLand || t('selectland')}
                     </Dropdown.Toggle>
                     <Dropdown.Menu className='drop-down-menu'>
                         {lands.map((land) => (
@@ -98,7 +117,7 @@ function Home() {
                 <br />
             </div>
             <div className='home-heading'>
-                <p>Ongoing Tasks</p>
+                <p>{t('ongoingtasks')}</p>
             </div>
             <div className="task-list">
                 {OngoingTasks.map((taskAssigned) => (
@@ -108,7 +127,7 @@ function Home() {
                 ))}
             </div>
             <div className='home-heading'>
-                <p>New Task</p>
+                <p>{t('newtask')}</p>
             </div>
             <div className="task-list">
                 {filteredTasks.map((task) => (

@@ -88,4 +88,8 @@ export const TRANSLATIONS_SL = {
     startdate: 'ආරම්භක දිනය',
     addtask: 'කාර්යය එක් කරන්න',
 
+    //home
+    home: 'මුල් පිටුව',
+    newtask: 'නව කාර්යය',
+    ongoingtasks: 'සිදුවෙමින් පවතින කාර්යයන්',
 };
