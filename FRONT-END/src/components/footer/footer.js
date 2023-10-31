@@ -4,17 +4,15 @@ import { faBars, faHome, faChartPie } from '@fortawesome/free-solid-svg-icons';
 import './footer.css'
 import { useHistory } from 'react-router-dom'
 import Navbar from 'react-bootstrap/Navbar';
-import SideNavBar from '../sideNav/SideNavPage';
 
 const Footer = () => {
     const [isSideNavOpen, setIsSideNavOpen] = useState(false);
     const history = useHistory();
 
-
     const toggleSideNav = () => {
         setIsSideNavOpen(!isSideNavOpen);
+        history.push('/sideNavPage')
     };
-
 
     const clickHome = () => {
         history.push('/home')
@@ -22,7 +20,7 @@ const Footer = () => {
 
     return (
         <div className='app-screen'>
-            <div className={`footer-app-screen ${isSideNavOpen ? 'open' : ''}`}>
+            <div className='footer-app-screen'>
                 <div className="footer-container">
 
                     <div className="footer-icon">
