@@ -103,4 +103,9 @@ export const TRANSLATIONS_EN = {
     //add task
     startdate: 'Start Date',
     addtask : 'Add Task',
+
+    //home
+    home: 'Home',
+    newtask: 'New Task',
+    ongoingtasks: 'Ongoing Tasks',
 };

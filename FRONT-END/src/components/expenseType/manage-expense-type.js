@@ -21,12 +21,12 @@ function ManageExpenseTypes() {
 
   useEffect(() => {
 
-    axios.get('http://localhost:8080/service/master/expenseFindAll').then((response) => {
+    axios.get('http://localhost:8081/service/master/expenseFindAll').then((response) => {
       setExpenseType(response.data.extra);
       console.log("Expenses : ", response.data.extra);
     });
 
-    axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
+    axios.get('http://localhost:8081/service/master/landFindAll').then((response) => {
       setLands(response.data.extra);
       console.log("Lands : ", response.data.extra);
     });

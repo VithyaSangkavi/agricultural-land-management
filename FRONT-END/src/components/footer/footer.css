@@ -1,15 +1,17 @@
 .footer-container {
-    display: flex;
-    justify-content: space-between; 
-    align-items: center;
-    /* background-color: #333; 
-    color: #fff; */
-    padding: 10px; 
-    margin-bottom: 0;
-    background-color: #0e4f20;
-  }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #0e4f20;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+}
 
-  .footer-icon {
-    padding: 0 10px;
-    color: white;
-  }
+.footer-icon {
+  padding: 0 10px;
+  color: white;
+}
