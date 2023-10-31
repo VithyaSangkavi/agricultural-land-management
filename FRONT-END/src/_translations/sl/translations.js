@@ -32,4 +32,7 @@ export const TRANSLATIONS_SL = {
     month: "මාසය",
     updateincome: "ආදායම් යාවත්කාලීන කිරීම",
     update: "යාවත්කාලීන කරන්න",
+
+    welcome: "ආයුබෝවන්",
+
 };

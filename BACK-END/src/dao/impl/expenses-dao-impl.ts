@@ -86,12 +86,7 @@ export class ExpensesDaoImpl implements ExpensesDao {
     if (expensesDto.getExpenseType()) {
       searchObject.expenseType = Like("%" + expensesDto.getExpenseType() + "%");
     }
-    if (expensesDto.getCreatedDate()) {
-      searchObject.createdDate = Like("%" + expensesDto.getCreatedDate() + "%");
-    }
-    if (expensesDto.getUpdatedDate()) {
-      searchObject.updatedDate = Like("%" + expensesDto.getUpdatedDate() + "%");
-    }
+
     
     searchObject.status = Status.Online;
     

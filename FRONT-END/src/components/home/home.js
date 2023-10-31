@@ -20,17 +20,17 @@ function Home() {
     const history = useHistory();
 
     useEffect(() => {
-        axios.post('http://localhost:8081/service/master/taskAssignedFindAll').then((response) => {
+        axios.post('http://localhost:8080/service/master/taskAssignedFindAll').then((response) => {
             setTaskAssigned(response.data);
             console.log("Task Assigned: ", response.data);
         });
 
-        axios.post('http://localhost:8081/service/master/taskFindAll').then((response) => {
+        axios.post('http://localhost:8080/service/master/taskFindAll').then((response) => {
             setTask(response.data.extra);
             console.log("Tasks : ", response.data.extra);
         });
 
-        axios.get('http://localhost:8081/service/master/landFindAll').then((response) => {
+        axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
             setLands(response.data.extra);
             console.log("Lands : ", response.data.extra);
         });
@@ -52,7 +52,7 @@ function Home() {
     const handleSelectedLand = (eventkey) => {
         setSelectedLand(eventkey);
 
-        axios.post(`http://localhost:8081/service/master/findLandIdByName?name=${eventkey}`)
+        axios.post(`http://localhost:8080/service/master/findLandIdByName?name=${eventkey}`)
             .then((response) => {
                 const landIdTask = response.data.extra;
                 const taskLand = JSON.stringify(landIdTask);

@@ -105,15 +105,6 @@ export class IncomeDaoImpl implements IncomeDao {
     if (incomeDto.getMonth()) {
       searchObject.name = Like("%" + incomeDto.getMonth() + "%");
     }
-    if (incomeDto.getPrice()) {
-      searchObject.name = Like("%" + incomeDto.getPrice() + "%");
-    }
-    if (incomeDto.getCreatedDate()) {
-      searchObject.color = Like("%" + incomeDto.getCreatedDate() + "%");
-    }
-    if (incomeDto.getUpdatedDate()) {
-      searchObject.color = Like("%" + incomeDto.getUpdatedDate() + "%");
-    }
 
     searchObject.status = Status.Online;
 

@@ -1,32 +1,61 @@
 .manageLots {
     background-color: #f0f0f7;
-    padding: 30px 50px; 
+    padding: 30px 20px;
     border-radius: 15px;
     background-image: radial-gradient(circle, #f0f0f7, #c5c1d8);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Added a soft shadow for depth */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .manageLots h2 {
-    font-weight: 600; 
-    border-bottom: 3px solid #6b52ae; 
-    padding-bottom: 15px;
+    color: white;
+    background: linear-gradient(145deg, #8a77db, #6b52ae);
+    padding: 10px 30px;
+    border-radius: 15px;
+}
+
+.manageLots .search {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.manageLots .search>form>.form-control {
+    border-radius: 25px;
+    padding-left: 60px;
+    background-color: #ffffff;
+    border: 1px solid #9575cd;
+    height: 55px;
+    box-shadow: 0 4px 6px rgba(142, 92, 195, 0.2);
+    transition: box-shadow 0.2s;
+}
+
+.manageLots .search>form>.form-control:focus {
+    box-shadow: 0 4px 6px rgba(142, 92, 195, 0.3);
+    font-size: 16px;
+}
+
+.manageLots .search>form::before {
+    content: "\1F50D";
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    background-color: #9575cd;
+    border-radius: 50%;
+    padding: 10px;
+    color: #f5f7fa;
+}
+
+.manageLots .filter,
+.manageLots .search {
     margin-bottom: 25px;
-    color: #6b52ae;
-    font-size: 24px; /* Slightly larger font size for better hierarchy */
 }
 
-.manageLots .mb-4 {
-    margin-bottom: 20px !important;
-}
-
-.manageLots .filter, .manageLots .search {
-    margin-bottom: 25px;
-}
-
-.manageLots .filter label, .manageLots .search label {
-    font-weight: 600; /* Consistent with the h2 */
+.manageLots .filter label,
+.manageLots .search label {
+    font-weight: 600;
     margin-right: 15px;
-    font-size: 16px; /* A bit larger for readability */
+    font-size: 16px;
 }
 
 .manageLots .divWithBorder {
@@ -38,17 +67,14 @@
 }
 
 .manageLots .card {
-    transition: transform 0.3s, box-shadow 0.3s; /* Smoothed out transitions */
-    border: none;
-    border-radius: 10px; /* Rounded corners for the cards */
-    background: linear-gradient(145deg, #ffffff, #e9e7f2);
-    padding: 20px; /* Additional padding inside the card */
-    overflow: hidden; 
+    background-color: #fffcfd;
+    border-radius: 15px;
+    padding: 20px 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
 }
 
 .manageLots .card:hover {
-    transform: translateY(-5px); /* A slight upward movement for hover effect */
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+    background-color: #f7e3f9;
 }
 
 .manageLots .btn-primary {
@@ -56,20 +82,20 @@
     border: none;
     border-radius: 50px;
     color: #fff;
-    padding: 10px 25px; 
-    letter-spacing: 1px; 
+    padding: 10px 25px;
+    letter-spacing: 1px;
     font-weight: 600;
     transition: all 0.3s;
 }
 
 .manageLots .btn-primary:hover {
     background: linear-gradient(135deg, #ff659c, #ec407a);
-    transform: translateY(-2px); /* Slight lift on hover */
+    transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
 }
 
 .manageLots .card-body {
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Distribute space inside card equally */
+    justify-content: space-between;
 }

@@ -35,7 +35,7 @@ const ManageTask = () => {
     // useEffect(() => {
     //     // console.log('Get task id from task assigned table : ', taskId);
 
-    //     axios.get(`http://localhost:8081/service/master/findTaskNameById/?taskId=${taskId}`)
+    //     axios.get(`http://localhost:8080/service/master/findTaskNameById/?taskId=${taskId}`)
     //         .then((response) => {
     //             setTaskName(response.data.extra.taskName);
     //         })
@@ -44,7 +44,7 @@ const ManageTask = () => {
     //         });
 
     //     axios
-    //         .post('http://localhost:8081/service/master/workerFindAll')
+    //         .post('http://localhost:8080/service/master/workerFindAll')
     //         .then((response) => {
     //             const workerNamesArray = response.data.extra.map((worker) => worker.name);
     //             setWorkerNames(workerNamesArray);
@@ -55,7 +55,7 @@ const ManageTask = () => {
     //         });
 
     //     axios
-    //         .get('http://localhost:8081/service/master/expenseFindAll')
+    //         .get('http://localhost:8080/service/master/expenseFindAll')
     //         .then((response) => {
     //             const expenseTypeArrays = response.data.extra.map((expense) => expense.expenseType);
     //             setExpenseTypes(expenseTypeArrays);
@@ -67,7 +67,7 @@ const ManageTask = () => {
     // })
 
     const fetchTaskName = () => {
-        axios.get(`http://localhost:8081/service/master/findTaskNameById/?taskId=${taskId}`)
+        axios.get(`http://localhost:8080/service/master/findTaskNameById/?taskId=${taskId}`)
             .then((response) => {
                 setTaskName(response.data.extra.taskName);
             })
@@ -77,7 +77,7 @@ const ManageTask = () => {
     };
 
     const fetchWorkerNames = () => {
-        axios.post('http://localhost:8081/service/master/workerFindAll')
+        axios.post('http://localhost:8080/service/master/workerFindAll')
             .then((response) => {
                 const workerNamesArray = response.data.extra.map((worker) => worker.name);
                 setWorkerNames(workerNamesArray);
@@ -88,7 +88,7 @@ const ManageTask = () => {
     };
 
     const fetchExpenseTypes = () => {
-        axios.get('http://localhost:8081/service/master/expenseFindAll')
+        axios.get('http://localhost:8080/service/master/expenseFindAll')
             .then((response) => {
                 const expenseTypeArrays = response.data.extra.map((expense) => expense.expenseType);
                 setExpenseTypes(expenseTypeArrays);
@@ -120,7 +120,7 @@ const ManageTask = () => {
                 setSelectedWorker('');
                 console.log('selected worker: ', selectedWorker);
 
-                axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${selectedWorker}`)
+                axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${selectedWorker}`)
                     .then((response) => {
                         const workerId = response.data.extra.workerId
                         // setWorkerId(storeWorkerId);
@@ -134,7 +134,7 @@ const ManageTask = () => {
                             lotId
                         }
 
-                        axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
+                        axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
                             .then((response) => {
                                 console.log('Work assigned added successfully:', response.data);
 
@@ -157,7 +157,7 @@ const ManageTask = () => {
 
         //get expense id according to the expense type
         axios
-            .get(`http://localhost:8081/service/master/find-by-type?expenseType=${selectedExpenseType}`)
+            .get(`http://localhost:8080/service/master/find-by-type?expenseType=${selectedExpenseType}`)
             .then((response) => {
                 const expenseId = response.data.expenseId;
                 setExpenseId(expenseId);
@@ -169,7 +169,7 @@ const ManageTask = () => {
                 };
 
                 //save task expense 
-                axios.post('http://localhost:8081/service/master/task-expense-save', addTaskExpense)
+                axios.post('http://localhost:8080/service/master/task-expense-save', addTaskExpense)
                     .then((response) => {
                         console.log('Task expense added successfully:', response.data);
                         history.push('/home');
@@ -195,7 +195,7 @@ const ManageTask = () => {
         const selectedWorker = localStorage.getItem('selectedWorker');
         console.log('selected worker: ', selectedWorker);
 
-        axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${selectedWorker}`)
+        axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${selectedWorker}`)
             .then((response) => {
                 const workerId = response.data.extra.workerId
                 // setWorkerId(storeWorkerId);
@@ -210,7 +210,7 @@ const ManageTask = () => {
                     lotId
                 }
 
-                axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
+                axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
                     .then((response) => {
                         console.log('Work assigned added successfully:', response.data);
 

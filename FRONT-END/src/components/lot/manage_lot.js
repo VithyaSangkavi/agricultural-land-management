@@ -75,7 +75,7 @@ const ManageLot = () => {
             </Row>
 
             <Row className='mb-4'>
-                <Col md={6}>
+                <Col className='search'>
                     <Form inline>
                         <FormControl
                             type='text'

@@ -32,4 +32,6 @@ export const TRANSLATIONS_EN = {
     month: "Month",
     updateincome: "Update Income",
     update: "Update",
+
+    welcome: "Welcome",
 };
