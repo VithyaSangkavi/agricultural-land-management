@@ -16,6 +16,7 @@ function Home() {
     const [task, setTask] = useState([]);
     const [taskNames, setTaskNames] = useState([]);
     const [taskAssigned, setTaskAssigned] = useState([]);
+    const [OngoingTasks, setOngoingTasks] = useState([]);
 
     const history = useHistory();
 
@@ -33,6 +34,11 @@ function Home() {
         axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
             setLands(response.data.extra);
             console.log("Lands : ", response.data.extra);
+        });
+
+        axios.get('http://localhost:8080/service/master/ongoing-tasks-with-names').then((response) => {
+            setOngoingTasks(response.data.extra);
+            console.log("Ongoing tasks : ", response.data.extra);
         });
     }, []);
 
@@ -95,8 +101,8 @@ function Home() {
                 <p>Ongoing Tasks</p>
             </div>
             <div className="task-list">
-                {filteredTaskAssigned.map((taskAssigned) => (
-                    <div key={taskAssigned.id} className="task-card" onClick={() => handleCardClick(taskAssigned.id)}>
+                {OngoingTasks.map((taskAssigned) => (
+                    <div key={taskAssigned.id} className="task-card">
                         <p>{taskAssigned.taskName}</p>
                     </div>
                 ))}
