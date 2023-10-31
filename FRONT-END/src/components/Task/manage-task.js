@@ -6,9 +6,14 @@ import DatePicker from 'react-datepicker';
 import './manage-task.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
+import { Dropdown, DropdownButton } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 
 
 const ManageTask = () => {
+    const [t, i18n] = useTranslation();
+
     const history = useHistory();
 
     const taskId = localStorage.getItem('TaskIDFromTaskAssigned')
@@ -222,15 +227,30 @@ const ManageTask = () => {
             .catch((error) => {
                 console.error('Error getting worker id:', error);
             });
-
     }
+
+    const handleLanguageChange = (lang) => {
+        i18n.changeLanguage(lang);
+    };
 
     return (
         <div className="manage-task-app-screen">
-            <p className='main-heading'>Manage Task</p>
+            <p className='main-heading'>{t('managetask')}</p>
+            <div className="position-absolute top-0 end-0 mt-2 me-2">
+                <Dropdown alignRight onSelect={handleLanguageChange}>
+                    <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                        <FaGlobeAmericas style={{ color: 'white' }} />
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu>
+                        <Dropdown.Item eventKey="en">English</Dropdown.Item>
+                        <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
+            </div>
             <div className='task-heading'>
-                <p> {taskName} task - </p>
-                <p> From - {startDate} </p>
+                <p> {taskName} {t('task')} - </p>
+                <p> {t('from')} - {startDate} </p>
             </div>
             <br />
             <div className="toggle-container">
@@ -238,20 +258,20 @@ const ManageTask = () => {
                     onClick={() => setSelectedView('tasks')}
                     className={selectedView === 'tasks' ? 'active toggle-button' : 'toggle-button'}
                 >
-                    Tasks
+                    {t('tasks')}
                 </button>
                 <button
                     onClick={() => setSelectedView('finance')}
                     className={selectedView === 'finance' ? 'active toggle-button' : 'toggle-button'}
                 >
-                    Finance
+                    {t('finance')}
                 </button>
             </div>
 
             {/* Task Toggled View */}
             {selectedView === 'tasks' && (
                 <div className='card'>
-                    <p>Date - Ongoing</p><br />
+                    <p>{t('dateongoing')}</p><br />
 
                     <div className="dropdown-and-button-container">
                         <select
@@ -259,14 +279,14 @@ const ManageTask = () => {
                             onChange={(e) => setSelectedWorker(e.target.value)}
                             className='dropdown-input'
                         >
-                            <option value="">Select a worker</option>
+                            <option value="">{t('selectaworker')}</option>
                             {workerNames.map((workerName) => (
                                 <option key={workers.name} value={workerName}>
                                     {workerName}
                                 </option>
                             ))}
                         </select>
-                        <button className='add-small' onClick={handleAddSelectedWorker}>Add</button>
+                        <button className='add-small' onClick={handleAddSelectedWorker}>{t('add')}</button>
                     </div>
                     {selectedWorkersList.length > 0 && (
                         <div>
@@ -278,7 +298,7 @@ const ManageTask = () => {
                                             <div className="kg-input">
                                                 <input
                                                     type="text"
-                                                    placeholder="Number of kg"
+                                                    placeholder={t('numberofkg')}
                                                     value={kgValues[index] || ''}
                                                     onChange={(e) => handleKgChange(e, index)}
                                                     className="dropdown-input"
@@ -294,7 +314,7 @@ const ManageTask = () => {
                         </div>
                     )}
 
-                    <button className="add-button">Assign Work</button>
+                    <button className="add-button">{t('assignwork')}</button>
                 </div>
             )}
 
@@ -306,7 +326,7 @@ const ManageTask = () => {
                         onChange={(e) => setSelectedExpenseType(e.target.value)}
                         className='dropdown-input'
                     >
-                        <option value="">Expense</option>
+                        <option value="">{t('expense')}</option>
                         {expenseTypes.map((expenseType) => (
                             <option key={expenseType} value={expenseType}>
                                 {expenseType}
@@ -315,15 +335,15 @@ const ManageTask = () => {
                     </select><br />
                     <input
                         type="text"
-                        placeholder="Amount"
+                        placeholder={t('amount')}
                         value={value}
                         onChange={(e) => setValue(e.target.value)}
                         className="dropdown-input"
                     />
-                    <button className="add-button" onClick={handleAddTaskExpense}>Add Task Expense</button>
+                    <button className="add-button" onClick={handleAddTaskExpense}>{t('addtaskexpense')}</button>
                 </div>
             )}
-            <br/>
+            <br />
             <div className='footer-alignment'>
                 <Footer />
             </div>

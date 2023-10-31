@@ -16,6 +16,9 @@ function ManageWorkers() {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [workers, setWorkers] = useState([]);
+  const [filteredWorkersForSelectedLand, setFilteredWorkersForSelectedLand] = useState([]);
+
+  const [landId, setLandId] = useState();
 
   const history = useHistory();
 
@@ -49,10 +52,21 @@ function ManageWorkers() {
     axios.post(`http://localhost:8080/service/master/findLandIdByName?name=${eventKey}`)
       .then((response) => {
         const landIdWorker = response.data.extra;
+        const thislandId = landIdWorker.landId;
 
         localStorage.setItem('selectedLandIdWorker', JSON.stringify(landIdWorker));
 
-        console.log("Stored Land ID: ", landIdWorker);
+        setLandId(thislandId);
+
+        axios.get(`http://localhost:8081/service/master/findByLandId?landId=${thislandId}`)
+          .then((response) => {
+            console.log("Workers for selected land:", response.data.extra);
+            setFilteredWorkersForSelectedLand(response.data.extra);
+          })
+          .catch((error) => {
+            console.error("Error fetching workers for the selected land:", error);
+          });
+
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -63,11 +77,6 @@ function ManageWorkers() {
     history.push('/addWorker', { basicDetails: worker });
   };
 
-  const filteredWorkersByLandId = workers.filter((worker) => {
-    const landIdWorker = localStorage.getItem('selectedLandIdWorker')
-    return landIdWorker === '' || worker.landId === landIdWorker;
-  });
-
   const handleLanguageChange = (lang) => {
     i18n.changeLanguage(lang);
   };
@@ -76,19 +85,16 @@ function ManageWorkers() {
     <div className="worker-app-screen">
       <p className='main-heading'>{t('workermanagement')}</p>
       <div className="position-absolute top-0 end-0 mt-2 me-2">
-        <DropdownButton
-          id="dropdown-language"
-          title={<FaLanguage />}
-          onSelect={handleLanguageChange}
-          variant="secondary"
-        >
-          <Dropdown.Item eventKey="en">
-            <FaGlobeAmericas /> English
-          </Dropdown.Item>
-          <Dropdown.Item eventKey="sl">
-            <FaGlobeAmericas /> Sinhala
-          </Dropdown.Item>
-        </DropdownButton>
+        <Dropdown alignRight onSelect={handleLanguageChange}>
+          <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+            <FaGlobeAmericas style={{ color: 'white' }} />
+          </Dropdown.Toggle>
+
+          <Dropdown.Menu>
+            <Dropdown.Item eventKey="en">English</Dropdown.Item>
+            <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
       </div>
       <div className='drop-down-container'>
         <Dropdown onSelect={handleSelectLand} className='custom-dropdown'>
@@ -118,14 +124,22 @@ function ManageWorkers() {
         />
       </div>
       <div className="worker-list">
-        {filteredWorkers.map((worker) => (
-          <div key={worker.id} className="worker-card"
-            onClick={() => handleWorkerCardClick(worker)}>
-            <h3>{t('name')}: {worker.name}</h3>
-            <p>{t('phone')}: {worker.phone}</p>
-          </div>
-        ))}
+        {selectedLand
+          ? filteredWorkersForSelectedLand.map((worker) => (
+            <div key={worker.id} className="worker-card" onClick={() => handleWorkerCardClick(worker)}>
+              <h3>{t('name')}: {worker.name}</h3>
+              <p>{t('phone')}: {worker.phone}</p>
+            </div>
+          ))
+          : filteredWorkers.map((worker) => (
+            <div key={worker.id} className="worker-card" onClick={() => handleWorkerCardClick(worker)}>
+              <h3>{t('name')}: {worker.name}</h3>
+              <p>{t('phone')}: {worker.phone}</p>
+            </div>
+          ))
+        }
       </div>
+
       <br />
       <div className='footer-alignment'>
         <Footer />

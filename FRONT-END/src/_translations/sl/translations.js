@@ -35,4 +35,57 @@ export const TRANSLATIONS_SL = {
 
     welcome: "ආයුබෝවන්",
 
+    //save payment
+    monthlydailypay: 'මාසික / දෛනික ගෙවීම',
+    monthly: 'මාසික',
+    daily: 'දිනපතා',
+    basepayment: 'මූලික ගෙවීම',
+    extrapayment: 'අමතර Kg ගෙවීම',
+    attendancepayment: 'පැමිණීමේ ගෙවීම',
+    addworkerpayment: 'සේවක ගෙවීම් එකතු කරන්න',
+
+    //manage workers
+    workermanagement: 'සේවක කළමනාකරණය',
+    selectland: 'ඉඩම තෝරන්න',
+    searchworkers: 'සෙවුම් සේවකයින්',
+
+    //side nav menu
+    welcome: 'සාදරයෙන් පිළිගනිමු',
+    managetasktype: 'කාර්ය වර්ගය කළමනාකරණය ',
+    manageexpensetype: 'වියදම් වර්ගය කළමනාකරණය',
+
+    //manage task type
+    tasktypemanagement: 'කාර්ය වර්ගය කළමනාකරණය',
+    addtasktype: 'කාර්ය වර්ගය එකතු කරන්න',
+    tasktype: 'කාර්ය වර්ගය',
+    searchtasktypes: 'සෙවුම් කාර්ය වර්ග',
+
+    //save task type
+    tasktypename: 'කාර්ය වර්ගය නම',
+
+    //add expense type
+    addexpensetype: 'වියදම් වර්ගය එකතු කරන්න',
+    expensetype: 'වියදම් වර්ගය',
+
+    //manage expense type
+    expensetypemanagement: 'වියදම් ආකාරයේ කළමනාකරණය',
+    searchexpensetypes: 'සෙවුම් වියදම් වර්ග',
+
+    //manage task
+    managetask: 'කාර්යය කළමනාකරණය ',
+    task: 'කාර්ය',
+    from: 'සිට',
+    tasks: 'කාර්යයන්',
+    dateongoing: 'දිනය - සිදුවෙමින් පවතී',
+    selectaworker: 'සේවකයෙකු තෝරන්න',
+    assignwork: 'වැඩ පැවරීම',
+    expense: 'වියදම්',
+    amount: 'ප්රමාණය',
+    addtaskexpense: 'කාර්ය වියදම් එකතු කරන්න',
+    numberofkg: 'කිලෝග්‍රෑම් ගණන',
+
+    //add task
+    startdate: 'ආරම්භක දිනය',
+    addtask: 'කාර්යය එක් කරන්න',
+
 };

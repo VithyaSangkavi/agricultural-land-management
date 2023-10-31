@@ -3,9 +3,14 @@ import axios from 'axios';
 import Footer from '../footer/footer';
 import { useHistory } from "react-router-dom";
 import DatePicker from 'react-datepicker';
-import './add-task.css'
+import './add-task.css';
+import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
+import { Dropdown, DropdownButton } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 
 const AddTask = () => {
+
+  const [t, i18n] = useTranslation();
 
   const history = useHistory();
 
@@ -42,8 +47,6 @@ const AddTask = () => {
       .catch((error) => {
         console.error('Error fetching task names:', error);
       });
-
-
   }, []);
 
   //add task type
@@ -68,9 +71,25 @@ const AddTask = () => {
       });
   };
 
+  const handleLanguageChange = (lang) => {
+    i18n.changeLanguage(lang);
+  };
+
   return (
     <div className="task-app-screen">
-      <p className='main-heading'>Add Task</p>
+      <p className='main-heading'>{t('addtask')}</p>
+      <div className="position-absolute top-0 end-0 mt-2 me-2">
+        <Dropdown alignRight onSelect={handleLanguageChange}>
+          <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+            <FaGlobeAmericas style={{ color: 'white' }} />
+          </Dropdown.Toggle>
+
+          <Dropdown.Menu>
+            <Dropdown.Item eventKey="en">English</Dropdown.Item>
+            <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+      </div>
       <div>
         <select value={initialSelectedValue} onChange={(e) => setTaskName(e.target.value)} className="inputs">
           {taskNames.map((taskName) => (
@@ -83,14 +102,14 @@ const AddTask = () => {
       <br />
       <DatePicker
         selected={selectedDate}
-        onChange={(date) => setSelectedDate(date)} // Set the selected date
+        onChange={(date) => setSelectedDate(date)}
         className="inputs"
-        placeholderText="Start Date" // Set the placeholder text
-        dateFormat="MM/dd/yyyy" // Define the date format
+        placeholderText={t('startdate')}
+        dateFormat="MM/dd/yyyy"
       />
       <br /> <br />
       <button className="add-button" onClick={handleAddTaskAssigned}>
-        Add Task
+        {t('addtask')}
       </button>
       <br />
       <div className='footer-alignment'>
