@@ -72,7 +72,7 @@ const ManageTask = () => {
                 setTaskName(response.data.extra.taskName);
             })
             .catch((error) => {
-                // Handle error
+                //console.error('Error fetching task name:', error);
             });
     };
 
@@ -83,7 +83,7 @@ const ManageTask = () => {
                 setWorkerNames(workerNamesArray);
             })
             .catch((error) => {
-                // Handle error
+                //console.error('Error fetching worker names:', error);
             });
     };
 
@@ -94,7 +94,7 @@ const ManageTask = () => {
                 setExpenseTypes(expenseTypeArrays);
             })
             .catch((error) => {
-                // Handle error
+                // console.error('Error fetching expenses:', error);
             });
     };
 
@@ -232,7 +232,7 @@ const ManageTask = () => {
                 <p> {taskName} task - </p>
                 <p> From - {startDate} </p>
             </div>
-
+            <br />
             <div className="toggle-container">
                 <button
                     onClick={() => setSelectedView('tasks')}
@@ -323,6 +323,7 @@ const ManageTask = () => {
                     <button className="add-button" onClick={handleAddTaskExpense}>Add Task Expense</button>
                 </div>
             )}
+            <br/>
             <div className='footer-alignment'>
                 <Footer />
             </div>

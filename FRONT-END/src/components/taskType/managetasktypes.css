@@ -1,12 +1,14 @@
 .task-app-screen {
-  position: relative;
-  max-width: 360px; 
+  max-width: 360px;
   margin: 0 auto;
   /* padding: 16px; */
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-  background-color: #fff;
-  /* height: 700px; */
-  min-height: 100vh;
+  background-image: url('../../assets/img/background.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: relative;
+  background-color: transparent;
 }
 
 .task-list {
@@ -17,13 +19,16 @@
   }
   
   .task-card {
-    border: 1px solid #ccc;
+    /* border: 1px solid #ccc; */
     padding: 16px;
     margin: 10px;
     width: 90%;
     /* max-width: 300px; */
     text-align: left;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    border-radius: 20px;
   }
   
   .task-card p {
@@ -33,13 +38,13 @@
 
   .drop-down{
     padding: 10px;
-    background-color: #6558f5;
+    background-color: #0e4f20;
     width: 100%;
   }
 
   .drop-down:hover{
     padding: 10px;
-    background-color: #bab6ef;
+    background-color: #05932d;
     width: 100%;
   }
 
@@ -51,7 +56,7 @@
 
   .drop-down-menu:hover{
     padding: 10px;
-    background-color: #bab6ef;
+    background-color: #05932d;
     width: 100%;
   }
 
@@ -67,12 +72,12 @@
 
 .task-app-screen .custom-dropdown .dropdown-toggle:active,
 .task-app-screen .custom-dropdown .dropdown-toggle:focus {
-  background-color: #6558f5; 
+  background-color: #0e4f20; 
   box-shadow: none;
 }
 
 .add-task-type-button {
-  background-color: #6558f5; 
+  background-color: #0e4f20; 
   color: #fff; 
   padding: 10px 20px;
   border: none; 
@@ -84,7 +89,7 @@
 }
 
 .add-task-type-button:hover {
-  background-color: #0056b3; /* Change background color on hover */
+  background-color: #05932d; /* Change background color on hover */
 }
 
 .add-task-type-button:focus {

@@ -1,22 +1,17 @@
 .task-app-screen {
-  max-width: 360px; 
+  max-width: 360px;
   margin: 0 auto;
   /* padding: 16px; */
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-  background-color: #fff;
-  height: 700px;
+  background-image: url('../../assets/img/background.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
   position: relative;
+  background-color: transparent;
+  /* height: 700px; */
 }
 
-.worker-app-screen {
-  max-width: 360px; 
-  margin: 0 auto;
-  /* padding: 16px; */
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-  background-color: #fff;
-  height: 700px;
-  position: relative;
-}
 
 .task-app-screen .input-field {
   padding: 8px;
@@ -26,22 +21,29 @@
   margin-right: 40px;
   margin-top: 200px;
   border: 1px solid #ccc;
-  border-radius: 4px;
   font-size: 16px;
+  background-color: rgba(0, 0, 0, 0.6);
+  border: none;
+  border-radius: 20px;
+}
+
+.task-app-screen .input-field::placeholder{
+  color: white;
 }
 
 .task-app-screen .add-button {
   padding: 8px 16px;
-  background-color: #6558f5;
+  margin-bottom: 200px;
+  background-color: #0e4f20;
   color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 20px;
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
 .task-app-screen .add-button:hover {
-  background-color: #0056b3;
+  background-color: #05932d;
 }
 
 .task-app-screen .input-field::placeholder {
@@ -49,26 +51,10 @@
 }
 
 .task-app-screen .main-heading {
-  background-color: #6558f5;
+  background-color: #0e4f20;
   color: white;
   padding: 10px;
   margin-bottom: 20px;
   font: bold;
   font-size: large;
-}
-
-.task-app-screen .add-button {
-  padding: 8px 16px;
-  background-color: #6558f5;
-  color: #fff;
-  width: 90%;
-  margin-left: 15px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.task-app-screen .add-button:hover {
-  background-color: #7273d6;
 }

@@ -22,6 +22,6 @@ export class ExpensesEntity {
     @Column({ type: "enum", enum:Status, default: Status.Online})
     status: Status;
 
-    @OneToMany(() => TaskExpenseEntity, (taskExpense) => taskExpense.id)
-    taskExpense: TaskExpenseEntity
+    @OneToMany(() => TaskExpenseEntity, (taskExpense) => taskExpense.expense)
+    taskExpense: TaskExpenseEntity[];
 }

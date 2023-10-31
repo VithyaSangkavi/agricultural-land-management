@@ -3,6 +3,7 @@ import { PaginationDto } from "../pagination-dto";
 import { Units } from "../../enum/units";
 import { Status } from "../../enum/Status";
 import { TaskStatus } from "../../enum/taskStatus";
+import { IWorkerAssignedInfoFromDao } from "../../types/worker-assignedt-types";
 
 export class WorkAssignedDto extends PaginationDto {
   private id: number;
@@ -21,8 +22,8 @@ export class WorkAssignedDto extends PaginationDto {
 
   filViaRequest(body) {
     
-    if (body.id) {
-      this.id = body.id;
+    if (body.landID) {
+      this.id = body.landID;
     }
     this.quantity = body.quantity;
     this.units = body.units;
@@ -44,7 +45,11 @@ export class WorkAssignedDto extends PaginationDto {
     }
   }
 
-  filViaDbObject(workAssignedModel: WorkAssignedEntity) {
+  fillViaResponse(data: IWorkerAssignedInfoFromDao) {
+    this.id = data.landID;
+  }
+
+  fillViaDbObject(workAssignedModel: WorkAssignedEntity) {
     this.id = workAssignedModel.id;
     this.quantity = workAssignedModel.quantity;
     this.units = workAssignedModel.units;

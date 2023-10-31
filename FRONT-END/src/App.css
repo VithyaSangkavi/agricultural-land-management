@@ -1,7 +1,7 @@
 @import url(./assets/css/roboto.css?family=Roboto:300,400,600,800);
 
-body{font-family: 'Roboto', sans-serif;min-height: 100%;background: #eff3ec;}
-body.d-mode{background: #142a33;}
+/* body{font-family: 'Roboto', sans-serif;min-height: 100%;background: #eff3ec;}
+body.d-mode{background: #142a33;} */
 
 .col-centered{margin:0 auto;float:none;}
 .centered{position: fixed;top: 50%;left: 50%;transform: translate(-50%, -50%);}
