@@ -33,6 +33,7 @@ export const TRANSLATIONS_EN = {
     updateincome: "Update Income",
     update: "Update",
 
+    welcome: "Welcome",
     //worker registration
     workerregistration: 'Worker Registration',
     basicdetails: 'Basic Details',

@@ -9,9 +9,12 @@ import { useTranslation } from 'react-i18next';
 
 function SideNavBar() {
 
-  const { t, i18n } = useTranslation();
 
   const history = useHistory();
+  const { t, i18n } = useTranslation();
+
+
+
 
   const ManageWorkers = () => {
     history.push('/manageWorkers');

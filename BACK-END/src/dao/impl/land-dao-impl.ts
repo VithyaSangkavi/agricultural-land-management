@@ -98,21 +98,7 @@ export class LandDaoImpl implements LandDao {
     if (landDto.getlandName()) {
       searchObject.name = Like("%" + landDto.getlandName() + "%");
     }
-    if (landDto.getArea()) {
-        searchObject.name = Like("%" + landDto.getArea() + "%");
-    }
-    if (landDto.getareaUOM()) {
-      searchObject.name = Like("%" + landDto.getareaUOM() + "%");
-    }
-    if (landDto.getCity()) {
-        searchObject.name = Like("%" + landDto.getCity() + "%");
-    }
-    if (landDto.getCreatedDate()) {
-      searchObject.color = Like("%" + landDto.getCreatedDate() + "%");
-    }
-    if (landDto.getUpdatedDate()) {
-      searchObject.color = Like("%" + landDto.getUpdatedDate() + "%");
-    }
+
     
     searchObject.status = Status.Online;
    
