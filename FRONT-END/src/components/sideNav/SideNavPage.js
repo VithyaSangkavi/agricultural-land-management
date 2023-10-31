@@ -45,19 +45,16 @@ function SideNavBar() {
     <div className='side-nav-screen'>
       <p className='main-heading'>{t('welcome')}</p>
       <div className="position-absolute top-0 end-0 mt-2 me-2">
-        <DropdownButton
-          id="dropdown-language"
-          title={<FaLanguage />}
-          onSelect={handleLanguageChange}
-          variant="secondary"
-        >
-          <Dropdown.Item eventKey="en">
-            <FaGlobeAmericas /> English
-          </Dropdown.Item>
-          <Dropdown.Item eventKey="sl">
-            <FaGlobeAmericas /> Sinhala
-          </Dropdown.Item>
-        </DropdownButton>
+        <Dropdown alignRight onSelect={handleLanguageChange}>
+          <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+            <FaGlobeAmericas style={{ color: 'white' }} />
+          </Dropdown.Toggle>
+
+          <Dropdown.Menu>
+            <Dropdown.Item eventKey="en">English</Dropdown.Item>
+            <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
       </div>
       <Navbar className="side-nav-menu">
         <Container>
@@ -98,7 +95,7 @@ function SideNavBar() {
           </Navbar.Brand>
         </Container>
       </Navbar>
-      <br /> 
+      <br />
       <Navbar className="side-nav-menu">
         <Container>
           <Navbar.Brand onClick={ManageExpenseType}>
@@ -106,7 +103,7 @@ function SideNavBar() {
           </Navbar.Brand>
         </Container>
       </Navbar>
-      <br/>
+      <br />
       <div className='footer-alignment'>
         <Footer />
       </div>

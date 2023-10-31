@@ -51,19 +51,16 @@ function ManageExpenseTypes() {
     <div className="expense-app-screen">
       <p className='main-heading'>{t('expensetypemanagement')}</p>
       <div className="position-absolute top-0 end-0 mt-2 me-2">
-        <DropdownButton
-          id="dropdown-language"
-          title={<FaLanguage />}
-          onSelect={handleLanguageChange}
-          variant="secondary"
-        >
-          <Dropdown.Item eventKey="en">
-            <FaGlobeAmericas /> English
-          </Dropdown.Item>
-          <Dropdown.Item eventKey="sl">
-            <FaGlobeAmericas /> Sinhala
-          </Dropdown.Item>
-        </DropdownButton>
+        <Dropdown alignRight onSelect={handleLanguageChange}>
+          <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+            <FaGlobeAmericas style={{ color: 'white' }} />
+          </Dropdown.Toggle>
+
+          <Dropdown.Menu>
+            <Dropdown.Item eventKey="en">English</Dropdown.Item>
+            <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
       </div>
       <div className='drop-down-container'>
         <Dropdown className='custom-dropdown'>
@@ -98,7 +95,7 @@ function ManageExpenseTypes() {
             <p>{t('expensetype')}: {expense.expenseType}</p>
           </div>
         ))}
-        <br/>
+        <br />
       </div>
       <Footer />
     </div>
