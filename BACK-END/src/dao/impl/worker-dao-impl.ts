@@ -75,7 +75,7 @@ export class WorkerDaoImpl implements WorkerDao {
     let workerRepo = getConnection().getRepository(WorkerEntity);
     const workers = await workerRepo.find({
       where: {
-        land: { id: landId }, // Assuming land's primary key is named 'id'
+        land: { id: landId }, 
         workerStatus: WorkerStatus.Active,
         status: Status.Online,
       },
