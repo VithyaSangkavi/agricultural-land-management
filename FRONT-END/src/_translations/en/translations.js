@@ -85,4 +85,21 @@ export const TRANSLATIONS_EN = {
     //manage expense type
     expensetypemanagement: 'Expense Type Management',
     searchexpensetypes: 'Search Expense Types',
+
+    //manage task
+    managetask: 'Manage Task',
+    task: 'task',
+    from: 'from',
+    tasks: 'Tasks',
+    dateongoing: 'Date - Ongoing',
+    selectaworker: 'Select a worker',
+    assignwork: 'Assign Work',
+    expense: 'Expense',
+    amount: 'Amount',
+    addtaskexpense: 'Add Task Expense',
+    numberofkg: 'Number of Kg',
+
+    //add task
+    startdate: 'Start Date',
+    addtask : 'Add Task',
 };
