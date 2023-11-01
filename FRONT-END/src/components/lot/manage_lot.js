@@ -22,8 +22,9 @@ const ManageLot = () => {
 
     const { t, i18n } = useTranslation();
 
-
-
+    const handleSignObj = (cobj) => {
+        console.log("handleSignObj called with:", cobj);
+    };
 
     const handleSearchChange = (event) => {
         setSearchQuery(event.target.value);
@@ -66,6 +67,7 @@ const ManageLot = () => {
                 selectedLandId={selectedLandId}
                 onLandChange={setSelectedLandId}
                 onLanguageChange={setSelectedLanguage}
+                handleSignObj={handleSignObj}
             />
             <br />
             <Row className='mb-4'>

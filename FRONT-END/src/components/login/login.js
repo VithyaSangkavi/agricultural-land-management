@@ -11,12 +11,15 @@ import i18n from "i18next";
 import { connect } from "react-redux";
 import { withTranslation } from "react-i18next";
 import { languageAction } from '../../actions/auth/login_action';
+import { loginAction } from '../../actions/auth/login_action';
+import { useDispatch } from 'react-redux';
 
 
 function Login(props) {
     const history = useHistory();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const dispatch = useDispatch();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -35,7 +38,8 @@ function Login(props) {
 
                     alertService.success('Login Successful');
 
-                    props.handleSignObj(res);
+                    // props.handleSignObj(res);
+                    dispatch(loginAction(res));  // Dispatch the login action with the response data
 
                     history.push('/home');
                 }
@@ -115,7 +119,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    setLangObj: (payload) => dispatch(languageAction(payload))
+    setLangObj: (payload) => dispatch(languageAction(payload)),
+    setSigninObj: (payload) => dispatch(loginAction(payload))
 });
 
 export default withTranslation()(connect(mapStateToProps, mapDispatchToProps)(Login));

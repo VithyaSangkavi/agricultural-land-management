@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
-import { Form, Row, Col } from 'react-bootstrap';
+import { Form, Row, Col, Button } from 'react-bootstrap';
 import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
-import '../navBar/navbar.css'
+import { logoutAction } from '../../actions/auth/login_action';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import '../navBar/navbar.css';
 
-
-
-function Navbar({ selectedLandId, onLandChange, onLanguageChange, }) {
+function Navbar(props) {
+    const { selectedLandId, onLandChange, onLanguageChange } = props;
     const [landNames, setLandNames] = useState([]);
 
     useEffect(() => {
@@ -19,13 +21,18 @@ function Navbar({ selectedLandId, onLandChange, onLanguageChange, }) {
 
     const handleLandChange = (event) => {
         onLandChange(event.target.value);
-
     };
 
     const handleLanguageChange = (languageKey) => {
         onLanguageChange(languageKey);
     };
-    
+
+    const handleLogout = () => {
+        props.setLogoutState("logout");
+        props.handleSignObj(null);
+        props.history.push("/");
+        props.logout();
+    }
 
     return (
         <nav>
@@ -61,9 +68,15 @@ function Navbar({ selectedLandId, onLandChange, onLanguageChange, }) {
                         </DropdownButton>
                     </Form.Group>
                 </Col>
+                <Button onClick={handleLogout}>Logout</Button>
             </Row>
         </nav>
     )
 }
 
-export default Navbar
+const mapDispatchToProps = dispatch => ({
+    setLogoutState: (payload) => dispatch(logoutAction(payload)),
+    logout: () => dispatch(logoutAction("logout")),
+});
+
+export default withRouter(connect(null, mapDispatchToProps)(Navbar));
