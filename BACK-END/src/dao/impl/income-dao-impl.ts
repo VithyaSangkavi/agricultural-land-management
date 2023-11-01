@@ -59,7 +59,7 @@ export class IncomeDaoImpl implements IncomeDao {
 
   async findByLandId(land: number): Promise<IncomeEntity[]> {
     const incomeRepository = getConnection().getRepository(IncomeEntity);
-    const incomeModels = await incomeRepository.find({ where: { landId: land } });
+    const incomeModels = await incomeRepository.find({ where: { land: land } });
     return incomeModels;
   }
 

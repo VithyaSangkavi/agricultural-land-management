@@ -1,51 +1,62 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useHistory, Link } from 'react-router-dom';
-import '../Income/manage_income.css';
-import Footer from '../footer/footer';
-import Navbar from '../navBar/navbar';
-import { submitCollection } from '../../_services/submit.service';
-import { submitSets } from '../UiComponents/SubmitSets';
 import { Container, Row, Col, Form, FormControl, Card } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
+import { Dropdown, DropdownButton } from 'react-bootstrap';
+import { submitCollection } from '../../_services/submit.service';
+import { submitSets } from '../UiComponents/SubmitSets';
+
+import Footer from '../footer/footer';
+import '../Income/manage_income.css';
 
 
 function ManageIncome() {
     const [data, setData] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
-    const [landNames, setLandNames] = useState([]);
     const [selectedLandId, setSelectedLandId] = useState('1');
-    const [selectedLanguage, setSelectedLanguage] = useState('en');
+    const [landNames, setLandNames] = useState([]);
 
-    const { t, i18n } = useTranslation();
 
+    const { i18n, t } = useTranslation();
     const history = useHistory();
 
+
+    const handleLanguageChange = (lang) => {
+        i18n.changeLanguage(lang);
+    };
+
+    const handleLandChange = (event) => {
+        const newSelectedLandId = event.target.value;
+        setSelectedLandId(newSelectedLandId);
+    };
+
     useEffect(() => {
-        console.log("Trying to change language to:", selectedLanguage);
-        i18n.changeLanguage(selectedLanguage);
-        console.log("Language should be changed now.");
-    }, [selectedLanguage]);
+        submitSets(submitCollection.manageland, false).then((res) => {
+            setLandNames(res.extra);
+        });
+    }, [submitCollection.manageland]);
+
+    useEffect(() => {
+        if (selectedLandId) {
+            axios.get(`http://localhost:8080/service/master/incomeFindByLandId/${selectedLandId}`)
+                .then((res) => {
+                    setData(res.data.extra);
+                })
+                .catch((error) => {
+                    console.error('Error fetching data:', error);
+                    setData([]);
+                });
+        } else {
+            setData([]);
+        }
+    }, [selectedLandId]);
 
 
     const handleSearchChange = (event) => {
         setSearchQuery(event.target.value);
     };
-
-
-
-    useEffect(() => {
-        console.log("selected land : ", selectedLandId);
-
-        if (selectedLandId) {
-            axios.get(`http://localhost:8080/service/master/incomeFindByLandId/${selectedLandId}`).then((res) => {
-                setData(res.data.extra);
-                console.log(res.data.extra);
-            });
-        } else {
-            setData([]);
-        }
-    }, [selectedLandId]);
 
     const redirectToInsertIncome = () => {
         history.push({
@@ -54,68 +65,82 @@ function ManageIncome() {
         });
     };
 
-
     return (
-        <div className='manageincome'>
-            <div className='incomenavbar'>
-                <Navbar
-                    selectedLandId={selectedLandId}
-                    onLandChange={setSelectedLandId}
-                    selectedLanguage={selectedLanguage}
-                    onLanguageChange={setSelectedLanguage}
+        <div className='manageincome-app-screen'>
+            <p className='main-heading'>{t('manageincome')}</p>
+            <div className="position-absolute top-0 end-0 mt-2 me-2">
+                <Dropdown alignRight onSelect={handleLanguageChange}>
+                    <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                        <FaGlobeAmericas style={{ color: 'white' }} />
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu>
+                        <Dropdown.Item eventKey="en">English</Dropdown.Item>
+                        <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
+            </div>
+
+            <div className='drop-down-container'>
+                <Dropdown className='custom-dropdown'>
+                    <Col md={6}>
+                        <Form.Group>
+                            <Form.Control as="select" value={selectedLandId} onChange={handleLandChange}>
+                                <option value="">All Lands</option>
+                                {landNames.map((land) => (
+                                    <option key={land.id} value={land.id}>
+                                        {land.name}
+                                    </option>
+                                ))}
+                            </Form.Control>
+                        </Form.Group>
+                    </Col>
+
+                </Dropdown>
+                <br />
+                <button className="add-income-button" onClick={redirectToInsertIncome}>
+                    {t('addincome')}
+                </button>
+            </div>
+
+            <div>
+                <input
+                    className='search-field'
+                    type="text"
+                    placeholder={t('search')}
+                    value={searchQuery}
+                // onChange={handleSearchChange}
                 />
             </div>
-            <div className='AddIncome'>
-                <Container className='manageLots'>
-                    <Row className='mb-4'>
-                        <Col>
-                            <h2>{t('manageincome')}</h2>
-                        </Col>
-                    </Row>
 
-                    <Row className='mb-4'>
-                        <Col md={6}>
-                            <Form inline>
-                                <FormControl
-                                    type='text'
-                                    placeholder={t('search')}
-                                    className='mr-sm-2'
-                                    value={searchQuery}
-                                    onChange={handleSearchChange}
-                                />
-                            </Form>
-                        </Col>
-                    </Row>
+            <div className='income-list'>
+                {data.map((income) => (
+                    <div key={income.id} className="income-card">
+                        <Link to={`/updateIncome/${income.id}`} className='custom-link'>
 
-                    <Row>
-                        {data.map((income) => (
-                            <Col key={income.id} md={4} sm={6} xs={12} className='mb-4'>
-                                <Link to={`/updateIncome/${income.id}`} className="custom-link">
-                                    <Card>
-                                        <Card.Body>
-                                            <Card.Title>{income.month}</Card.Title>
-                                            <Card.Text>
-                                            {t('price')}: {income.price}
-                                            </Card.Text>
-                                        </Card.Body>
-                                    </Card>
-                                </Link>
-                            </Col>
-                        ))}
-                    </Row>
-                    <Row className='mt-4'>
-                        <Col>
-                            <button className="btn btn-primary" onClick={redirectToInsertIncome}>
-                            {t('addincome')}
-                            </button>
-                        </Col>
-                    </Row>
-                </Container>
+                            <h3>{income.month}</h3>
+                            <p>
+                                {t('price')}: {income.price}
+                            </p>
+                        </Link>
+                    </div>
+                ))}
             </div>
 
-        </div>
+            <div>
+                <br />
+                <br />
+                <br />
+            </div>
 
+            <div className='footer-alignment'>
+                <Footer />
+            </div>
+
+
+
+        </div>
     );
 }
 
-export default ManageIncome
+export default ManageIncome;
