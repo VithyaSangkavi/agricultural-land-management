@@ -73,9 +73,19 @@ export class TaskAssignedDaoImpl implements TaskAssignedDao {
     return taskAssignedModel;
   }
 
+  async findByTaskId(taskId: number): Promise<TaskAssignedEntity> {
+    const taskAssignedRepo = getConnection().getRepository(TaskAssignedEntity);
+    console.log("Searching for taskId:", taskId);
+    const taskAssignedModel = await taskAssignedRepo.findOne({
+      where: { task: taskId },
+    }); 
+    console.log("Query result:", taskAssignedModel); 
+    return taskAssignedModel;
+  } 
+
   async preparetaskAssignedModel(taskAssignedModel: TaskAssignedEntity, taskAssignedDto: TaskAssignedDto) {
     taskAssignedModel.startDate = taskAssignedDto.getStartDate();
-    taskAssignedModel.endDate = taskAssignedDto.getEndDate();
+    taskAssignedModel.endDate = taskAssignedDto.getEndDate(); 
     taskAssignedModel.status = taskAssignedDto.getStatus();
   }
   prepareSearchObject(taskAssignedDto: TaskAssignedDto): any {

@@ -85,7 +85,7 @@
 
 .home-app-screen .task-card {
     border: none;
-    padding: 5px;
+    padding-left: 10px;
     margin: 10px;
     width: 90%;
     /* max-width: 300px; */

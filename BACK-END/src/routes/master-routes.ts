@@ -81,7 +81,8 @@ router.post("/task-assigned-save", taskAssignedController.save);
 // router.post("/taskUpdate", taskTypeController.update);
 // router.post("/taskDelete", taskTypeController.delete);
 router.post("/taskAssignedFindAll", taskAssignedController.findAll);
-// router.get("/taskFindById", taskTypeController.findById);
+router.get('/task-assigned', taskAssignedController.findByTaskId);
+router.get("/taskFindById", taskTypeController.findById);
 
 // task-expense routes
 router.post("/task-expense-save", taskExpenseController.save);

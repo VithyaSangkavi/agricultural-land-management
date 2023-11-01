@@ -30,11 +30,18 @@ const ManageTask = () => {
     const [selectedWorkersList, setSelectedWorkersList] = useState([]);
     const [kgValues, setKgValues] = useState('');
     //const [workerId, setWorkerId] = useState('');
-    const taskAssignedId = 1;
+    const [taskAssignedId, setTaskAssignedId] = useState('');
     const lotId = 1;
     const [quantity, setQuantity] = useState('');
 
     const [workers, setWorkers] = useState([]);
+    
+    useEffect(() => {
+        fetchTaskName();
+        fetchWorkerNames();
+        fetchExpenseTypes();
+        fetchTaskAssignedId();
+    }, []);
 
     const fetchTaskName = () => {
         axios.get(`http://localhost:8080/service/master/findTaskNameById/?taskId=${taskId}`)
@@ -68,11 +75,17 @@ const ManageTask = () => {
             });
     };
 
-    useEffect(() => {
-        fetchTaskName();
-        fetchWorkerNames();
-        fetchExpenseTypes();
-    }, []);
+    const fetchTaskAssignedId = () => {
+        //get task-assigned id
+        axios.get(`http://localhost:8081/service/master/task-assigned?taskId=${taskId}`)
+            .then((response) => {
+                console.log('Task assigned id: ', response.data.extra.id)
+                setTaskAssignedId(response.data.extra.id);
+            })
+            .catch((error) => {
+                console.error('Error fetching task name:', error);
+            });
+    }
 
     const handleAddSelectedWorker = () => {
 
@@ -117,9 +130,7 @@ const ManageTask = () => {
                         console.error('Error getting worker id:', error);
                     });
             }
-
         }
-
     }
 
     // add task expense
@@ -279,7 +290,7 @@ const ManageTask = () => {
                         </div>
                     )}
 
-                    <button className="add-button">{t('assignwork')}</button>
+                    {/* <button className="add-button">{t('assignwork')}</button> */}
                 </div>
             )}
 
