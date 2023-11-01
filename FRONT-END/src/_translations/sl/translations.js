@@ -35,6 +35,23 @@ export const TRANSLATIONS_SL = {
 
     welcome: "ආයුබෝවන්",
 
+    //worker registration
+    workerregistration: 'සේවක ලියාපදිංචිය',
+    basicdetails: 'මූලික විස්තර',
+    finance: 'මූල්ය',
+    gender: 'ස්ත්රී පුරුෂ භාවය',
+    male: 'පිරිමි',
+    female: 'ගැහැණු',
+    joineddate: 'සම්බන්ධ වූ දිනය',
+    phone: 'දුරකථන අංකය',
+    address: 'ලිපිනය',
+    status: 'තත්ත්වය',
+    active: 'ක්රියාකාරී',
+    retired: 'විශ්‍රාමිකයි',
+    fired: 'ඉවත් කර ඇත',
+    temporarystopped: 'තාවකාලිකව නතර කර ඇත',
+    addworker: 'සේවකයා එකතු කරන්න',
+
     //save payment
     monthlydailypay: 'මාසික / දෛනික ගෙවීම',
     monthly: 'මාසික',
