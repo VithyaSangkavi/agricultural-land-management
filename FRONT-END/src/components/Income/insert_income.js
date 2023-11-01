@@ -15,7 +15,7 @@ const InsertIncome = () => {
     const [month, setMonth] = useState('');
     const [price, setValue] = useState('');
     const [selectedLandId, setSelectedLandId] = useState('1');
-    const [selectedLanguage, setSelectedLanguage] = useState('english');
+    const [selectedLanguage, setSelectedLanguage] = useState('en');
 
     const { t, i18n } = useTranslation();
 
@@ -64,7 +64,7 @@ const InsertIncome = () => {
                                 <Card.Body>
                                     <Form>
                                         <Form.Group controlId="month">
-                                            <Form.Label className="form-label">{t('month')}</Form.Label>
+                                            <Form.Label className="form-label" >{t('month')}</Form.Label>
                                             <Form.Control
                                                 className="input-field"
                                                 as="Select"

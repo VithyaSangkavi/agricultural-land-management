@@ -198,7 +198,8 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
         .innerJoin('workAssigned.task', 'task')
         .where('workAssigned.taskStatus = :taskStatus', { taskStatus: "ongoing" })
         .andWhere('workAssigned.status = :status', { status: Status.Online })
-        .select(['task.id as taskId', 'task.taskName as taskName'])
+        .groupBy('workAssigned.taskAssignedId')
+        .select(['workAssigned.taskAssignedId as taskAssignedId', 'MAX(task.id) as taskId', 'MAX(task.taskName) as taskName'])
         .getRawMany();
   
       cr.setStatus(true);
@@ -211,5 +212,8 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
   
     return cr;
   }
+  
+  
+  
   
 }
