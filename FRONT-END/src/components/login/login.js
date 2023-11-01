@@ -57,28 +57,21 @@ function Login(props) {
         props.setLangObj({ languageDetails: { code: lang } });
     };
 
-
-
-
-
     return (
         <div className="parent-container">
-            <div className="language-selector position-absolute top-0 end-0 mt-2 me-2">
-                <DropdownButton
-                    id="dropdown-language"
-                    title={<FaLanguage />}
-                    onSelect={handleLanguageChange}
-                    variant="secondary"
-                >
-                    <Dropdown.Item eventKey="en">
-                        <FaGlobeAmericas /> English
-                    </Dropdown.Item>
-                    <Dropdown.Item eventKey="sl">
-                        <FaGlobeAmericas /> Sinhala
-                    </Dropdown.Item>
-                </DropdownButton>
-            </div>
+            <p className='main-heading'>Agri-Management</p>
+            <div className="position-absolute top-0 end-0 mt-2 me-2">
+                <Dropdown alignRight onSelect={handleLanguageChange}>
+                    <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                        <FaGlobeAmericas style={{ color: 'white' }} />
+                    </Dropdown.Toggle>
 
+                    <Dropdown.Menu>
+                        <Dropdown.Item eventKey="en">English</Dropdown.Item>
+                        <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
+            </div>
             <div className="login-container mx-auto mt-5">
                 <h2 className="text-center mb-4">{props.t('loginname')}</h2>
                 <Form onSubmit={handleSubmit}>
