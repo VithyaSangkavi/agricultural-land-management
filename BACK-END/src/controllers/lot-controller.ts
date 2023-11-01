@@ -38,3 +38,15 @@ exports.findByLandId = async (req: Request, res: Response, next: NextFunction) =
       next(error);
   }
 };
+
+exports.findLotByLandID = async (req, res, next) => {
+  try {
+    let landId = Number(req.query.landId);
+    console.log('Received landId:', landId);
+    let cr = await lotService.findLotByLandId(landId);
+
+    res.send(cr);
+  } catch (error) {
+    next(error);
+  }
+};

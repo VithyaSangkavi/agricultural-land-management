@@ -74,6 +74,17 @@ export class LotDaoImpl implements LotDao {
     let lotModel = await lotRepo.findOne({ where: { name: name, status: Status.Online } });
     return lotModel;
   }
+
+  async findLotByLandId(landId: number): Promise<LotEntity> {
+    const lotRepo = getConnection().getRepository(LotEntity);
+    console.log("Searching for landId:", landId);
+    const lotModel = await lotRepo.findOne({
+      where: { land: landId },
+    }); 
+    console.log("Query result:", lotModel); 
+    return lotModel;
+  }
+
   async preparelotModel(lotModel: LotEntity, lotDto: LotDto) {
     lotModel.name = lotDto.getLotName();
     lotModel.area = lotDto.getArea();

@@ -26,7 +26,6 @@ export class LotDto extends PaginationDto {
         this.updatedDate = body.updatedDate;
         this.status = body.status;
        
-
         if (body.startIndex && body.maxResult) {
             this.setStartIndex(body.startIndex);
             this.setMaxResult(body.maxResult);

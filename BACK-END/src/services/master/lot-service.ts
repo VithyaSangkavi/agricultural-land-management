@@ -8,4 +8,5 @@ export interface LotService {
     find(lotDto: LotDto): Promise<CommonResponse>;
     findById(lot_id: number): Promise<CommonResponse>;
     findByLandId(land: string): Promise<CommonResponse>;
+    findLotByLandId(landId: number): Promise<CommonResponse>;
 }
