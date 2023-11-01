@@ -57,70 +57,61 @@ const ManageLand = () => {
 
 
     return (
-        <div>
+        <div className='manageland-app-screen'>
+            <p className='main-heading'>{t('managelands')}</p>
             <div className="position-absolute top-0 end-0 mt-2 me-2">
-                <DropdownButton
-                    id="dropdown-language"
-                    title={<FaLanguage />}
-                    onSelect={handleLanguageChange}
-                    variant="secondary"
-                >
-                    <Dropdown.Item eventKey="en">
-                        <FaGlobeAmericas /> English
-                    </Dropdown.Item>
-                    <Dropdown.Item eventKey="sl">
-                        <FaGlobeAmericas /> Sinhala
-                    </Dropdown.Item>
-                </DropdownButton>
+
+                <Dropdown alignRight onSelect={handleLanguageChange}>
+                    <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                        <FaGlobeAmericas style={{ color: 'white' }} />
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu>
+                        <Dropdown.Item eventKey="en">English</Dropdown.Item>
+                        <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
+                
             </div>
-            <Container className='manageLands'>
-            <Row className='mb-4'>
-                <Col>
-                    <h2>{t('managelands')}</h2>
-                </Col>
-            </Row>
 
-            <Row className='mb-4'>
-                <Col className='search'>
-                    <Form inline>
-                        <FormControl
-                            type='text'
-                            placeholder={t('search')}
-                            className='mr-sm-2'
-                            value={searchQuery}
-                            onChange={handleSearchChange}
-                        />
-                    </Form>
-                </Col>
-                <Col className='text-right'>
-                    <Button variant="primary" onClick={handleAddLotClick}>
-                        {t('addnewland')}
-                    </Button>
-                </Col>
-            </Row>
+            <div className="drop-down-container">
+                <button className='add-land-button' onClick={handleAddLotClick}>
+                    {t('addnewland')}
+                </button>
+            </div>
 
-            <Row>
+            <div>
+                <input
+                    className='search-field'
+                    type="text"
+                    placeholder={t('search')}
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                />
+            </div>
+
+            <div className='land-list'>
                 {filteredData.map((item) => (
-                    <Col key={item.id} md={4} sm={6} xs={12} className='mb-4'>
-                        <Card>
-                            <Card.Body>
-                                <Card.Title>
-                                    {item.name}
-                                    </Card.Title>
-                                <Card.Text>
-                                {t('city')}: {item.city}
-                                </Card.Text>
-                                
-                            </Card.Body>
-                        </Card>
-                    </Col>
+                    <div key={item.id} className="land-card">
+                        <Card.Body>
+                            <h3>{item.name}</h3>
+                            <p>{t('city')}: {item.city}</p>
+                        </Card.Body>
+                    </div>
                 ))}
-            </Row>
-        
-        </Container>
+            </div>
+            <div>
+                <br/>
+                <br/>
+            </div>
+
+            <br />
+            <div className='footer-alignment'>
+                <Footer />
+            </div>
+
         </div>
     );
-
 
 
 };

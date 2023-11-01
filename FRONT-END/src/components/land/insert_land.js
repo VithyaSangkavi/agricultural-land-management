@@ -33,6 +33,7 @@ const InsertLand = () => {
             if (res && res.status) {
 
                 alertService.success("Data sent successfully!")
+                window.location.reload();
 
             } else {
                 alertService.error("Data sent failed!")
@@ -49,90 +50,75 @@ const InsertLand = () => {
     };
 
     return (
-        <div className="AddLandCard">
+        <div className="add-land-screen">
+            <p className='main-heading'>{t('addland')}</p>
             <div className="position-absolute top-0 end-0 mt-2 me-2">
-                <DropdownButton
-                    id="dropdown-language"
-                    title={<FaLanguage />}
-                    onSelect={handleLanguageChange}
-                    variant="secondary"
-                >
-                    <Dropdown.Item eventKey="en">
-                        <FaGlobeAmericas /> English
-                    </Dropdown.Item>
-                    <Dropdown.Item eventKey="sl">
-                        <FaGlobeAmericas /> Sinhala
-                    </Dropdown.Item>
-                </DropdownButton>
+
+                <Dropdown alignRight onSelect={handleLanguageChange}>
+                    <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                        <FaGlobeAmericas style={{ color: 'white' }} />
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu>
+                        <Dropdown.Item eventKey="en">English</Dropdown.Item>
+                        <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
+
             </div>
-            <Container className="container">
-                <Row className="justify-content-center">
-                    <Col sm={6}>
-                        <Card className="card-container">
-                            <Card.Header className="card-title">{t('addland')}</Card.Header>
-                            <Card.Body>
-                                <Form>
-                                    <Form.Group controlId="name">
-                                        <Form.Label className="form-label">{t('name')}</Form.Label>
-                                        <Form.Control
-                                            className="input-field"
-                                            type="text"
-                                            placeholder="Land Name"
-                                            value={name}
-                                            onChange={(e) => setName(e.target.value)}
-                                        />
-                                    </Form.Group>
-                                    <Form.Group controlId="area">
-                                        <Form.Label className="form-label">{t('landarea')}</Form.Label>
-                                        <Form.Control
-                                            className="input-field"
-                                            type="text"
-                                            placeholder="Land Area"
-                                            value={area}
-                                            onChange={(e) => setArea(e.target.value)}
-                                        />
-                                    </Form.Group>
-                                    <Form.Group controlId="areaUom">
-                                        <Form.Label className="form-label">{t('landarea')} UOM</Form.Label>
-                                        <Form.Control
-                                            className="input-field"
-                                            as="select"
-                                            value={areaUom}
-                                            onChange={(e) => setAreaUom(e.target.value)}
-                                        >
-                                            <option value="">UOM {t('select')}</option>
-                                            <option value="arce">{t('arce')}</option>
-                                            <option value="perch">{t('perch')}</option>
-                                        </Form.Control>
-                                    </Form.Group>
-                                    <Form.Group controlId="city">
-                                        <Form.Label className="form-label">{t('city')}</Form.Label>
-                                        <Form.Control
-                                            className="input-field"
-                                            as="select"
-                                            value={city}
-                                            onChange={(e) => setCity(e.target.value)}
-                                        >
-                                            <option value="">{t('city')} {t('select')}</option>
-                                            <option value="kandy">Kandy</option>
-                                            <option value="colombo">Colombo</option>
-                                            <option value="jaffna">Jaffna</option>
-                                            <option value="gampaha">Gampaha</option>
-                                        </Form.Control>
-                                    </Form.Group>
-                                    <Button
-                                        className="submit-button"
-                                        variant="primary"
-                                        onClick={handleSubmit}
-                                    >
-                                        {t('add')}
-                                    </Button>
-                                </Form>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                </Row>
-            </Container>
+
+            <div className="content">
+                <input
+                    className="input-field"
+                    type="text"
+                    placeholder={t('name')}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                />
+
+                <input
+                    className="input-field"
+                    type="text"
+                    placeholder={t('landarea')}
+                    value={area}
+                    onChange={(e) => setArea(e.target.value)}
+                />
+
+                <select
+                    className="input-field"
+                    as="select"
+                    value={areaUom}
+                    onChange={(e) => setAreaUom(e.target.value)}
+                >
+                    <option value="">{t('landarea')} UOM</option>
+                    <option value="arce">{t('arce')}</option>
+                    <option value="perch">{t('perch')}</option>
+                </select>
+
+                <select
+                    className="input-field"
+                    as="select"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                >
+                    <option value="">{t('city')} {t('select')}</option>
+                    <option value="kandy">Kandy</option>
+                    <option value="colombo">Colombo</option>
+                    <option value="jaffna">Jaffna</option>
+                    <option value="gampaha">Gampaha</option>
+                </select>
+
+                <Button
+                    className="add-button"
+                    onClick={handleSubmit}
+                >
+                    {t('add')}
+                </Button>
+            </div>
+
+            <div className='footer-alignment'>
+                <Footer />
+            </div>
 
         </div>
     );

@@ -22,7 +22,7 @@ const AddTaskType = () => {
       cropId
     };
 
-  Axios.post('http://localhost:8081/service/master/taskSave', addTask)
+  Axios.post('http://localhost:8080/service/master/taskSave', addTask)
       .then((response) => {
         console.log('Task type added successfully:', response.data);
         history.push('/manageTaskType')

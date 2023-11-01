@@ -18,10 +18,10 @@ const AddExpenseType = () => {
   //add task type
   const handleAddExpense = () => {
     const addExpense = {
-      expenseType
+      expenseType 
     };
 
-  Axios.post('http://localhost:8081/service/master/expenseSave', addExpense)
+  Axios.post('http://localhost:8080/service/master/expenseSave', addExpense)
       .then((response) => {
         console.log('Expense type added successfully:', response.data);
         history.push('/manageExpenseType');

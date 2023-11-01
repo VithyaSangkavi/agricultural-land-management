@@ -9,6 +9,8 @@ import { Form, Button, Container, Col, Row, Card } from 'react-bootstrap';
 import { submitSets } from '../UiComponents/SubmitSets';
 import { alertService } from '../../_services/alert.service';
 import { useTranslation } from 'react-i18next';
+import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
+import { Dropdown, DropdownButton } from 'react-bootstrap';
 
 
 
@@ -17,15 +19,25 @@ const InsertLot = () => {
     const [area, setArea] = useState('');
     const [areaUom, setAreaUom] = useState('');
     const [selectedLandId, setSelectedLandId] = useState('1');
+    const [landNames, setLandNames] = useState([]);
     const [selectedLanguage, setSelectedLanguage] = useState('en');
 
     const { t, i18n } = useTranslation();
 
+    const handleLanguageChange = (lang) => {
+        i18n.changeLanguage(lang);
+    };
+
     useEffect(() => {
-        console.log("Trying to change language to:", selectedLanguage);
-        i18n.changeLanguage(selectedLanguage);
-        console.log("Language should be changed now.");
-    }, [selectedLanguage]);
+        submitSets(submitCollection.manageland, false).then((res) => {
+            setLandNames(res.extra);
+        });
+    }, [submitCollection.manageland]);
+
+    const handleLandChange = (event) => {
+        const newSelectedLandId = event.target.value;
+        setSelectedLandId(newSelectedLandId);
+    };
 
     const handleSubmit = () => {
 
@@ -40,9 +52,10 @@ const InsertLot = () => {
         submitSets(submitCollection.savelot, dataToSend, false).then(res => {
 
             console.log(res)
-            
+
             if (res && res.status) {
                 alertService.success("Data sent successfully!")
+                window.location.reload();
             } else {
                 alertService.error("Error sending data");
             };
@@ -50,72 +63,82 @@ const InsertLot = () => {
     }
 
     return (
-        <div className='inserlot'>
-            <div className='lotnavbar'>
-             <Navbar
-                selectedLandId={selectedLandId}
-                onLandChange={setSelectedLandId}
-                selectedLanguage={selectedLanguage}
-                onLanguageChange={setSelectedLanguage}
-            />
+        <div className='inserlot-app-screen'>
+            <p className='main-heading'>{t('addlots')}</p>
+            <div className="position-absolute top-0 end-0 mt-2 me-2">
+                <Dropdown alignRight onSelect={handleLanguageChange}>
+                    <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                        <FaGlobeAmericas style={{ color: 'white' }} />
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu>
+                        <Dropdown.Item eventKey="en">English</Dropdown.Item>
+                        <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
             </div>
-            <div className="AddLandCard">
-                <Container className="container">
-                    <Row className="justify-content-center">
-                        <Col sm={6}>
-                            <Card className="card-container">
-                                <Card.Header className="card-title">{t('addlots')}</Card.Header>
-                                <Card.Body>
-                                    <Form>
-                                        <Form.Group controlId="name">
-                                            <Form.Label className="form-label">{t('name')}</Form.Label>
-                                            <Form.Control
-                                                className="input-field"
-                                                type="text"
-                                                placeholder={`${t('lot')} ${t('name')}`}
-                                                value={name}
-                                                onChange={(e) => setName(e.target.value)}
-                                            />
-                                        </Form.Group>
-                                        <Form.Group controlId="area">
-                                            <Form.Label className="form-label">{t('area')}</Form.Label>
-                                            <Form.Control
-                                                className="input-field"
-                                                type="text"
-                                                placeholder={t('area')}
-                                                value={area}
-                                                onChange={(e) => setArea(e.target.value)}
-                                            />
-                                        </Form.Group>
-                                        <Form.Group controlId="areaUom">
-                                            <Form.Label className="form-label">{t('area')} UOM</Form.Label>
-                                            <Form.Control
-                                                className="input-field"
-                                                as="select"
-                                                value={areaUom}
-                                                onChange={(e) => setAreaUom(e.target.value)}
-                                            >
-                                                <option value="">{t('select')}</option>
-                                                <option value="arce">{t('arce')}</option>
-                                                <option value="perch">{t('perch')}</option>
-                                            </Form.Control>
-                                        </Form.Group>
-                                        <Button
-                                            className="submit-button"
-                                            variant="primary"
-                                            onClick={handleSubmit}
-                                        >
-                                            {t('add')}
-                                        </Button>
-                                    </Form>
-                                </Card.Body>
-                                <br/>
-                            </Card>
-                        </Col>
-                    </Row>
-                    
-                </Container>
+
+            <div className='drop-down-container'>
+                <Dropdown className='custom-dropdown'>
+                    <Col md={6}>
+                        <Form.Group>
+                            <Form.Control as="select" value={selectedLandId} onChange={handleLandChange}>
+                                <option value="">All Lands</option>
+                                {landNames.map((land) => (
+                                    <option key={land.id} value={land.id}>
+                                        {land.name}
+                                    </option>
+                                ))}
+                            </Form.Control>
+                        </Form.Group>
+                    </Col>
+
+                </Dropdown>
             </div>
+
+            <div className="content">
+
+                <input
+                    className="input-field"
+                    type="text"
+                    placeholder={`${t('lot')} ${t('name')}`}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                />
+
+                <input
+                    className="input-field"
+                    type="text"
+                    placeholder={t('area')}
+                    value={area}
+                    onChange={(e) => setArea(e.target.value)}
+                />
+                <select
+                    className="input-field"
+                    as="select"
+                    value={areaUom}
+                    onChange={(e) => setAreaUom(e.target.value)}
+                >
+                    <option value="">UOM {t('select')}</option>
+                    <option value="arce">{t('arce')}</option>
+                    <option value="perch">{t('perch')}</option>
+                </select>
+
+                <Button
+                    className="add-button"
+                    onClick={handleSubmit}
+                >
+                    {t('add')}
+                </Button>
+
+
+
+            </div>
+
+            <div className='footer-alignment'>
+                <Footer />
+            </div>
+
         </div>
     );
 };

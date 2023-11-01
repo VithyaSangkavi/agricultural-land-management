@@ -1,77 +1,132 @@
-
-
-.manageincome .incomenavbar {
-    padding-top: 4%;
-    padding-left: 5%;
-    padding-bottom: 0.5rem;
-}
-
-
-.manageincome .content-wrapper {
-    flex: 1;
-    overflow-y: auto;
-}
-
-.manageincome .manageLots {
-    padding: 20px;
-    border-radius: 10px;
-    flex: 1 0 auto;
-
-}
-
-.manageincome .manageLots h2 {
-    font-weight: bold;
-    border-bottom: 2px solid #ddd;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-}
-
-.manageincome .mb-4 {
-    margin-bottom: 1.5rem !important;
-}
-
-.manageincome .filter,
-.manageincome .search {
-    margin-bottom: 20px;
-}
-
-.manageincome .filter label,
-.manageincome .search label {
-    font-weight: bold;
-    margin-right: 10px;
-}
-
-.manageincome .divWithBorder {
-    border: 1px solid #e7e7e7;
+.manageincome-app-screen {
+    /* max-width: 360px; */
+    max-width: 100%;
+    height: 100vh;
+    margin: 0 auto;
+    /* padding: 16px; */
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    background-image: url('../../assets/img/background.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: relative;
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+  .manageincome-app-screen .income-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .manageincome-app-screen .income-card {
+    /* border: 1px solid #ccc; */
+    padding: 16px;
+    margin: 10px;
+    width: 90%;
+    /* max-width: 300px; */
+    text-align: left;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    border-radius: 20px;
+  }
+  
+   .manageincome-app-screen .income-card h3 {
+    font-size: 18px;
+    margin: 0;
+  }
+  
+   .manageincome-app-screen .income-card p {
+    font-size: 14px;
+    margin: 10px 0 0;
+  }
+  
+   .manageincome-app-screen .drop-down {
     padding: 10px;
-    border-radius: 10px;
-    background-color: #fff;
-}
+    background-color: #0e4f20;
+    border: none;
+    width: 100%;
+  }
+  
+   .manageincome-app-screen .drop-down-container {
+    padding: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  
+   .manageincome-app-screen .drop-down-menu{
+    padding: 10px;
+    background-color: white;
+    width: 100%;
+  }
+  
+   .manageincome-app-screen .drop-down-menu:hover{
+    padding: 10px;
+    background-color: #a5dbb4;
+    width: 100%;
+  }
+  
+  .manageincome-app-screen .custom-dropdown .dropdown-toggle:active,
+  .manageincome-app-screen .custom-dropdown .dropdown-toggle:focus {
+    background-color: #0e4f20;
+    box-shadow: none;
+  }
+  
+  .manageincome-app-screen .search-field {
+    margin-left: 20px;
+  }
+  
+  /* .add-income-button {
+    padding: 8px 16px;
+    background-color: #6558f5;
+    color: #fff;
+    width: 90%;
+    margin-left: 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .add-income-button:hover {
+    background-color: #7273d6;
+  } */
+  
 
-.manageincome .card {
-    transition: transform 0.2s, box-shadow 0.2s;
-}
+  .manageincome-app-screen .add-income-button {
+    background-color: #0e4f20; 
+    color: #fff; 
+    padding: 10px 20px;
+    border: none; 
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%
 
-.manageincome .card:hover {
-    transform: scale(1.02);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-}
-
-.manageincome .custom-link {
+  }
+  
+   .manageincome-app-screen .add-income-button:hover {
+    background-color: #007922; 
+  }
+  
+   .manageincome-app-screen .add-income-button:focus {
+    outline: none; 
+  }
+  .manageincome-app-screen .main-heading {
+    background-color: #0e4f20;
+    color: white;
+    padding: 10px;
+    margin-bottom: 20px;
+    font: bold;
+    font-size: large;
+  }
+  .manageincome-app-screen .custom-link {
     text-decoration: none;
     color: inherit;
 }
 
-.manageincome .custom-link:hover {
-    text-decoration: none;
+.manageincome-app-screen .custom-link:hover {
+    text-decoration: none;
 }
-
-.manageincome .footer-alignment {
-    flex-shrink: 0;
-}
-.manageincome .AddIncome{
-    margin-top: 0.5rem;
-}
-
-
-
+  
+  

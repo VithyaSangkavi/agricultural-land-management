@@ -9,6 +9,8 @@ import { Form, Button, Container, Col, Row, Card } from 'react-bootstrap';
 import { submitSets } from '../UiComponents/SubmitSets';
 import { alertService } from '../../_services/alert.service';
 import { useTranslation } from 'react-i18next';
+import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
+import { Dropdown, DropdownButton } from 'react-bootstrap';
 
 const UpdateIncome = () => {
     const { incomeId } = useParams();
@@ -20,13 +22,12 @@ const UpdateIncome = () => {
     const [selectedLandId, setSelectedLandId] = useState('');
     const [selectedLanguage, setSelectedLanguage] = useState('english');
 
-    const { t, i18n} = useTranslation();
+    const { t, i18n } = useTranslation();
 
-    useEffect(() => {
-        console.log("Trying to change language to:", selectedLanguage);
-        i18n.changeLanguage(selectedLanguage);
-        console.log("Language should be changed now.");
-    }, [selectedLanguage]);
+    const handleLanguageChange = (lang) => {
+        i18n.changeLanguage(lang);
+    };
+
 
     useEffect(() => {
 
@@ -35,7 +36,7 @@ const UpdateIncome = () => {
                 setData(res.extra)
                 setValue(res.extra.price);
                 setTrueLandId(res.extra.landId)
-   
+
             } else {
                 alertService.error("No Lots");
             };
@@ -45,9 +46,9 @@ const UpdateIncome = () => {
     console.log(price)
 
     console.log("selected land id: " + selectedLandId)
-    console.log("true land id : ",trueLandId)
+    console.log("true land id : ", trueLandId)
 
-    if(trueLandId != selectedLandId && selectedLandId != ''){
+    if (trueLandId != selectedLandId && selectedLandId != '') {
         history.push('/manageincome')
     }
 
@@ -75,55 +76,51 @@ const UpdateIncome = () => {
     }
 
     return (
-        <div className='updateincome'>
-            <div className='lotnavbar'>
-                <Navbar
-                    selectedLandId={selectedLandId}
-                    onLandChange={setSelectedLandId}
-                    selectedLanguage={selectedLanguage}
-                    onLanguageChange={setSelectedLanguage}
-                />
+        <div className='updateincome-app-screen'>
+            <p className='main-heading'>{t('updateincome')}</p>
+
+            <div className="position-absolute top-0 end-0 mt-2 me-2">
+                <Dropdown alignRight onSelect={handleLanguageChange}>
+                    <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                        <FaGlobeAmericas style={{ color: 'white' }} />
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu>
+                        <Dropdown.Item eventKey="en">English</Dropdown.Item>
+                        <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
             </div>
+
             <div className="AddLandCard">
-                <Container className="container">
-                    <Row className="justify-content-center">
-                        <Col sm={6}>
-                            <Card className="card-container">
-                                <Card.Header className="card-title">{t('updateincome')}</Card.Header>
-                                <Card.Body>
-                                    <Form>
-                                        <Form.Group controlId="month">
-                                            <Form.Label className="form-label">{t('month')}</Form.Label>
-                                            <Form.Control
-                                                className="input-field"
-                                                type="text"
-                                                placeholder={t('month')}
-                                                value={data.month}
-                                            />
-                                        </Form.Group>
-                                        <Form.Group controlId="value">
-                                            <Form.Label className="form-label">{t('price')}</Form.Label>
-                                            <Form.Control
-                                                className="input-field"
-                                                type="text"
-                                                placeholder="Value"
-                                                value={price}
-                                                onChange={(e) => setValue(e.target.value)}
-                                            />
-                                        </Form.Group>
-                                        <Button
-                                            className="submit-button"
-                                            variant="primary"
-                                            onClick={handleSubmit}
-                                        >
-                                            {t('update')}
-                                        </Button>
-                                    </Form>
-                                </Card.Body>
-                            </Card>
-                        </Col>
-                    </Row>
-                </Container>
+                
+                <div className="content">
+                    <input
+                        className="input-field"
+                        type="text"
+                        placeholder={t('month')}
+                        value={data.month}
+                    />
+
+                    <input
+                        className="input-field"
+                        type="text"
+                        placeholder="Value"
+                        value={price}
+                        onChange={(e) => setValue(e.target.value)}
+                    />
+
+                    <Button
+                        className="add-button"
+                        onClick={handleSubmit}
+                    >
+                        {t('update')}
+                    </Button>
+
+                </div>
+            </div>
+            <div className='footer-alignment'>
+                <Footer />
             </div>
         </div>
     );
