@@ -9,10 +9,14 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
+
 
 
 const ManageTask = () => {
     const [t, i18n] = useTranslation();
+    const { taskAssignedid } = useParams();
+
 
     const history = useHistory();
 
@@ -29,18 +33,75 @@ const ManageTask = () => {
     const [expenseId, setExpenseId] = useState('');
     const [selectedWorkersList, setSelectedWorkersList] = useState([]);
     const [kgValues, setKgValues] = useState('');
+
+    const [ongoingTaskName, setOngoingTaskName] = useState('');
+    const [ongoingTaskDate, setOngoingTaskDate] = useState('');
+    const [ongoingTaskWorkerDetails, setOngoingTaskWorkerDetails] = useState([]);
+
     //const [workerId, setWorkerId] = useState('');
     const [taskAssignedId, setTaskAssignedId] = useState('');
     const lotId = 1;
     const [quantity, setQuantity] = useState('');
 
     const [workers, setWorkers] = useState([]);
-    
+
+    const getFormattedDate = (dateString) => {
+        const date = new Date(dateString);
+        const day = date.getDate();
+        const options = {
+            year: 'numeric',
+            month: 'long',
+            weekday: 'long',
+        };
+        const formattedDate = date.toLocaleDateString('en-US', options);
+        const daySuffix = getDaySuffix(day);
+
+        return `${day}${daySuffix} ${formattedDate}`;
+    };
+
+    const getDaySuffix = (day) => {
+        if (day >= 11 && day <= 13) {
+            return 'th';
+        }
+        const lastDigit = day % 10;
+        switch (lastDigit) {
+            case 1:
+                return 'st';
+            case 2:
+                return 'nd';
+            case 3:
+                return 'rd';
+            default:
+                return 'th';
+        }
+    };
+
     useEffect(() => {
+
         fetchTaskName();
         fetchWorkerNames();
         fetchExpenseTypes();
         fetchTaskAssignedId();
+
+    }, []);
+
+    useEffect(() => {
+        axios.get(`http://localhost:8080/service/master/work-assigned-details/${taskAssignedid}`)
+            .then((response) => {
+                console.log("data : ", response.data);
+
+                // Update state variables using the set functions
+                setOngoingTaskName(response.data.extra.taskName);
+
+                const formattedStartDate = getFormattedDate(response.data.extra.startDate);
+                setOngoingTaskDate(formattedStartDate);
+
+                setOngoingTaskWorkerDetails(response.data.extra.workerDetails);
+            })
+            .catch((error) => {
+                // Handle errors
+                console.error('Error fetching task details:', error);
+            });
     }, []);
 
     const fetchTaskName = () => {
@@ -80,7 +141,7 @@ const ManageTask = () => {
         axios.get(`http://localhost:8080/service/master/task-assigned?taskId=${taskId}`)
             .then((response) => {
                 console.log('Task assigned id: ', response.data.extra.id)
-                setTaskAssignedId(response.data.extra.id);
+                // setTaskAssignedId(response.data.extra.id);
             })
             .catch((error) => {
                 console.error('Error fetching task name:', error);
@@ -209,9 +270,11 @@ const ManageTask = () => {
         i18n.changeLanguage(lang);
     };
 
+    // At this point, the state variables will have their updated values
+
     return (
         <div className="manage-task-app-screen">
-            <p className='main-heading'>{t('managetask')}</p>
+            <p className='main-heading'>{t('ongoingtasks')}</p>
             <div className="position-absolute top-0 end-0 mt-2 me-2">
                 <Dropdown alignRight onSelect={handleLanguageChange}>
                     <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
@@ -225,8 +288,8 @@ const ManageTask = () => {
                 </Dropdown>
             </div>
             <div className='task-heading'>
-                <p> {taskName} {t('task')} - </p>
-                <p> {t('from')} - {startDate} </p>
+                <p> {ongoingTaskName} {t('task')} - </p>
+                <p> {t('from')} - {ongoingTaskDate} </p>
             </div>
             <br />
             <div className="toggle-container">
@@ -236,18 +299,31 @@ const ManageTask = () => {
                 >
                     {t('tasks')}
                 </button>
-                <button
+                {/* <button
                     onClick={() => setSelectedView('finance')}
                     className={selectedView === 'finance' ? 'active toggle-button' : 'toggle-button'}
                 >
                     {t('finance')}
-                </button>
+                </button> */}
             </div>
 
             {/* Task Toggled View */}
             {selectedView === 'tasks' && (
                 <div className='card'>
                     <p>{t('dateongoing')}</p><br />
+
+                    {ongoingTaskWorkerDetails.map((worker) => (
+                        <div key={worker.id}>
+                            {ongoingTaskName === 'Pluck' ? (
+                                <p>{worker.workerName} - {worker.quantity}{worker.units}</p>
+                            ) : (
+                                <p>{worker.workerName}</p>
+                            )}
+                        </div>
+                    ))}
+
+
+                    <br />
 
                     <div className="dropdown-and-button-container">
                         <select
@@ -295,7 +371,7 @@ const ManageTask = () => {
             )}
 
             {/* Finance Toggled View */}
-            {selectedView === 'finance' && (
+            {/* {selectedView === 'finance' && (
                 <div>
                     <select
                         value={selectedExpenseType}
@@ -318,7 +394,7 @@ const ManageTask = () => {
                     />
                     <button className="add-button" onClick={handleAddTaskExpense}>{t('addtaskexpense')}</button>
                 </div>
-            )}
+            )} */}
             <br />
             <div className='footer-alignment'>
                 <Footer />

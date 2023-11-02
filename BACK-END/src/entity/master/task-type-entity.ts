@@ -36,4 +36,5 @@ export class TaskTypeEntity {
 
   @OneToMany(() => WorkAssignedEntity, (workAssigned) => workAssigned.task)
   workAssigned: WorkAssignedEntity[];
+  name: any;
 }

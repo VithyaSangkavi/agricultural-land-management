@@ -108,6 +108,11 @@ export class WorkAssignedDaoImpl implements WorkAssignedDao {
     let workAssignedModel = await workAssignedRepo.findOne({ where: { name: name, status: Status.Online } });
     return workAssignedModel;
   }
+  // async findByTaskAssignedId(taskAssignedId: number): Promise<WorkAssignedEntity[]> {
+  //   const workAssignedRepo = getConnection().getRepository(WorkAssignedEntity);
+  //   let workAssignedModel = await workAssignedRepo.find({ where: { taskAssigned: taskAssignedId } });
+  //   return workAssignedModel;
+  // }
   async prepareWorkAssignedModel(workAssignedModel: WorkAssignedEntity, workAssignedDto: WorkAssignedDto) {
     workAssignedModel.quantity = workAssignedDto.getQuantity();
     workAssignedModel.units = workAssignedDto.getUnits();

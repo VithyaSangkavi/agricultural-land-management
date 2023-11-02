@@ -96,6 +96,7 @@ router.post("/work-assigned-save", workAssignedController.save);
 router.post("/work-assigned-update", workAssignedController.update);
 router.post("/work-assigned-findAll", workAssignedController.findAll);
 router.get("/ongoing-tasks-with-names", workAssignedController.getOngoingTasksWithTaskNames);
+router.get("/work-assigned-details/:taskAssignedId", workAssignedController.getDetailsByTaskAssignedId);
 
 
 module.exports = router;
