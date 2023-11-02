@@ -6,6 +6,9 @@ import Footer from '../footer/footer';
 import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { submitCollection } from '../../_services/submit.service';
+import { submitSets } from '../UiComponents/SubmitSets';
+import { alertService } from '../../_services/alert.service';
 
 function ManageWorkers() {
 
@@ -24,15 +27,25 @@ function ManageWorkers() {
 
   useEffect(() => {
 
-    axios.post('http://localhost:8081/service/master/workerFindAll').then((response) => {
-      setWorkers(response.data.extra);
-      console.log("Workers : ", response.data.extra);
-    });
+    // axios.post('http://localhost:8081/service/master/workerFindAll').then((response) => {
+    //   setWorkers(response.data.extra);
+    //   console.log("Workers : ", response.data.extra);
+    // });
 
-    axios.get('http://localhost:8081/service/master/landFindAll').then((response) => {
-      setLands(response.data.extra);
-      console.log("Lands : ", response.data.extra);
-    });
+    submitSets(submitCollection.manageworker)
+      .then((res) => {
+        setWorkers(res.extra);
+      })
+
+    // axios.get('http://localhost:8081/service/master/landFindAll').then((response) => {
+    //   setLands(response.data.extra);
+    //   console.log("Lands : ", response.data.extra);
+    // });
+    
+    submitSets(submitCollection.manageland)
+    .then((res) => {
+      setLands(res.extra);
+    })
   }, []);
 
   const handleSearchChange = (event) => {

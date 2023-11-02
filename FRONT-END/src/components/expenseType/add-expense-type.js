@@ -6,6 +6,9 @@ import { useHistory } from 'react-router-dom';
 import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { submitCollection } from '../../_services/submit.service';
+import { submitSets } from '../UiComponents/SubmitSets';
+import { alertService } from '../../_services/alert.service';
 
 const AddExpenseType = () => {
 
@@ -21,14 +24,15 @@ const AddExpenseType = () => {
       expenseType 
     };
 
-  Axios.post('http://localhost:8081/service/master/expenseSave', addExpense)
-      .then((response) => {
-        console.log('Expense type added successfully:', response.data);
-        history.push('/manageExpenseType');
-      })
-      .catch((error) => {
-        console.error('Error adding expense type:', error);
-      });
+    submitSets(submitCollection.saveexpense, addExpense, false)
+    .then(res => {
+      if (res && res.status) {
+        alertService.success("Expense type added successfully")
+        history.push('/manageExpenseType')
+      } else {
+        alertService.error("Error adding expense type")
+      }
+    })
   };
 
   const handleLanguageChange = (lang) => {

@@ -26,6 +26,7 @@
   background-color: rgba(0, 0, 0, 0.6);
   border: none;
   border-radius: 20px;
+  color: white;
 }
 
 .task-app-screen .input-field::placeholder{
