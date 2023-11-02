@@ -6,6 +6,9 @@ import { useHistory } from "react-router-dom";
 import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { submitCollection } from '../../_services/submit.service';
+import { submitSets } from '../UiComponents/SubmitSets';
+import { alertService } from '../../_services/alert.service';
 
 const AddTaskType = () => {
   const { t, i18n } = useTranslation();
@@ -22,14 +25,15 @@ const AddTaskType = () => {
       cropId
     };
 
-  Axios.post('http://localhost:8080/service/master/taskSave', addTask)
-      .then((response) => {
-        console.log('Task type added successfully:', response.data);
+  submitSets(submitCollection.savetasktype, addTask, false)
+    .then(res => {
+      if (res && res.status) {
+        alertService.success("Task type added successfully")
         history.push('/manageTaskType')
-      })
-      .catch((error) => {
-        console.error('Error adding task type:', error);
-      });
+      } else {
+        alertService.error("Error adding Task type")
+      }
+    })
   };
 
   const handleLanguageChange = (lang) => {

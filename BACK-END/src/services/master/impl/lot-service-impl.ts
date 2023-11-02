@@ -183,5 +183,25 @@ export class LotServiceImpl implements LotService {
     return cr;
   }
 
+  async findLotByLandId(landId: number): Promise<CommonResponse> {
+    const cr = new CommonResponse();
+    try {
+      let lot = await this.lotDao.findLotByLandId(landId);
+  
+      console.log('service: ', lot);
+  
+      let lotDto = new LotDto();
+      console.log('middle');
+      lotDto.filViaRequest(lot);
+      console.log('end');
+      cr.setStatus(true);
+      cr.setExtra(lotDto);
+    } catch (error) {
+      cr.setStatus(false);
+      cr.setExtra(error);
+      ErrorHandlerSup.handleError(error);
+    }
+    return cr;
+  }
 
 }

@@ -6,6 +6,9 @@ import Footer from '../footer/footer';
 import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { submitCollection } from '../../_services/submit.service';
+import { submitSets } from '../UiComponents/SubmitSets';
+import { alertService } from '../../_services/alert.service';
 
 function ManageExpenseTypes() {
 
@@ -20,16 +23,15 @@ function ManageExpenseTypes() {
   const history = useHistory();
 
   useEffect(() => {
+    submitSets(submitCollection.manageexpense)
+    .then((res) => {
+      setExpenseType(res.extra);
+    })
 
-    axios.get('http://localhost:8080/service/master/expenseFindAll').then((response) => {
-      setExpenseType(response.data.extra);
-      console.log("Expenses : ", response.data.extra);
-    });
-
-    axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
-      setLands(response.data.extra);
-      console.log("Lands : ", response.data.extra);
-    });
+    submitSets(submitCollection.manageland)
+    .then((res) => {
+      setLands(res.extra);
+    })
   }, []);
 
   const handleSearchChange = (event) => {

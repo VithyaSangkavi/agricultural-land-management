@@ -15,6 +15,13 @@ const submitCollection = {
     updateprice: { ptype: "PUT", url: basePath+"/service/master/updatePrice", queryparam: true, data:true, auth: true },
 
     login: { ptype: "POST", url: basePath+"/service/master/login", queryparam: false, data:true },
+
+    saveworker: { ptype: "POST", url: basePath+"/service/master/workerSave", queryparam: false, data:true, auth: true },
+    savepayment: { ptype: "POST", url: basePath+"/service/master/paymentSave", queryparam: false, data:true, auth: true },
+    manageworker: { ptype: "POST", url: basePath+"/service/master/workerFindAll", queryparam: false, data:true, auth: true },
+    saveexpense: { ptype: "POST", url: basePath+"/service/master/expenseSave", queryparam: false, data:true, auth: true },
+    manageexpense: { ptype: "GET", url: basePath+"/service/master/expenseFindAll", queryparam: false, data:true, auth: true },
+    savetasktype: { ptype: "POST", url: basePath+"/service/master/taskSave", queryparam: false, data:true, auth: true },
 }
 
 const autoClose = true;

@@ -6,6 +6,9 @@ import Footer from '../footer/footer';
 import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { submitCollection } from '../../_services/submit.service';
+import { submitSets } from '../UiComponents/SubmitSets';
+import { alertService } from '../../_services/alert.service';
 
 function ManageWorkers() {
 
@@ -24,15 +27,25 @@ function ManageWorkers() {
 
   useEffect(() => {
 
-    axios.post('http://localhost:8080/service/master/workerFindAll').then((response) => {
-      setWorkers(response.data.extra);
-      console.log("Workers : ", response.data.extra);
-    });
+    // axios.post('http://localhost:8081/service/master/workerFindAll').then((response) => {
+    //   setWorkers(response.data.extra);
+    //   console.log("Workers : ", response.data.extra);
+    // });
 
-    axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
-      setLands(response.data.extra);
-      console.log("Lands : ", response.data.extra);
-    });
+    submitSets(submitCollection.manageworker)
+      .then((res) => {
+        setWorkers(res.extra);
+      })
+
+    // axios.get('http://localhost:8081/service/master/landFindAll').then((response) => {
+    //   setLands(response.data.extra);
+    //   console.log("Lands : ", response.data.extra);
+    // });
+    
+    submitSets(submitCollection.manageland)
+    .then((res) => {
+      setLands(res.extra);
+    })
   }, []);
 
   const handleSearchChange = (event) => {
@@ -49,7 +62,7 @@ function ManageWorkers() {
   const handleSelectLand = (eventKey) => {
     setSelectedLand(eventKey);
 
-    axios.post(`http://localhost:8080/service/master/findLandIdByName?name=${eventKey}`)
+    axios.post(`http://localhost:8081/service/master/findLandIdByName?name=${eventKey}`)
       .then((response) => {
         const landIdWorker = response.data.extra;
         const thislandId = landIdWorker.landId;
@@ -58,7 +71,7 @@ function ManageWorkers() {
 
         setLandId(thislandId);
 
-        axios.get(`http://localhost:8080/service/master/findByLandId?landId=${thislandId}`)
+        axios.get(`http://localhost:8081/service/master/findByLandId?landId=${thislandId}`)
           .then((response) => {
             console.log("Workers for selected land:", response.data.extra);
             setFilteredWorkersForSelectedLand(response.data.extra);

@@ -49,7 +49,7 @@ router.post('/findLandIdByName', landController.findLandIdByName);
 router.post("/lotSave", lotController.save);
 router.get("/lotFindAll", lotController.findAll);
 router.get("/lotFindByLandId/:landId", lotController.findByLandId);
-
+router.get("/findLotByLandId", lotController.findLotByLandID);
 
 // worker routes
 router.post("/workerSave", workerController.save);

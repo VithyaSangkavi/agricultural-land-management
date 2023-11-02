@@ -1,7 +1,7 @@
 .manageland-app-screen {
   /* max-width: 360px; */
   max-width: 100%;
-  height: auto;
+  height: 100vh;
   margin: 0 auto;
   /* padding: 16px; */
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
