@@ -8,4 +8,7 @@ export interface WorkAssignedService {
   find(landId: number): Promise<CommonResponse>;
   findById(attendanceId: number): Promise<CommonResponse>;
   getOngoingTasksWithTaskNames(): Promise<CommonResponse>;
+  getDetailsByTaskAssignedId(taskAssignedId: number): Promise<CommonResponse>;
+  // findByTaskAssignedId(taskAssignedId: number): Promise<CommonResponse>;
+  
 }

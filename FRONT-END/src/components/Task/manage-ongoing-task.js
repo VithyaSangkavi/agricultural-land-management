@@ -9,15 +9,18 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
+
 
 
 const ManageTask = () => {
     const [t, i18n] = useTranslation();
+    const { taskAssignedid } = useParams();
+
 
     const history = useHistory();
 
     const taskId = localStorage.getItem('TaskIDFromTaskAssigned')
-    const landId = localStorage.getItem('SelectedLandId')
     const startDate = localStorage.getItem('StartDate');
 
     const [taskName, setTaskName] = useState('');
@@ -30,23 +33,79 @@ const ManageTask = () => {
     const [expenseId, setExpenseId] = useState('');
     const [selectedWorkersList, setSelectedWorkersList] = useState([]);
     const [kgValues, setKgValues] = useState('');
+
+    const [ongoingTaskName, setOngoingTaskName] = useState('');
+    const [ongoingTaskDate, setOngoingTaskDate] = useState('');
+    const [ongoingTaskWorkerDetails, setOngoingTaskWorkerDetails] = useState([]);
+
     //const [workerId, setWorkerId] = useState('');
     const [taskAssignedId, setTaskAssignedId] = useState('');
-    const [lotId, setLotId] = useState('');
+    const lotId = 1;
     const [quantity, setQuantity] = useState('');
 
     const [workers, setWorkers] = useState([]);
-    
+
+    const getFormattedDate = (dateString) => {
+        const date = new Date(dateString);
+        const day = date.getDate();
+        const options = {
+            year: 'numeric',
+            month: 'long',
+            weekday: 'long',
+        };
+        const formattedDate = date.toLocaleDateString('en-US', options);
+        const daySuffix = getDaySuffix(day);
+
+        return `${day}${daySuffix} ${formattedDate}`;
+    };
+
+    const getDaySuffix = (day) => {
+        if (day >= 11 && day <= 13) {
+            return 'th';
+        }
+        const lastDigit = day % 10;
+        switch (lastDigit) {
+            case 1:
+                return 'st';
+            case 2:
+                return 'nd';
+            case 3:
+                return 'rd';
+            default:
+                return 'th';
+        }
+    };
+
     useEffect(() => {
+
         fetchTaskName();
         fetchWorkerNames();
         fetchExpenseTypes();
         fetchTaskAssignedId();
-        fetchLandId();
+
+    }, []);
+
+    useEffect(() => {
+        axios.get(`http://localhost:8080/service/master/work-assigned-details/${taskAssignedid}`)
+            .then((response) => {
+                console.log("data : ", response.data);
+
+                // Update state variables using the set functions
+                setOngoingTaskName(response.data.extra.taskName);
+
+                const formattedStartDate = getFormattedDate(response.data.extra.startDate);
+                setOngoingTaskDate(formattedStartDate);
+
+                setOngoingTaskWorkerDetails(response.data.extra.workerDetails);
+            })
+            .catch((error) => {
+                // Handle errors
+                console.error('Error fetching task details:', error);
+            });
     }, []);
 
     const fetchTaskName = () => {
-        axios.get(`http://localhost:8081/service/master/findTaskNameById/?taskId=${taskId}`)
+        axios.get(`http://localhost:8080/service/master/findTaskNameById/?taskId=${taskId}`)
             .then((response) => {
                 setTaskName(response.data.extra.taskName);
             })
@@ -56,7 +115,7 @@ const ManageTask = () => {
     };
 
     const fetchWorkerNames = () => {
-        axios.post('http://localhost:8081/service/master/workerFindAll')
+        axios.post('http://localhost:8080/service/master/workerFindAll')
             .then((response) => {
                 const workerNamesArray = response.data.extra.map((worker) => worker.name);
                 setWorkerNames(workerNamesArray);
@@ -67,7 +126,7 @@ const ManageTask = () => {
     };
 
     const fetchExpenseTypes = () => {
-        axios.get('http://localhost:8081/service/master/expenseFindAll')
+        axios.get('http://localhost:8080/service/master/expenseFindAll')
             .then((response) => {
                 const expenseTypeArrays = response.data.extra.map((expense) => expense.expenseType);
                 setExpenseTypes(expenseTypeArrays);
@@ -82,22 +141,10 @@ const ManageTask = () => {
         axios.get(`http://localhost:8080/service/master/task-assigned?taskId=${taskId}`)
             .then((response) => {
                 console.log('Task assigned id: ', response.data.extra.id)
-                setTaskAssignedId(response.data.extra.id);
+                // setTaskAssignedId(response.data.extra.id);
             })
             .catch((error) => {
                 console.error('Error fetching task name:', error);
-            });
-    }
-
-    const fetchLandId = () => {
-        axios.get(`http://localhost:8081/service/master/findLotByLandId?landId=${landId}`)
-            .then((response) => {
-                const thislot = response.data.extra.id;
-                console.log('Lot id: ', response.data.extra.id)
-                setLotId(thislot);
-            })
-            .catch((error) => {
-                console.error('Error fetching lot id:', error);
             });
     }
 
@@ -117,7 +164,7 @@ const ManageTask = () => {
                 setSelectedWorker('');
                 console.log('selected worker: ', selectedWorker);
 
-                axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${selectedWorker}`)
+                axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${selectedWorker}`)
                     .then((response) => {
                         const workerId = response.data.extra.workerId
                         // setWorkerId(storeWorkerId);
@@ -131,7 +178,7 @@ const ManageTask = () => {
                             lotId
                         }
 
-                        axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
+                        axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
                             .then((response) => {
                                 console.log('Work assigned added successfully:', response.data);
 
@@ -152,7 +199,7 @@ const ManageTask = () => {
 
         //get expense id according to the expense type
         axios
-            .get(`http://localhost:8081/service/master/find-by-type?expenseType=${selectedExpenseType}`)
+            .get(`http://localhost:8080/service/master/find-by-type?expenseType=${selectedExpenseType}`)
             .then((response) => {
                 const expenseId = response.data.expenseId;
                 setExpenseId(expenseId);
@@ -164,7 +211,7 @@ const ManageTask = () => {
                 };
 
                 //save task expense 
-                axios.post('http://localhost:8081/service/master/task-expense-save', addTaskExpense)
+                axios.post('http://localhost:8080/service/master/task-expense-save', addTaskExpense)
                     .then((response) => {
                         console.log('Task expense added successfully:', response.data);
                         history.push('/home');
@@ -190,7 +237,7 @@ const ManageTask = () => {
         const selectedWorker = localStorage.getItem('selectedWorker');
         console.log('selected worker: ', selectedWorker);
 
-        axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${selectedWorker}`)
+        axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${selectedWorker}`)
             .then((response) => {
                 const workerId = response.data.extra.workerId
                 // setWorkerId(storeWorkerId);
@@ -205,7 +252,7 @@ const ManageTask = () => {
                     lotId
                 }
 
-                axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
+                axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
                     .then((response) => {
                         console.log('Work assigned added successfully:', response.data);
 
@@ -223,9 +270,11 @@ const ManageTask = () => {
         i18n.changeLanguage(lang);
     };
 
+    // At this point, the state variables will have their updated values
+
     return (
         <div className="manage-task-app-screen">
-            <p className='main-heading'>{t('managetask')}</p>
+            <p className='main-heading'>{t('ongoingtasks')}</p>
             <div className="position-absolute top-0 end-0 mt-2 me-2">
                 <Dropdown alignRight onSelect={handleLanguageChange}>
                     <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
@@ -239,8 +288,8 @@ const ManageTask = () => {
                 </Dropdown>
             </div>
             <div className='task-heading'>
-                <p> {taskName} {t('task')} - </p>
-                <p> {t('from')} - {startDate} </p>
+                <p> {ongoingTaskName} {t('task')} - </p>
+                <p> {t('from')} - {ongoingTaskDate} </p>
             </div>
             <br />
             <div className="toggle-container">
@@ -250,18 +299,31 @@ const ManageTask = () => {
                 >
                     {t('tasks')}
                 </button>
-                <button
+                {/* <button
                     onClick={() => setSelectedView('finance')}
                     className={selectedView === 'finance' ? 'active toggle-button' : 'toggle-button'}
                 >
                     {t('finance')}
-                </button>
+                </button> */}
             </div>
 
             {/* Task Toggled View */}
             {selectedView === 'tasks' && (
                 <div className='card'>
                     <p>{t('dateongoing')}</p><br />
+
+                    {ongoingTaskWorkerDetails.map((worker) => (
+                        <div key={worker.id}>
+                            {ongoingTaskName === 'Pluck' ? (
+                                <p>{worker.workerName} - {worker.quantity}{worker.units}</p>
+                            ) : (
+                                <p>{worker.workerName}</p>
+                            )}
+                        </div>
+                    ))}
+
+
+                    <br />
 
                     <div className="dropdown-and-button-container">
                         <select
@@ -309,7 +371,7 @@ const ManageTask = () => {
             )}
 
             {/* Finance Toggled View */}
-            {selectedView === 'finance' && (
+            {/* {selectedView === 'finance' && (
                 <div>
                     <select
                         value={selectedExpenseType}
@@ -332,7 +394,7 @@ const ManageTask = () => {
                     />
                     <button className="add-button" onClick={handleAddTaskExpense}>{t('addtaskexpense')}</button>
                 </div>
-            )}
+            )} */}
             <br />
             <div className='footer-alignment'>
                 <Footer />

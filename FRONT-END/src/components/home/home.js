@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import './home.css';
 import Footer from '../footer/footer';
 import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
@@ -85,6 +85,9 @@ function Home() {
     const handleLanguageChange = (lang) => {
         i18n.changeLanguage(lang);
     };
+    const handleTaskClick = (taskAssignedid) => {
+        history.push(`/manageOngoingTask/${taskAssignedid}`);
+    };
 
     return (
         <div className="home-app-screen">
@@ -119,13 +122,15 @@ function Home() {
             <div className='home-heading'>
                 <p>{t('ongoingtasks')}</p>
             </div>
+
             <div className="task-list">
                 {OngoingTasks.map((taskAssigned) => (
-                    <div key={taskAssigned.id} className="task-card">
+                    <div key={taskAssigned.id} className="task-card" onClick={() => handleTaskClick(taskAssigned.taskAssignedId)}>
                         <p>{taskAssigned.taskName}</p>
                     </div>
                 ))}
             </div>
+
             <div className='home-heading'>
                 <p>{t('newtask')}</p>
             </div>
