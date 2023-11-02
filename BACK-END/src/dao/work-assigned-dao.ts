@@ -15,4 +15,5 @@ export interface WorkAssignedDao {
   findById(attendanceId: number): Promise<WorkAssignedEntity>;
   findByName(taskStatus: TaskStatus): Promise<WorkAssignedEntity>;
   findCount(landId: number): Promise<number> ;
+  // findByTaskAssignedId(taskAssignedId: number): Promise<WorkAssignedEntity[]>;
 }

@@ -78,3 +78,21 @@ exports.getOngoingTasksWithTaskNames = async (req: Request, res: Response, next:
   }
 };
 
+// exports.findByTaskAssignedId = async (req: Request, res: Response, next: NextFunction) => {
+//   try {
+//       const workassigneddetail = await workAssignedService.findByTaskAssignedId(req.params.taskAssignedId);
+//       res.json(workassigneddetail);
+//   } catch (error) {
+//       next(error);
+//   }
+// };
+
+exports.getDetailsByTaskAssignedId = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const cr = await workAssignedService.getDetailsByTaskAssignedId(req.params.taskAssignedId);
+    res.send(cr);
+  } catch (error) {
+    next(error);
+  }
+};
+

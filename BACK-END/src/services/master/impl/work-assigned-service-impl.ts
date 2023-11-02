@@ -212,6 +212,79 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
   
     return cr;
   }
+
+  // async findByTaskAssignedId(taskAssignedId: number): Promise<CommonResponse> {
+  //   let cr = new CommonResponse();
+  //   try{
+  //     let workAssigneds = await this.workAssignedDao.findByTaskAssignedId(taskAssignedId);
+  //     let workAssignedDtoList = new Array();
+  //     for (const workAssignedModel of workAssigneds) {
+  //       let workAssignedDto = new WorkAssignedDto();
+  //       workAssignedDto.filViaRequest(workAssignedModel);
+  //       workAssignedDtoList.push(workAssignedDto);
+  //     }
+  //     cr.setStatus(true);
+  //     cr.setExtra(workAssignedDtoList);
+  //   }catch(error){
+  //     cr.setStatus(false);
+  //     cr.setExtra(error);
+  //     ErrorHandlerSup.handleError(error);
+  //   }
+  //   return cr
+    
+  // }
+
+
+  async getDetailsByTaskAssignedId(taskAssignedId: number): Promise<CommonResponse> {
+    let cr = new CommonResponse();
+    try {
+      const workAssignedRepo = getConnection().getRepository(WorkAssignedEntity);
+  
+      const taskDetails = await workAssignedRepo
+        .createQueryBuilder('workAssigned')
+        .innerJoinAndSelect('workAssigned.worker', 'worker') 
+        .innerJoinAndSelect('workAssigned.task', 'task') 
+        .where('workAssigned.taskAssignedId = :taskAssignedId', { taskAssignedId })
+        .groupBy('workAssigned.id') 
+        .select([
+          'MAX(workAssigned.startDate) as startDate',
+          'MAX(workAssigned.endDate) as endDate',
+          'MAX(task.taskName) as taskName',
+          'workAssigned.quantity as quantity',
+          'workAssigned.units as units',
+          'worker.name as workerName',
+        ])
+        .getRawMany(); 
+  
+      const taskDetail = taskDetails[0]; 
+  
+      // Extract and format worker-specific details
+      const workerDetails = taskDetails.map((row) => ({
+        quantity: row.quantity,
+        units: row.units,
+        workerName: row.workerName,
+      }));
+  
+      // Create a result object that includes common task details and worker-specific details
+      const result = {
+        startDate: taskDetail.startDate,
+        endDate: taskDetail.endDate,
+        taskName: taskDetail.taskName,
+        workerDetails: workerDetails,
+      };
+  
+      cr.setStatus(true);
+      cr.setExtra(result);
+    } catch (error) {
+      cr.setStatus(false);
+      cr.setExtra(error);
+      ErrorHandlerSup.handleError(error);
+    }
+  
+    return cr;
+  }
+  
+
   
   
   
