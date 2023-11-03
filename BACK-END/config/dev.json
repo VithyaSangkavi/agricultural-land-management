@@ -1,14 +1,14 @@
 {
   "server": {
-    "port": "8080",
+    "port": "8081",
     "ip": "127.0.0.1"
   },
   "db": {
     "host": "localhost",
     "userName": "root",
-    "password": "1234",
-    "db":"agri-management",
-    "port":"3306"
+    "password": "Vithya24",
+    "db": "agri-management",
+    "port": "3306"
   },
   "aws": {
     "accessKey": "",
