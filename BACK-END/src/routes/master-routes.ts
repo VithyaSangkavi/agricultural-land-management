@@ -13,6 +13,7 @@ var userController = require("../controllers/user-controller");
 var taskAssignedController = require('../controllers/task-assigned-controller')
 var taskExpenseController = require('../controllers/task-expense-controller')
 var workAssignedController = require('../controllers/work-assigned-controller')
+var taskCardController = require('../controllers/task-card-controller')
 
 const router: Router = express.Router();
 
@@ -97,6 +98,12 @@ router.post("/work-assigned-update", workAssignedController.update);
 router.post("/work-assigned-findAll", workAssignedController.findAll);
 router.get("/ongoing-tasks-with-names", workAssignedController.getOngoingTasksWithTaskNames);
 router.get("/work-assigned-details/:taskAssignedId", workAssignedController.getDetailsByTaskAssignedId);
+
+// work-assigned routes
+router.post("/task-card-save", taskCardController.save);
+router.put("/task-card-update", taskCardController.update);
+router.get("/task-card-findAll", taskCardController.findAll);
+router.get("/task-card-findById", taskCardController.findById);
 
 
 module.exports = router;
