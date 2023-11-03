@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 import DatePicker from 'react-datepicker';
 import './manage-task.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faCheck, faReopen } from '@fortawesome/free-solid-svg-icons';
 import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
@@ -17,11 +17,11 @@ const ManageTask = () => {
     const [t, i18n] = useTranslation();
     const { taskAssignedid } = useParams();
 
-
     const history = useHistory();
 
     const taskId = localStorage.getItem('TaskIDFromTaskAssigned')
     const startDate = localStorage.getItem('StartDate');
+    const landId = localStorage.getItem('SelectedLandId')
 
     const [taskName, setTaskName] = useState('');
     const [selectedView, setSelectedView] = useState('tasks');
@@ -40,10 +40,26 @@ const ManageTask = () => {
 
     //const [workerId, setWorkerId] = useState('');
     const [taskAssignedId, setTaskAssignedId] = useState('');
-    const lotId = 1;
+    const [lotId, setLotId] = useState('');
     const [quantity, setQuantity] = useState('');
 
     const [workers, setWorkers] = useState([]);
+    const [isCompleted, setIsCompleted] = useState(false);
+    const [completedTasks, setCompletedTasks] = useState([]);
+
+    const handleCompleteTask = () => {
+        setIsCompleted(true);
+        setCompletedTasks([...completedTasks, ongoingTaskName]);
+    };
+
+    const handleReopenTask = () => {
+        setIsCompleted(false);
+        const updatedCompletedTasks = completedTasks.filter(
+            (task) => task !== ongoingTaskName
+        );
+        setCompletedTasks(updatedCompletedTasks);
+    };
+
 
     const getFormattedDate = (dateString) => {
         const date = new Date(dateString);
@@ -82,11 +98,11 @@ const ManageTask = () => {
         fetchWorkerNames();
         fetchExpenseTypes();
         fetchTaskAssignedId();
-
+        fetchLotId();
     }, []);
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/service/master/work-assigned-details/${taskAssignedid}`)
+        axios.get(`http://localhost:8081/service/master/work-assigned-details/${taskAssignedid}`)
             .then((response) => {
                 console.log("data : ", response.data);
 
@@ -105,7 +121,7 @@ const ManageTask = () => {
     }, []);
 
     const fetchTaskName = () => {
-        axios.get(`http://localhost:8080/service/master/findTaskNameById/?taskId=${taskId}`)
+        axios.get(`http://localhost:8081/service/master/findTaskNameById/?taskId=${taskId}`)
             .then((response) => {
                 setTaskName(response.data.extra.taskName);
             })
@@ -115,7 +131,7 @@ const ManageTask = () => {
     };
 
     const fetchWorkerNames = () => {
-        axios.post('http://localhost:8080/service/master/workerFindAll')
+        axios.post('http://localhost:8081/service/master/workerFindAll')
             .then((response) => {
                 const workerNamesArray = response.data.extra.map((worker) => worker.name);
                 setWorkerNames(workerNamesArray);
@@ -126,7 +142,7 @@ const ManageTask = () => {
     };
 
     const fetchExpenseTypes = () => {
-        axios.get('http://localhost:8080/service/master/expenseFindAll')
+        axios.get('http://localhost:8081/service/master/expenseFindAll')
             .then((response) => {
                 const expenseTypeArrays = response.data.extra.map((expense) => expense.expenseType);
                 setExpenseTypes(expenseTypeArrays);
@@ -138,13 +154,25 @@ const ManageTask = () => {
 
     const fetchTaskAssignedId = () => {
         //get task-assigned id
-        axios.get(`http://localhost:8080/service/master/task-assigned?taskId=${taskId}`)
+        axios.get(`http://localhost:8081/service/master/task-assigned?taskId=${taskId}`)
             .then((response) => {
                 console.log('Task assigned id: ', response.data.extra.id)
-                // setTaskAssignedId(response.data.extra.id);
+                setTaskAssignedId(response.data.extra.id);
             })
             .catch((error) => {
                 console.error('Error fetching task name:', error);
+            });
+    }
+
+    const fetchLotId = () => {
+        axios.get(`http://localhost:8081/service/master/findLotByLandId?landId=${landId}`)
+            .then((response) => {
+                const thislot = response.data.extra.id;
+                console.log('Lot id: ', response.data.extra.id)
+                setLotId(thislot);
+            })
+            .catch((error) => {
+                console.error('Error fetching lot id:', error);
             });
     }
 
@@ -164,7 +192,7 @@ const ManageTask = () => {
                 setSelectedWorker('');
                 console.log('selected worker: ', selectedWorker);
 
-                axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${selectedWorker}`)
+                axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${selectedWorker}`)
                     .then((response) => {
                         const workerId = response.data.extra.workerId
                         // setWorkerId(storeWorkerId);
@@ -178,7 +206,7 @@ const ManageTask = () => {
                             lotId
                         }
 
-                        axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
+                        axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
                             .then((response) => {
                                 console.log('Work assigned added successfully:', response.data);
 
@@ -199,7 +227,7 @@ const ManageTask = () => {
 
         //get expense id according to the expense type
         axios
-            .get(`http://localhost:8080/service/master/find-by-type?expenseType=${selectedExpenseType}`)
+            .get(`http://localhost:8081/service/master/find-by-type?expenseType=${selectedExpenseType}`)
             .then((response) => {
                 const expenseId = response.data.expenseId;
                 setExpenseId(expenseId);
@@ -211,7 +239,7 @@ const ManageTask = () => {
                 };
 
                 //save task expense 
-                axios.post('http://localhost:8080/service/master/task-expense-save', addTaskExpense)
+                axios.post('http://localhost:8081/service/master/task-expense-save', addTaskExpense)
                     .then((response) => {
                         console.log('Task expense added successfully:', response.data);
                         history.push('/home');
@@ -237,7 +265,7 @@ const ManageTask = () => {
         const selectedWorker = localStorage.getItem('selectedWorker');
         console.log('selected worker: ', selectedWorker);
 
-        axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${selectedWorker}`)
+        axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${selectedWorker}`)
             .then((response) => {
                 const workerId = response.data.extra.workerId
                 // setWorkerId(storeWorkerId);
@@ -252,7 +280,7 @@ const ManageTask = () => {
                     lotId
                 }
 
-                axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
+                axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
                     .then((response) => {
                         console.log('Work assigned added successfully:', response.data);
 
@@ -292,109 +320,73 @@ const ManageTask = () => {
                 <p> {t('from')} - {ongoingTaskDate} </p>
             </div>
             <br />
-            <div className="toggle-container">
-                <button
-                    onClick={() => setSelectedView('tasks')}
-                    className={selectedView === 'tasks' ? 'active toggle-button' : 'toggle-button'}
-                >
-                    {t('tasks')}
-                </button>
-                {/* <button
-                    onClick={() => setSelectedView('finance')}
-                    className={selectedView === 'finance' ? 'active toggle-button' : 'toggle-button'}
-                >
-                    {t('finance')}
-                </button> */}
-            </div>
+            <div className='card'>
+                <p>{t('dateongoing')}</p><br />
 
-            {/* Task Toggled View */}
-            {selectedView === 'tasks' && (
-                <div className='card'>
-                    <p>{t('dateongoing')}</p><br />
-
-                    {ongoingTaskWorkerDetails.map((worker) => (
-                        <div key={worker.id}>
-                            {ongoingTaskName === 'Pluck' ? (
-                                <p>{worker.workerName} - {worker.quantity}{worker.units}</p>
-                            ) : (
-                                <p>{worker.workerName}</p>
-                            )}
-                        </div>
-                    ))}
-
-
-                    <br />
-
-                    <div className="dropdown-and-button-container">
-                        <select
-                            value={selectedWorker}
-                            onChange={(e) => setSelectedWorker(e.target.value)}
-                            className='dropdown-input'
-                        >
-                            <option value="">{t('selectaworker')}</option>
-                            {workerNames.map((workerName) => (
-                                <option key={workers.name} value={workerName}>
-                                    {workerName}
-                                </option>
-                            ))}
-                        </select>
-                        <button className='add-small' onClick={handleAddSelectedWorker}>{t('add')}</button>
+                {ongoingTaskWorkerDetails.map((worker) => (
+                    <div key={worker.id}>
+                        {ongoingTaskName === 'Pluck' ? (
+                            <p>{worker.workerName} - {worker.quantity}{worker.units}</p>
+                        ) : (
+                            <p>{worker.workerName}</p>
+                        )}
                     </div>
-                    {selectedWorkersList.length > 0 && (
-                        <div>
-                            {selectedWorkersList.map((worker, index) => (
-                                <div key={index} className="worker-container">
-                                    <p>{worker}</p>
-                                    {taskName === 'Pluck' && (
-                                        <div className="kg-input-container">
-                                            <div className="kg-input">
-                                                <input
-                                                    type="text"
-                                                    placeholder={t('numberofkg')}
-                                                    value={kgValues[index] || ''}
-                                                    onChange={(e) => handleKgChange(e, index)}
-                                                    className="dropdown-input"
-                                                />
-                                                <span className="add-kg-icon">
-                                                    <FontAwesomeIcon icon={faPlus} onClick={addQuantity} />
-                                                </span>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-                    )}
+                ))}
 
-                    {/* <button className="add-button">{t('assignwork')}</button> */}
-                </div>
-            )}
+                <br />
 
-            {/* Finance Toggled View */}
-            {/* {selectedView === 'finance' && (
-                <div>
+                <div className="dropdown-and-button-container">
                     <select
-                        value={selectedExpenseType}
-                        onChange={(e) => setSelectedExpenseType(e.target.value)}
+                        value={selectedWorker}
+                        onChange={(e) => setSelectedWorker(e.target.value)}
                         className='dropdown-input'
                     >
-                        <option value="">{t('expense')}</option>
-                        {expenseTypes.map((expenseType) => (
-                            <option key={expenseType} value={expenseType}>
-                                {expenseType}
+                        <option value="">{t('selectaworker')}</option>
+                        {workerNames.map((workerName) => (
+                            <option key={workers.name} value={workerName}>
+                                {workerName}
                             </option>
                         ))}
-                    </select><br />
-                    <input
-                        type="text"
-                        placeholder={t('amount')}
-                        value={value}
-                        onChange={(e) => setValue(e.target.value)}
-                        className="dropdown-input"
-                    />
-                    <button className="add-button" onClick={handleAddTaskExpense}>{t('addtaskexpense')}</button>
+                    </select>
+                    <button className='add-small' onClick={handleAddSelectedWorker}>{t('add')}</button>
+                    {isCompleted ? (
+                        <button className="reopen-button top-right" onClick={handleReopenTask}>
+                            Reopen
+                        </button>
+                    ) : (
+                        <button className="complete-button top" onClick={handleCompleteTask}>
+                            Complete
+                        </button>
+                    )}
                 </div>
-            )} */}
+                {selectedWorkersList.length > 0 && (
+                    <div>
+                        {selectedWorkersList.map((worker, index) => (
+                            <div key={index} className="worker-container">
+                                <p>{worker}</p>
+                                {taskName === 'Pluck' && (
+                                    <div className="kg-input-container">
+                                        <div className="kg-input">
+                                            <input
+                                                type="text"
+                                                placeholder={t('numberofkg')}
+                                                value={kgValues[index] || ''}
+                                                onChange={(e) => handleKgChange(e, index)}
+                                                className="dropdown-input"
+                                            />
+                                            <span className="add-kg-icon">
+                                                <FontAwesomeIcon icon={faPlus} onClick={addQuantity} />
+                                            </span>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                {/* <button className="add-button">{t('assignwork')}</button> */}
+            </div>
             <br />
             <div className='footer-alignment'>
                 <Footer />

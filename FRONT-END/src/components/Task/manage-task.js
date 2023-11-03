@@ -42,7 +42,7 @@ const ManageTask = () => {
         fetchWorkerNames();
         fetchExpenseTypes();
         fetchTaskAssignedId();
-        fetchLandId();
+        fetchLotId();
     }, []);
 
     const fetchTaskName = () => {
@@ -79,7 +79,7 @@ const ManageTask = () => {
 
     const fetchTaskAssignedId = () => {
         //get task-assigned id
-        axios.get(`http://localhost:8080/service/master/task-assigned?taskId=${taskId}`)
+        axios.get(`http://localhost:8081/service/master/task-assigned?taskId=${taskId}`)
             .then((response) => {
                 console.log('Task assigned id: ', response.data.extra.id)
                 setTaskAssignedId(response.data.extra.id);
@@ -89,7 +89,7 @@ const ManageTask = () => {
             });
     }
 
-    const fetchLandId = () => {
+    const fetchLotId = () => {
         axios.get(`http://localhost:8081/service/master/findLotByLandId?landId=${landId}`)
             .then((response) => {
                 const thislot = response.data.extra.id;
