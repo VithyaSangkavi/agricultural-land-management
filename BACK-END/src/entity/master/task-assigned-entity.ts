@@ -4,6 +4,7 @@ import { LandEntity } from "./land-entity";
 import { TaskTypeEntity } from "./task-type-entity";
 import { WorkAssignedEntity } from "./work-assigned-entity";
 import { TaskStatus } from "../../enum/taskStatus";
+import { TaskCardEntity } from "./task-card-entity";
 
 @Entity({
     name: "task-assigned",
@@ -35,4 +36,7 @@ export class TaskAssignedEntity {
 
     @OneToMany(() => WorkAssignedEntity, (workAssigned) => workAssigned.taskAssigned)
     workAssigned: WorkAssignedEntity[];
+
+    @OneToMany(() => TaskCardEntity, (taskCard) => taskCard.taskAssigned)
+    taskCard: TaskCardEntity[];
 }

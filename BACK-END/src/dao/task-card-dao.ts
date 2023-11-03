@@ -1,8 +1,9 @@
 import { TaskCardDto } from "../dto/master/task-card-dto";
+import { TaskAssignedEntity } from "../entity/master/task-assigned-entity";
 import { TaskCardEntity } from "../entity/master/task-card-entity";
 
 export interface TaskCardDao {
-  save(taskCardDto: TaskCardDto): Promise<TaskCardEntity>;
+  save(taskCardDto: TaskCardDto, taskAssignedModel: TaskAssignedEntity): Promise<TaskCardEntity>;
   update(taskCardDto: TaskCardDto): Promise<TaskCardEntity>;
   delete(taskCardDto: TaskCardDto): Promise<TaskCardEntity>;
   findAll(taskCardDto: TaskCardDto): Promise<TaskCardEntity[]>;

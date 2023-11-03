@@ -20,6 +20,9 @@ import { TaskAssignedEntity } from "../../../entity/master/task-assigned-entity"
 import { getConnection } from "typeorm";
 import { WorkAssignedEntity } from "../../../entity/master/work-assigned-entity";
 import { Status } from "../../../enum/Status";
+import { TaskCardDao } from "../../../dao/task-card-dao";
+import { TaskCardDaoImpl } from "../../../dao/impl/task-card-dao-impl";
+import { TaskCardEntity } from "../../../entity/master/task-card-entity";
 
 /**
  * workAssigned service layer
@@ -31,6 +34,7 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
   taskTypeDao: TaskTypeDao = new TaskTypeDaoImpl();
   lotDao: LotDao = new LotDaoImpl();
   taskAssignedDao: TaskAssignedDao = new TaskAssignedDaoImpl();
+  taskcardDao: TaskCardDao = new TaskCardDaoImpl();
 
   /**
    * save new workAssigned
@@ -65,16 +69,24 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
         return CommonResSupport.getValidationException("Lot with the specified ID does not exist!");
       }
 
-      //check task type id
+      //check task assigned id
       let taskAssignedModel: TaskAssignedEntity = null;
-      if (workAssignedDto.getTaskId() > 0) {
+      if (workAssignedDto.getTaskAssignedId() > 0) {
         taskAssignedModel = await this.taskAssignedDao.findById(workAssignedDto.getTaskAssignedId());
       } else {
         return CommonResSupport.getValidationException("Assigned task with the specified ID does not exist!");
       }
 
+      //check task card id
+      let taskCardModel: TaskCardEntity = null;
+      if (workAssignedDto.getTaskCardId() > 0) {
+        taskCardModel = await this.taskcardDao.findById(workAssignedDto.getTaskCardId());
+      } else {
+        return CommonResSupport.getValidationException("task card with the specified ID does not exist!");
+      }
+
       // save new workAssigned
-      let newworkAssigned = await this.workAssignedDao.save(workAssignedDto, workerModel, taskTypeModel, lotModel, taskAssignedModel);
+      let newworkAssigned = await this.workAssignedDao.save(workAssignedDto, workerModel, taskTypeModel, lotModel, taskAssignedModel, taskCardModel);
       cr.setStatus(true);
     } catch (error) {
       cr.setStatus(false);
@@ -192,7 +204,7 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
     let cr = new CommonResponse();
     try {
       const workAssignedRepo = getConnection().getRepository(WorkAssignedEntity);
-  
+
       const taskDetails = await workAssignedRepo
         .createQueryBuilder('workAssigned')
         .innerJoin('workAssigned.task', 'task')
@@ -201,7 +213,7 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
         .groupBy('workAssigned.taskAssignedId')
         .select(['workAssigned.taskAssignedId as taskAssignedId', 'MAX(task.id) as taskId', 'MAX(task.taskName) as taskName'])
         .getRawMany();
-  
+
       cr.setStatus(true);
       cr.setExtra(taskDetails);
     } catch (error) {
@@ -209,7 +221,7 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
       cr.setExtra(error);
       ErrorHandlerSup.handleError(error);
     }
-  
+
     return cr;
   }
 
@@ -231,7 +243,7 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
   //     ErrorHandlerSup.handleError(error);
   //   }
   //   return cr
-    
+
   // }
 
 
@@ -239,13 +251,13 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
     let cr = new CommonResponse();
     try {
       const workAssignedRepo = getConnection().getRepository(WorkAssignedEntity);
-  
+
       const taskDetails = await workAssignedRepo
         .createQueryBuilder('workAssigned')
-        .innerJoinAndSelect('workAssigned.worker', 'worker') 
-        .innerJoinAndSelect('workAssigned.task', 'task') 
+        .innerJoinAndSelect('workAssigned.worker', 'worker')
+        .innerJoinAndSelect('workAssigned.task', 'task')
         .where('workAssigned.taskAssignedId = :taskAssignedId', { taskAssignedId })
-        .groupBy('workAssigned.id') 
+        .groupBy('workAssigned.id')
         .select([
           'MAX(workAssigned.startDate) as startDate',
           'MAX(workAssigned.endDate) as endDate',
@@ -254,17 +266,17 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
           'workAssigned.units as units',
           'worker.name as workerName',
         ])
-        .getRawMany(); 
-  
-      const taskDetail = taskDetails[0]; 
-  
+        .getRawMany();
+
+      const taskDetail = taskDetails[0];
+
       // Extract and format worker-specific details
       const workerDetails = taskDetails.map((row) => ({
         quantity: row.quantity,
         units: row.units,
         workerName: row.workerName,
       }));
-  
+
       // Create a result object that includes common task details and worker-specific details
       const result = {
         startDate: taskDetail.startDate,
@@ -272,7 +284,7 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
         taskName: taskDetail.taskName,
         workerDetails: workerDetails,
       };
-  
+
       cr.setStatus(true);
       cr.setExtra(result);
     } catch (error) {
@@ -280,13 +292,13 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
       cr.setExtra(error);
       ErrorHandlerSup.handleError(error);
     }
-  
+
     return cr;
   }
-  
 
-  
-  
-  
-  
+
+
+
+
+
 }

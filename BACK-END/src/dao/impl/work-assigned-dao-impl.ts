@@ -11,13 +11,14 @@ import { LotEntity } from "../../entity/master/lot-entity";
 import { TaskAssignedEntity } from "../../entity/master/task-assigned-entity";
 import { IWorkerAssignedInfoFromDao } from "../../types/worker-assignedt-types";
 import { log } from "util";
+import { TaskCardEntity } from "../../entity/master/task-card-entity";
 
 /**
  * work-assigned data access layer
  * contain crud method
  */
 export class WorkAssignedDaoImpl implements WorkAssignedDao {
-  async save(workAssignedDto: WorkAssignedDto, workerModel: WorkerEntity, taskTypeModel: TaskTypeEntity, lotModel: LotEntity, taskAssignedModel: TaskAssignedEntity): Promise<WorkAssignedEntity> {
+  async save(workAssignedDto: WorkAssignedDto, workerModel: WorkerEntity, taskTypeModel: TaskTypeEntity, lotModel: LotEntity, taskAssignedModel: TaskAssignedEntity, taskCardModel: TaskCardEntity): Promise<WorkAssignedEntity> {
     let workAssignedRepo = getConnection().getRepository(WorkAssignedEntity);
     let workAssignedModel = new WorkAssignedEntity();
 
@@ -25,6 +26,7 @@ export class WorkAssignedDaoImpl implements WorkAssignedDao {
     workAssignedModel.task = taskTypeModel;
     workAssignedModel.lot = lotModel;
     workAssignedModel.taskAssigned = taskAssignedModel;
+    workAssignedModel.taskCard = taskCardModel;
     this.prepareWorkAssignedModel(workAssignedModel, workAssignedDto);
     let savedWorkAssigned = await workAssignedRepo.save(workAssignedModel);
     return savedWorkAssigned;

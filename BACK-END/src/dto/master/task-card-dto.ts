@@ -30,14 +30,14 @@ export class TaskCardDto extends PaginationDto {
     }
   }
 
-  filViaDbObject(TaskAssignedModel: TaskCardEntity) {
-    this.id = TaskAssignedModel.id;
-    this.taskAssignedDate = TaskAssignedModel.taskAssignedDate;
-    this.cardStatus = TaskAssignedModel.cardStatus;
-    this.createdDate = TaskAssignedModel.createdDate;
-    this.updatedDate = TaskAssignedModel.updatedDate;
-    this.status = TaskAssignedModel.status;
-    this.taskAssignedId = TaskAssignedModel.taskAssigned.id;
+  filViaDbObject(TaskCardModel: TaskCardEntity) {
+    this.id = TaskCardModel.id;
+    this.taskAssignedDate = TaskCardModel.taskAssignedDate;
+    this.cardStatus = TaskCardModel.cardStatus;
+    this.createdDate = TaskCardModel.createdDate;
+    this.updatedDate = TaskCardModel.updatedDate;
+    this.status = TaskCardModel.status;
+    this.taskAssignedId = TaskCardModel.taskAssigned.id;
   }
 
   public getTaskCardId(): number {
@@ -56,7 +56,7 @@ export class TaskCardDto extends PaginationDto {
     this.taskAssignedDate = taskAssignedDate;
   }
 
-  public getcardStatus(): TaskCardStatus {
+  public getCardStatus(): TaskCardStatus {
     return this.cardStatus;
   }
 
