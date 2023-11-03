@@ -3,6 +3,7 @@ import { Status } from "../../enum/Status";
 import { LandEntity } from "./land-entity";
 import { TaskTypeEntity } from "./task-type-entity";
 import { WorkAssignedEntity } from "./work-assigned-entity";
+import { TaskStatus } from "../../enum/taskStatus";
 
 @Entity({
     name: "task-assigned",
@@ -20,6 +21,9 @@ export class TaskAssignedEntity {
     
     @Column({ type: "enum", enum:Status, default: Status.Online})
     status: Status;
+
+    @Column({ type: "enum" ,enum:TaskStatus,default:TaskStatus.Ongoing})
+    taskStatus: TaskStatus;
 
     @ManyToOne(() => LandEntity, (land) => land.taskAssigned)
     @JoinColumn({ name: "landId" })

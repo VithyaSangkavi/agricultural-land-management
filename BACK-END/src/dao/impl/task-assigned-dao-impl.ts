@@ -1,6 +1,7 @@
 import { getConnection, Like } from "typeorm";
 import { TaskAssignedDto } from "../../dto/master/task-assigned-dto";
 import { Status } from "../../enum/Status";
+import { TaskStatus } from "../../enum/taskStatus";
 import { TaskAssignedEntity } from "../../entity/master/task-assigned-entity";
 import { WorkerStatus } from "../../enum/workerStatus";
 import { TaskAssignedDao } from "../task-assigned-dao";
@@ -87,6 +88,7 @@ export class TaskAssignedDaoImpl implements TaskAssignedDao {
     taskAssignedModel.startDate = taskAssignedDto.getStartDate();
     taskAssignedModel.endDate = taskAssignedDto.getEndDate(); 
     taskAssignedModel.status = taskAssignedDto.getStatus();
+    taskAssignedModel.taskStatus = taskAssignedDto.getTaskStatus();
   }
   prepareSearchObject(taskAssignedDto: TaskAssignedDto): any {
     let searchObject: any = {};
@@ -98,6 +100,8 @@ export class TaskAssignedDaoImpl implements TaskAssignedDao {
         searchObject.endDate = Like("%" + taskAssignedDto.getEndDate() + "%");
     }
     searchObject.status = Status.Online;
+
+    searchObject.taskStatus = TaskStatus.Completed;
 
     if (taskAssignedDto.getLandId()) {
         searchObject.landId = Like("%" + taskAssignedDto.getLandId() + "%");
