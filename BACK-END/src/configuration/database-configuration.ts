@@ -11,6 +11,7 @@ import { TaskExpenseEntity } from "../entity/master/task-expense-entity";
 import { WorkAssignedEntity } from "../entity/master/work-assigned-entity";
 import { WorkerEntity } from "../entity/master/worker-entity";
 import { TaskAssignedEntity } from "../entity/master/task-assigned-entity";
+import { TaskCardEntity } from "../entity/master/task-card-entity";
 
 const connectionManager = getConnectionManager();
 const environmentConfiguration = new EnvironmentConfiguration();
@@ -24,7 +25,7 @@ const Connection = connectionManager.create({
   password: appConfig.getPassword(),
   database: appConfig.getDataBase(),
   synchronize: true,
-  entities: [CropEntity, ExpensesEntity, IncomeEntity, LandEntity, LotEntity, PaymentEntity, TaskTypeEntity, TaskExpenseEntity, WorkAssignedEntity, WorkerEntity, TaskAssignedEntity],
+  entities: [CropEntity, ExpensesEntity, IncomeEntity, LandEntity, LotEntity, PaymentEntity, TaskTypeEntity, TaskExpenseEntity, WorkAssignedEntity, WorkerEntity, TaskAssignedEntity, TaskCardEntity],
   logging: false,
 });
 

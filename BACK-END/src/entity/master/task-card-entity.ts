@@ -12,7 +12,7 @@ export class TaskCardEntity {
   id: number;
 
   @Column()
-  taskAssinnedDate: Date;
+  taskAssignedDate: Date;
 
   @Column({ type: "enum" ,enum:TaskCardStatus,default:TaskCardStatus.Ongoing})
   cardStatus: TaskCardStatus;
@@ -29,4 +29,7 @@ export class TaskCardEntity {
   @ManyToOne(()=> TaskAssignedEntity, (taskAssigned) => taskAssigned.workAssigned)
   @JoinColumn({name: "taskAssignedId"})
   taskAssigned: TaskAssignedEntity;
+
+  @OneToMany(() => WorkAssignedEntity, (workAssigned) => workAssigned.taskCard)
+  workAssigned: WorkAssignedEntity[];
 }

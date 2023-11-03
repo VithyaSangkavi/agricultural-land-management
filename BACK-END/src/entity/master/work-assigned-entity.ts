@@ -1,10 +1,11 @@
-import { Column, Double, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Table } from "typeorm";
+import { Column, Double, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Table } from "typeorm";
 import { Status } from "../../enum/Status";
 import { Units } from "../../enum/units";
 import { WorkerEntity } from "./worker-entity";
 import { TaskTypeEntity } from "./task-type-entity";
 import { LotEntity } from "./lot-entity";
 import { TaskAssignedEntity } from "./task-assigned-entity";
+import { TaskCardEntity } from "./task-card-entity";
 
 @Entity({
   name: "work-assigned",
@@ -52,4 +53,8 @@ export class WorkAssignedEntity {
   @ManyToOne(()=> TaskAssignedEntity, (taskAssigned) => taskAssigned.workAssigned)
   @JoinColumn({name: "taskAssignedId"})
   taskAssigned: TaskAssignedEntity;
+
+  @ManyToOne(()=> TaskCardEntity, (taskCard) => taskCard.workAssigned)
+  @JoinColumn({name: "taskCardId"})
+  taskCard: TaskCardEntity;
 }
