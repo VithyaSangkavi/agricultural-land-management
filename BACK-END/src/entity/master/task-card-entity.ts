@@ -26,7 +26,7 @@ export class TaskCardEntity {
   @Column({ type: "enum" ,enum:Status,default:Status.Online})
   status: Status;
 
-  @ManyToOne(()=> TaskAssignedEntity, (taskAssigned) => taskAssigned.workAssigned)
+  @ManyToOne(()=> TaskAssignedEntity, (taskAssigned) => taskAssigned.taskCard)
   @JoinColumn({name: "taskAssignedId"})
   taskAssigned: TaskAssignedEntity;
 

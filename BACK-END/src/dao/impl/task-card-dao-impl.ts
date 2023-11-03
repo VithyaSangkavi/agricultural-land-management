@@ -4,15 +4,18 @@ import { Status } from "../../enum/Status";
 import { TaskCardStatus } from "../../enum/taskCardStatus";
 import { TaskCardEntity } from "../../entity/master/task-card-entity";
 import { TaskCardDao } from "../task-card-dao";
+import { TaskAssignedEntity } from "../../entity/master/task-assigned-entity";
 
 /**
  * department data access layer
  * contain crud method
  */
 export class TaskCardDaoImpl implements TaskCardDao {
-    async save(taskCardDto: TaskCardDto): Promise<TaskCardEntity> {
+    async save(taskCardDto: TaskCardDto, taskAssignedModel: TaskAssignedEntity): Promise<TaskCardEntity> {
         let taskCardRepo = getConnection().getRepository(TaskCardEntity);
         let taskCardModel = new TaskCardEntity();
+        
+        taskCardModel.taskAssigned = taskAssignedModel;
 
         taskCardModel.status = Status.Online;
         this.preparetaskCardModel(taskCardModel, taskCardDto);

@@ -5,6 +5,9 @@ import { TaskCardDto } from "../../../dto/master/task-card-dto";
 import { CommonResSupport } from "../../../support/common-res-sup";
 import { ErrorHandlerSup } from "../../../support/error-handler-sup";
 import { TaskCardService } from "../task-card-service";
+import { TaskAssignedEntity } from "../../../entity/master/task-assigned-entity";
+import { TaskAssignedDao } from "../../../dao/task-assigned-dao";
+import { TaskAssignedDaoImpl } from "../../../dao/impl/task-assigned-dao-impl";
 
 /**
  * taskCard service layer
@@ -12,6 +15,7 @@ import { TaskCardService } from "../task-card-service";
  */
 export class TaskCardServiceImpl implements TaskCardService {
   taskCardDao: TaskCardDao = new TaskCardDaoImpl();
+  taskAssignedDao: TaskAssignedDao = new TaskAssignedDaoImpl();
 
   /**
    * save new taskCard
@@ -21,8 +25,15 @@ export class TaskCardServiceImpl implements TaskCardService {
   async save(taskCardDto: TaskCardDto): Promise<CommonResponse> {
     let cr = new CommonResponse();
     try {
+      let taskAssignedModel:TaskAssignedEntity = null;
+      if(taskCardDto.getTaskAssignedId() > 0){
+        taskAssignedModel = await this.taskAssignedDao.findById(taskCardDto.getTaskAssignedId());
+      } else{ 
+        
+        return CommonResSupport.getValidationException("Land with the specified ID does not exist!");
+      }
       // save new taskCard
-      let newTaskCard = await this.taskCardDao.save(taskCardDto);
+      let newTaskCard = await this.taskCardDao.save(taskCardDto, taskAssignedModel);
       cr.setStatus(true);
     } catch (error) {
       cr.setStatus(false);
