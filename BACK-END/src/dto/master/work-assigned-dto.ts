@@ -14,7 +14,6 @@ export class WorkAssignedDto extends PaginationDto {
   private createdDate: Date;
   private updatedDate: Date;
   private status: Status;
-  private taskStatus: TaskStatus;
   private workerId: number;
   private taskId: number;
   private lotId: number;
@@ -32,7 +31,6 @@ export class WorkAssignedDto extends PaginationDto {
     this.createdDate = body.createdDate;
     this.updatedDate = body.updatedDate;
     this.status= body.status;
-    this.taskStatus = body.taskStatus;
     this.workerId = body.workerId;
     this.taskId = body.taskId;
     this.lotId = body.lotId;
@@ -58,7 +56,6 @@ export class WorkAssignedDto extends PaginationDto {
     this.createdDate = workAssignedModel.createdDate;
     this.updatedDate = workAssignedModel.updatedDate;
     this.status = workAssignedModel.status;
-    this.taskStatus = workAssignedModel.taskStatus;
     this.workerId = workAssignedModel.worker.id;
     this.taskId = workAssignedModel.task.id;
     this.lotId = workAssignedModel.lot.id;  
@@ -127,14 +124,6 @@ export class WorkAssignedDto extends PaginationDto {
 
   public setStatus(status: Status): void {
     this.status = status;
-  }
-
-  public getTaskStatus(): TaskStatus {
-    return this.taskStatus;
-  }
-
-  public setTaskStatus(taskStatus: TaskStatus): void {
-    this.taskStatus = taskStatus;
   }
 
   public getworkerId(): number {

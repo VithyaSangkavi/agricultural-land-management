@@ -1,7 +1,6 @@
 import { Column, Double, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Table } from "typeorm";
 import { Status } from "../../enum/Status";
 import { Units } from "../../enum/units";
-import { TaskStatus } from "../../enum/taskStatus";
 import { WorkerEntity } from "./worker-entity";
 import { TaskTypeEntity } from "./task-type-entity";
 import { LotEntity } from "./lot-entity";
@@ -35,8 +34,8 @@ export class WorkAssignedEntity {
   @Column({ type: "enum" ,enum:Status,default:Status.Online})
   status: Status;
 
-  @Column({ type: "enum" ,enum:TaskStatus,default:TaskStatus.Ongoing})
-  taskStatus: TaskStatus;
+  // @Column({ type: "enum" ,enum:TaskStatus,default:TaskStatus.Ongoing})
+  // taskStatus: TaskStatus;
 
   @ManyToOne(()=> WorkerEntity, (worker) => worker.workAssigned)
   @JoinColumn({ name: "workerId" })

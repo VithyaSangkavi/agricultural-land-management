@@ -121,7 +121,6 @@ export class WorkAssignedDaoImpl implements WorkAssignedDao {
     workAssignedModel.createdDate = new Date();
     workAssignedModel.updatedDate = new Date();
     workAssignedModel.status = Status.Online;
-    workAssignedModel.taskStatus = workAssignedDto.getTaskStatus();
   }
   prepareSearchObject(workAssignedDto: WorkAssignedDto): any {
     let searchObject: any = {};
@@ -145,8 +144,6 @@ export class WorkAssignedDaoImpl implements WorkAssignedDao {
     }
 
     searchObject.status = Status.Online;
-    
-    searchObject.taskStatus = TaskStatus.Completed;
 
     if (workAssignedDto.getworkerId()) {
         searchObject.workerId = Like("%" + workAssignedDto.getworkerId() + "%");
