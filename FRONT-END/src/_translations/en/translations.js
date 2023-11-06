@@ -103,6 +103,7 @@ export const TRANSLATIONS_EN = {
     //add task
     startdate: 'Start Date',
     addtask : 'Add Task',
+    date: 'Date',
 
     //home
     home: 'Home',

@@ -81,3 +81,12 @@ exports.findByTaskId = async (req, res, next) => {
   }
 };
 
+exports.getOngoingTasksWithTaskNames = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const cr = await taskAssignedService.getOngoingTasksWithTaskNames();
+    res.send(cr);
+  } catch (error) {
+    next(error);
+  }
+};
+

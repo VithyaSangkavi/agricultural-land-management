@@ -11,6 +11,10 @@ import { LandDaoImpl } from "../../../dao/impl/land-dao-impl";
 import { TaskTypeEntity } from "../../../entity/master/task-type-entity";
 import { TaskTypeDao } from "../../../dao/task-type-dao";
 import { TaskTypeDaoImpl } from "../../../dao/impl/task-type-dao-impl";
+import { WorkAssignedEntity } from "../../../entity/master/work-assigned-entity";
+import { getConnection } from "typeorm";
+import { Status } from "../../../enum/Status";
+import { TaskAssignedEntity } from "../../../entity/master/task-assigned-entity";
 
 /**
  * taskAssigned service layer
@@ -170,9 +174,9 @@ export class TaskAssignedServiceImpl implements TaskAssignedService {
     const cr = new CommonResponse();
     try {
       let taskAssigned = await this.taskAssignedDao.findByTaskId(taskId);
-  
+
       console.log('service: ', taskAssigned);
-  
+
       let taskAssignedDto = new TaskAssignedDto();
       console.log('middle');
       taskAssignedDto.filViaRequest(taskAssigned);
@@ -186,6 +190,31 @@ export class TaskAssignedServiceImpl implements TaskAssignedService {
     }
     return cr;
   }
-  
+
+  async getOngoingTasksWithTaskNames(): Promise<CommonResponse> {
+    let cr = new CommonResponse();
+    try {
+      const taskAssignedRepo = getConnection().getRepository(TaskAssignedEntity);
+
+      const taskDetails = await taskAssignedRepo
+        .createQueryBuilder('taskAssigned')
+        .innerJoin('taskAssigned.task', 'task')
+        .where('taskAssigned.taskStatus = :taskStatus', { taskStatus: "ongoing" })
+        .andWhere('taskAssigned.status = :status', { status: Status.Online })
+        .groupBy('taskAssigned.taskAssignedId')
+        .select(['taskAssigned.taskAssignedId as taskAssignedId', 'MAX(task.id) as taskId', 'MAX(task.taskName) as taskName'])
+        .getRawMany();
+
+      cr.setStatus(true);
+      cr.setExtra(taskDetails);
+    } catch (error) {
+      cr.setStatus(false);
+      cr.setExtra(error);
+      ErrorHandlerSup.handleError(error);
+    }
+
+    return cr;
+  }
+
 
 }

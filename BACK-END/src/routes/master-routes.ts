@@ -84,6 +84,7 @@ router.post("/task-assigned-save", taskAssignedController.save);
 router.post("/taskAssignedFindAll", taskAssignedController.findAll);
 router.get('/task-assigned', taskAssignedController.findByTaskId);
 router.get("/taskFindById", taskTypeController.findById);
+router.get("/ongoing-tasks-with-names", taskAssignedController.getOngoingTasksWithTaskNames);
 
 // task-expense routes
 router.post("/task-expense-save", taskExpenseController.save);
@@ -96,10 +97,9 @@ router.post("/task-expense-save", taskExpenseController.save);
 router.post("/work-assigned-save", workAssignedController.save);
 router.post("/work-assigned-update", workAssignedController.update);
 router.post("/work-assigned-findAll", workAssignedController.findAll);
-router.get("/ongoing-tasks-with-names", workAssignedController.getOngoingTasksWithTaskNames);
 router.get("/work-assigned-details/:taskAssignedId", workAssignedController.getDetailsByTaskAssignedId);
 
-// work-assigned routes
+// task-card routes
 router.post("/task-card-save", taskCardController.save);
 router.put("/task-card-update", taskCardController.update);
 router.get("/task-card-findAll", taskCardController.findAll);

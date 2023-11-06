@@ -8,4 +8,6 @@ export interface TaskAssignedService {
   find(taskAssignedDto: TaskAssignedDto): Promise<CommonResponse>;
   findById(taskAssignedId: number): Promise<CommonResponse>;
   findByTaskId(taskId: number): Promise<CommonResponse>;
+  getOngoingTasksWithTaskNames(): Promise<CommonResponse>;
+
 }
