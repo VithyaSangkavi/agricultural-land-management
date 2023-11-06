@@ -251,40 +251,52 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
     let cr = new CommonResponse();
     try {
       const workAssignedRepo = getConnection().getRepository(WorkAssignedEntity);
-
+  
       const taskDetails = await workAssignedRepo
         .createQueryBuilder('workAssigned')
         .innerJoinAndSelect('workAssigned.worker', 'worker')
         .innerJoinAndSelect('workAssigned.task', 'task')
+        .innerJoinAndSelect('workAssigned.taskCard', 'taskCard')
         .where('workAssigned.taskAssignedId = :taskAssignedId', { taskAssignedId })
-        .groupBy('workAssigned.id')
+        .groupBy(['taskCard.taskCardId', 'taskCard.taskAssignedDate', 'task.taskName', 'worker.name'].join(', '))
         .select([
           'MAX(workAssigned.startDate) as startDate',
           'MAX(workAssigned.endDate) as endDate',
           'MAX(task.taskName) as taskName',
-          'workAssigned.quantity as quantity',
-          'workAssigned.units as units',
-          'worker.name as workerName',
+          'MAX(taskCard.taskAssignedDate) as date',
+          'workAssigned.taskCardId as taskCardId',
+          'MAX(workAssigned.quantity) as quantity',
+          'MAX(workAssigned.units) as units',
+          'MAX(worker.name) as workerName', // Use MAX for worker name
         ])
         .getRawMany();
-
-      const taskDetail = taskDetails[0];
-
-      // Extract and format worker-specific details
-      const workerDetails = taskDetails.map((row) => ({
-        quantity: row.quantity,
-        units: row.units,
-        workerName: row.workerName,
-      }));
-
-      // Create a result object that includes common task details and worker-specific details
+  
+      const cardDetails = {};
+  
+      for (const row of taskDetails) {
+        const cardId = row.taskCardId;
+        if (!cardDetails[cardId]) {
+          cardDetails[cardId] = {
+            taskCardId: cardId,
+            date: row.date,
+            workerDetails: [],
+          };
+        }
+  
+        cardDetails[cardId].workerDetails.push({
+          quantity: row.quantity,
+          units: row.units,
+          workerName: row.workerName,
+        });
+      }
+  
       const result = {
-        startDate: taskDetail.startDate,
-        endDate: taskDetail.endDate,
-        taskName: taskDetail.taskName,
-        workerDetails: workerDetails,
+        startDate: taskDetails[0].startDate,
+        endDate: taskDetails[0].endDate,
+        taskName: taskDetails[0].taskName,
+        cardDetails: Object.values(cardDetails),
       };
-
+  
       cr.setStatus(true);
       cr.setExtra(result);
     } catch (error) {
@@ -292,13 +304,9 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
       cr.setExtra(error);
       ErrorHandlerSup.handleError(error);
     }
-
+  
     return cr;
   }
-
-
-
-
-
+  
 
 }
