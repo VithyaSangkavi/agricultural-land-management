@@ -124,13 +124,13 @@ function Home() {
                 <p>{t('ongoingtasks')}</p>
             </div>
 
-            {/* <div className="task-list">
+            <div className="task-list">
                 {OngoingTasks.map((taskAssigned) => (
                     <div key={taskAssigned.id} className="task-card" onClick={() => handleTaskClick(taskAssigned.taskAssignedId)}>
                         <p>{taskAssigned.taskName}</p>
                     </div>
                 ))}
-            </div> */}
+            </div>
 
             <div className='home-heading'>
                 <p>{t('newtask')}</p>

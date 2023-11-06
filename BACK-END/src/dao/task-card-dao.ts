@@ -10,4 +10,5 @@ export interface TaskCardDao {
   findById(taskCardId: number): Promise<TaskCardEntity>;
   findCount(TaskCardDto: TaskCardDto): Promise<number> ;
   findTaskCardByTaskId(taskAssignedId: number): Promise<TaskCardEntity | null>;
+  updateStatus(taskCardId: number, newStatus: string): Promise<TaskCardEntity>;
 }
