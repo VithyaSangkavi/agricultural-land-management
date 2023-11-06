@@ -23,13 +23,20 @@ exports.update = async (req: Request, res: Response, next: NextFunction) => {
     let taskCardDto = new TaskCardDto();
     taskCardDto.filViaRequest(req.body);
 
-    let cr = await taskCardService.update(taskCardDto);
+    const id = req.body.id;
+
+    if (!id || id <= 0) {
+      return res.status(400).json({ error: "Invalid or missing ID" });
+    }
+
+    let cr = await taskCardService.update(taskCardDto, id);
 
     res.send(cr);
   } catch (error) {
     next(error);
   }
 };
+
 
 exports.delete = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -69,3 +76,14 @@ exports.findById = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+exports.findTaskCardByTaskId = async (req, res, next) => {
+  try {
+    let taskAssignedId = Number(req.query.taskAssignedId);
+    console.log('Received taskAssignedId:', taskAssignedId);
+    let cr = await taskCardService.findTaskCardByTaskId(taskAssignedId);
+
+    res.send(cr);
+  } catch (error) {
+    next(error);
+  }
+};

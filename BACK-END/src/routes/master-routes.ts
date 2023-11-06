@@ -104,6 +104,6 @@ router.post("/task-card-save", taskCardController.save);
 router.put("/task-card-update", taskCardController.update);
 router.get("/task-card-findAll", taskCardController.findAll);
 router.get("/task-card-findById", taskCardController.findById);
-
+router.get("/taskCardFindById", taskCardController.findTaskCardByTaskId);
 
 module.exports = router;

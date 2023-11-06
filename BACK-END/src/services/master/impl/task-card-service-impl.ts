@@ -30,7 +30,7 @@ export class TaskCardServiceImpl implements TaskCardService {
         taskAssignedModel = await this.taskAssignedDao.findById(taskCardDto.getTaskAssignedId());
       } else{ 
         
-        return CommonResSupport.getValidationException("Land with the specified ID does not exist!");
+        return CommonResSupport.getValidationException("Task assigned with the specified ID does not exist!");
       }
       // save new taskCard
       let newTaskCard = await this.taskCardDao.save(taskCardDto, taskAssignedModel);
@@ -47,16 +47,22 @@ export class TaskCardServiceImpl implements TaskCardService {
    * @param taskCardDto
    * @returns
    */
-  async update(taskCardDto: TaskCardDto): Promise<CommonResponse> {
+  async update(taskCardDto: TaskCardDto, id: number): Promise<CommonResponse> {
     let cr = new CommonResponse();
     try {
-      // update taskCard
-      let updateTaskCard = await this.taskCardDao.update(taskCardDto);
+      if (id <= 0) {
+        cr.setStatus(false);
+        cr.setExtra("Invalid ID provided for the task card!");
+        return cr;
+      }
+  
+      // Update taskCard with the provided ID
+      let updateTaskCard = await this.taskCardDao.update(taskCardDto, id);
       if (updateTaskCard) {
         cr.setStatus(true);
       } else {
         cr.setStatus(false);
-        cr.setExtra("taskCard Not Found !");
+        cr.setExtra("Task card Not Found!");
       }
     } catch (error) {
       cr.setStatus(false);
@@ -65,6 +71,7 @@ export class TaskCardServiceImpl implements TaskCardService {
     }
     return cr;
   }
+  
   /**
    * delete taskCard
    * not delete from db.just update its status as offline
@@ -131,6 +138,27 @@ export class TaskCardServiceImpl implements TaskCardService {
       let taskCardDto = new TaskCardDto();
       taskCardDto.filViaDbObject(taskCard);
 
+      cr.setStatus(true);
+      cr.setExtra(taskCardDto);
+    } catch (error) {
+      cr.setStatus(false);
+      cr.setExtra(error);
+      ErrorHandlerSup.handleError(error);
+    }
+    return cr;
+  }
+
+  async findTaskCardByTaskId(taskId: number): Promise<CommonResponse> {
+    const cr = new CommonResponse();
+    try {
+      let taskcard = await this.taskCardDao.findTaskCardByTaskId(taskId);
+  
+      console.log('service: ', taskcard);
+  
+      let taskCardDto = new TaskCardDto();
+      console.log('middle');
+      taskCardDto.filViaRequest(taskcard);
+      console.log('end');
       cr.setStatus(true);
       cr.setExtra(taskCardDto);
     } catch (error) {

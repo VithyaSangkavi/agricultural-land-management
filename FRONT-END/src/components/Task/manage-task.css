@@ -5,6 +5,12 @@
   right: 0;
 }
 
+.completed-button{
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
 
 .manage-task-app-screen {
   max-width: 100%;
