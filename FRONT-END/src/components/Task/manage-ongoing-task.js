@@ -409,6 +409,8 @@ const ManageTask = () => {
                             </p>
                         ))}
 
+                        <br/>
+
                         <div className="dropdown-and-button-container">
                             <select
                                 value={selectedWorker[taskDetail.taskCardId] || ''}
@@ -467,7 +469,7 @@ const ManageTask = () => {
                 ))}
             </div>
 
-
+            <br/><br/><br/>
 
             <br />
             <div className='footer-alignment'>
