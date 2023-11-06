@@ -34,15 +34,27 @@ const ManageTask = () => {
     const [taskAssignedId, setTaskAssignedId] = useState('');
     const [lotId, setLotId] = useState('');
     const [quantity, setQuantity] = useState('');
-
+    const [taskCardId, setTaskCardId] = useState('');
+    const thisid = localStorage.getItem('taskassignedid')
     const [workers, setWorkers] = useState([]);
-    
+
+    const taskAssignedDate = startDate;
+
+    const [isTaskCompleted, setIsTaskCompleted] = useState(false);
+
+    const handleToggleCompleted = () => {
+        setIsTaskCompleted(!isTaskCompleted);
+
+
+    };  
+
     useEffect(() => {
         fetchTaskName();
         fetchWorkerNames();
         fetchExpenseTypes();
         fetchTaskAssignedId();
         fetchLotId();
+        console.log('check task assigned id: ', thisid);
     }, []);
 
     const fetchTaskName = () => {
@@ -80,14 +92,29 @@ const ManageTask = () => {
     const fetchTaskAssignedId = () => {
         //get task-assigned id
         axios.get(`http://localhost:8080/service/master/task-assigned?taskId=${taskId}`)
+
             .then((response) => {
-                console.log('Task assigned id: ', response.data.extra.id)
-                setTaskAssignedId(response.data.extra.id);
+                const taskAssignedId = response.data.extra.id;
+
+                console.log('Task assigned id: ', taskAssignedId);
+                setTaskAssignedId(taskAssignedId);
+
+                //ge task card id
+                axios.get(`http://localhost:8081/service/master/taskCardFindById?taskAssignedId=${taskAssignedId}`)
+                    .then((response) => {
+                        const taskCardId = response.data.extra.id;
+
+                        console.log('Task card id: ', taskCardId);
+                        setTaskCardId(taskCardId);
+                    })
+                    .catch((error) => {
+                        console.error('Error fetching task card id:', error);
+                    });
             })
             .catch((error) => {
-                console.error('Error fetching task name:', error);
+                console.error('Error fetching task assigned id:', error);
             });
-    }
+    };
 
     const fetchLotId = () => {
         axios.get(`http://localhost:8080/service/master/findLotByLandId?landId=${landId}`)
@@ -129,7 +156,8 @@ const ManageTask = () => {
                             workerId,
                             taskId,
                             taskAssignedId,
-                            lotId
+                            lotId,
+                            taskCardId
                         }
 
                         axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
@@ -224,6 +252,22 @@ const ManageTask = () => {
         i18n.changeLanguage(lang);
     };
 
+    const handleTaskCard = () => {
+        const saveTaskCard = {
+            taskAssignedDate,
+            taskAssignedId
+        }
+
+        axios.post('http://localhost:8081/service/master/task-card-save', saveTaskCard)
+            .then((response) => {
+                console.log('task card added', response.data)
+            })
+            .catch((error) => {
+                console.error('Error adding task card:', error);
+            });
+    }
+
+
     return (
         <div className="manage-task-app-screen">
             <p className='main-heading'>{t('managetask')}</p>
@@ -262,6 +306,9 @@ const ManageTask = () => {
             {/* Task Toggled View */}
             {selectedView === 'tasks' && (
                 <div className='card'>
+                    <button className="completed-button" onClick={handleToggleCompleted}>
+                        {isTaskCompleted ? "Reopen" : "Completed"}
+                    </button>
                     <p>{t('dateongoing')}</p><br />
 
                     <div className="dropdown-and-button-container">

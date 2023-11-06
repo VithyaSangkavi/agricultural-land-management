@@ -22,17 +22,19 @@ export class TaskCardDaoImpl implements TaskCardDao {
         let savedTaskCard = await taskCardRepo.save(taskCardModel);
         return savedTaskCard;
     }
-    async update(TaskCardDto: TaskCardDto): Promise<TaskCardEntity> {
+    async update(taskCardDto: TaskCardDto, id: number): Promise<TaskCardEntity | null> {
         let taskCardRepo = getConnection().getRepository(TaskCardEntity);
-        let taskCardModel = await taskCardRepo.findOne(TaskCardDto.getTaskCardId());
+        let taskCardModel = await taskCardRepo.findOne(id);
+      
         if (taskCardModel) {
-            this.preparetaskCardModel(taskCardModel, TaskCardDto);
-            let updatedModel = await taskCardRepo.save(taskCardModel);
-            return updatedModel;
+          this.preparetaskCardModel(taskCardModel, taskCardDto);
+          let updatedModel = await taskCardRepo.save(taskCardModel);
+          return updatedModel;
         } else {
-            return null;
+          return null;
         }
-    }
+      }
+      
     async delete(TaskCardDto: TaskCardDto): Promise<TaskCardEntity> {
         let taskCardRepo = getConnection().getRepository(TaskCardEntity);
         let taskCardModel = await taskCardRepo.findOne(TaskCardDto.getTaskCardId());
@@ -72,11 +74,22 @@ export class TaskCardDaoImpl implements TaskCardDao {
         let taskCardModel = await taskCardRepo.findOne({ where: { name: name, status: Status.Online } });
         return taskCardModel;
     }
+
+    async findTaskCardByTaskId(taskAssignedId: number): Promise<TaskCardEntity> {
+        const taskAssignedRepo = getConnection().getRepository(TaskCardEntity);
+        console.log("Searching for taskAssignedId:", taskAssignedId);
+        const taskAssignedModel = await taskAssignedRepo.findOne({
+          where: { taskAssigned: taskAssignedId },
+        }); 
+        console.log("Query result:", taskAssignedModel); 
+        return taskAssignedModel;
+    } 
+
     async preparetaskCardModel(taskCardModel: TaskCardEntity, TaskCardDto: TaskCardDto) {
         taskCardModel.taskAssignedDate = TaskCardDto.getTaskAssignedDate();
         taskCardModel.cardStatus = TaskCardStatus.Ongoing;
-        taskCardModel.createdDate = TaskCardDto.getCreatedDate();
-        taskCardModel.updatedDate = TaskCardDto.getUpdatedDate();
+        taskCardModel.createdDate = new Date();
+        taskCardModel.updatedDate = new Date();
         taskCardModel.status = Status.Online;
     }
     prepareSearchObject(TaskCardDto: TaskCardDto): any {
