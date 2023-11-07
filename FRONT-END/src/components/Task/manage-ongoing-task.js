@@ -425,7 +425,10 @@ const ManageTask = () => {
                         {t('To')} - {formattedEndDate}
                     </h6>
                 ) : (
-                    <h6> {ongoingTaskDate} </h6>
+                    <h6> {ongoingTaskName} {t('Task')} - {commanTaskDetails.taskStatus}
+                        <br /><br />
+                        {t('From')} - {ongoingTaskDate}
+                    </h6>
                 )}
 
             </div>
