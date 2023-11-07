@@ -61,7 +61,7 @@ const ManageTask = () => {
     };
 
     const updateTaskCardStatus = (taskCardId, newStatus) => {
-        axios.put(`http://localhost:8080/service/master/updateStatus/${taskCardId}`, {
+        axios.put(`http://localhost:8081/service/master/updateStatus/${taskCardId}`, {
             newStatus,
         })
             .then((response) => {
@@ -114,6 +114,7 @@ const ManageTask = () => {
         fetchLotId();
     }, []);
 
+
     // useEffect(() => {
     //     axios.get(`http://localhost:8080/service/master/work-assigned-details/${taskAssignedid}`)
     //         .then((response) => {
@@ -132,6 +133,7 @@ const ManageTask = () => {
     //             console.error('Error fetching task details:', error);
     //         });
     // }, []);
+
 
     useEffect(() => {
         // Fetch the task details from your API
@@ -267,18 +269,21 @@ const ManageTask = () => {
 
         if (taskName === 'Pluck') {
             console.log('Pluck task')
-            if (selectedWorker) {
-                console.log('selected worker: ', selectedWorker);
-                localStorage.setItem('selectedWorker', selectedWorker);
+            if (workerName) {
+                console.log('selected worker: ', workerName);
+                localStorage.setItem('selectedWorker', workerName);
             }
         } else {
-            if (selectedWorker) {
-                console.log('selected worker: ', selectedWorker);
 
-                axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${selectedWorker}`)
+            if (workerName) {
+                console.log('selected worker: ', workerName);
+                const name = workerName;
+                setSelectedWorkersList([...selectedWorkersList, name]);
+                setSelectedWorker('');
+                axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${name}`)
                     .then((response) => {
                         const workerId = response.data.extra.workerId
-                        // setWorkerId(storeWorkerId);
+                        //setWorkerId(workerId);
                         console.log('Worker ID :', workerId);
 
                         const addWorkAssigned = {
@@ -286,7 +291,8 @@ const ManageTask = () => {
                             workerId,
                             taskId,
                             taskAssignedId,
-                            lotId
+                            lotId,
+                            taskCardId
                         }
 
                         axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
@@ -455,7 +461,6 @@ const ManageTask = () => {
                             </select>
 
                             <button className='add-small' onClick={handleAddSelectedWorker}>{t('add')}</button>
-
 
                             {taskDetail.cardStatus === 'completed' ? (
                                 <button className="reopen-button top-right" onClick={() => handleReopenTask(taskDetail.taskCardId)}>
