@@ -82,6 +82,7 @@ const ManageTask = () => {
     };
 
     const fetchTaskAssignedId = () => {
+        
         //get task-assigned id
         axios.get(`http://localhost:8081/service/master/task-assigned?taskId=${taskId}`)
 
@@ -223,7 +224,8 @@ const ManageTask = () => {
                     workerId,
                     taskId,
                     taskAssignedId,
-                    lotId
+                    lotId,
+                    taskCardId
                 }
 
                 axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)

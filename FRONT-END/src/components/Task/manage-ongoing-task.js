@@ -40,7 +40,6 @@ const ManageTask = () => {
     const [taskDetails, setTaskDetails] = useState([]);
 
 
-
     //const [workerId, setWorkerId] = useState('');
     const [taskAssignedId, setTaskAssignedId] = useState('');
     const [lotId, setLotId] = useState('');
@@ -71,8 +70,6 @@ const ManageTask = () => {
                 console.error(`Error updating TaskCard ${taskCardId} status:`, error);
             });
     };
-
-
 
     const getFormattedDate = (dateString) => {
         const date = new Date(dateString);
@@ -260,24 +257,28 @@ const ManageTask = () => {
     //     }
     // }
 
-    const handleAddSelectedWorker = (taskCardId, workerName) => {
+    const handleSelectedWorkerChange = (taskCardId, value) => {
         // Update the selected worker for the specific task card
         setSelectedWorker((prevSelectedWorkers) => ({
             ...prevSelectedWorkers,
-            [taskCardId]: workerName,
+            [taskCardId]: value,
         }));
+    };
+
+    const handleAddSelectedWorker = (taskCardId) => {
+        const selectedWorkerValue = selectedWorker[taskCardId];
 
         if (taskName === 'Pluck') {
             console.log('Pluck task')
-            if (workerName) {
-                console.log('selected worker: ', workerName);
-                localStorage.setItem('selectedWorker', workerName);
+            if (selectedWorkerValue) {
+                console.log('selected worker: ', selectedWorkerValue);
+                localStorage.setItem('selectedWorker', selectedWorkerValue);
             }
         } else {
 
-            if (workerName) {
-                console.log('selected worker: ', workerName);
-                const name = workerName;
+            if (selectedWorkerValue) {
+                console.log('selected worker: ', selectedWorkerValue);
+                const name = selectedWorkerValue;
                 setSelectedWorkersList([...selectedWorkersList, name]);
                 setSelectedWorker('');
                 axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${name}`)
@@ -459,7 +460,7 @@ const ManageTask = () => {
                             <select
                                 value={selectedWorker[taskDetail.taskCardId] || ''}
                                 onChange={(e) =>
-                                    handleAddSelectedWorker(taskDetail.taskCardId, e.target.value)
+                                    handleSelectedWorkerChange(taskDetail.taskCardId, e.target.value)
                                 }
                                 className="dropdown-input"
                             >
@@ -471,7 +472,7 @@ const ManageTask = () => {
                                 ))}
                             </select>
 
-                            <button className='add-small' onClick={handleAddSelectedWorker}>{t('add')}</button>
+                            <button className='add-small' onClick={() => handleAddSelectedWorker(taskDetail.taskCardId)}>{t('add')}</button>
 
                             {taskDetail.cardStatus === 'completed' ? (
                                 <button className="reopen-button top-right" onClick={() => handleReopenTask(taskDetail.taskCardId)}>
