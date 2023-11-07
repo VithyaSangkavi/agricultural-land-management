@@ -440,6 +440,7 @@ const ManageTask = () => {
 
                             <button className='add-small' onClick={handleAddSelectedWorker}>{t('add')}</button>
 
+
                             {taskDetail.cardStatus === 'completed' ? (
                                 <button className="reopen-button top-right" onClick={() => handleReopenTask(taskDetail.taskCardId)}>
                                     Reopen
@@ -450,7 +451,6 @@ const ManageTask = () => {
                                 </button>
                             )}
 
-                            
                         </div>
                         {selectedWorkersList.length > 0 && (
                             <div>
