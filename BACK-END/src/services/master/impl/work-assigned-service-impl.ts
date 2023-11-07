@@ -269,7 +269,8 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
           'task.taskName as taskName',
           'taskAssigned.startDate as startDate',
           'taskAssigned.endDate as endDate',
-          'taskAssigned.taskStatus as taskStatus',
+          'taskAssigned.taskStatus as taskStatus', 
+
         ])
         .getRawMany();
 
@@ -311,7 +312,6 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
 
     return cr;
   }
-
 
 
 
