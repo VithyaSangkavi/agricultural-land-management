@@ -257,11 +257,13 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
         .innerJoinAndSelect('workAssigned.worker', 'worker')
         .innerJoinAndSelect('workAssigned.task', 'task')
         .innerJoinAndSelect('workAssigned.taskCard', 'taskCard')
+        .innerJoinAndSelect('workAssigned.taskAssigned', 'taskAssigned')
         .where('workAssigned.taskAssignedId = :taskAssignedId', { taskAssignedId })
         .groupBy(['taskCard.taskCardId', 'taskCard.taskAssignedDate', 'task.taskName'].join(', '))
         .select([
-          'MAX(workAssigned.startDate) as startDate',
-          'MAX(workAssigned.endDate) as endDate',
+          'MAX(taskAssigned.startDate) as startDate',
+          'MAX(taskAssigned.endDate) as endDate',
+          'MAX(taskAssigned.taskStatus) as taskStatus',
           'MAX(task.taskName) as taskName',
           'MAX(taskCard.taskAssignedDate) as date',
           'workAssigned.taskCardId as taskCardId',
@@ -296,6 +298,7 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
         startDate: taskDetails[0].startDate,
         endDate: taskDetails[0].endDate,
         taskName: taskDetails[0].taskName,
+        taskStatus: taskDetails[0].taskStatus,
         cardDetails: Object.values(cardDetails),
       };
 

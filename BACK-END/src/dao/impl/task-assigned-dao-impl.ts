@@ -84,6 +84,23 @@ export class TaskAssignedDaoImpl implements TaskAssignedDao {
     return taskAssignedModel;
   } 
 
+  async updateEndDate(taskAssignedId: number, endDate: Date, newStatus: string): Promise<TaskAssignedEntity | null> {
+    const incomeRepository = getConnection().getRepository(TaskAssignedEntity);
+
+    try {
+        const details = await incomeRepository.findOne(taskAssignedId);
+
+        details.endDate = new Date();
+        details.taskStatus = newStatus as TaskStatus;
+
+        const updatedDate = await incomeRepository.save(details);
+
+        return updatedDate;
+    } catch (error) {
+        throw error;
+    }
+}
+
   async preparetaskAssignedModel(taskAssignedModel: TaskAssignedEntity, taskAssignedDto: TaskAssignedDto) {
     taskAssignedModel.startDate = taskAssignedDto.getStartDate();
     taskAssignedModel.endDate = taskAssignedDto.getEndDate(); 
