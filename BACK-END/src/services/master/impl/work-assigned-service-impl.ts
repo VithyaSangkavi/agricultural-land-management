@@ -270,6 +270,7 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
           'taskAssigned.startDate as startDate',
           'taskAssigned.endDate as endDate',
           'taskAssigned.taskStatus as taskStatus', 
+
         ])
         .getRawMany();
 
