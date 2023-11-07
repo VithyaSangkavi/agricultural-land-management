@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { TaskCardDto } from '../dto/master/task-card-dto';
 import { TaskCardServiceImpl } from '../services/master/impl/task-card-service-impl';
+import { TaskCardStatus } from '../enum/taskCardStatus';
 
 let taskCardService = new TaskCardServiceImpl();
 
@@ -87,3 +88,25 @@ exports.findTaskCardByTaskId = async (req, res, next) => {
     next(error);
   }
 };
+
+export const updateStatus = async (req, res, next) => {
+  try {
+    const taskCardId = parseInt(req.params.taskCardId, 10);
+    const newStatus = req.body.newStatus;
+
+    if (isNaN(taskCardId) || !isValidTaskCardStatus(newStatus)) {
+      res.status(400).json({ message: 'Invalid taskCard ID or new status' });
+      return;
+    }
+
+    const result = await taskCardService.updateStatus(taskCardId, newStatus);
+
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+function isValidTaskCardStatus(status) {
+  return Object.values(TaskCardStatus).includes(status);
+}
