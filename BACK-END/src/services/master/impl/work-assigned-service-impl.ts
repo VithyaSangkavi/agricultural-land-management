@@ -259,18 +259,17 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
         .innerJoinAndSelect('workAssigned.taskCard', 'taskCard')
         .innerJoinAndSelect('workAssigned.taskAssigned', 'taskAssigned')
         .where('workAssigned.taskAssignedId = :taskAssignedId', { taskAssignedId })
-        .groupBy(['taskCard.taskCardId', 'taskCard.taskAssignedDate', 'task.taskName'].join(', '))
         .select([
-          'MAX(taskAssigned.startDate) as startDate',
-          'MAX(taskAssigned.endDate) as endDate',
-          'MAX(taskAssigned.taskStatus) as taskStatus',
-          'MAX(task.taskName) as taskName',
-          'MAX(taskCard.taskAssignedDate) as date',
-          'workAssigned.taskCardId as taskCardId',
-          'MAX(workAssigned.quantity) as quantity',
-          'MAX(workAssigned.units) as units',
-          'MAX(worker.name) as workerName',
-          'MAX(taskCard.cardStatus) as cardStatus',
+          'taskCard.taskCardId as taskCardId',
+          'taskCard.taskAssignedDate as date',
+          'taskCard.cardStatus as cardStatus',
+          'worker.name as workerName',
+          'workAssigned.quantity as quantity',
+          'workAssigned.units as units',
+          'task.taskName as taskName',
+          'taskAssigned.startDate as startDate',
+          'taskAssigned.endDate as endDate',
+          'taskAssigned.taskStatus as taskStatus', 
         ])
         .getRawMany();
 
@@ -282,8 +281,8 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
           cardDetails[cardId] = {
             taskCardId: cardId,
             date: row.date,
-            workerDetails: [],
             cardStatus: row.cardStatus,
+            workerDetails: [],
           };
         }
 
@@ -312,7 +311,6 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
 
     return cr;
   }
-
 
 
 
