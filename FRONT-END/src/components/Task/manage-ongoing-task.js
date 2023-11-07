@@ -395,6 +395,8 @@ const ManageTask = () => {
             });
     }
 
+    const formattedEndDate = getFormattedDate(commanTaskDetails.endDate);
+
 
     // At this point, the state variables will have their updated values
 
@@ -414,9 +416,18 @@ const ManageTask = () => {
                 </Dropdown>
             </div>
             <div className='task-heading'>
-                <h6> {ongoingTaskName} {t('Task')} </h6>
-                <h6> {t('From')} - {ongoingTaskDate} </h6>
-                <h6> {t('To')} - {commanTaskDetails.taskStatus} </h6>
+
+                {commanTaskDetails.taskStatus === 'completed' ? (
+                    <h6> {ongoingTaskName} {t('Task')} - {commanTaskDetails.taskStatus}
+                        <br /><br />
+                        {t('From')} - {ongoingTaskDate}
+                        <br/><br />
+                        {t('To')} - {formattedEndDate}
+                    </h6>
+                ) : (
+                    <h6> {ongoingTaskDate} </h6>
+                )}
+
             </div>
             <br />
 
