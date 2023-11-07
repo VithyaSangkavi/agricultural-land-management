@@ -85,6 +85,7 @@ router.post("/taskAssignedFindAll", taskAssignedController.findAll);
 router.get('/task-assigned', taskAssignedController.findByTaskId);
 router.get("/taskFindById", taskTypeController.findById);
 router.get("/ongoing-tasks-with-names", taskAssignedController.getOngoingTasksWithTaskNames);
+router.put("/updateEndDate/:taskAssignedId", taskAssignedController.updateEndDate);
 
 // task-expense routes
 router.post("/task-expense-save", taskExpenseController.save);
