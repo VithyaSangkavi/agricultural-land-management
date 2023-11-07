@@ -24,22 +24,22 @@ function Home() {
     const history = useHistory();
 
     useEffect(() => {
-        axios.post('http://localhost:8080/service/master/taskAssignedFindAll').then((response) => {
+        axios.post('http://localhost:8081/service/master/taskAssignedFindAll').then((response) => {
             setTaskAssigned(response.data);
             console.log("Task Assigned: ", response.data);
         });
 
-        axios.post('http://localhost:8080/service/master/taskFindAll').then((response) => {
+        axios.post('http://localhost:8081/service/master/taskFindAll').then((response) => {
             setTask(response.data.extra);
             console.log("Tasks : ", response.data.extra);
         });
 
-        axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
+        axios.get('http://localhost:8081/service/master/landFindAll').then((response) => {
             setLands(response.data.extra);
             console.log("Lands : ", response.data.extra);
         });
 
-        axios.get('http://localhost:8080/service/master/ongoing-tasks-with-names').then((response) => {
+        axios.get('http://localhost:8081/service/master/ongoing-tasks-with-names').then((response) => {
             setOngoingTasks(response.data.extra);
             console.log("Ongoing tasks : ", response.data.extra);
         });
@@ -61,7 +61,7 @@ function Home() {
     const handleSelectedLand = (eventkey) => {
         setSelectedLand(eventkey);
 
-        axios.post(`http://localhost:8080/service/master/findLandIdByName?name=${eventkey}`)
+        axios.post(`http://localhost:8081/service/master/findLandIdByName?name=${eventkey}`)
             .then((response) => {
                 const landIdTask = response.data.extra;
                 const taskLand = JSON.stringify(landIdTask);
@@ -124,13 +124,13 @@ function Home() {
                 <p>{t('ongoingtasks')}</p>
             </div>
 
-            {/* <div className="task-list">
+            <div className="task-list">
                 {OngoingTasks.map((taskAssigned) => (
                     <div key={taskAssigned.id} className="task-card" onClick={() => handleTaskClick(taskAssigned.taskAssignedId)}>
                         <p>{taskAssigned.taskName}</p>
                     </div>
                 ))}
-            </div> */}
+            </div>
 
             <div className='home-heading'>
                 <p>{t('newtask')}</p>
@@ -142,6 +142,10 @@ function Home() {
                     </div>
                 ))}
             </div>
+
+            < br />
+            <br />
+            < br />
             <Footer />
         </div>
     );
