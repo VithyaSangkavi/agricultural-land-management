@@ -50,18 +50,28 @@ const ManageTask = () => {
     const [isCompleted, setIsCompleted] = useState(false);
     const [completedTasks, setCompletedTasks] = useState([]);
 
-    const handleCompleteTask = () => {
-        setIsCompleted(true);
-        setCompletedTasks([...completedTasks, ongoingTaskName]);
+    const handleCompleteTask = (taskCardId) => {
+        const newStatus = 'completed';
+        updateTaskCardStatus(taskCardId, newStatus);
     };
 
-    const handleReopenTask = () => {
-        setIsCompleted(false);
-        const updatedCompletedTasks = completedTasks.filter(
-            (task) => task !== ongoingTaskName
-        );
-        setCompletedTasks(updatedCompletedTasks);
+    const handleReopenTask = (taskCardId) => {
+        const newStatus = 'reopened';
+        updateTaskCardStatus(taskCardId, newStatus);
     };
+
+    const updateTaskCardStatus = (taskCardId, newStatus) => {
+        axios.put(`http://localhost:8080/service/master/updateStatus/${taskCardId}`, {
+            newStatus,
+        })
+            .then((response) => {
+                window.location.reload();
+            })
+            .catch((error) => {
+                console.error(`Error updating TaskCard ${taskCardId} status:`, error);
+            });
+    };
+
 
 
     const getFormattedDate = (dateString) => {
@@ -144,7 +154,6 @@ const ManageTask = () => {
             });
     }, []);
 
-    console.log(commanTaskDetails.taskName)
 
     const fetchTaskName = () => {
         axios.get(`http://localhost:8081/service/master/findTaskNameById/?taskId=${taskId}`)
@@ -398,7 +407,9 @@ const ManageTask = () => {
             <div className='card-container'>
                 {taskDetails.map((taskDetail) => (
                     <div key={taskDetail.taskCardId} className='card'>
-                        <p>{t('date')} - <h6>{getFormattedDate(taskDetail.date)}</h6></p><br />
+                        <p>{t('date')} - <h6>{getFormattedDate(taskDetail.date)}</h6></p>
+                        <h6> Current Staus - {taskDetail.cardStatus}</h6>
+                        <p>---------------------------------------------</p>
                         {taskDetail.workerDetails.map((workerDetail) => (
                             <p key={workerDetail.id}>
                                 {ongoingTaskName === 'Pluck' ? (
@@ -408,6 +419,8 @@ const ManageTask = () => {
                                 )}
                             </p>
                         ))}
+
+                        <br />
 
                         <div className="dropdown-and-button-container">
                             <select
@@ -426,6 +439,18 @@ const ManageTask = () => {
                             </select>
 
                             <button className='add-small' onClick={handleAddSelectedWorker}>{t('add')}</button>
+
+
+                            {taskDetail.cardStatus === 'completed' ? (
+                                <button className="reopen-button top-right" onClick={() => handleReopenTask(taskDetail.taskCardId)}>
+                                    Reopen
+                                </button>
+                            ) : (
+                                <button className="complete-button top" onClick={() => handleCompleteTask(taskDetail.taskCardId)}>
+                                    Complete
+                                </button>
+                            )}
+
                         </div>
                         {selectedWorkersList.length > 0 && (
                             <div>
@@ -456,7 +481,7 @@ const ManageTask = () => {
                 ))}
             </div>
 
-
+            <br /><br /><br />
 
             <br />
             <div className='footer-alignment'>

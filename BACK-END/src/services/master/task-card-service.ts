@@ -8,4 +8,6 @@ export interface TaskCardService {
   find(taskCardDto: TaskCardDto): Promise<CommonResponse>;
   findById(taskCardId: number): Promise<CommonResponse>;
   findTaskCardByTaskId(taskId: number): Promise<CommonResponse>;
+  updateStatus(taskCardId: number, newStatus: string): Promise<CommonResponse>;
+
 }

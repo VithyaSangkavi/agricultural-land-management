@@ -14,8 +14,8 @@
 
 .manage-task-app-screen {
   max-width: 100%;
-  height: 100vh;
   margin: 0 auto;
+  height: 100%;
   /* padding: 16px; */
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
   background-image: url('../../assets/img/background.jpg');
@@ -129,6 +129,21 @@
   width: 20%;
   color: #fff;
   background-color: #0e4f20;
+  border: none;
+}
+.complete-button{
+  background-color: #642e04;
+  width: 40%;
+  color: #fff;
+  margin-left: 5%;
+  border: none;
+}
+
+.reopen-button{
+  background-color: #64040c;
+  width: 40%;
+  color: #fff;
+  margin-left: 5%;
   border: none;
 }
 

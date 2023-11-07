@@ -71,6 +71,26 @@ export class TaskCardServiceImpl implements TaskCardService {
     }
     return cr;
   }
+
+  async updateStatus(taskCardId: number, newStatus: string): Promise<CommonResponse> {
+    let cr = new CommonResponse();
+    try {
+      const updatedIncome = await this.taskCardDao.updateStatus(taskCardId, newStatus);
+
+      let updatedIncomeDto = new TaskCardDto();
+      updatedIncomeDto.filViaRequest(updatedIncome);
+
+      cr.setStatus(true);
+      cr.setExtra(updatedIncomeDto);
+
+    } catch (error) {
+      cr.setStatus(false);
+      cr.setExtra(error);
+      ErrorHandlerSup.handleError(error);
+    }
+    return cr;
+  }
+
   
   /**
    * delete taskCard
