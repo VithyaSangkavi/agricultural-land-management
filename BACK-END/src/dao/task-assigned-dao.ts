@@ -13,4 +13,6 @@ export interface TaskAssignedDao {
   findByName(status: Status): Promise<TaskAssignedEntity>;
   findCount(taskAssignedDto: TaskAssignedDto): Promise<number> ;
   findByTaskId(taskId: number): Promise<TaskAssignedEntity | null>;
+  updateEndDate(taskAssignedId: number, endDate: Date, newStatus : string): Promise<TaskAssignedEntity>;
+
 }

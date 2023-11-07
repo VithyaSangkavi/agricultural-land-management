@@ -216,5 +216,24 @@ export class TaskAssignedServiceImpl implements TaskAssignedService {
     return cr;
   }
 
+  async updateEndDate(taskAssignedId: number, endDate: Date, newStatus: string): Promise<CommonResponse> {
+    let cr = new CommonResponse();
+    try {
+      const updateEndDate = await this.taskAssignedDao.updateEndDate(taskAssignedId, endDate, newStatus);
+
+      let updateEndDateDto = new TaskAssignedDto();
+      updateEndDateDto.filViaRequest(updateEndDate);
+
+      cr.setStatus(true);
+      cr.setExtra(updateEndDateDto);
+
+    } catch (error) {
+      cr.setStatus(false);
+      cr.setExtra(error);
+      ErrorHandlerSup.handleError(error);
+    }
+    return cr;
+  }
+
 
 }

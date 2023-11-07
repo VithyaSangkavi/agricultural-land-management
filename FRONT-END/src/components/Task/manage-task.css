@@ -1,11 +1,10 @@
-
 .top-right {
   position: absolute;
   top: 0;
   right: 0;
 }
 
-.completed-button{
+.completed-button {
   position: absolute;
   top: 0;
   right: 0;
@@ -24,6 +23,23 @@
   background-position: center;
   position: relative;
   background-color: transparent;
+}
+
+.manage-task-app-screen .container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.manage-task-app-screen .end-task {
+  background-color: #0e4f20;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 80%;
 }
 
 .manage-task-app-screen .main-heading {
@@ -71,7 +87,7 @@
 }
 
 .card {
-  background-color:rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.6);
   border: none;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -100,8 +116,8 @@
   border-radius: 20px;
 }
 
-.manage-task-app-screen .dropdown-input::placeholder{
-  color:white;
+.manage-task-app-screen .dropdown-input::placeholder {
+  color: white;
 }
 
 .dropdown-and-button-container {
@@ -125,13 +141,14 @@
   background-color: #7273d6;
 }
 
-.add-small{
+.add-small {
   width: 20%;
   color: #fff;
   background-color: #0e4f20;
   border: none;
 }
-.complete-button{
+
+.complete-button {
   background-color: #642e04;
   width: 40%;
   color: #fff;
@@ -139,7 +156,7 @@
   border: none;
 }
 
-.reopen-button{
+.reopen-button {
   background-color: #64040c;
   width: 40%;
   color: #fff;
@@ -155,5 +172,17 @@
 .kg-input {
   display: flex;
   align-items: center;
-  margin-right: 10px; /* Adjust the margin as needed to control spacing */
+  margin-right: 10px;
+  /* Adjust the margin as needed to control spacing */
+}
+
+.end-task {
+  background-color: #0e4f20;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 80%
 }

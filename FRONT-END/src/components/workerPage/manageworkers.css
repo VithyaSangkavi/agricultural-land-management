@@ -88,7 +88,6 @@
   cursor: pointer;
   transition: background-color 0.3s;
   width: 100%
-  /* Optional: Add more styles for hover and focus states */
 }
 
 .add-worker-button:hover {

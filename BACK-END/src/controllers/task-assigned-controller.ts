@@ -90,3 +90,18 @@ exports.getOngoingTasksWithTaskNames = async (req: Request, res: Response, next:
   }
 };
 
+exports.updateEndDate = async (req, res, next) => {
+  try {
+    const taskAssignedId = parseInt(req.params.taskAssignedId, 10);
+    const endDate = req.body.endDate;
+    const newStatus = req.body.newStatus;
+    
+
+    const result = await taskAssignedService.updateEndDate(taskAssignedId, endDate, newStatus);
+
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
