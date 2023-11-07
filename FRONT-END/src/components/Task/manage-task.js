@@ -40,26 +40,6 @@ const ManageTask = () => {
 
     const taskAssignedDate = startDate;
 
-    const [isTaskCompleted, setIsTaskCompleted] = useState(false);
-    const [completedTasks, setCompletedTasks] = useState([]);
-
-    const handleToggleCompleted = () => {
-        if (!isTaskCompleted) {
-            setIsTaskCompleted(true);
-
-            const completedTaskCard = {
-                taskId: taskId,
-                taskName: taskName,
-                startDate: startDate,
-            };
-
-            setCompletedTasks([...completedTasks, completedTaskCard]);
-        } else {
-            setIsTaskCompleted(false);
-        }
-
-    };
-
     useEffect(() => {
         fetchTaskName();
         fetchWorkerNames();
@@ -318,9 +298,6 @@ const ManageTask = () => {
             {/* Task Toggled View */}
             {selectedView === 'tasks' && (
                 <div className='card'>
-                    <button className="completed-button" onClick={handleToggleCompleted}>
-                        {isTaskCompleted ? "Reopen" : "Completed"}
-                    </button>
                     <p>{t('dateongoing')}</p><br />
 
                     <div className="dropdown-and-button-container">
@@ -391,55 +368,6 @@ const ManageTask = () => {
                         className="dropdown-input"
                     />
                     <button className="add-button" onClick={handleAddTaskExpense}>{t('addtaskexpense')}</button>
-                </div>
-            )}
-            {completedTasks.length > 0 && (
-                <div className='card'>
-                    <button className="completed-button" onClick={handleToggleCompleted}>
-                        {isTaskCompleted ? "Reopen" : "Completed"}
-                    </button>
-                    <p>{t('dateongoing')}</p><br />
-
-                    <div className="dropdown-and-button-container">
-                        <select
-                            value={selectedWorker}
-                            onChange={(e) => setSelectedWorker(e.target.value)}
-                            className='dropdown-input'
-                        >
-                            <option value="">{t('selectaworker')}</option>
-                            {workerNames.map((workerName) => (
-                                <option key={workers.name} value={workerName}>
-                                    {workerName}
-                                </option>
-                            ))}
-                        </select>
-                        <button className='add-small' onClick={handleAddSelectedWorker}>{t('add')}</button>
-                    </div>
-                    {selectedWorkersList.length > 0 && (
-                        <div>
-                            {selectedWorkersList.map((worker, index) => (
-                                <div key={index} className="worker-container">
-                                    <p>{worker}</p>
-                                    {taskName === 'Pluck' && (
-                                        <div className="kg-input-container">
-                                            <div className="kg-input">
-                                                <input
-                                                    type="text"
-                                                    placeholder={t('numberofkg')}
-                                                    value={kgValues[index] || ''}
-                                                    onChange={(e) => handleKgChange(e, index)}
-                                                    className="dropdown-input"
-                                                />
-                                                <span className="add-kg-icon">
-                                                    <FontAwesomeIcon icon={faPlus} onClick={addQuantity} />
-                                                </span>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-                    )}
                 </div>
             )}
             <br />
