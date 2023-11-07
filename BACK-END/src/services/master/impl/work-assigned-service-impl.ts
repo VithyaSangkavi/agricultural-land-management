@@ -251,14 +251,14 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
     let cr = new CommonResponse();
     try {
       const workAssignedRepo = getConnection().getRepository(WorkAssignedEntity);
-  
+
       const taskDetails = await workAssignedRepo
         .createQueryBuilder('workAssigned')
         .innerJoinAndSelect('workAssigned.worker', 'worker')
         .innerJoinAndSelect('workAssigned.task', 'task')
         .innerJoinAndSelect('workAssigned.taskCard', 'taskCard')
         .where('workAssigned.taskAssignedId = :taskAssignedId', { taskAssignedId })
-        .groupBy(['taskCard.taskCardId', 'taskCard.taskAssignedDate', 'task.taskName', 'worker.name'].join(', '))
+        .groupBy(['taskCard.taskCardId', 'taskCard.taskAssignedDate', 'task.taskName'].join(', '))
         .select([
           'MAX(workAssigned.startDate) as startDate',
           'MAX(workAssigned.endDate) as endDate',
@@ -267,12 +267,13 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
           'workAssigned.taskCardId as taskCardId',
           'MAX(workAssigned.quantity) as quantity',
           'MAX(workAssigned.units) as units',
-          'MAX(worker.name) as workerName', // Use MAX for worker name
+          'MAX(worker.name) as workerName',
+          'MAX(taskCard.cardStatus) as cardStatus',
         ])
         .getRawMany();
-  
+
       const cardDetails = {};
-  
+
       for (const row of taskDetails) {
         const cardId = row.taskCardId;
         if (!cardDetails[cardId]) {
@@ -280,23 +281,24 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
             taskCardId: cardId,
             date: row.date,
             workerDetails: [],
+            cardStatus: row.cardStatus,
           };
         }
-  
+
         cardDetails[cardId].workerDetails.push({
           quantity: row.quantity,
           units: row.units,
           workerName: row.workerName,
         });
       }
-  
+
       const result = {
         startDate: taskDetails[0].startDate,
         endDate: taskDetails[0].endDate,
         taskName: taskDetails[0].taskName,
         cardDetails: Object.values(cardDetails),
       };
-  
+
       cr.setStatus(true);
       cr.setExtra(result);
     } catch (error) {
@@ -304,9 +306,11 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
       cr.setExtra(error);
       ErrorHandlerSup.handleError(error);
     }
-  
+
     return cr;
   }
-  
+
+
+
 
 }

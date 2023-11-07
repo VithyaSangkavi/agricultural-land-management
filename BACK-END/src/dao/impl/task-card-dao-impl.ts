@@ -85,6 +85,28 @@ export class TaskCardDaoImpl implements TaskCardDao {
         return taskAssignedModel;
     } 
 
+    async updateStatus(taskCardId: number, newStatus: string): Promise<TaskCardEntity | null> {
+        const incomeRepository = getConnection().getRepository(TaskCardEntity);
+    
+        try {
+            const existingStatus = await incomeRepository.findOne(taskCardId);
+    
+            if (!existingStatus) {
+                return null;
+            }
+    
+            // Use type casting to assign newStatus to cardStatus
+            existingStatus.cardStatus = newStatus as TaskCardStatus;
+            existingStatus.updatedDate = new Date();
+    
+            const updatedStatus = await incomeRepository.save(existingStatus);
+    
+            return updatedStatus;
+        } catch (error) {
+            throw error;
+        }
+    }
+    
     async preparetaskCardModel(taskCardModel: TaskCardEntity, TaskCardDto: TaskCardDto) {
         taskCardModel.taskAssignedDate = TaskCardDto.getTaskAssignedDate();
         taskCardModel.cardStatus = TaskCardStatus.Ongoing;
