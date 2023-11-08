@@ -11,6 +11,8 @@ import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { Trash } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
+import { alertService } from '../../_services/alert.service';
+
 
 
 
@@ -223,6 +225,8 @@ const ManageTask = () => {
                         axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
                             .then((response) => {
                                 console.log('Work assigned added successfully:', response.data);
+                                alertService.success('Worker added successfully');
+                                window.location.reload();
 
                             })
                             .catch((error) => {
