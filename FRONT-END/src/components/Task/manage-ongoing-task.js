@@ -102,13 +102,14 @@ const ManageTask = () => {
                 return 'th';
         }
     };
+    
+    console.log("ongoing task : ", taskAssignedid)
 
     useEffect(() => {
 
         fetchTaskName();
         fetchWorkerNames();
         fetchExpenseTypes();
-        fetchTaskAssignedId();
         fetchLotId();
     }, []);
 
@@ -168,18 +169,6 @@ const ManageTask = () => {
             });
     };
 
-    const fetchTaskAssignedId = () => {
-        //get task-assigned id
-        axios.get(`http://localhost:8080/service/master/task-assigned?taskId=${taskId}`)
-            .then((response) => {
-                console.log('Task assigned id: ', response.data.extra.id)
-                setTaskAssignedId(response.data.extra.id);
-            })
-            .catch((error) => {
-                console.error('Error fetching task name:', error);
-            });
-    }
-
     const fetchLotId = () => {
         axios.get(`http://localhost:8080/service/master/findLotByLandId?landId=${landId}`)
             .then((response) => {
@@ -226,9 +215,9 @@ const ManageTask = () => {
                             startDate,
                             workerId,
                             taskId,
-                            taskAssignedId,
+                            taskAssignedId : taskAssignedid,
                             lotId,
-                            taskCardId
+                            taskCardId : taskCardId
                         }
 
                         axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
