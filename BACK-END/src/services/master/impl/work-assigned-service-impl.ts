@@ -269,7 +269,7 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
           'task.taskName as taskName',
           'taskAssigned.startDate as startDate',
           'taskAssigned.endDate as endDate',
-          'taskAssigned.taskStatus as taskStatus', 
+          'taskAssigned.taskStatus as taskStatus',
 
         ])
         .getRawMany();
@@ -313,6 +313,28 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
     return cr;
   }
 
+  /**
+     * Delete work assignments by workerId
+     * @param workerId
+     * @returns CommonResponse
+     */
+  async deleteByWorkerId(workerId: number): Promise<CommonResponse> {
+    let cr = new CommonResponse();
+    try {
+      const deleted = await this.workAssignedDao.deleteByWorkerId(workerId);
 
+      if (deleted) {
+        cr.setStatus(true);
+      } else {
+        cr.setStatus(false);
+        cr.setExtra("No work assignments found for the specified worker ID.");
+      }
+    } catch (error) {
+      cr.setStatus(false);
+      cr.setExtra(error);
+      ErrorHandlerSup.handleError(error);
+    }
+    return cr;
+  }
 
 }

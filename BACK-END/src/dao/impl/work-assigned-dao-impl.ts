@@ -115,6 +115,31 @@ export class WorkAssignedDaoImpl implements WorkAssignedDao {
   //   let workAssignedModel = await workAssignedRepo.find({ where: { taskAssigned: taskAssignedId } });
   //   return workAssignedModel;
   // }
+
+  async deleteByWorkerId(workerId: number): Promise<boolean> {
+    try {
+      const workAssignedRepo = getConnection().getRepository(WorkAssignedEntity);
+      const workAssignments = await workAssignedRepo.find({
+        where: { worker: { id: workerId } },
+      });
+  
+      if (workAssignments.length === 0) {
+        return false; // No work assignments found for the specified worker ID.
+      }
+  
+      // Soft delete the found work assignments
+      workAssignments.forEach((workAssignment) => {
+        workAssignment.status = Status.Offline;
+      });
+  
+      await workAssignedRepo.save(workAssignments);
+      return true; // Work assignments deleted successfully.
+    } catch (error) {
+      throw new Error('Error deleting work assignments by worker ID: ' + error.message);
+    }
+  }
+  
+
   async prepareWorkAssignedModel(workAssignedModel: WorkAssignedEntity, workAssignedDto: WorkAssignedDto) {
     workAssignedModel.quantity = workAssignedDto.getQuantity();
     workAssignedModel.units = workAssignedDto.getUnits();
