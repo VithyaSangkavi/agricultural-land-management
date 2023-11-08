@@ -70,6 +70,8 @@ export const TRANSLATIONS_SL = {
     welcome: 'සාදරයෙන් පිළිගනිමු',
     managetasktype: 'කාර්ය වර්ගය කළමනාකරණය ',
     manageexpensetype: 'වියදම් වර්ගය කළමනාකරණය',
+    completedtasks: 'සම්පූර්ණ කරන ලද කාර්යයන්',
+
 
     //manage task type
     tasktypemanagement: 'කාර්ය වර්ගය කළමනාකරණය',

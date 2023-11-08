@@ -216,6 +216,31 @@ export class TaskAssignedServiceImpl implements TaskAssignedService {
     return cr;
   }
 
+  async getCompletedTasksWithTaskNames(): Promise<CommonResponse> {
+    let cr = new CommonResponse();
+    try {
+      const taskAssignedRepo = getConnection().getRepository(TaskAssignedEntity);
+
+      const taskDetails = await taskAssignedRepo
+        .createQueryBuilder('taskAssigned')
+        .innerJoin('taskAssigned.task', 'task')
+        .where('taskAssigned.taskStatus = :taskStatus', { taskStatus: "completed" })
+        .andWhere('taskAssigned.status = :status', { status: Status.Online })
+        .groupBy('taskAssigned.taskAssignedId')
+        .select(['taskAssigned.taskAssignedId as taskAssignedId', 'MAX(task.id) as taskId', 'MAX(task.taskName) as taskName','taskAssigned.startDate as taskStartDate','taskAssigned.landId as landId'])
+        .getRawMany();
+
+      cr.setStatus(true);
+      cr.setExtra(taskDetails);
+    } catch (error) {
+      cr.setStatus(false);
+      cr.setExtra(error);
+      ErrorHandlerSup.handleError(error);
+    }
+
+    return cr;
+  }
+
   async updateEndDate(taskAssignedId: number, endDate: Date, newStatus: string): Promise<CommonResponse> {
     let cr = new CommonResponse();
     try {
