@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faCheck, faReopen } from '@fortawesome/free-solid-svg-icons';
 import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
+import { Trash } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
@@ -338,8 +339,19 @@ const ManageTask = () => {
 
     const formattedEndDate = getFormattedDate(commanTaskDetails.endDate);
 
+    const handleRemoveWorker = (taskCardId, workAssignedId) => {
 
-    // At this point, the state variables will have their updated values
+        axios.delete(`http://localhost:8080/service/master/work-assigned-delete/${workAssignedId}`)
+            .then(response => {
+                console.log('Worker removed successfully:', response.data);
+                window.location.reload();
+            })
+            .catch(error => {
+                console.error('Error removing worker:', error);
+            });
+    };
+
+
 
     return (
         <div className="manage-task-app-screen">
@@ -362,7 +374,7 @@ const ManageTask = () => {
                     <h6> {ongoingTaskName} {t('Task')} - {commanTaskDetails.taskStatus}
                         <br /><br />
                         {t('From')} - {ongoingTaskDate}
-                        <br/><br />
+                        <br /><br />
                         {t('To')} - {formattedEndDate}
                     </h6>
                 ) : (
@@ -381,15 +393,27 @@ const ManageTask = () => {
                         <p>{t('date')} - <h6>{getFormattedDate(taskDetail.date)}</h6></p>
                         <h6> Current Staus - {taskDetail.cardStatus}</h6>
                         <p>---------------------------------------------</p>
-                        {taskDetail.workerDetails.map((workerDetail) => (
-                            <p key={workerDetail.id}>
-                                {ongoingTaskName === 'Pluck' ? (
-                                    `${workerDetail.workerName} - ${workerDetail.quantity}${workerDetail.units}`
-                                ) : (
-                                    workerDetail.workerName
-                                )}
-                            </p>
-                        ))}
+
+                        {taskDetail.workerDetails
+                            .map((workerDetail) => (
+                                <div key={workerDetail.id} className="worker-details">
+                                    <div className="worker-name-container">
+                                        {ongoingTaskName === 'Pluck' ? (
+                                            <p>
+                                                {workerDetail.workerName} - {workerDetail.quantity}
+                                                {workerDetail.units}
+                                            </p>
+                                        ) : (
+                                            <p>{workerDetail.workerName}</p>
+                                        )}
+                                    </div>
+                                    {taskDetail.cardStatus !== 'completed' && (
+                                        <div className="remove-button-container">
+                                            <Trash onClick={() => handleRemoveWorker(taskDetail.taskCardId, workerDetail.workAssigned)} />
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
 
                         <br />
 

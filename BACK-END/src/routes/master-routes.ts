@@ -98,6 +98,7 @@ router.post("/task-expense-save", taskExpenseController.save);
 // work-assigned routes
 router.post("/work-assigned-save", workAssignedController.save);
 router.post("/work-assigned-update", workAssignedController.update);
+router.delete("/work-assigned-delete/:workAssignedId", workAssignedController.delete);
 router.post("/work-assigned-findAll", workAssignedController.findAll);
 router.get("/work-assigned-details/:taskAssignedId", workAssignedController.getDetailsByTaskAssignedId);
 

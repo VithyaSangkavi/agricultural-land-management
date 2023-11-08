@@ -186,3 +186,13 @@
   transition: background-color 0.3s;
   width: 80%
 }
+
+.worker-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.remove-button-container {
+  margin-left: 10px;
+}
