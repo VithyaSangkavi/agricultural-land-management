@@ -42,9 +42,9 @@ export class WorkAssignedDaoImpl implements WorkAssignedDao {
       return null;
     }
   }
-  async delete(workAssignedDto: WorkAssignedDto): Promise<WorkAssignedEntity> {
+  async delete(workAssignedId: number): Promise<WorkAssignedEntity> {
     let workAssignedRepo = getConnection().getRepository(WorkAssignedEntity);
-    let workAssignedModel = await workAssignedRepo.findOne(workAssignedDto.getAttendanceid());
+    let workAssignedModel = await workAssignedRepo.findOne(workAssignedId);
     if (workAssignedModel) {
       workAssignedModel.status = Status.Offline;
       let updatedModel = await workAssignedRepo.save(workAssignedModel);
