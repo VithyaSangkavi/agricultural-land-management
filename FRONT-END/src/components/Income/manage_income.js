@@ -40,9 +40,10 @@ function ManageIncome() {
 
     useEffect(() => {
         if (selectedLandId) {
-            axios.get(`http://localhost:8081/service/master/incomeFindByLandId/${selectedLandId}`)
+            axios.get(`http://localhost:8080/service/master/incomeFindByLandId/${selectedLandId}`)
                 .then((res) => {
                     setData(res.data.extra);
+                    console.log(res.data.extra);
                 })
                 .catch((error) => {
                     console.error('Error fetching data:', error);
@@ -52,6 +53,8 @@ function ManageIncome() {
             setData([]);
         }
     }, [selectedLandId]);
+
+    console.log(data)
 
 
     const handleSearchChange = (event) => {
