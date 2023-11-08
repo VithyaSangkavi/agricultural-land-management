@@ -68,7 +68,7 @@ const AddTask = () => {
         console.log('Sample test task aasigned id: ', assignedId)
         localStorage.setItem('TaskIDFromTaskAssigned', taskId);
         localStorage.setItem('StartDate', startDate);
-        fetchTaskAssignedId();
+       // fetchTaskAssignedId();
         history.push('/manageTask')
       })
       .catch((error) => {
@@ -80,30 +80,30 @@ const AddTask = () => {
     i18n.changeLanguage(lang);
   };
 
-  const fetchTaskAssignedId = () => {
-    axios.get(`http://localhost:8081/service/master/task-assigned?taskId=${taskId}`)
-      .then((response) => {
-        const taskAssignedId = response.data.extra.id;
-        setTaskAssignedId(taskAssignedId);
+  // const fetchTaskAssignedId = () => {
+  //   axios.get(`http://localhost:8081/service/master/task-assigned?taskId=${taskId}`)
+  //     .then((response) => {
+  //       const taskAssignedId = response.data.extra.id;
+  //       setTaskAssignedId(taskAssignedId);
   
-        const saveTaskCard = {
-          taskAssignedDate,
-          taskAssignedId
-        };
+  //       const saveTaskCard = {
+  //         taskAssignedDate,
+  //         taskAssignedId
+  //       };
 
-        axios.post('http://localhost:8081/service/master/task-card-save', saveTaskCard)
-          .then((response) => {
-            console.log('Task card added', response.data);
-            localStorage.setItem('taskassignedid', taskAssignedId);
-          })
-          .catch((error) => {
-            console.error('Error adding task card:', error);
-          });
-      })
-      .catch((error) => {
-        console.error('Error fetching task name:', error);
-      });
-  };
+  //       axios.post('http://localhost:8081/service/master/task-card-save', saveTaskCard)
+  //         .then((response) => {
+  //           console.log('Task card added', response.data);
+  //           localStorage.setItem('taskassignedid', taskAssignedId);
+  //         })
+  //         .catch((error) => {
+  //           console.error('Error adding task card:', error);
+  //         });
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error fetching task name:', error);
+  //     });
+  // };
   
   return (
     <div className="task-app-screen">

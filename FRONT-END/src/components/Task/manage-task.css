@@ -186,3 +186,16 @@
   transition: background-color 0.3s;
   width: 80%
 }
+
+.line {
+  display: flex;
+  align-items: center;
+}
+
+.delete-button {
+  background: none;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-left: 50px; /* Adjust the margin as needed */
+}
