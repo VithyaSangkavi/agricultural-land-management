@@ -11,6 +11,8 @@ import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { Trash } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
+import { alertService } from '../../_services/alert.service';
+
 
 
 
@@ -102,13 +104,14 @@ const ManageTask = () => {
                 return 'th';
         }
     };
+    
+    console.log("ongoing task : ", taskAssignedid)
 
     useEffect(() => {
 
         fetchTaskName();
         fetchWorkerNames();
         fetchExpenseTypes();
-        fetchTaskAssignedId();
         fetchLotId();
     }, []);
 
@@ -168,18 +171,6 @@ const ManageTask = () => {
             });
     };
 
-    const fetchTaskAssignedId = () => {
-        //get task-assigned id
-        axios.get(`http://localhost:8080/service/master/task-assigned?taskId=${taskId}`)
-            .then((response) => {
-                console.log('Task assigned id: ', response.data.extra.id)
-                setTaskAssignedId(response.data.extra.id);
-            })
-            .catch((error) => {
-                console.error('Error fetching task name:', error);
-            });
-    }
-
     const fetchLotId = () => {
         axios.get(`http://localhost:8080/service/master/findLotByLandId?landId=${landId}`)
             .then((response) => {
@@ -226,14 +217,16 @@ const ManageTask = () => {
                             startDate,
                             workerId,
                             taskId,
-                            taskAssignedId,
+                            taskAssignedId : taskAssignedid,
                             lotId,
-                            taskCardId
+                            taskCardId : taskCardId
                         }
 
                         axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
                             .then((response) => {
                                 console.log('Work assigned added successfully:', response.data);
+                                alertService.success('Worker added successfully');
+                                window.location.reload();
 
                             })
                             .catch((error) => {
