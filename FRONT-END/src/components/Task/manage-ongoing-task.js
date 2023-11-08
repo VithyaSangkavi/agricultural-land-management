@@ -112,26 +112,6 @@ const ManageTask = () => {
     }, []);
 
 
-    // useEffect(() => {
-    //     axios.get(`http://localhost:8080/service/master/work-assigned-details/${taskAssignedid}`)
-    //         .then((response) => {
-    //             console.log("data : ", response.data);
-
-    //             // Update state variables using the set functions
-    //             setOngoingTaskName(response.data.extra.taskName);
-
-    //             const formattedStartDate = getFormattedDate(response.data.extra.startDate);
-    //             setOngoingTaskDate(formattedStartDate);
-
-    //             setOngoingTaskWorkerDetails(response.data.extra.workerDetails);
-    //         })
-    //         .catch((error) => {
-    //             // Handle errors
-    //             console.error('Error fetching task details:', error);
-    //         });
-    // }, []);
-
-
     useEffect(() => {
         // Fetch the task details from your API
         axios.get(`http://localhost:8080/service/master/work-assigned-details/${taskAssignedid}`)
@@ -210,52 +190,6 @@ const ManageTask = () => {
                 console.error('Error fetching lot id:', error);
             });
     }
-
-    // const handleAddSelectedWorker = () => {
-
-    //     if (taskName === 'Pluck') {
-    //         console.log('Pluck task')
-    //         if (selectedWorker) {
-    //             setSelectedWorkersList([...selectedWorkersList, selectedWorker]);
-    //             setSelectedWorker('');
-    //             console.log('selected worker: ', selectedWorker);
-    //             localStorage.setItem('selectedWorker', selectedWorker);
-    //         }
-    //     } else {
-    //         if (selectedWorker) {
-    //             setSelectedWorkersList([...selectedWorkersList, selectedWorker]);
-    //             setSelectedWorker('');
-    //             console.log('selected worker: ', selectedWorker);
-
-    //             axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${selectedWorker}`)
-    //                 .then((response) => {
-    //                     const workerId = response.data.extra.workerId
-    //                     // setWorkerId(storeWorkerId);
-    //                     console.log('Worker ID :', workerId);
-
-    //                     const addWorkAssigned = {
-    //                         startDate,
-    //                         workerId,
-    //                         taskId,
-    //                         taskAssignedId,
-    //                         lotId
-    //                     }
-
-    //                     axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
-    //                         .then((response) => {
-    //                             console.log('Work assigned added successfully:', response.data);
-
-    //                         })
-    //                         .catch((error) => {
-    //                             console.error('Error adding work assigned:', error);
-    //                         });
-    //                 })
-    //                 .catch((error) => {
-    //                     console.error('Error getting worker id:', error);
-    //                 });
-    //         }
-    //     }
-    // }
 
     const handleSelectedWorkerChange = (taskCardId, value) => {
         // Update the selected worker for the specific task card
