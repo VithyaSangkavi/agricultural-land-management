@@ -202,7 +202,7 @@ export class TaskAssignedServiceImpl implements TaskAssignedService {
         .where('taskAssigned.taskStatus = :taskStatus', { taskStatus: "ongoing" })
         .andWhere('taskAssigned.status = :status', { status: Status.Online })
         .groupBy('taskAssigned.taskAssignedId')
-        .select(['taskAssigned.taskAssignedId as taskAssignedId', 'MAX(task.id) as taskId', 'MAX(task.taskName) as taskName'])
+        .select(['taskAssigned.taskAssignedId as taskAssignedId', 'MAX(task.id) as taskId', 'MAX(task.taskName) as taskName','taskAssigned.startDate as taskStartDate','taskAssigned.landId as landId'])
         .getRawMany();
 
       cr.setStatus(true);
