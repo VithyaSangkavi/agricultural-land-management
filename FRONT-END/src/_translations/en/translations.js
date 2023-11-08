@@ -69,6 +69,7 @@ export const TRANSLATIONS_EN = {
     welcome: 'WELCOME',
     managetasktype: 'Manage Task Type',
     manageexpensetype: 'Manage Expense Type',
+    completedtasks: 'Completed Tasks',
 
     //manage task type
     tasktypemanagement: 'Task Type Management',

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useHistory, Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import './home.css';
 import Footer from '../footer/footer';
-import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
-import { Dropdown, DropdownButton } from 'react-bootstrap';
+import { FaGlobeAmericas } from 'react-icons/fa';
+import { Dropdown } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
 function Home() {
@@ -17,10 +17,8 @@ function Home() {
 
     const [query, setQuery] = useState('');
     const [task, setTask] = useState([]);
-    const [taskNames, setTaskNames] = useState([]);
     const [taskAssigned, setTaskAssigned] = useState([]);
     const [OngoingTasks, setOngoingTasks] = useState([]);
-    const [ongoingTaskDate, setOngoingTaskDate] = useState('');
 
 
     const history = useHistory();
@@ -30,30 +28,21 @@ function Home() {
         const day = date.getDate();
         const month = date.getMonth() + 1;
         const year = date.getFullYear();
-    
+
         const formattedDate = `${day}/${month}/${year}`;
-    
+
         return formattedDate;
     };
-    
+
 
     useEffect(() => {
-        axios.post('http://localhost:8080/service/master/taskAssignedFindAll').then((response) => {
-            setTaskAssigned(response.data);
-            console.log("Task Assigned: ", response.data);
-        });
-
-        axios.post('http://localhost:8080/service/master/taskFindAll').then((response) => {
-            setTask(response.data.extra);
-            console.log("Tasks : ", response.data.extra);
-        });
 
         axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
             setLands(response.data.extra);
             console.log("Lands : ", response.data.extra);
         });
 
-        axios.get('http://localhost:8080/service/master/ongoing-tasks-with-names').then((response) => {
+        axios.get('http://localhost:8080/service/master/completed-tasks-with-names').then((response) => {
             setOngoingTasks(response.data.extra);
             console.log("Ongoing tasks : ", response.data.extra);
 
@@ -66,12 +55,6 @@ function Home() {
     const filteredTasks = task.filter((task) =>
         task.taskName.toLowerCase().includes(searchQuery.toLowerCase())
     );
-
-    const handleCardClick = (taskId) => {
-        localStorage.setItem('selectedTaskId', taskId);
-        console.log("Selected Task ID: ", taskId);
-        history.push(`/addTask`);
-    };
 
     const handleSelectedLand = (eventkey) => {
         setSelectedLand(eventkey);
@@ -107,7 +90,7 @@ function Home() {
 
     return (
         <div className="home-app-screen">
-            <p className='main-heading'>{t('home')}</p>
+            <p className='main-heading'>{t('completedtasks')}</p>
             <div className="position-absolute top-0 end-0 mt-2 me-2">
                 <Dropdown alignRight onSelect={handleLanguageChange}>
                     <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
@@ -135,9 +118,6 @@ function Home() {
                 </Dropdown>
                 <br />
             </div>
-            <div className='home-heading'>
-                <p>{t('ongoingtasks')}</p>
-            </div>
 
             <div className="task-list">
                 {OngoingTasks.map((taskAssigned) => (
@@ -147,20 +127,10 @@ function Home() {
                 ))}
             </div>
 
-            <div className='home-heading'>
-                <p>{t('newtask')}</p>
-            </div>
-            <div className="task-list">
-                {filteredTasks.map((task) => (
-                    <div key={task.id} className="task-card" onClick={() => handleCardClick(task.id)}>
-                        <p>{task.taskName}</p>
-                    </div>
-                ))}
-            </div>
-
-            < br />
             <br />
-            < br />
+            <br />
+            <br />
+
             <Footer />
         </div>
     );

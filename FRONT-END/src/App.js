@@ -37,6 +37,7 @@ import MenuButtons from './components/common_layouts/menubuttons';
 import ManageIncome from './components/Income/manage_income';
 import InsertIncome from './components/Income/insert_income';
 import UpdateIncome from './components/Income/update_income';
+import ViewCompletedTasks from './components/Task/view-completed-task';
 
 
 import Login from './components/login/login';
@@ -147,7 +148,8 @@ class App extends React.Component {
           <RoleBasedRouting path="/home"><Home /></RoleBasedRouting>
           <RoleBasedRouting path="/addTask"><AddTask /></RoleBasedRouting>
           <RoleBasedRouting path="/manageTask"><ManageTask /></RoleBasedRouting>
-          <RoleBasedRouting path="/manageOngoingTask/:taskAssignedid"><ManageOngoingTask /></RoleBasedRouting>
+          <RoleBasedRouting path="/manageOngoingTask/:taskAssignedid"><ManageOngoingTask /></RoleBasedRouting> 
+          <RoleBasedRouting path="/viewcompltedtasks"><ViewCompletedTasks /></RoleBasedRouting>
 
           <RoleBasedRouting path="/dashboard" exact roles={[usrRoles.CM]}><DashboardComponent/></RoleBasedRouting>
 

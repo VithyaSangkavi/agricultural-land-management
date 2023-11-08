@@ -125,11 +125,11 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
    * @param workAssignedDto
    * @returns
    */
-  async delete(workAssignedDto: WorkAssignedDto): Promise<CommonResponse> {
+  async delete(workAssignedId: number): Promise<CommonResponse> {
     let cr = new CommonResponse();
     try {
       // delete workAssigned
-      let deleteWorkAssigned = await this.workAssignedDao.delete(workAssignedDto);
+      let deleteWorkAssigned = await this.workAssignedDao.delete(workAssignedId);
       if (deleteWorkAssigned) {
         cr.setStatus(true);
       } else {
@@ -259,6 +259,7 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
         .innerJoinAndSelect('workAssigned.taskCard', 'taskCard')
         .innerJoinAndSelect('workAssigned.taskAssigned', 'taskAssigned')
         .where('workAssigned.taskAssignedId = :taskAssignedId', { taskAssignedId })
+        .andWhere('workAssigned.status = :status', { status: 'online' })
         .select([
           'taskCard.taskCardId as taskCardId',
           'taskCard.taskAssignedDate as date',
@@ -268,6 +269,8 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
           'workAssigned.units as units',
           'task.taskName as taskName',
           'taskAssigned.startDate as startDate',
+          'workAssigned.id as workAssignedId',
+          'workAssigned.status as status',
           'taskAssigned.endDate as endDate',
           'taskAssigned.taskStatus as taskStatus',
 
@@ -288,9 +291,11 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
         }
 
         cardDetails[cardId].workerDetails.push({
+          workAssigned: row.workAssignedId,
           quantity: row.quantity,
           units: row.units,
           workerName: row.workerName,
+          status: row.status
         });
       }
 

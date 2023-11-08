@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faCheck, faReopen } from '@fortawesome/free-solid-svg-icons';
 import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
+import { Trash } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
@@ -60,7 +61,7 @@ const ManageTask = () => {
     };
 
     const updateTaskCardStatus = (taskCardId, newStatus) => {
-        axios.put(`http://localhost:8081/service/master/updateStatus/${taskCardId}`, {
+        axios.put(`http://localhost:8080/service/master/updateStatus/${taskCardId}`, {
             newStatus,
         })
             .then((response) => {
@@ -112,29 +113,9 @@ const ManageTask = () => {
     }, []);
 
 
-    // useEffect(() => {
-    //     axios.get(`http://localhost:8081/service/master/work-assigned-details/${taskAssignedid}`)
-    //         .then((response) => {
-    //             console.log("data : ", response.data);
-
-    //             // Update state variables using the set functions
-    //             setOngoingTaskName(response.data.extra.taskName);
-
-    //             const formattedStartDate = getFormattedDate(response.data.extra.startDate);
-    //             setOngoingTaskDate(formattedStartDate);
-
-    //             setOngoingTaskWorkerDetails(response.data.extra.workerDetails);
-    //         })
-    //         .catch((error) => {
-    //             // Handle errors
-    //             console.error('Error fetching task details:', error);
-    //         });
-    // }, []);
-
-
     useEffect(() => {
         // Fetch the task details from your API
-        axios.get(`http://localhost:8081/service/master/work-assigned-details/${taskAssignedid}`)
+        axios.get(`http://localhost:8080/service/master/work-assigned-details/${taskAssignedid}`)
             .then((response) => {
                 setTaskDetails(response.data.extra.cardDetails);
                 setCommanTaskDetails(response.data.extra);
@@ -155,7 +136,7 @@ const ManageTask = () => {
 
 
     const fetchTaskName = () => {
-        axios.get(`http://localhost:8081/service/master/findTaskNameById/?taskId=${taskId}`)
+        axios.get(`http://localhost:8080/service/master/findTaskNameById/?taskId=${taskId}`)
             .then((response) => {
                 setTaskName(response.data.extra.taskName);
 
@@ -166,7 +147,7 @@ const ManageTask = () => {
     };
 
     const fetchWorkerNames = () => {
-        axios.post('http://localhost:8081/service/master/workerFindAll')
+        axios.post('http://localhost:8080/service/master/workerFindAll')
             .then((response) => {
                 const workerNamesArray = response.data.extra.map((worker) => worker.name);
                 setWorkerNames(workerNamesArray);
@@ -177,7 +158,7 @@ const ManageTask = () => {
     };
 
     const fetchExpenseTypes = () => {
-        axios.get('http://localhost:8081/service/master/expenseFindAll')
+        axios.get('http://localhost:8080/service/master/expenseFindAll')
             .then((response) => {
                 const expenseTypeArrays = response.data.extra.map((expense) => expense.expenseType);
                 setExpenseTypes(expenseTypeArrays);
@@ -189,7 +170,7 @@ const ManageTask = () => {
 
     const fetchTaskAssignedId = () => {
         //get task-assigned id
-        axios.get(`http://localhost:8081/service/master/task-assigned?taskId=${taskId}`)
+        axios.get(`http://localhost:8080/service/master/task-assigned?taskId=${taskId}`)
             .then((response) => {
                 console.log('Task assigned id: ', response.data.extra.id)
                 setTaskAssignedId(response.data.extra.id);
@@ -200,7 +181,7 @@ const ManageTask = () => {
     }
 
     const fetchLotId = () => {
-        axios.get(`http://localhost:8081/service/master/findLotByLandId?landId=${landId}`)
+        axios.get(`http://localhost:8080/service/master/findLotByLandId?landId=${landId}`)
             .then((response) => {
                 const thislot = response.data.extra.id;
                 console.log('Lot id: ', response.data.extra.id)
@@ -210,52 +191,6 @@ const ManageTask = () => {
                 console.error('Error fetching lot id:', error);
             });
     }
-
-    // const handleAddSelectedWorker = () => {
-
-    //     if (taskName === 'Pluck') {
-    //         console.log('Pluck task')
-    //         if (selectedWorker) {
-    //             setSelectedWorkersList([...selectedWorkersList, selectedWorker]);
-    //             setSelectedWorker('');
-    //             console.log('selected worker: ', selectedWorker);
-    //             localStorage.setItem('selectedWorker', selectedWorker);
-    //         }
-    //     } else {
-    //         if (selectedWorker) {
-    //             setSelectedWorkersList([...selectedWorkersList, selectedWorker]);
-    //             setSelectedWorker('');
-    //             console.log('selected worker: ', selectedWorker);
-
-    //             axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${selectedWorker}`)
-    //                 .then((response) => {
-    //                     const workerId = response.data.extra.workerId
-    //                     // setWorkerId(storeWorkerId);
-    //                     console.log('Worker ID :', workerId);
-
-    //                     const addWorkAssigned = {
-    //                         startDate,
-    //                         workerId,
-    //                         taskId,
-    //                         taskAssignedId,
-    //                         lotId
-    //                     }
-
-    //                     axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
-    //                         .then((response) => {
-    //                             console.log('Work assigned added successfully:', response.data);
-
-    //                         })
-    //                         .catch((error) => {
-    //                             console.error('Error adding work assigned:', error);
-    //                         });
-    //                 })
-    //                 .catch((error) => {
-    //                     console.error('Error getting worker id:', error);
-    //                 });
-    //         }
-    //     }
-    // }
 
     const handleSelectedWorkerChange = (taskCardId, value) => {
         // Update the selected worker for the specific task card
@@ -281,7 +216,7 @@ const ManageTask = () => {
                 const name = selectedWorkerValue;
                 setSelectedWorkersList([...selectedWorkersList, name]);
                 setSelectedWorker('');
-                axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${name}`)
+                axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${name}`)
                     .then((response) => {
                         const workerId = response.data.extra.workerId
                         //setWorkerId(workerId);
@@ -296,7 +231,7 @@ const ManageTask = () => {
                             taskCardId
                         }
 
-                        axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
+                        axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
                             .then((response) => {
                                 console.log('Work assigned added successfully:', response.data);
 
@@ -317,7 +252,7 @@ const ManageTask = () => {
 
         //get expense id according to the expense type
         axios
-            .get(`http://localhost:8081/service/master/find-by-type?expenseType=${selectedExpenseType}`)
+            .get(`http://localhost:8080/service/master/find-by-type?expenseType=${selectedExpenseType}`)
             .then((response) => {
                 const expenseId = response.data.expenseId;
                 setExpenseId(expenseId);
@@ -329,7 +264,7 @@ const ManageTask = () => {
                 };
 
                 //save task expense 
-                axios.post('http://localhost:8081/service/master/task-expense-save', addTaskExpense)
+                axios.post('http://localhost:8080/service/master/task-expense-save', addTaskExpense)
                     .then((response) => {
                         console.log('Task expense added successfully:', response.data);
                         history.push('/home');
@@ -355,7 +290,7 @@ const ManageTask = () => {
         const selectedWorker = localStorage.getItem('selectedWorker');
         console.log('selected worker: ', selectedWorker);
 
-        axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${selectedWorker}`)
+        axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${selectedWorker}`)
             .then((response) => {
                 const workerId = response.data.extra.workerId
                 // setWorkerId(storeWorkerId);
@@ -370,7 +305,7 @@ const ManageTask = () => {
                     lotId
                 }
 
-                axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
+                axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
                     .then((response) => {
                         console.log('Work assigned added successfully:', response.data);
 
@@ -393,7 +328,7 @@ const ManageTask = () => {
             newStatus: 'completed',
         }
 
-        axios.put(`http://localhost:8081/service/master/updateEndDate/${taskAssignedid}`, details)
+        axios.put(`http://localhost:8080/service/master/updateEndDate/${taskAssignedid}`, details)
             .then((response) => {
                 window.location.reload();
             })
@@ -404,8 +339,19 @@ const ManageTask = () => {
 
     const formattedEndDate = getFormattedDate(commanTaskDetails.endDate);
 
+    const handleRemoveWorker = (taskCardId, workAssignedId) => {
 
-    // At this point, the state variables will have their updated values
+        axios.delete(`http://localhost:8080/service/master/work-assigned-delete/${workAssignedId}`)
+            .then(response => {
+                console.log('Worker removed successfully:', response.data);
+                window.location.reload();
+            })
+            .catch(error => {
+                console.error('Error removing worker:', error);
+            });
+    };
+
+
 
     return (
         <div className="manage-task-app-screen">
@@ -428,7 +374,7 @@ const ManageTask = () => {
                     <h6> {ongoingTaskName} {t('Task')} - {commanTaskDetails.taskStatus}
                         <br /><br />
                         {t('From')} - {ongoingTaskDate}
-                        <br/><br />
+                        <br /><br />
                         {t('To')} - {formattedEndDate}
                     </h6>
                 ) : (
@@ -447,15 +393,27 @@ const ManageTask = () => {
                         <p>{t('date')} - <h6>{getFormattedDate(taskDetail.date)}</h6></p>
                         <h6> Current Staus - {taskDetail.cardStatus}</h6>
                         <p>---------------------------------------------</p>
-                        {taskDetail.workerDetails.map((workerDetail) => (
-                            <p key={workerDetail.id}>
-                                {ongoingTaskName === 'Pluck' ? (
-                                    `${workerDetail.workerName} - ${workerDetail.quantity}${workerDetail.units}`
-                                ) : (
-                                    workerDetail.workerName
-                                )}
-                            </p>
-                        ))}
+
+                        {taskDetail.workerDetails
+                            .map((workerDetail) => (
+                                <div key={workerDetail.id} className="worker-details">
+                                    <div className="worker-name-container">
+                                        {ongoingTaskName === 'Pluck' ? (
+                                            <p>
+                                                {workerDetail.workerName} - {workerDetail.quantity}
+                                                {workerDetail.units}
+                                            </p>
+                                        ) : (
+                                            <p>{workerDetail.workerName}</p>
+                                        )}
+                                    </div>
+                                    {taskDetail.cardStatus !== 'completed' && (
+                                        <div className="remove-button-container">
+                                            <Trash onClick={() => handleRemoveWorker(taskDetail.taskCardId, workerDetail.workAssigned)} />
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
 
                         <br />
 

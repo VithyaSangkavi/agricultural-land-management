@@ -85,6 +85,7 @@ router.post("/taskAssignedFindAll", taskAssignedController.findAll);
 router.get('/task-assigned', taskAssignedController.findByTaskId);
 router.get("/taskFindById", taskTypeController.findById);
 router.get("/ongoing-tasks-with-names", taskAssignedController.getOngoingTasksWithTaskNames);
+router.get("/completed-tasks-with-names", taskAssignedController.getCompletedTasksWithTaskNames);
 router.put("/updateEndDate/:taskAssignedId", taskAssignedController.updateEndDate);
 
 // task-expense routes
@@ -97,6 +98,7 @@ router.post("/task-expense-save", taskExpenseController.save);
 // work-assigned routes
 router.post("/work-assigned-save", workAssignedController.save);
 router.post("/work-assigned-update", workAssignedController.update);
+router.delete("/work-assigned-delete/:workAssignedId", workAssignedController.delete);
 router.post("/work-assigned-findAll", workAssignedController.findAll);
 router.get("/work-assigned-details/:taskAssignedId", workAssignedController.getDetailsByTaskAssignedId);
 router.delete('/work-assigned-delete-by-worker/:workerId', workAssignedController.deleteByWorkerId);

@@ -37,6 +37,11 @@ function SideNavBar() {
     history.push('/manageIncome');
   };
 
+  const CompletedTasks = () => {
+    history.push('/viewcompltedtasks');
+  };
+  
+
   const handleLanguageChange = (lang) => {
     i18n.changeLanguage(lang);
   };
@@ -104,7 +109,16 @@ function SideNavBar() {
             </Navbar.Brand>
           </Container>
         </Navbar>
-
+        <br />
+        <Navbar className="side-nav-menu">
+          <Container>
+            <Navbar.Brand onClick={CompletedTasks}>
+              {t('completedtasks')}
+            </Navbar.Brand>
+          </Container>
+        </Navbar>
+        <br />
+        <br />
         <br />
         <div className='footer-alignment'>
           <Footer />

@@ -11,7 +11,7 @@ import { IWorkerAssignedInfoFromDao } from "../types/worker-assignedt-types";
 export interface WorkAssignedDao {
   save(workAssignedDto: WorkAssignedDto, workerModel: WorkerEntity, taskTypeModel: TaskTypeEntity, lotModel: LotEntity, taskAssignedModel: TaskAssignedEntity, taskCardModel: TaskCardEntity): Promise<WorkAssignedEntity>;
   update(workAssignedDto: WorkAssignedDto): Promise<WorkAssignedEntity>;
-  delete(workAssignedDto: WorkAssignedDto): Promise<WorkAssignedEntity>;
+  delete(workAssignedId: number): Promise<WorkAssignedEntity>;
   findAll(landId: number): Promise<IWorkerAssignedInfoFromDao[]>;
   findById(attendanceId: number): Promise<WorkAssignedEntity>;
   findByName(taskStatus: TaskStatus): Promise<WorkAssignedEntity>;

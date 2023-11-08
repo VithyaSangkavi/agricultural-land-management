@@ -33,10 +33,9 @@ exports.update = async (req: Request, res: Response, next: NextFunction) => {
   
   exports.delete = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      let workAssignedDto = new WorkAssignedDto();
-      workAssignedDto.filViaRequest(req.body);
+      let workAssignedId = req.params.workAssignedId
   
-      let cr = await workAssignedService.delete(workAssignedDto);
+      let cr = await workAssignedService.delete(workAssignedId);
   
       res.send(cr);
     } catch (error) {
