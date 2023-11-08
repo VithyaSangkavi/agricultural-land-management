@@ -5,6 +5,7 @@ import { TaskCardStatus } from "../../enum/taskCardStatus";
 import { TaskCardEntity } from "../../entity/master/task-card-entity";
 import { TaskCardDao } from "../task-card-dao";
 import { TaskAssignedEntity } from "../../entity/master/task-assigned-entity";
+import { Schedule } from "../../enum/schedule";
 
 /**
  * department data access layer
@@ -18,6 +19,7 @@ export class TaskCardDaoImpl implements TaskCardDao {
         taskCardModel.taskAssigned = taskAssignedModel;
 
         taskCardModel.status = Status.Online;
+        taskCardModel.schedule = Schedule.NotScheduled;
         this.preparetaskCardModel(taskCardModel, taskCardDto);
         let savedTaskCard = await taskCardRepo.save(taskCardModel);
         return savedTaskCard;
@@ -113,6 +115,7 @@ export class TaskCardDaoImpl implements TaskCardDao {
         taskCardModel.createdDate = new Date();
         taskCardModel.updatedDate = new Date();
         taskCardModel.status = Status.Online;
+        taskCardModel.schedule = Schedule.NotScheduled;
     }
     prepareSearchObject(TaskCardDto: TaskCardDto): any {
         let searchObject: any = {};
@@ -131,6 +134,8 @@ export class TaskCardDaoImpl implements TaskCardDao {
 
         searchObject.status = Status.Online;
 
+        searchObject.schedule = Schedule.NotScheduled;
+        
         if (TaskCardDto.getTaskAssignedId()) {
             searchObject.color = Like("%" + TaskCardDto.getTaskAssignedId() + "%");
         }

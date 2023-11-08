@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 import DatePicker from 'react-datepicker';
 import './manage-task.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
@@ -82,7 +82,7 @@ const ManageTask = () => {
     };
 
     const fetchTaskAssignedId = () => {
-        
+
         //get task-assigned id
         axios.get(`http://localhost:8080/service/master/task-assigned?taskId=${taskId}`)
 
@@ -91,18 +91,6 @@ const ManageTask = () => {
 
                 console.log('Task assigned id: ', taskAssignedId);
                 setTaskAssignedId(taskAssignedId);
-
-                //ge task card id
-                axios.get(`http://localhost:8080/service/master/taskCardFindById?taskAssignedId=${taskAssignedId}`)
-                    .then((response) => {
-                        const taskCardId = response.data.extra.id;
-
-                        console.log('Task card id: ', taskCardId);
-                        setTaskCardId(taskCardId);
-                    })
-                    .catch((error) => {
-                        console.error('Error fetching task card id:', error);
-                    });
             })
             .catch((error) => {
                 console.error('Error fetching task assigned id:', error);
@@ -138,35 +126,66 @@ const ManageTask = () => {
                 setSelectedWorker('');
                 console.log('selected worker: ', selectedWorker);
 
-                axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${selectedWorker}`)
-                    .then((response) => {
-                        const workerId = response.data.extra.workerId
-                        // setWorkerId(storeWorkerId);
-                        console.log('Worker ID :', workerId);
+                if (!taskCardId) {
+                    const saveTaskCard = {
+                        taskAssignedDate,
+                        taskAssignedId,
+                    };
 
-                        const addWorkAssigned = {
-                            startDate,
-                            workerId,
-                            taskId,
-                            taskAssignedId,
-                            lotId,
-                            taskCardId
-                        }
+                    axios.post('http://localhost:8081/service/master/task-card-save', saveTaskCard)
+                        .then((response) => {
+                            console.log('Task card added', response.data);
+                            localStorage.setItem('taskassignedid', taskAssignedId);
 
-                        axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
-                            .then((response) => {
-                                console.log('Work assigned added successfully:', response.data);
+                            axios.get(`http://localhost:8081/service/master/taskCardFindById?taskAssignedId=${taskAssignedId}`)
+                                .then((response) => {
+                                    const taskCardId = response.data.extra.id;
 
-                            })
-                            .catch((error) => {
-                                console.error('Error adding work assigned:', error);
-                            });
-                    })
-                    .catch((error) => {
-                        console.error('Error getting worker id:', error);
-                    });
+                                    console.log('Task card id: ', taskCardId);
+                                    setTaskCardId(taskCardId);
+
+                                    addWorkerToTaskCard(taskCardId);
+                                })
+                                .catch((error) => {
+                                    console.error('Error fetching task card id:', error);
+                                });
+                        })
+                        .catch((error) => {
+                            console.error('Error adding task card:', error);
+                        });
+                } else {
+                    addWorkerToTaskCard(taskCardId);
+                }
             }
         }
+    }
+
+    const addWorkerToTaskCard = (taskCardId) => {
+        axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${selectedWorker}`)
+            .then((response) => {
+                const workerId = response.data.extra.workerId;
+                console.log('Worker ID :', workerId);
+
+                const addWorkAssigned = {
+                    startDate,
+                    workerId,
+                    taskId,
+                    taskAssignedId,
+                    lotId,
+                    taskCardId,
+                };
+
+                axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
+                    .then((response) => {
+                        console.log('Work assigned added successfully:', response.data);
+                    })
+                    .catch((error) => {
+                        console.error('Error adding work assigned:', error);
+                    });
+            })
+            .catch((error) => {
+                console.error('Error getting worker id:', error);
+            });
     }
 
     // add task expense
@@ -212,34 +231,37 @@ const ManageTask = () => {
         const selectedWorker = localStorage.getItem('selectedWorker');
         console.log('selected worker: ', selectedWorker);
 
-        axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${selectedWorker}`)
-            .then((response) => {
-                const workerId = response.data.extra.workerId
-                // setWorkerId(storeWorkerId);
-                console.log('Worker ID :', workerId);
+        if (!taskCardId) {
+            const saveTaskCard = {
+                taskAssignedDate,
+                taskAssignedId,
+            };
 
-                const addWorkAssigned = {
-                    quantity,
-                    startDate,
-                    workerId,
-                    taskId,
-                    taskAssignedId,
-                    lotId,
-                    taskCardId
-                }
+            axios.post('http://localhost:8081/service/master/task-card-save', saveTaskCard)
+                .then((response) => {
+                    console.log('Task card added', response.data);
+                    localStorage.setItem('taskassignedid', taskAssignedId);
 
-                axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
-                    .then((response) => {
-                        console.log('Work assigned added successfully:', response.data);
+                    axios.get(`http://localhost:8081/service/master/taskCardFindById?taskAssignedId=${taskAssignedId}`)
+                        .then((response) => {
+                            const taskCardId = response.data.extra.id;
 
-                    })
-                    .catch((error) => {
-                        console.error('Error adding work assigned:', error);
-                    });
-            })
-            .catch((error) => {
-                console.error('Error getting worker id:', error);
-            });
+                            console.log('Task card id: ', taskCardId);
+                            setTaskCardId(taskCardId);
+
+                            addWorkerToTaskCard(taskCardId);
+                        })
+                        .catch((error) => {
+                            console.error('Error fetching task card id:', error);
+                        });
+                })
+                .catch((error) => {
+                    console.error('Error adding task card:', error);
+                });
+        } else {
+            addWorkerToTaskCard(taskCardId);
+        }
+
     }
 
     const handleLanguageChange = (lang) => {
@@ -261,6 +283,35 @@ const ManageTask = () => {
             });
     }
 
+    const removeWorker = (index) => {
+        const workerName = selectedWorkersList[index];
+
+        deleteItem(workerName);
+
+        const updatedWorkersList = [...selectedWorkersList];
+        updatedWorkersList.splice(index, 1);
+        setSelectedWorkersList(updatedWorkersList);
+    }
+
+    const deleteItem = (workerName) => {
+        axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${workerName}`)
+            .then((response) => {
+                const thisid = response.data.extra.workerId
+                console.log('workerid:', response.data.extra.workerId);
+
+                axios.delete(`http://localhost:8081/service/master/work-assigned-delete-by-worker/${thisid}`)
+                    .then((response) => {
+                        console.log('worker assigned removed successfully:', response.data);
+
+                    })
+                    .catch((error) => {
+                        console.error('Error getting worker id:', error);
+                    });
+            })
+            .catch((error) => {
+                console.error('Error getting worker id:', error);
+            });
+    };
 
     return (
         <div className="manage-task-app-screen">
@@ -321,7 +372,14 @@ const ManageTask = () => {
                         <div>
                             {selectedWorkersList.map((worker, index) => (
                                 <div key={index} className="worker-container">
-                                    <p>{worker}</p>
+                                    <div className='line'>
+                                        <p>{worker}</p>
+
+                                        <button onClick={() => removeWorker(index)} className="delete-button">
+                                            <FontAwesomeIcon icon={faTrashAlt} />
+                                        </button>
+
+                                    </div>
                                     {taskName === 'Pluck' && (
                                         <div className="kg-input-container">
                                             <div className="kg-input">

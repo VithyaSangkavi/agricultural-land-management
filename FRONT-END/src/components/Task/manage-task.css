@@ -187,12 +187,16 @@
   width: 80%
 }
 
-.worker-details {
+.line {
   display: flex;
-  justify-content: space-between;
   align-items: center;
 }
 
-.remove-button-container {
-  margin-left: 10px;
+.delete-button {
+  background: none;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-left: 50px; /* Adjust the margin as needed */
 }
+

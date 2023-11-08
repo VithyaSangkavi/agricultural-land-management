@@ -1,5 +1,6 @@
 import { PaginationDto } from "../pagination-dto";
 import { Status } from "../../enum/Status";
+import {Schedule} from "../../enum/schedule";
 import { TaskCardStatus } from "../../enum/taskCardStatus";
 import { TaskCardEntity } from "../../entity/master/task-card-entity";
 
@@ -10,6 +11,7 @@ export class TaskCardDto extends PaginationDto {
   private createdDate: Date;
   private updatedDate: Date;
   private status: Status;
+  private schedule: Schedule;
   private taskAssignedId: number;
 
   filViaRequest(body) {
@@ -22,6 +24,7 @@ export class TaskCardDto extends PaginationDto {
     this.createdDate = body.createdDate;
     this.updatedDate = body.updatedDate;
     this.status= body.status;
+    this.schedule = body.schedule;
     this.taskAssignedId = body.taskAssignedId;
 
     if (body.startIndex && body.maxResult) {
@@ -37,6 +40,7 @@ export class TaskCardDto extends PaginationDto {
     this.createdDate = TaskCardModel.createdDate;
     this.updatedDate = TaskCardModel.updatedDate;
     this.status = TaskCardModel.status;
+    this.schedule = TaskCardModel.schedule;
     this.taskAssignedId = TaskCardModel.taskAssigned.id;
   }
 
@@ -86,6 +90,14 @@ export class TaskCardDto extends PaginationDto {
 
   public setStatus(status: Status): void {
     this.status = status;
+  }
+
+  public getSchedule(): Schedule {
+    return this.schedule;
+  }
+
+  public setSchedule(schedule: Schedule): void {
+    this.schedule = schedule;
   }
 
   public getTaskAssignedId(): number {

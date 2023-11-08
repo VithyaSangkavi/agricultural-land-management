@@ -88,3 +88,15 @@ exports.getDetailsByTaskAssignedId = async (req: Request, res: Response, next: N
   }
 };
 
+exports.deleteByWorkerId = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const workerId = req.params.workerId;
+
+    let cr = await workAssignedService.deleteByWorkerId(workerId);
+
+    res.send(cr);
+  } catch (error) {
+    next(error);
+  }
+};
+

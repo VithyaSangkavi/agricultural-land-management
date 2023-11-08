@@ -1,5 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Table } from "typeorm";
 import { Status } from "../../enum/Status";
+import {Schedule} from "../../enum/schedule";
 import { TaskCardStatus } from "../../enum/taskCardStatus";
 import { TaskAssignedEntity } from "./task-assigned-entity";
 import { WorkAssignedEntity } from "./work-assigned-entity";
@@ -25,6 +26,9 @@ export class TaskCardEntity {
 
   @Column({ type: "enum" ,enum:Status,default:Status.Online})
   status: Status;
+
+  @Column({ type: "enum" ,enum:Schedule,default:Schedule.NotScheduled})
+  schedule: Schedule;
 
   @ManyToOne(()=> TaskAssignedEntity, (taskAssigned) => taskAssigned.taskCard)
   @JoinColumn({name: "taskAssignedId"})
