@@ -81,23 +81,17 @@ const AddTask = () => {
   };
 
   // const fetchTaskAssignedId = () => {
-  //   axios.get(`http://localhost:8081/service/master/task-assigned?taskId=${taskId}`)
+  //   axios.get(`http://localhost:8080/service/master/task-assigned?taskId=${taskId}`)
   //     .then((response) => {
   //       const taskAssignedId = response.data.extra.id;
   //       setTaskAssignedId(taskAssignedId);
-
-  const fetchTaskAssignedId = () => {
-    axios.get(`http://localhost:8080/service/master/task-assigned?taskId=${taskId}`)
-      .then((response) => {
-        const taskAssignedId = response.data.extra.id;
-        setTaskAssignedId(taskAssignedId);
 
   //       const saveTaskCard = {
   //         taskAssignedDate,
   //         taskAssignedId
   //       };
 
-  //       axios.post('http://localhost:8081/service/master/task-card-save', saveTaskCard)
+  //       axios.post('http://localhost:8080/service/master/task-card-save', saveTaskCard)
   //         .then((response) => {
   //           console.log('Task card added', response.data);
   //           localStorage.setItem('taskassignedid', taskAssignedId);
@@ -111,21 +105,6 @@ const AddTask = () => {
   //     });
   // };
 
-        axios.post('http://localhost:8080/service/master/task-card-save', saveTaskCard)
-          .then((response) => {
-            console.log('Task card added', response.data);
-            localStorage.setItem('taskassignedid', taskAssignedId);
-          })
-          .catch((error) => {
-            console.error('Error adding task card:', error);
-          });
-      })
-      .catch((error) => {
-        console.error('Error fetching task name:', error);
-      });
-  };
-
-  
   return (
     <div className="task-app-screen">
       <p className='main-heading'>{t('addtask')}</p>

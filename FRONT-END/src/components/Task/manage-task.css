@@ -197,6 +197,19 @@
   color: white;
   border: none;
   cursor: pointer;
-  margin-left: 50px; /* Adjust the margin as needed */
+  margin-left: 50px;
 }
 
+.worker-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.worker-name-container {
+  flex: 1;
+}
+
+.remove-button-container {
+  margin-left: 10px; 
+}
