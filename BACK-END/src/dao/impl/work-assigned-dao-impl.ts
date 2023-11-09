@@ -116,28 +116,27 @@ export class WorkAssignedDaoImpl implements WorkAssignedDao {
   //   return workAssignedModel;
   // }
 
-  async deleteByWorkerId(workerId: number): Promise<boolean> {
+  async deleteByWorkerAndTaskCardId(workerId: number, taskCardId: number): Promise<boolean> {
     try {
       const workAssignedRepo = getConnection().getRepository(WorkAssignedEntity);
-      const workAssignments = await workAssignedRepo.find({
-        where: { worker: { id: workerId } },
-      });
+      const workAssignments = await workAssignedRepo
+        .createQueryBuilder()
+        .update(WorkAssignedEntity)
+        .set({ status: Status.Offline })
+        .where('worker.id = :workerId', { workerId })
+        .andWhere('taskCard.id = :taskCardId', { taskCardId })
+        .execute();
   
-      if (workAssignments.length === 0) {
-        return false; // No work assignments found for the specified worker ID.
+      if (workAssignments.affected === 0) {
+        return false; // No work assignments found for the specified worker ID and taskCardId.
       }
   
-      // Soft delete the found work assignments
-      workAssignments.forEach((workAssignment) => {
-        workAssignment.status = Status.Offline;
-      });
-  
-      await workAssignedRepo.save(workAssignments);
       return true; // Work assignments deleted successfully.
     } catch (error) {
-      throw new Error('Error deleting work assignments by worker ID: ' + error.message);
+      throw new Error('Error deleting work assignments by worker ID and taskCardId: ' + error.message);
     }
   }
+  
   
 
   async prepareWorkAssignedModel(workAssignedModel: WorkAssignedEntity, workAssignedDto: WorkAssignedDto) {

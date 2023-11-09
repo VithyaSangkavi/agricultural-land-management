@@ -101,7 +101,8 @@ router.post("/work-assigned-update", workAssignedController.update);
 router.delete("/work-assigned-delete/:workAssignedId", workAssignedController.delete);
 router.post("/work-assigned-findAll", workAssignedController.findAll);
 router.get("/work-assigned-details/:taskAssignedId", workAssignedController.getDetailsByTaskAssignedId);
-router.delete('/work-assigned-delete-by-worker/:workerId', workAssignedController.deleteByWorkerId);
+router.delete('/work-assigned-delete/:workerId/:taskCardId', workAssignedController.deleteByWorkerAndTaskCardId);
+
 
 // task-card routes
 router.post("/task-card-save", taskCardController.save);

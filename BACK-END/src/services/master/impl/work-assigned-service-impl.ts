@@ -323,16 +323,17 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
      * @param workerId
      * @returns CommonResponse
      */
-  async deleteByWorkerId(workerId: number): Promise<CommonResponse> {
+  async deleteByWorkerAndTaskCardId(workerId: number, taskCardId: number): Promise<CommonResponse> {
     let cr = new CommonResponse();
     try {
-      const deleted = await this.workAssignedDao.deleteByWorkerId(workerId);
-
+      // Delete work assignments by both workerId and taskCardId
+      const deleted = await this.workAssignedDao.deleteByWorkerAndTaskCardId(workerId, taskCardId);
+  
       if (deleted) {
         cr.setStatus(true);
       } else {
         cr.setStatus(false);
-        cr.setExtra("No work assignments found for the specified worker ID.");
+        cr.setExtra("No work assignments found for the specified worker ID and taskCardId.");
       }
     } catch (error) {
       cr.setStatus(false);
@@ -341,5 +342,6 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
     }
     return cr;
   }
+  
 
 }

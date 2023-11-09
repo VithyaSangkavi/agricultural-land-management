@@ -9,5 +9,5 @@ export interface WorkAssignedService {
   findById(attendanceId: number): Promise<CommonResponse>;
   getDetailsByTaskAssignedId(taskAssignedId: number): Promise<CommonResponse>;
   // findByTaskAssignedId(taskAssignedId: number): Promise<CommonResponse>;
-  deleteByWorkerId(workerId: number): Promise<CommonResponse>;
+  deleteByWorkerAndTaskCardId(workerId: number, taskCardId: number): Promise<CommonResponse>
 }
