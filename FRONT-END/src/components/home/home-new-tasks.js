@@ -6,9 +6,9 @@ import Footer from '../footer/footer';
 import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { FaPlus } from 'react-icons/fa';
 
-function Home() {
+
+function HomeNewTasks() {
     const [t, i18n] = useTranslation();
 
     const [lands, setLands] = useState([]);
@@ -20,22 +20,9 @@ function Home() {
     const [task, setTask] = useState([]);
     const [taskNames, setTaskNames] = useState([]);
     const [taskAssigned, setTaskAssigned] = useState([]);
-    const [OngoingTasks, setOngoingTasks] = useState([]);
-    const [ongoingTaskDate, setOngoingTaskDate] = useState('');
 
 
     const history = useHistory();
-
-    const getFormattedDate = (dateString) => {
-        const date = new Date(dateString);
-        const day = date.getDate();
-        const month = date.getMonth() + 1;
-        const year = date.getFullYear();
-    
-        const formattedDate = `${day}/${month}/${year}`;
-    
-        return formattedDate;
-    };
     
 
     useEffect(() => {
@@ -52,12 +39,6 @@ function Home() {
         axios.get('http://localhost:8081/service/master/landFindAll').then((response) => {
             setLands(response.data.extra);
             console.log("Lands : ", response.data.extra);
-        });
-
-        axios.get('http://localhost:8081/service/master/ongoing-tasks-with-names').then((response) => {
-            setOngoingTasks(response.data.extra);
-            console.log("Ongoing tasks : ", response.data.extra);
-
         });
     }, []);
 
@@ -108,7 +89,7 @@ function Home() {
 
     return (
         <div className="home-app-screen">
-            <p className='main-heading'>{t('home')}</p>
+            <p className='main-heading'>{t('newtask')}</p>
             <div className="position-absolute top-0 end-0 mt-2 me-2">
                 <Dropdown alignRight onSelect={handleLanguageChange}>
                     <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
@@ -136,22 +117,19 @@ function Home() {
                 </Dropdown>
                 <br />
             </div>
-            <div className='home-heading'>
-                <p>{t('ongoingtasks')}</p>
-            </div>
 
+            <div className='home-heading'>
+                <p>{t('newtask')}</p>
+            </div>
             <div className="task-list">
-                {OngoingTasks.map((taskAssigned) => (
-                    <div key={taskAssigned.id} className="task-card" onClick={() => handleTaskClick(taskAssigned.taskAssignedId)}>
-                        <p>{taskAssigned.taskName} - {getFormattedDate(taskAssigned.taskStartDate)} - land {taskAssigned.landId}</p>
+                {filteredTasks.map((task) => (
+                    <div key={task.id} className="task-card" onClick={() => handleCardClick(task.id)}>
+                        <p>{task.taskName}</p>
                     </div>
                 ))}
             </div>
 
             < br />
-            <button className="float-new-task-button" onClick={() => history.push('/homeNewTasks')}>
-                <FaPlus />
-            </button>
             <br />
             < br />
             <Footer />
@@ -159,4 +137,4 @@ function Home() {
     );
 }
 
-export default Home;
+export default HomeNewTasks;
