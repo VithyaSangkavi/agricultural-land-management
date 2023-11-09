@@ -88,15 +88,17 @@ exports.getDetailsByTaskAssignedId = async (req: Request, res: Response, next: N
   }
 };
 
-exports.deleteByWorkerId = async (req: Request, res: Response, next: NextFunction) => {
+exports.deleteByWorkerAndTaskCardId = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const workerId = req.params.workerId;
+    const taskCardId = req.params.taskCardId; // Retrieve taskCardId from request parameters
 
-    let cr = await workAssignedService.deleteByWorkerId(workerId);
+    let cr = await workAssignedService.deleteByWorkerAndTaskCardId(workerId, taskCardId);
 
     res.send(cr);
   } catch (error) {
     next(error);
   }
 };
+
 
