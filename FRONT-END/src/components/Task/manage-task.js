@@ -402,8 +402,6 @@ const ManageTask = () => {
                             ))}
                         </div>
                     )}
-
-                    {/* <button className="add-button">{t('assignwork')}</button> */}
                 </div>
             )}
 

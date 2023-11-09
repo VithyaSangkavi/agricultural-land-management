@@ -1,6 +1,6 @@
 .home-app-screen {
     max-width: 100%;
-    height: auto;
+    height: 100vh;
    
     margin: 0 auto;
     /* padding: 16px; */
@@ -99,4 +99,29 @@
 .home-app-screen .task-card p {
     font-size: 16px;
     margin: 10px 0 0;
+}
+
+/* floating-button.css */
+
+.float-new-task-button {
+    position: fixed;
+    bottom: 60px;
+    right: 15px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #5ef88a; 
+    color: black; 
+    font-size: 24px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.float-new-task-button:hover {
+    background-color: #0a8a2e; 
 }

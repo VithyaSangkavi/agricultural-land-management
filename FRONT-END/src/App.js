@@ -48,6 +48,7 @@ import Home from './components/home/home';
 import AddTask from './components/Task/add-task'
 import ManageTask from './components/Task/manage-task';
 import ManageOngoingTask from './components/Task/manage-ongoing-task';
+import HomeNewTasks from './components/home/home-new-tasks';
 
 class App extends React.Component {
   _isMounted = false;
@@ -150,6 +151,7 @@ class App extends React.Component {
           <RoleBasedRouting path="/manageTask"><ManageTask /></RoleBasedRouting>
           <RoleBasedRouting path="/manageOngoingTask/:taskAssignedid"><ManageOngoingTask /></RoleBasedRouting> 
           <RoleBasedRouting path="/viewcompltedtasks"><ViewCompletedTasks /></RoleBasedRouting>
+          <RoleBasedRouting path="/homeNewTasks"><HomeNewTasks /></RoleBasedRouting>
 
           <RoleBasedRouting path="/dashboard" exact roles={[usrRoles.CM]}><DashboardComponent/></RoleBasedRouting>
 
