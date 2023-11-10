@@ -5,8 +5,8 @@
   margin: 0 auto;
   /* padding: 16px; */
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-  background-image: url('../../assets/img/background.jpg');
-  /* background-color: #c1fab6; */
+  /* background-image: url('../../assets/img/background.jpg'); */
+  background-color: white;
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -26,7 +26,7 @@
   padding: 8px;
   text-align: center;
   background-color: #f2f2f2;
-  border:none;
+  border:1px solid #0e4f20;
   cursor: pointer;
   transition: background-color 0.3s;
 }
@@ -49,21 +49,20 @@
 
 .worker-app-screen .input-field {
   width: 90%;
-  padding: 8px;
-  margin-bottom: 16px;
+  padding: 10px;
+  margin-bottom: 8px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 5px;
   text-align: center;
   font-size: 16px;
-  background-color: rgba(0, 0, 0, 0.6);
-  color: white;
-  border: none;
-  border-radius: 20px;
+  background-color: #f2f2f2;
+  color: black;
+  /* border: 1px solid #0e4f20; */
   margin-left: none;
 }
 
 .worker-app-screen .input-field::placeholder{
-  color: white;
+  color: black;
 }
 
 .worker-app-screen .input-dates {
@@ -86,12 +85,13 @@
 }
 
 .worker-app-screen .add-button {
-  padding: 8px 16px;
+  padding: 10px;
+  margin-top: 10px;
   background-color: #0e4f20;
   color: #fff;
   width: 90%;
   border: none;
-  border-radius: 20px;
+  border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s;
 }

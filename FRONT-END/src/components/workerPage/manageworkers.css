@@ -6,15 +6,15 @@
 
 .worker-card {
   /* border: 1px solid #ccc; */
-  padding: 16px;
+  padding: 20px;
   margin: 10px;
   width: 90%;
   /* max-width: 300px; */
   text-align: left;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  background-color: rgba(0, 0, 0, 0.6);
-  color: white;
-  border-radius: 20px;
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+  background-color: #f2f2f2;
+  color: black;
+  border-radius: 5px;
 }
 
 .worker-card h3 {
