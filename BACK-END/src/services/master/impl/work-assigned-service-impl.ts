@@ -254,10 +254,10 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
 
       const taskDetails = await workAssignedRepo
         .createQueryBuilder('workAssigned')
-        .innerJoinAndSelect('workAssigned.worker', 'worker')
-        .innerJoinAndSelect('workAssigned.task', 'task')
-        .innerJoinAndSelect('workAssigned.taskCard', 'taskCard')
-        .innerJoinAndSelect('workAssigned.taskAssigned', 'taskAssigned')
+        .innerJoin('workAssigned.worker', 'worker')
+        .innerJoin('workAssigned.task', 'task')
+        .innerJoin('workAssigned.taskCard', 'taskCard')
+        .innerJoin('workAssigned.taskAssigned', 'taskAssigned')
         .where('workAssigned.taskAssignedId = :taskAssignedId', { taskAssignedId })
         .andWhere('workAssigned.status = :status', { status: 'online' })
         .select([
