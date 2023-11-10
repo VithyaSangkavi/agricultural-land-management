@@ -35,6 +35,7 @@ export class TaskCardServiceImpl implements TaskCardService {
       // save new taskCard
       let newTaskCard = await this.taskCardDao.save(taskCardDto, taskAssignedModel);
       cr.setStatus(true);
+      cr.setExtra(newTaskCard);
     } catch (error) {
       cr.setStatus(false);
       cr.setExtra(error);
