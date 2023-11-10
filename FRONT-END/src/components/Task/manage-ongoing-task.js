@@ -13,9 +13,6 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { alertService } from '../../_services/alert.service';
 
-
-
-
 const ManageTask = () => {
     const [t, i18n] = useTranslation();
     const { taskAssignedid } = useParams();
@@ -42,6 +39,7 @@ const ManageTask = () => {
     const [commanTaskDetails, setCommanTaskDetails] = useState([]);
     const [taskDetails, setTaskDetails] = useState([]);
     const [taskStatus, setTaskStatus] = useState('');
+    const [newTaskCardId, setNewTaskCardId] = useState('');
 
 
     //const [workerId, setWorkerId] = useState('');
@@ -52,6 +50,7 @@ const ManageTask = () => {
     const [workers, setWorkers] = useState([]);
     const [isCompleted, setIsCompleted] = useState(false);
     const [completedTasks, setCompletedTasks] = useState([]);
+    const [workerId, setWorkerId] = useState('');
 
     const handleCompleteTask = (taskCardId) => {
         const newStatus = 'completed';
@@ -109,16 +108,14 @@ const ManageTask = () => {
     console.log("ongoing task : ", taskAssignedid)
 
     useEffect(() => {
-
+        fetchTaskAssignedId();
         fetchTaskName();
         fetchWorkerNames();
         fetchExpenseTypes();
         fetchLotId();
     }, []);
 
-
     useEffect(() => {
-        // Fetch the task details from your API
         axios.get(`http://localhost:8081/service/master/work-assigned-details/${taskAssignedid}`)
             .then((response) => {
                 setTaskDetails(response.data.extra.cardDetails);
@@ -129,9 +126,21 @@ const ManageTask = () => {
                 const formattedStartDate = getFormattedDate(response.data.extra.startDate);
                 setOngoingTaskDate(formattedStartDate);
 
-                setOngoingTaskDate(formattedStartDate);
+                const today = getFormattedDate(new Date());
+                const isCardExist = response.data.extra.cardDetails.some(
+                    (card) => getFormattedDate(card.date) === today
+                );
 
+                if (!isCardExist) {
+                    const newEmptyCard = {
+                        newTaskCardId,
+                        date: new Date(),
+                        cardStatus: 'ongoing',
+                        workerDetails: [],
+                    };
 
+                    setTaskDetails((prevTaskDetails) => [...prevTaskDetails, newEmptyCard]);
+                }
 
             })
             .catch((error) => {
@@ -198,12 +207,60 @@ const ManageTask = () => {
     }
 
     const handleSelectedWorkerChange = (taskCardId, value) => {
-        // Update the selected worker for the specific task card
         setSelectedWorker((prevSelectedWorkers) => ({
             ...prevSelectedWorkers,
             [taskCardId]: value,
         }));
     };
+
+    // const handleAddSelectedWorker = (taskCardId) => {
+    //     const selectedWorkerValue = selectedWorker[taskCardId];
+
+    //     if (taskName === 'Pluck') {
+    //         console.log('Pluck task')
+    //         if (selectedWorkerValue) {
+    //             console.log('selected worker: ', selectedWorkerValue);
+    //             localStorage.setItem('selectedWorker', selectedWorkerValue);
+    //         }
+    //     } else {
+
+    //         if (selectedWorkerValue) {
+    //             console.log('selected worker: ', selectedWorkerValue);
+    //             const name = selectedWorkerValue;
+    //             setSelectedWorkersList([...selectedWorkersList, name]);
+    //             setSelectedWorker('');
+    //             axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${name}`)
+    //                 .then((response) => {
+    //                     const workerId = response.data.extra.workerId
+    //                     //setWorkerId(workerId);
+    //                     console.log('Worker ID :', workerId);
+
+    //                     const addWorkAssigned = {
+    //                         startDate,
+    //                         workerId,
+    //                         taskId,
+    //                         taskAssignedId: taskAssignedid,
+    //                         lotId,
+    //                         taskCardId: taskCardId || newTaskCardId
+    //                     }
+
+    //                     axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
+    //                         .then((response) => {
+    //                             console.log('Work assigned added successfully:', response.data);
+    //                             alertService.success('Worker added successfully');
+    //                             // window.location.reload();
+
+    //                         })
+    //                         .catch((error) => {
+    //                             console.error('Error adding work assigned:', error);
+    //                         });
+    //                 })
+    //                 .catch((error) => {
+    //                     console.error('Error getting worker id:', error);
+    //                 });
+    //         }
+    //     }
+    // };
 
     const handleAddSelectedWorker = (taskCardId) => {
         const selectedWorkerValue = selectedWorker[taskCardId];
@@ -215,37 +272,79 @@ const ManageTask = () => {
                 localStorage.setItem('selectedWorker', selectedWorkerValue);
             }
         } else {
-
             if (selectedWorkerValue) {
                 console.log('selected worker: ', selectedWorkerValue);
                 const name = selectedWorkerValue;
                 setSelectedWorkersList([...selectedWorkersList, name]);
                 setSelectedWorker('');
+
                 axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${name}`)
                     .then((response) => {
                         const workerId = response.data.extra.workerId
-                        //setWorkerId(workerId);
                         console.log('Worker ID :', workerId);
 
-                        const addWorkAssigned = {
-                            startDate,
-                            workerId,
-                            taskId,
-                            taskAssignedId: taskAssignedid,
-                            lotId,
-                            taskCardId: taskCardId
+                        console.log('New task card id: ', taskCardId)
+                        // Check if taskCardId is null
+                        if (taskCardId == null) {
+                            // If null, it means it's a new card
+                            const newTaskCard = {
+                                taskAssignedDate: new Date(),
+                                taskAssignedId: taskAssignedid
+                            };
+
+                            axios.post('http://localhost:8081/service/master/task-card-save', newTaskCard)
+                                .then((savedTaskCardResponse) => {
+                                    console.log('New Task card added', savedTaskCardResponse.data.extra);
+                                    const newtaskCardId = savedTaskCardResponse.data.extra.id
+                                   
+                                            setNewTaskCardId(newtaskCardId);
+
+                                            const addWorkAssigned = {
+                                                startDate,
+                                                workerId,
+                                                taskId,
+                                                taskAssignedId: taskAssignedid,
+                                                lotId,
+                                                taskCardId: newtaskCardId
+                                            }
+        
+                                            axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
+                                                .then((response) => {
+                                                    console.log('Work assigned added successfully:', response.data);
+                                                    alertService.success('Worker added successfully');
+                                                    // window.location.reload();
+                                                })
+                                                .catch((error) => {
+                                                    console.error('Error adding work assigned:', error);
+                                                });
+                                       
+
+                                  
+                                })
+                                .catch((error) => {
+                                    console.error('Error adding new task card:', error);
+                                });
+                        } else {
+                            // If taskCardId is not null, it means it's an existing card, directly assign the worker
+                            const addWorkAssigned = {
+                                startDate,
+                                workerId,
+                                taskId,
+                                taskAssignedId: taskAssignedid,
+                                lotId,
+                                taskCardId: taskCardId
+                            }
+
+                            axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
+                                .then((response) => {
+                                    console.log('Work assigned added successfully:', response.data);
+                                    alertService.success('Worker added successfully');
+                                    // window.location.reload();
+                                })
+                                .catch((error) => {
+                                    console.error('Error adding work assigned:', error);
+                                });
                         }
-
-                        axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
-                            .then((response) => {
-                                console.log('Work assigned added successfully:', response.data);
-                                alertService.success('Worker added successfully');
-                                window.location.reload();
-
-                            })
-                            .catch((error) => {
-                                console.error('Error adding work assigned:', error);
-                            });
                     })
                     .catch((error) => {
                         console.error('Error getting worker id:', error);
@@ -253,6 +352,8 @@ const ManageTask = () => {
             }
         }
     };
+
+
 
     // add task expense
     const handleAddTaskExpense = () => {
@@ -356,11 +457,7 @@ const ManageTask = () => {
             .catch(error => {
                 console.error('Error removing worker:', error);
             });
-
-
     };
-
-
 
     return (
         <div className="manage-task-app-screen">
