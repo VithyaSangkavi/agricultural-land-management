@@ -1,4 +1,4 @@
-import Container from 'react-bootstrap/Container';
+import button from 'react-bootstrap/button';
 import Navbar from 'react-bootstrap/Navbar';
 import './SideNavPage.css'
 import Footer from '../footer/footer';
@@ -50,7 +50,7 @@ function SideNavBar() {
     <AnimatedPage>
       <div className='side-nav-screen'>
         <p className='main-heading'>{t('welcome')}</p>
-        <div className="position-absolute top-0 end-0 mt-2 me-2">
+        <div className="position-absolute top-0 end-0 me-2">
           <Dropdown alignRight onSelect={handleLanguageChange}>
             <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
               <FaGlobeAmericas style={{ color: 'white' }} />
@@ -62,62 +62,62 @@ function SideNavBar() {
             </Dropdown.Menu>
           </Dropdown>
         </div>
-        <Navbar className="side-nav-menu">
-          <Container>
-            <Navbar.Brand onClick={ManageWorkers}>
+        <div className="side-nav-menu">
+          <button className='menu-click'>
+            <div onClick={ManageWorkers}>
               {t('workermanagement')}
-            </Navbar.Brand>
-          </Container>
-        </Navbar>
-        <br />
-        <Navbar className="side-nav-menu">
-          <Container>
-            <Navbar.Brand onClick={ManageLand}>
+            </div>
+            </button>
+          </div>
+
+        <div className="side-nav-menu">
+          <button className='menu-click'>
+            <div onClick={ManageLand}>
               {t('managelands')}
-            </Navbar.Brand>
-          </Container>
-        </Navbar>
-        <br />
-        <Navbar className="side-nav-menu">
-          <Container>
-            <Navbar.Brand onClick={ManageLot}>
+            </div>
+          </button>
+        </div>
+
+        <div className="side-nav-menu">
+          <button className='menu-click'>
+            <div onClick={ManageLot}>
               {t('managelots')}
-            </Navbar.Brand>
-          </Container>
-        </Navbar>
-        <br />
-        <Navbar className="side-nav-menu">
-          <Container>
-            <Navbar.Brand onClick={ManageTaskType}>
+            </div>
+          </button>
+        </div>
+
+        <div className="side-nav-menu">
+          <button className='menu-click'>
+            <div onClick={ManageTaskType}>
               {t('managetasktype')}
-            </Navbar.Brand>
-          </Container>
-        </Navbar>
-        <br />
-        <Navbar className="side-nav-menu">
-          <Container>
-            <Navbar.Brand onClick={ManageIncome}>
+            </div>
+          </button>
+        </div>
+
+        <div className="side-nav-menu">
+          <button className='menu-click'>
+            <div onClick={ManageIncome}>
               {t('manageincome')}
-            </Navbar.Brand>
-          </Container>
-        </Navbar>
-        <br />
-        <Navbar className="side-nav-menu">
-          <Container>
-            <Navbar.Brand onClick={ManageExpenseType}>
+            </div>
+          </button>
+        </div>
+
+        <div className="side-nav-menu">
+          <button className='menu-click'>
+            <div onClick={ManageExpenseType}>
               {t('manageexpensetype')}
-            </Navbar.Brand>
-          </Container>
-        </Navbar>
-        <br />
-        <Navbar className="side-nav-menu">
-          <Container>
-            <Navbar.Brand onClick={CompletedTasks}>
+            </div>
+          </button>
+        </div>
+
+        <div className="side-nav-menu">
+          <button className='menu-click'>
+            <div onClick={CompletedTasks}>
               {t('completedtasks')}
-            </Navbar.Brand>
-          </Container>
-        </Navbar>
-        <br />
+            </div>
+          </button>
+        </div>
+
         <br />
         <br />
         <div className='footer-alignment'>
