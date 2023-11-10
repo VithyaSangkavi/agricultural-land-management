@@ -7,6 +7,7 @@ import { WorkerStatus } from "../../enum/workerStatus";
 import { TaskAssignedDao } from "../task-assigned-dao";
 import { LandEntity } from "../../entity/master/land-entity";
 import { TaskTypeEntity } from "../../entity/master/task-type-entity";
+import { Schedule } from "../../enum/schedule";
 
 /**
  * task-expense data access layer
@@ -19,6 +20,7 @@ export class TaskAssignedDaoImpl implements TaskAssignedDao {
 
     taskAssignedModel.land = landModel;
     taskAssignedModel.task = taskTypeModel;
+    taskAssignedModel.schedule = Schedule.NotScheduled;
     this.preparetaskAssignedModel(taskAssignedModel, taskAssignedDto);
     let savedTask = await taskAssignedRepo.save(taskAssignedModel);
     return savedTask;
@@ -106,6 +108,7 @@ export class TaskAssignedDaoImpl implements TaskAssignedDao {
     taskAssignedModel.endDate = taskAssignedDto.getEndDate(); 
     taskAssignedModel.status = taskAssignedDto.getStatus();
     taskAssignedModel.taskStatus = taskAssignedDto.getTaskStatus();
+    taskAssignedModel.schedule = Schedule.NotScheduled;
   }
   prepareSearchObject(taskAssignedDto: TaskAssignedDto): any {
     let searchObject: any = {};
@@ -119,6 +122,8 @@ export class TaskAssignedDaoImpl implements TaskAssignedDao {
     searchObject.status = Status.Online;
 
     searchObject.taskStatus = TaskStatus.Completed;
+
+    searchObject.schedule = Schedule.NotScheduled;
 
     if (taskAssignedDto.getLandId()) {
         searchObject.landId = Like("%" + taskAssignedDto.getLandId() + "%");
