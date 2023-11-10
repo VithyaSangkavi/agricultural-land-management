@@ -8,7 +8,8 @@ import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import MultiDatePicker from "react-multi-date-picker";
-import { FaRegCalendarAlt } from "react-icons/fa";
+import moment from 'moment';
+
 
 
 
@@ -34,7 +35,7 @@ const AddTask = () => {
     const [selectedDates, setSelectedDates] = useState([]);
 
     const handleDateChange = (dates) => {
-        setSelectedDates(dates);    
+        setSelectedDates(dates);
     };
 
     useEffect(() => {
@@ -69,13 +70,22 @@ const AddTask = () => {
 
     //add task type
     const handleAddTaskAssigned = () => {
+
+        const momentDates = selectedDates.map(date => moment(date));
+
+        const recentDate = momentDates.reduce((mostRecent, currentDate) => {
+            return currentDate.isAfter(mostRecent) ? currentDate : mostRecent;
+        }, momentDates[0]);
+
+        const startDate = recentDate.format("MM/DD/YYYY")
+        console.log('startDate: ', startDate)
+
         const addTaskAssigned = {
-            startDate,
+            startDate: recentDate.format("MM/DD/YYYY"),
             endDate,
             landId,
             taskId
         };
-
         axios.post('http://localhost:8080/service/master/task-assigned-save', addTaskAssigned)
             .then((response) => {
                 console.log('Task assigned added successfully:', response.data);
@@ -85,7 +95,10 @@ const AddTask = () => {
                 localStorage.setItem('TaskIDFromTaskAssigned', taskId);
                 localStorage.setItem('StartDate', startDate);
                 // fetchTaskAssignedId();
-                history.push('/manageTask')
+                history.push({
+                    pathname: '/manageTaskSheduled',
+                    state: { selectedDates },
+                });
             })
             .catch((error) => {
                 console.error('Error adding task assigned:', error);
