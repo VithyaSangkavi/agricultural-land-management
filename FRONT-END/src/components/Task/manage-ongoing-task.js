@@ -117,10 +117,7 @@ const ManageOngoingTask = () => {
 
     useEffect(() => {
 
-        // Fetch the task details from your API
         axios.get(`http://localhost:8081/service/master/work-assigned-details/${taskAssignedid}`)
-
-
             .then((response) => {
                 setTaskDetails(response.data.extra.cardDetails);
                 setCommanTaskDetails(response.data.extra);
@@ -135,8 +132,6 @@ const ManageOngoingTask = () => {
                     (card) => getFormattedDate(card.date) === today
                 );
 
-
-
                 if (!isCardExist) {
                     const newEmptyCard = {
                         newTaskCardId,
@@ -147,8 +142,6 @@ const ManageOngoingTask = () => {
 
                     setTaskDetails((prevTaskDetails) => [...prevTaskDetails, newEmptyCard]);
                 }
-
-
             })
             .catch((error) => {
                 console.error('Error fetching task details:', error);

@@ -1,6 +1,7 @@
 import { PaginationDto } from "../pagination-dto";
 import { Status } from "../../enum/Status";
 import { TaskStatus } from "../../enum/taskStatus";
+import {Schedule} from "../../enum/schedule";
 import { TaskAssignedEntity } from "../../entity/master/task-assigned-entity";
 
 export class TaskAssignedDto extends PaginationDto {
@@ -9,6 +10,7 @@ export class TaskAssignedDto extends PaginationDto {
   private endDate: Date;
   private status: Status;
   private taskStatus: TaskStatus;
+  private schedule: Schedule;
   private landId: number;
   private taskId: number;
 
@@ -21,6 +23,7 @@ export class TaskAssignedDto extends PaginationDto {
     this.endDate = body.endDate;
     this.status= body.status;
     this.taskStatus = body.taskStatus;
+    this.schedule = body.schedule;
     this.landId = body.landId;
     this.taskId = body.taskId;
 
@@ -36,6 +39,7 @@ export class TaskAssignedDto extends PaginationDto {
     this.endDate = TaskAssignedModel.endDate;
     this.status = TaskAssignedModel.status;
     this.taskStatus = TaskAssignedModel.taskStatus;
+    this.schedule = TaskAssignedModel.schedule;
     this.landId = TaskAssignedModel.land.id;  
     this.taskId = TaskAssignedModel.task.id;
   }
@@ -80,6 +84,14 @@ export class TaskAssignedDto extends PaginationDto {
     this.taskStatus = taskStatus;
   }
 
+  public getSchedule(): Schedule {
+    return this.schedule;
+  }
+
+  public setSchedule(schedule: Schedule): void {
+    this.schedule = schedule;
+  }
+  
   public getLandId(): number {
     return this.landId;
   }
