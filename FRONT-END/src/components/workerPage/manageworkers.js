@@ -127,6 +127,7 @@ function ManageWorkers() {
           {t('addworker')}
         </button>
       </div>
+      <br/>
       <div>
         <input
           className='search-field'

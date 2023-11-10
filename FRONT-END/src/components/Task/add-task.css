@@ -4,12 +4,12 @@
   margin: 0 auto;
   /* padding: 16px; */
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-  background-image: url('../../assets/img/background.jpg');
+  /* background-image: url('../../assets/img/background.jpg'); */
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   position: relative;
-  background-color: transparent;
+  background-color: white;
   }
   
   .task-app-screen .inputs {
@@ -17,16 +17,15 @@
     width: 90%;
     margin-left: 15px;
     margin-right: 40px;
-    border-radius: 4px;
+    border-radius: 5px;
     font-size: 16px;
-    background-color: rgba(0, 0, 0, 0.6);
-    color: white;
+    background-color: #f2f2f2;
+    color: black;
     border: none;
-    border-radius: 20px;
   }
   
   .task-app-screen .inputs::placeholder{
-    color: white;
+    color: black;
   }
 
   .task-app-screen .add-button {
@@ -34,7 +33,7 @@
     background-color: #0e4f20;
     color: #fff;
     border: none;
-    border-radius: 20px;
+    border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
   }
@@ -45,7 +44,7 @@
   
   .task-app-screen .input-field::placeholder {
     text-align: left;
-    color: white;
+    color: black;
   }
   
   .task-app-screen .main-heading {

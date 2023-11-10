@@ -110,6 +110,7 @@ function ManageTaskTypes() {
           {t('addtasktype')}
         </button>
       </div>
+      <br/>
       <div>
         <input
           className='search-field'
