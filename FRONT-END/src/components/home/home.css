@@ -127,3 +127,18 @@
 .float-new-task-button:hover {
     background-color: #0a8a2e; 
 }
+
+.tooltip {
+    position: absolute;
+    background-color: #333;
+    color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 14px;
+    z-index: 1; /* Ensure the tooltip appears above other elements */
+    /* Adjust the positioning of the tooltip as needed */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  

@@ -52,7 +52,7 @@ import ManageOngoingTask from './components/Task/manage-ongoing-task';
 import AddSheduledTask from './components/Task/add-shedule-task';
 
 import HomeNewTasks from './components/home/home-new-tasks';
-
+import Report from './components/report/report';
 
 class App extends React.Component {
   _isMounted = false;
@@ -160,6 +160,7 @@ class App extends React.Component {
 
           <RoleBasedRouting path="/homeNewTasks"><HomeNewTasks /></RoleBasedRouting>
 
+          <RoleBasedRouting path="/report"><Report/></RoleBasedRouting>
 
           <RoleBasedRouting path="/dashboard" exact roles={[usrRoles.CM]}><DashboardComponent/></RoleBasedRouting>
 

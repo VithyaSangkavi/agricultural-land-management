@@ -315,10 +315,41 @@ const ManageTask = () => {
             });
     };
 
+    const getFormattedDate = (dateString) => {
+        const date = new Date(dateString);
+        const day = date.getDate();
+        const options = {
+            year: 'numeric',
+            month: 'long',
+            weekday: 'long',
+        };
+        const formattedDate = date.toLocaleDateString('en-US', options);
+        const daySuffix = getDaySuffix(day);
+
+        return `${day}${daySuffix} ${formattedDate}`;
+    };
+
+    const getDaySuffix = (day) => {
+        if (day >= 11 && day <= 13) {
+            return 'th';
+        }
+        const lastDigit = day % 10;
+        switch (lastDigit) {
+            case 1:
+                return 'st';
+            case 2:
+                return 'nd';
+            case 3:
+                return 'rd';
+            default:
+                return 'th';
+        }
+    };
+
     return (
         <div className="manage-task-app-screen">
             <p className='main-heading'>{t('managetask')}</p>
-            <div className="position-absolute top-0 end-0 mt-2 me-2">
+            <div className="position-absolute top-0 end-0 me-2">
                 <Dropdown alignRight onSelect={handleLanguageChange}>
                     <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
                         <FaGlobeAmericas style={{ color: 'white' }} />
@@ -353,13 +384,13 @@ const ManageTask = () => {
             {/* Task Toggled View */}
             {selectedView === 'tasks' && (
                 <div className='card'>
-                    <p>{t('dateongoing')}</p><br />
+                    <p>{t('date')}: {getFormattedDate(startDate)}</p><br />
 
                     <div className="dropdown-and-button-container">
                         <select
                             value={selectedWorker}
                             onChange={(e) => setSelectedWorker(e.target.value)}
-                            className='dropdown-input'
+                            className='dropdown-input-select-worker'
                         >
                             <option value="">{t('selectaworker')}</option>
                             {workerNames.map((workerName) => (
