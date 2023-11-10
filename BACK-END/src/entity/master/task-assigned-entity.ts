@@ -5,6 +5,7 @@ import { TaskTypeEntity } from "./task-type-entity";
 import { WorkAssignedEntity } from "./work-assigned-entity";
 import { TaskStatus } from "../../enum/taskStatus";
 import { TaskCardEntity } from "./task-card-entity";
+import {Schedule} from "../../enum/schedule";
 
 @Entity({
     name: "task-assigned",
@@ -25,6 +26,9 @@ export class TaskAssignedEntity {
 
     @Column({ type: "enum" ,enum:TaskStatus,default:TaskStatus.Ongoing})
     taskStatus: TaskStatus;
+
+    @Column({ type: "enum" ,enum:Schedule,default:Schedule.NotScheduled})
+    schedule: Schedule;
 
     @ManyToOne(() => LandEntity, (land) => land.taskAssigned)
     @JoinColumn({ name: "landId" })

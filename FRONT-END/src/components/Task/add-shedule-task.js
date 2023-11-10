@@ -47,7 +47,7 @@ const AddTask = () => {
         console.log('get land id: ', landId);
         console.log('get task id: ', selectedTaskId);
 
-        axios.get(`http://localhost:8080/service/master/findTaskNameById/?taskId=${selectedTaskId}`)
+        axios.get(`http://localhost:8081/service/master/findTaskNameById/?taskId=${selectedTaskId}`)
             .then((response) => {
                 console.log(response.data.extra.taskName)
                 setInitialSelectedValue(response.data.extra.taskName);
@@ -57,7 +57,7 @@ const AddTask = () => {
             });
 
         //display all task names
-        axios.post('http://localhost:8080/service/master/taskFindAll')
+        axios.post('http://localhost:8081/service/master/taskFindAll')
             .then((response) => {
                 const tasks = response.data.extra;
                 const taskNamesArray = Array.isArray(tasks) ? tasks.map((task) => task.taskName) : [];
@@ -86,7 +86,10 @@ const AddTask = () => {
             landId,
             taskId
         };
+
         axios.post('http://localhost:8080/service/master/task-assigned-save', addTaskAssigned)
+
+
             .then((response) => {
                 console.log('Task assigned added successfully:', response.data);
                 console.log('Task id to be stored: ', taskId)
