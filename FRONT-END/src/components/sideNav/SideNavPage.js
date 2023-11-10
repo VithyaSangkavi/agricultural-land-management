@@ -47,7 +47,6 @@ function SideNavBar() {
   };
 
   return (
-    <AnimatedPage>
       <div className='side-nav-screen'>
         <p className='main-heading'>{t('welcome')}</p>
         <div className="position-absolute top-0 end-0 me-2">
@@ -62,6 +61,7 @@ function SideNavBar() {
             </Dropdown.Menu>
           </Dropdown>
         </div>
+        <AnimatedPage>
         <div className="side-nav-menu">
           <button className='menu-click'>
             <div onClick={ManageWorkers}>
@@ -117,14 +117,11 @@ function SideNavBar() {
             </div>
           </button>
         </div>
-
-        <br />
-        <br />
+        </AnimatedPage>
         <div className='footer-alignment'>
           <Footer />
         </div>
       </div >
-    </AnimatedPage >
   );
 }
 

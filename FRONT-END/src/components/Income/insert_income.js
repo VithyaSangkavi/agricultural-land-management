@@ -63,7 +63,7 @@ const InsertIncome = () => {
         <div className='insertincome-app-screen'>
             <p className='main-heading'>{t('addincome')}</p>
 
-            <div className="position-absolute top-0 end-0 mt-2 me-2">
+            <div className="position-absolute top-0 end-0 me-2">
                 <Dropdown alignRight onSelect={handleLanguageChange}>
                     <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
                         <FaGlobeAmericas style={{ color: 'white' }} />

@@ -9,7 +9,7 @@
     background-repeat: no-repeat;
     background-position: center;
     position: relative;
-    background: linear-gradient(to right, rgb(136, 137, 136), #dff5d8);
+    background-color: white;
 }
 
 .home-app-screen .input-field {
@@ -72,8 +72,9 @@
     font-size: 20px;
     text-align: center;
     font: bold;
-    color: white;
-    background-color: #0e4f20;
+    color: #0e4f20;
+    font-weight: bold;
+    /* background-color: #0e4f20; */
 }
 
 .home-app-screen .task-list {
@@ -92,7 +93,7 @@
     /* max-width: 300px; */
     text-align: left;
     /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
-    border-radius: 20px;
+    border-radius: 5px;
 }
 
 .home-app-screen .task-card p {

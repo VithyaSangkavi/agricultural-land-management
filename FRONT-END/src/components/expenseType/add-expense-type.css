@@ -4,12 +4,12 @@
   margin: 0 auto;
   /* padding: 16px; */
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-  background-image: url('../../assets/img/background.jpg');
+  /* background-image: url('../../assets/img/background.jpg'); */
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   position: relative;
-  background-color: transparent;
+  background-color: white;
   }
   
   .expense-app-screen .input-field {
@@ -19,17 +19,15 @@
     margin-left: 15px;
     margin-right: 40px;
     margin-top: 200px;
-    border: 1px solid #ccc;
-    border-radius: 4px; 
-    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 5px; 
+    background-color: #f2f2f2;
     font-size: 16px;
     border: none;
-    border-radius: 20px;
-    color: white;
+    color: black;
   }
   
 .expense-app-screen .input-field::placeholder{
-  color: white;
+  color: black;
 }
 
   .expense-app-screen .add-button {
@@ -37,7 +35,7 @@
     background-color: #0e4f20;
     color: #fff;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
   }
@@ -66,7 +64,7 @@
     width: 90%;
     margin-left: 15px;
     border: none;
-    border-radius: 20px;
+    border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
   }

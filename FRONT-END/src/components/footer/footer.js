@@ -17,6 +17,10 @@ const Footer = () => {
     const clickHome = () => {
         history.push('/home')
     }
+    
+    const clickReport = () => {
+        history.push('/report')
+    }
 
     return (
         <div className='app-screen'>
@@ -30,7 +34,7 @@ const Footer = () => {
                         <FontAwesomeIcon icon={faHome} size="2x" onClick={clickHome} />
                     </div>
                     <div className="footer-icon">
-                        <FontAwesomeIcon icon={faChartPie} size="2x" />
+                        <FontAwesomeIcon icon={faChartPie} size="2x" onClick={clickReport}/>
                     </div>
                 </div>
             </div>
