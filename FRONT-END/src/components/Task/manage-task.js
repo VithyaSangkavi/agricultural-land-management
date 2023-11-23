@@ -9,6 +9,8 @@ import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import MultiDatePicker from "react-multi-date-picker";
+import moment from 'moment'
 
 
 const ManageTask = () => {
@@ -37,6 +39,26 @@ const ManageTask = () => {
     const [taskCardId, setTaskCardId] = useState('');
     const thisid = localStorage.getItem('taskassignedid')
     const [workers, setWorkers] = useState([]);
+    const [selectedDates, setSelectedDates] = useState([]);
+
+
+    const handleDateChange = (value) => {
+        setSelectedDates(value);
+    };
+
+
+    const handleShedule = () => {
+
+        const formattedDates = selectedDates.map(date => moment(date).format('DD/MM/YYYY'));
+        console.log("manage task page dates : ", formattedDates);
+
+
+        history.push({
+            pathname: '/addsheduledtask',
+            state: { selectedDates: formattedDates },
+        })
+
+    };
 
     const taskAssignedDate = startDate;
 
@@ -50,7 +72,7 @@ const ManageTask = () => {
     }, []);
 
     const fetchTaskName = () => {
-        axios.get(`http://localhost:8081/service/master/findTaskNameById/?taskId=${taskId}`)
+        axios.get(`http://localhost:8080/service/master/findTaskNameById/?taskId=${taskId}`)
             .then((response) => {
                 setTaskName(response.data.extra.taskName);
             })
@@ -60,7 +82,7 @@ const ManageTask = () => {
     };
 
     const fetchWorkerNames = () => {
-        axios.post('http://localhost:8081/service/master/workerFindAll')
+        axios.post('http://localhost:8080/service/master/workerFindAll')
             .then((response) => {
                 const workerNamesArray = response.data.extra.map((worker) => worker.name);
                 setWorkerNames(workerNamesArray);
@@ -71,7 +93,7 @@ const ManageTask = () => {
     };
 
     const fetchExpenseTypes = () => {
-        axios.get('http://localhost:8081/service/master/expenseFindAll')
+        axios.get('http://localhost:8080/service/master/expenseFindAll')
             .then((response) => {
                 const expenseTypeArrays = response.data.extra.map((expense) => expense.expenseType);
                 setExpenseTypes(expenseTypeArrays);
@@ -84,7 +106,7 @@ const ManageTask = () => {
     const fetchTaskAssignedId = () => {
 
         //get task-assigned id
-        axios.get(`http://localhost:8081/service/master/task-assigned?taskId=${taskId}`)
+        axios.get(`http://localhost:8080/service/master/task-assigned?taskId=${taskId}`)
 
             .then((response) => {
                 const taskAssignedId = response.data.extra.id;
@@ -98,7 +120,7 @@ const ManageTask = () => {
     };
 
     const fetchLotId = () => {
-        axios.get(`http://localhost:8081/service/master/findLotByLandId?landId=${landId}`)
+        axios.get(`http://localhost:8080/service/master/findLotByLandId?landId=${landId}`)
 
             .then((response) => {
                 const thislot = response.data.extra.id;
@@ -132,12 +154,12 @@ const ManageTask = () => {
                         taskAssignedId,
                     };
 
-                    axios.post('http://localhost:8081/service/master/task-card-save', saveTaskCard)
+                    axios.post('http://localhost:8080/service/master/task-card-save', saveTaskCard)
                         .then((response) => {
                             console.log('Task card added', response.data);
                             localStorage.setItem('taskassignedid', taskAssignedId);
 
-                            axios.get(`http://localhost:8081/service/master/taskCardFindById?taskAssignedId=${taskAssignedId}`)
+                            axios.get(`http://localhost:8080/service/master/taskCardFindById?taskAssignedId=${taskAssignedId}`)
                                 .then((response) => {
                                     const taskCardId = response.data.extra.id;
 
@@ -161,7 +183,7 @@ const ManageTask = () => {
     }
 
     const addWorkerToTaskCard = (taskCardId) => {
-        axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${selectedWorker}`)
+        axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${selectedWorker}`)
             .then((response) => {
                 const workerId = response.data.extra.workerId;
                 console.log('Worker ID :', workerId);
@@ -175,7 +197,7 @@ const ManageTask = () => {
                     taskCardId,
                 };
 
-                axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
+                axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
                     .then((response) => {
                         console.log('Work assigned added successfully:', response.data);
                     })
@@ -193,7 +215,7 @@ const ManageTask = () => {
 
         //get expense id according to the expense type
         axios
-            .get(`http://localhost:8081/service/master/find-by-type?expenseType=${selectedExpenseType}`)
+            .get(`http://localhost:8080/service/master/find-by-type?expenseType=${selectedExpenseType}`)
             .then((response) => {
                 const expenseId = response.data.expenseId;
                 setExpenseId(expenseId);
@@ -205,7 +227,7 @@ const ManageTask = () => {
                 };
 
                 //save task expense 
-                axios.post('http://localhost:8081/service/master/task-expense-save', addTaskExpense)
+                axios.post('http://localhost:8080/service/master/task-expense-save', addTaskExpense)
                     .then((response) => {
                         console.log('Task expense added successfully:', response.data);
                         history.push('/home');
@@ -237,12 +259,12 @@ const ManageTask = () => {
                 taskAssignedId,
             };
 
-            axios.post('http://localhost:8081/service/master/task-card-save', saveTaskCard)
+            axios.post('http://localhost:8080/service/master/task-card-save', saveTaskCard)
                 .then((response) => {
                     console.log('Task card added', response.data);
                     localStorage.setItem('taskassignedid', taskAssignedId);
 
-                    axios.get(`http://localhost:8081/service/master/taskCardFindById?taskAssignedId=${taskAssignedId}`)
+                    axios.get(`http://localhost:8080/service/master/taskCardFindById?taskAssignedId=${taskAssignedId}`)
                         .then((response) => {
                             const taskCardId = response.data.extra.id;
 
@@ -274,7 +296,7 @@ const ManageTask = () => {
             taskAssignedId
         }
 
-        axios.post('http://localhost:8081/service/master/task-card-save', saveTaskCard)
+        axios.post('http://localhost:8080/service/master/task-card-save', saveTaskCard)
             .then((response) => {
                 console.log('task card added', response.data)
             })
@@ -294,14 +316,14 @@ const ManageTask = () => {
     }
 
     const deleteItem = (workerName) => {
-        axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${workerName}`)
+        axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${workerName}`)
             .then((response) => {
                 const thisid = response.data.extra.workerId
                 console.log("Delete")
                 console.log('workerid:', response.data.extra.workerId);
                 console.log('Task card id: ', taskCardId)
 
-                axios.delete(`http://localhost:8081/service/master/work-assigned-delete/${thisid}/${taskCardId}`)
+                axios.delete(`http://localhost:8080/service/master/work-assigned-delete/${thisid}/${taskCardId}`)
                     .then((response) => {
                         console.log('worker assigned removed successfully:', response.data);
 
@@ -333,6 +355,20 @@ const ManageTask = () => {
             <div className='task-heading'>
                 <p> {taskName} {t('task')} - </p>
                 <p> {t('from')} - {startDate} </p>
+            </div>
+            <div>
+                <div>
+                    <MultiDatePicker
+                        value={selectedDates}
+                        onChange={handleDateChange}
+                        className="inputs"
+                        placeholderText="Start Date"
+                        format='DD/MM/YYYY'
+                    />
+                </div>
+                <div>
+                    <button onClick={handleShedule}>Shedule</button>
+                </div>
             </div>
             <br />
             <div className="toggle-container">
