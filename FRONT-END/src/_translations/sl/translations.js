@@ -106,6 +106,7 @@ export const TRANSLATIONS_SL = {
     //add task
     startdate: 'ආරම්භක දිනය',
     addtask: 'කාර්යය එක් කරන්න',
+    date: 'දිනය',
 
     //home
     home: 'මුල් පිටුව',

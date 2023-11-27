@@ -264,6 +264,7 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
           'taskCard.taskCardId as taskCardId',
           'taskCard.taskAssignedDate as date',
           'taskCard.cardStatus as cardStatus',
+          'taskCard.workDate as workDate',
           'worker.name as workerName',
           'workAssigned.quantity as quantity',
           'workAssigned.units as units',
@@ -286,6 +287,7 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
             taskCardId: cardId,
             date: row.date,
             cardStatus: row.cardStatus,
+            workDate: row.workDate,
             workerDetails: [],
           };
         }

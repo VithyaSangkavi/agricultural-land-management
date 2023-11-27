@@ -18,6 +18,8 @@ const ManageTask = () => {
 
     const location = useLocation();
     const { selectedDates } = location.state || {};
+    const [formattedDates, setFormattedDates] = useState([]);
+    const [currentDate, setCurrentDate] = useState(Array(selectedDates.length).fill(''));
 
     const [t, i18n] = useTranslation();
 
@@ -49,7 +51,26 @@ const ManageTask = () => {
     const thisid = localStorage.getItem('taskassignedid')
     const [workers, setWorkers] = useState([]);
 
+
     console.log("Selected Dates : ", selectedDates)
+
+    useEffect(() => {
+        const formattedDatesArray = selectedDates.map(dateObject => {
+            const year = dateObject.year;
+            const month = dateObject.month.index + 1;
+            const day = dateObject.day;
+            const formattedDate = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+            return formattedDate;
+        });
+
+        setFormattedDates(formattedDatesArray);
+        setCurrentDate(formattedDatesArray); // Initialize currentDate with formattedDatesArray
+    }, [selectedDates]);
+
+
+    console.log("Formatted date page 02: ", formattedDates)
+
+
 
 
     const taskAssignedDate = startDate;
@@ -283,6 +304,7 @@ const ManageTask = () => {
             const saveTaskCard = {
                 taskAssignedDate,
                 taskAssignedId,
+                workDate: currentDate[dateIndex]
             };
 
             axios.post('http://localhost:8080/service/master/task-card-save', saveTaskCard)
@@ -381,7 +403,7 @@ const ManageTask = () => {
                     <div key={dateIndex}>
                         {selectedView === 'tasks' && (
                             <div className='card'>
-                                <p>{t('dateongoing')}</p><br />
+                                <p>{t('date')}: {formattedDates[dateIndex]}</p><br />
 
                                 {/* <div className="dropdown-and-button-container">
                                     <select

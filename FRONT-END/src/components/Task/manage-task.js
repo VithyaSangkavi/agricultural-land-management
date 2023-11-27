@@ -10,7 +10,9 @@ import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import MultiDatePicker from "react-multi-date-picker";
+import DatePanel from "react-multi-date-picker/plugins/date_panel"
 import moment from 'moment'
+import "react-multi-date-picker/styles/layouts/prime.css"
 
 
 const ManageTask = () => {
@@ -40,25 +42,29 @@ const ManageTask = () => {
     const thisid = localStorage.getItem('taskassignedid')
     const [workers, setWorkers] = useState([]);
     const [selectedDates, setSelectedDates] = useState([]);
+    const [formattedDates, setFormattedDates] = useState([]);
 
 
-    const handleDateChange = (value) => {
+
+    // const handleDateChange = (value) => {
+    //     setSelectedDates(value);
+    //     console.log(value);
+    //     console.log("date : ", value.day);
+    // };
+
+
+    const handleShedule = (value) => {
+
+        console.log("Dates: ", value);
         setSelectedDates(value);
-    };
-
-
-    const handleShedule = () => {
-
-        const formattedDates = selectedDates.map(date => moment(date).format('DD/MM/YYYY'));
-        console.log("manage task page dates : ", formattedDates);
-
 
         history.push({
             pathname: '/addsheduledtask',
-            state: { selectedDates: formattedDates },
+            state: { selectedDates },
         })
 
     };
+
 
     const taskAssignedDate = startDate;
 
@@ -359,11 +365,13 @@ const ManageTask = () => {
             <div>
                 <div>
                     <MultiDatePicker
+                        className="rmdp-prime"
                         value={selectedDates}
-                        onChange={handleDateChange}
-                        className="inputs"
-                        placeholderText="Start Date"
+                        onChange={setSelectedDates}
                         format='DD/MM/YYYY'
+                        plugins={[
+                            <DatePanel />
+                        ]}
                     />
                 </div>
                 <div>

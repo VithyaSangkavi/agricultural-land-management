@@ -515,7 +515,7 @@ const ManageOngoingTask = () => {
                 <div className='card-container'>
                     {taskDetails.map((taskDetail) => (
                         <div key={taskDetail.taskCardId} className='card'>
-                            <p>{t('date')} - <h6>{getFormattedDate(taskDetail.date)}</h6></p>
+                            <p>{t('date')} - <h6>{getFormattedDate(taskDetail.workDate)}</h6></p>
                             <h6> Current Staus - {taskDetail.cardStatus}</h6>
                             <p>---------------------------------------------</p>
 

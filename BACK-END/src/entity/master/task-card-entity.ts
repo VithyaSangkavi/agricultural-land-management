@@ -26,6 +26,9 @@ export class TaskCardEntity {
   @Column({ type: "enum" ,enum:Status,default:Status.Online})
   status: Status;
 
+  @Column({ type: "varchar", length: 12, nullable: true })
+  workDate: string;
+
   @ManyToOne(()=> TaskAssignedEntity, (taskAssigned) => taskAssigned.taskCard)
   @JoinColumn({name: "taskAssignedId"})
   taskAssigned: TaskAssignedEntity;
