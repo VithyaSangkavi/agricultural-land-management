@@ -109,7 +109,7 @@ function Home() {
     return (
         <div className="home-app-screen">
             <p className='main-heading'>{t('home')}</p>
-            <div className="position-absolute top-0 end-0 mt-2 me-2">
+            <div className="position-absolute top-0 end-0 me-2">
                 <Dropdown alignRight onSelect={handleLanguageChange}>
                     <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
                         <FaGlobeAmericas style={{ color: 'white' }} />
@@ -149,7 +149,7 @@ function Home() {
             </div>
 
             < br />
-            <button className="float-new-task-button" onClick={() => history.push('/homeNewTasks')}>
+            <button className="float-new-task-button" onClick={() => history.push('/homeNewTasks')} title="Assign new task">
                 <FaPlus />
             </button>
             <br />
