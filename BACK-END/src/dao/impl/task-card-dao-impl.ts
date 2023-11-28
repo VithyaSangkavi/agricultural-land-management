@@ -14,7 +14,7 @@ export class TaskCardDaoImpl implements TaskCardDao {
     async save(taskCardDto: TaskCardDto, taskAssignedModel: TaskAssignedEntity): Promise<TaskCardEntity> {
         let taskCardRepo = getConnection().getRepository(TaskCardEntity);
         let taskCardModel = new TaskCardEntity();
-        
+
         taskCardModel.taskAssigned = taskAssignedModel;
 
         taskCardModel.status = Status.Online;
@@ -25,16 +25,16 @@ export class TaskCardDaoImpl implements TaskCardDao {
     async update(taskCardDto: TaskCardDto, id: number): Promise<TaskCardEntity | null> {
         let taskCardRepo = getConnection().getRepository(TaskCardEntity);
         let taskCardModel = await taskCardRepo.findOne(id);
-      
+
         if (taskCardModel) {
-          this.preparetaskCardModel(taskCardModel, taskCardDto);
-          let updatedModel = await taskCardRepo.save(taskCardModel);
-          return updatedModel;
+            this.preparetaskCardModel(taskCardModel, taskCardDto);
+            let updatedModel = await taskCardRepo.save(taskCardModel);
+            return updatedModel;
         } else {
-          return null;
+            return null;
         }
-      }
-      
+    }
+
     async delete(TaskCardDto: TaskCardDto): Promise<TaskCardEntity> {
         let taskCardRepo = getConnection().getRepository(TaskCardEntity);
         let taskCardModel = await taskCardRepo.findOne(TaskCardDto.getTaskCardId());
@@ -79,61 +79,65 @@ export class TaskCardDaoImpl implements TaskCardDao {
         const taskAssignedRepo = getConnection().getRepository(TaskCardEntity);
         console.log("Searching for taskAssignedId:", taskAssignedId);
         const taskAssignedModel = await taskAssignedRepo.findOne({
-          where: { taskAssigned: taskAssignedId },
-        }); 
-        console.log("Query result:", taskAssignedModel); 
+            where: { taskAssigned: taskAssignedId },
+        });
+        console.log("Query result:", taskAssignedModel);
         return taskAssignedModel;
-    } 
+    }
 
     async updateStatus(taskCardId: number, newStatus: string): Promise<TaskCardEntity | null> {
         const incomeRepository = getConnection().getRepository(TaskCardEntity);
-    
+
         try {
             const existingStatus = await incomeRepository.findOne(taskCardId);
-    
+
             if (!existingStatus) {
                 return null;
             }
-    
+
             // Use type casting to assign newStatus to cardStatus
             existingStatus.cardStatus = newStatus as TaskCardStatus;
             existingStatus.updatedDate = new Date();
-    
+
             const updatedStatus = await incomeRepository.save(existingStatus);
-    
+
             return updatedStatus;
         } catch (error) {
             throw error;
         }
     }
-    
+
     async preparetaskCardModel(taskCardModel: TaskCardEntity, TaskCardDto: TaskCardDto) {
         taskCardModel.taskAssignedDate = TaskCardDto.getTaskAssignedDate();
         taskCardModel.cardStatus = TaskCardStatus.Ongoing;
         taskCardModel.createdDate = new Date();
         taskCardModel.updatedDate = new Date();
         taskCardModel.status = Status.Online;
+        taskCardModel.workDate = TaskCardDto.getWorkDate();
     }
+    
     prepareSearchObject(TaskCardDto: TaskCardDto): any {
         let searchObject: any = {};
         if (TaskCardDto.getTaskAssignedDate()) {
-            searchObject.name = Like("%" + TaskCardDto.getTaskAssignedDate() + "%");
+            searchObject.taskAssignedDate = TaskCardDto.getTaskAssignedDate();
         }
 
         searchObject.cardStatus = TaskCardStatus.Ongoing;
 
         if (TaskCardDto.getCreatedDate()) {
-            searchObject.color = Like("%" + TaskCardDto.getCreatedDate() + "%");
+            searchObject.createdDate = TaskCardDto.getCreatedDate();
         }
         if (TaskCardDto.getUpdatedDate()) {
-            searchObject.color = Like("%" + TaskCardDto.getUpdatedDate() + "%");
+            searchObject.updatedDate = TaskCardDto.getUpdatedDate();
         }
 
         searchObject.status = Status.Online;
-        
+
         if (TaskCardDto.getTaskAssignedId()) {
-            searchObject.color = Like("%" + TaskCardDto.getTaskAssignedId() + "%");
+            searchObject.taskAssignedId = TaskCardDto.getTaskAssignedId();
         }
+
         return searchObject;
     }
+
 }

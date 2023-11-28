@@ -11,6 +11,7 @@ export class TaskCardDto extends PaginationDto {
   private updatedDate: Date;
   private status: Status;
   private taskAssignedId: number;
+  private workDate: string;
 
   filViaRequest(body) {
     
@@ -23,6 +24,7 @@ export class TaskCardDto extends PaginationDto {
     this.updatedDate = body.updatedDate;
     this.status= body.status;
     this.taskAssignedId = body.taskAssignedId;
+    this.workDate = body.workDate;
 
     if (body.startIndex && body.maxResult) {
       this.setStartIndex(body.startIndex);
@@ -38,6 +40,7 @@ export class TaskCardDto extends PaginationDto {
     this.updatedDate = TaskCardModel.updatedDate;
     this.status = TaskCardModel.status;
     this.taskAssignedId = TaskCardModel.taskAssigned.id;
+    this.workDate = TaskCardModel.workDate;
   }
 
   public getTaskCardId(): number {
@@ -79,7 +82,7 @@ export class TaskCardDto extends PaginationDto {
   public setUpdatedDate(updatedDate: Date): void {
     this.updatedDate = updatedDate;
   }
- 
+
   public getStatus(): Status {
     return this.status;
   }
@@ -94,5 +97,13 @@ export class TaskCardDto extends PaginationDto {
 
   public setTaskAssignedId(taskAssignedId: number): void {
     this.taskAssignedId = taskAssignedId;
+  }
+
+  public getWorkDate(): string {
+    return this.workDate;
+  }
+
+  public setWorkDate(workDate: string): void {
+    this.workDate = workDate;
   }
 }

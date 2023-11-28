@@ -70,6 +70,7 @@ export const TRANSLATIONS_EN = {
     managetasktype: 'Manage Task Type',
     manageexpensetype: 'Manage Expense Type',
     completedtasks: 'Completed Tasks',
+    reports: 'Reports',
 
     //manage task type
     tasktypemanagement: 'Task Type Management',
