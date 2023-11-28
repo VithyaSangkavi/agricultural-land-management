@@ -71,6 +71,7 @@ export const TRANSLATIONS_SL = {
     managetasktype: 'කාර්ය වර්ගය කළමනාකරණය ',
     manageexpensetype: 'වියදම් වර්ගය කළමනාකරණය',
     completedtasks: 'සම්පූර්ණ කරන ලද කාර්යයන්',
+    reports: 'වාර්තා',
 
 
     //manage task type

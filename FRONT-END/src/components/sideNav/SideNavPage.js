@@ -40,7 +40,11 @@ function SideNavBar() {
   const CompletedTasks = () => {
     history.push('/viewcompltedtasks');
   };
-  
+
+  const Reports = () => {
+    history.push('/report');
+  };
+
 
   const handleLanguageChange = (lang) => {
     i18n.changeLanguage(lang);
@@ -67,8 +71,8 @@ function SideNavBar() {
             <div onClick={ManageWorkers}>
               {t('workermanagement')}
             </div>
-            </button>
-          </div>
+          </button>
+        </div>
 
         <div className="side-nav-menu">
           <button className='menu-click'>
@@ -114,6 +118,14 @@ function SideNavBar() {
           <button className='menu-click'>
             <div onClick={CompletedTasks}>
               {t('completedtasks')}
+            </div>
+          </button>
+        </div>
+
+        <div className="side-nav-menu">
+          <button className='menu-click'>
+            <div onClick={Reports}>
+              {t('reports')}
             </div>
           </button>
         </div>
