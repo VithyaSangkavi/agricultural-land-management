@@ -75,12 +75,33 @@ export class ExpensesDaoImpl implements ExpensesDao {
     return expensesModel ? expensesModel.id : null;
   }
 
+  async findAExpenseIdAndType(expensesDto: ExpensesDto): Promise<Partial<ExpensesEntity>[]> {
+    const expensesRepo = getConnection().getRepository(ExpensesEntity);
+    const searchObject: any = this.prepareSearchObject(expensesDto);
+
+    const expensesModel = await expensesRepo.find({
+        where: searchObject,
+        skip: expensesDto.getStartIndex(),
+        take: expensesDto.getMaxResult(),
+        order: { id: "DESC" }
+    });
+
+    const selectedFields = expensesModel.map((model) => {
+        const { id, expenseType } = model;
+        return { id, expenseType };
+    }) as Partial<ExpensesEntity>[];
+
+    return selectedFields;
+}
+
+
   async prepareExpensesModel(expensesModel: ExpensesEntity, expensesDto: ExpensesDto) {
     expensesModel.expenseType = expensesDto.getExpenseType();
     expensesModel.createdDate = new Date();
     expensesModel.updatedDate = new Date();
     expensesModel.status = Status.Online;
   }
+  
   prepareSearchObject(expensesDto: ExpensesDto): any {
     let searchObject: any = {};
     if (expensesDto.getExpenseType()) {

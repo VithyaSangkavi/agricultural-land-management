@@ -14,6 +14,7 @@ var taskAssignedController = require('../controllers/task-assigned-controller')
 var taskExpenseController = require('../controllers/task-expense-controller')
 var workAssignedController = require('../controllers/work-assigned-controller')
 var taskCardController = require('../controllers/task-card-controller')
+var reportController = require('../controllers/report-controller')
 
 const router: Router = express.Router();
 
@@ -112,5 +113,7 @@ router.get("/task-card-findById", taskCardController.findById);
 router.get("/taskCardFindById", taskCardController.findTaskCardByTaskId);
 router.put("/updateStatus/:taskCardId", taskCardController.updateStatus);
 
+//report routes
+router.post("/report-expenses", reportController.findAll);
 
 module.exports = router;

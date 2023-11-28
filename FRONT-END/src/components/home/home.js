@@ -39,22 +39,22 @@ function Home() {
     
 
     useEffect(() => {
-        axios.post('http://localhost:8080/service/master/taskAssignedFindAll').then((response) => {
+        axios.post('http://localhost:8081/service/master/taskAssignedFindAll').then((response) => {
             setTaskAssigned(response.data);
             console.log("Task Assigned: ", response.data);
         });
 
-        axios.post('http://localhost:8080/service/master/taskFindAll').then((response) => {
+        axios.post('http://localhost:8081/service/master/taskFindAll').then((response) => {
             setTask(response.data.extra);
             console.log("Tasks : ", response.data.extra);
         });
 
-        axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
+        axios.get('http://localhost:8081/service/master/landFindAll').then((response) => {
             setLands(response.data.extra);
             console.log("Lands : ", response.data.extra);
         });
 
-        axios.get('http://localhost:8080/service/master/ongoing-tasks-with-names').then((response) => {
+        axios.get('http://localhost:8081/service/master/ongoing-tasks-with-names').then((response) => {
             setOngoingTasks(response.data.extra);
             console.log("Ongoing tasks : ", response.data.extra);
 
@@ -77,7 +77,7 @@ function Home() {
     const handleSelectedLand = (eventkey) => {
         setSelectedLand(eventkey);
 
-        axios.post(`http://localhost:8080/service/master/findLandIdByName?name=${eventkey}`)
+        axios.post(`http://localhost:8081/service/master/findLandIdByName?name=${eventkey}`)
             .then((response) => {
                 const landIdTask = response.data.extra;
                 const taskLand = JSON.stringify(landIdTask);
@@ -109,7 +109,7 @@ function Home() {
     return (
         <div className="home-app-screen">
             <p className='main-heading'>{t('home')}</p>
-            <div className="position-absolute top-0 end-0 mt-2 me-2">
+            <div className="position-absolute top-0 end-0 me-2">
                 <Dropdown alignRight onSelect={handleLanguageChange}>
                     <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
                         <FaGlobeAmericas style={{ color: 'white' }} />
@@ -149,7 +149,7 @@ function Home() {
             </div>
 
             < br />
-            <button className="float-new-task-button" onClick={() => history.push('/homeNewTasks')}>
+            <button className="float-new-task-button" onClick={() => history.push('/homeNewTasks')} title="Assign new task">
                 <FaPlus />
             </button>
             <br />

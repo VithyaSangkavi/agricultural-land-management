@@ -21,12 +21,12 @@ function ManageTaskTypes() {
 
   useEffect(() => {
 
-    axios.post('http://localhost:8080/service/master/taskFindAll').then((response) => {
+    axios.post('http://localhost:8081/service/master/taskFindAll').then((response) => {
       setTasks(response.data.extra);
       console.log("Tasks : ", response.data.extra);
     });
 
-    axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
+    axios.get('http://localhost:8081/service/master/landFindAll').then((response) => {
       setLands(response.data.extra);
       console.log("Lands : ", response.data.extra);
     });
@@ -42,7 +42,7 @@ function ManageTaskTypes() {
   const handleSelectLand = (eventKey) => {
     setSelectedLand(eventKey);
 
-    axios.post(`http://localhost:8080/service/master/findLandIdByName?name=${eventKey}`)
+    axios.post(`http://localhost:8081/service/master/findLandIdByName?name=${eventKey}`)
       .then((response) => {
         const landIdTask = response.data.extra;
         const taskLand = JSON.stringify(landIdTask);
@@ -51,7 +51,7 @@ function ManageTaskTypes() {
         console.log('Land ID Task :', landId);
 
         //get crop id by using landid
-        axios.get(`http://localhost:8080/service/master/cropFindByLandId/${landId}`)
+        axios.get(`http://localhost:8081/service/master/cropFindByLandId/${landId}`)
           .then((response) => {
             const cropIdLand = response.data.cropId.extra;
             localStorage.setItem('CropIdLand', cropIdLand);
@@ -80,7 +80,7 @@ function ManageTaskTypes() {
   return (
     <div className="task-app-screen">
       <p className='main-heading'>{t('tasktypemanagement')}</p>
-      <div className="position-absolute top-0 end-0 mt-2 me-2">
+      <div className="position-absolute top-0 end-0 me-2">
         <Dropdown alignRight onSelect={handleLanguageChange}>
           <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
             <FaGlobeAmericas style={{ color: 'white' }} />
@@ -110,6 +110,7 @@ function ManageTaskTypes() {
           {t('addtasktype')}
         </button>
       </div>
+      <br/>
       <div>
         <input
           className='search-field'

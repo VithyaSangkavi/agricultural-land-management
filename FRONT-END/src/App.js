@@ -164,7 +164,6 @@ class App extends React.Component {
 
           <RoleBasedRouting path="/homeNewTasks"><HomeNewTasks /></RoleBasedRouting>
 
-
           <RoleBasedRouting path="/dashboard" exact roles={[usrRoles.CM]}><DashboardComponent/></RoleBasedRouting>
 
           <RoleBasedRouting exact path="/"><Login langobj={this.props.langState} handleSignObj={this.handleSignObj}/></RoleBasedRouting>
