@@ -31,7 +31,9 @@ const ManageOngoingTask = () => {
     const [selectedExpenseType, setSelectedExpenseType] = useState('');
     const [value, setValue] = useState('');
     const [expenseId, setExpenseId] = useState('');
-    const [selectedWorkersList, setSelectedWorkersList] = useState([]);
+    // const [selectedWorkersList, setSelectedWorkersList] = useState([]);
+    const [selectedWorkersList, setSelectedWorkersList] = useState({});
+
     const [kgValues, setKgValues] = useState('');
 
     const [ongoingTaskName, setOngoingTaskName] = useState('');
@@ -213,54 +215,7 @@ const ManageOngoingTask = () => {
         }));
     };
 
-    // const handleAddSelectedWorker = (taskCardId) => {
-    //     const selectedWorkerValue = selectedWorker[taskCardId];
 
-    //     if (taskName === 'Pluck') {
-    //         console.log('Pluck task')
-    //         if (selectedWorkerValue) {
-    //             console.log('selected worker: ', selectedWorkerValue);
-    //             localStorage.setItem('selectedWorker', selectedWorkerValue);
-    //         }
-    //     } else {
-
-    //         if (selectedWorkerValue) {
-    //             console.log('selected worker: ', selectedWorkerValue);
-    //             const name = selectedWorkerValue;
-    //             setSelectedWorkersList([...selectedWorkersList, name]);
-    //             setSelectedWorker('');
-    //             axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${name}`)
-    //                 .then((response) => {
-    //                     const workerId = response.data.extra.workerId
-    //                     //setWorkerId(workerId);
-    //                     console.log('Worker ID :', workerId);
-
-    //                     const addWorkAssigned = {
-    //                         startDate,
-    //                         workerId,
-    //                         taskId,
-    //                         taskAssignedId: taskAssignedid,
-    //                         lotId,
-    //                         taskCardId: taskCardId || newTaskCardId
-    //                     }
-
-    //                     axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
-    //                         .then((response) => {
-    //                             console.log('Work assigned added successfully:', response.data);
-    //                             alertService.success('Worker added successfully');
-    //                             // window.location.reload();
-
-    //                         })
-    //                         .catch((error) => {
-    //                             console.error('Error adding work assigned:', error);
-    //                         });
-    //                 })
-    //                 .catch((error) => {
-    //                     console.error('Error getting worker id:', error);
-    //                 });
-    //         }
-    //     }
-    // };
 
     const handleAddSelectedWorker = (taskCardId) => {
         const selectedWorkerValue = selectedWorker[taskCardId];
@@ -275,7 +230,10 @@ const ManageOngoingTask = () => {
             if (selectedWorkerValue) {
                 console.log('selected worker: ', selectedWorkerValue);
                 const name = selectedWorkerValue;
-                setSelectedWorkersList([...selectedWorkersList, name]);
+                setSelectedWorkersList((prevSelectedWorkers) => ({
+                    ...prevSelectedWorkers,
+                    [taskCardId]: [...(prevSelectedWorkers[taskCardId] || []), name],
+                }));
                 setSelectedWorker('');
 
                 axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${name}`)
@@ -299,30 +257,30 @@ const ManageOngoingTask = () => {
                                 .then((savedTaskCardResponse) => {
                                     console.log('New Task card added', savedTaskCardResponse.data.extra);
                                     const newtaskCardId = savedTaskCardResponse.data.extra.id
-                                   
-                                            setNewTaskCardId(newtaskCardId);
 
-                                            const addWorkAssigned = {
-                                                startDate,
-                                                workerId,
-                                                taskId,
-                                                taskAssignedId: taskAssignedid,
-                                                lotId,
-                                                taskCardId: newtaskCardId
-                                            }
-        
-                                            axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
-                                                .then((response) => {
-                                                    console.log('Work assigned added successfully:', response.data);
-                                                    alertService.success('Worker added successfully');
-                                                    // window.location.reload();
-                                                })
-                                                .catch((error) => {
-                                                    console.error('Error adding work assigned:', error);
-                                                });
-                                       
+                                    setNewTaskCardId(newtaskCardId);
 
-                                  
+                                    const addWorkAssigned = {
+                                        startDate,
+                                        workerId,
+                                        taskId,
+                                        taskAssignedId: taskAssignedid,
+                                        lotId,
+                                        taskCardId: newtaskCardId
+                                    }
+
+                                    axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
+                                        .then((response) => {
+                                            console.log('Work assigned added successfully:', response.data);
+                                            alertService.success('Worker added successfully');
+                                            // window.location.reload();
+                                        })
+                                        .catch((error) => {
+                                            console.error('Error adding work assigned:', error);
+                                        });
+
+
+
                                 })
                                 .catch((error) => {
                                     console.error('Error adding new task card:', error);
@@ -602,9 +560,9 @@ const ManageOngoingTask = () => {
                                 <div></div>
                             )}
 
-                            {selectedWorkersList.length > 0 && (
+                            {selectedWorkersList[taskDetail.taskCardId]?.length > 0 && (
                                 <div>
-                                    {selectedWorkersList.map((worker, index) => (
+                                    {selectedWorkersList[taskDetail.taskCardId].map((worker, index) => (
                                         <div key={index} className="worker-container">
                                             <p>{worker}</p>
                                             {taskName === 'Pluck' && (
