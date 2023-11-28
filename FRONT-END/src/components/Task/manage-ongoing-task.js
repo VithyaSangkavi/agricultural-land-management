@@ -631,7 +631,6 @@ const ManageOngoingTask = () => {
                                 </div>
                             ))}
                         </div>
-                    </div>
                 )}
 
             {/* Finance Toggled View */}
