@@ -53,8 +53,8 @@ const ManageOngoingTask = () => {
     const [workerId, setWorkerId] = useState('');
 
     const sortedTaskDetails = taskDetails && taskDetails.length > 1
-    ? taskDetails.sort((a, b) => new Date(b.date) - new Date(a.date))
-    : taskDetails;
+        ? taskDetails.sort((a, b) => new Date(b.date) - new Date(a.date))
+        : taskDetails;
 
     const handleCompleteTask = (taskCardId) => {
         const newStatus = 'completed';
@@ -537,101 +537,104 @@ const ManageOngoingTask = () => {
                                         </div>
 
 
-                                                {taskStatus === 'ongoing' ? (
-                                                    <>
+                                        {taskStatus === 'ongoing' ? (
+                                            <>
 
-                                                        {taskDetail.cardStatus !== 'completed' && (
-                                                            <div className="remove-button-container">
-                                                                <Trash onClick={() => handleRemoveWorker(taskDetail.taskCardId, workerDetail.workAssigned)} />
-                                                            </div>
-                                                        )}
-
-                                                    </>
-
-                                                ) : (
-                                                    <div></div>
+                                                {taskDetail.cardStatus !== 'completed' && (
+                                                    <div className="remove-button-container">
+                                                        <Trash onClick={() => handleRemoveWorker(taskDetail.taskCardId, workerDetail.workAssigned)} />
+                                                    </div>
                                                 )}
 
-                                            </div>
-                                        ))}
+                                            </>
 
-                                    <br />
+                                        ) : (
+                                            <div></div>
+                                        )}
 
-                                    {taskStatus === 'ongoing' ? (
-                                        <>
+                                    </div>
+                                ))}
 
-                                            <div className="dropdown-and-button-container">
-                                                <select
-                                                    value={selectedWorker[taskDetail.taskCardId] || ''}
-                                                    onChange={(e) =>
-                                                        handleSelectedWorkerChange(taskDetail.taskCardId, e.target.value)
-                                                    }
-                                                    className="dropdown-input-select-worker"
-                                                >
-                                                    <option value="">{t('selectaworker')}</option>
-                                                    {workerNames.map((workerName) => (
-                                                        <option key={workerName} value={workerName}>
-                                                            {workerName}
-                                                        </option>
-                                                    ))}
-                                                </select>
+                            <br />
 
-                                                {taskStatus === 'ongoing' ? (
-                                                    <>
-                                                        <button className='add-small' onClick={() => handleAddSelectedWorker(taskDetail.taskCardId)}>
-                                                            {t('add')}
-                                                        </button>
+                            {taskStatus === 'ongoing' ? (
+                                <>
 
-                                                        {taskDetail.cardStatus === 'completed' ? (
-                                                            <button className="reopen-button" onClick={() => handleReopenTask(taskDetail.taskCardId)}>
-                                                                Reopen
-                                                            </button>
-                                                        ) : (
-                                                            <button className="complete-button" onClick={() => handleCompleteTask(taskDetail.taskCardId)}>
-                                                                Complete
-                                                            </button>
-                                                        )}
-
-                                                    </>
-
-                                                ) : (
-                                                    <div></div>
-                                                )}
-                                            </div>
-                                        </>
-                                    ) : (
-                                        <div></div>
-                                    )}
-
-                                    {selectedWorkersList.length > 0 && (
-                                        <div>
-                                            {selectedWorkersList.map((worker, index) => (
-                                                <div key={index} className="worker-container">
-                                                    <p>{worker}</p>
-                                                    {taskName === 'Pluck' && (
-                                                        <div className="kg-input-container">
-                                                            <div className="kg-input">
-                                                                <input
-                                                                    type="text"
-                                                                    placeholder={t('numberofkg')}
-                                                                    value={kgValues[index] || ''}
-                                                                    onChange={(e) => handleKgChange(e, index)}
-                                                                    className="dropdown-input"
-                                                                />
-                                                                <span className="add-kg-icon">
-                                                                    <FontAwesomeIcon icon={faPlus} onClick={addQuantity} />
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    )}
-                                                </div>
+                                    <div className="dropdown-and-button-container">
+                                        <select
+                                            value={selectedWorker[taskDetail.taskCardId] || ''}
+                                            onChange={(e) =>
+                                                handleSelectedWorkerChange(taskDetail.taskCardId, e.target.value)
+                                            }
+                                            className="dropdown-input-select-worker"
+                                        >
+                                            <option value="">{t('selectaworker')}</option>
+                                            {workerNames.map((workerName) => (
+                                                <option key={workerName} value={workerName}>
+                                                    {workerName}
+                                                </option>
                                             ))}
+                                        </select>
+
+                                        {taskStatus === 'ongoing' ? (
+                                            <>
+                                                <button className='add-small' onClick={() => handleAddSelectedWorker(taskDetail.taskCardId)}>
+                                                    {t('add')}
+                                                </button>
+
+                                                {taskDetail.cardStatus === 'completed' ? (
+                                                    <button className="reopen-button" onClick={() => handleReopenTask(taskDetail.taskCardId)}>
+                                                        Reopen
+                                                    </button>
+                                                ) : (
+                                                    <button className="complete-button" onClick={() => handleCompleteTask(taskDetail.taskCardId)}>
+                                                        Complete
+                                                    </button>
+                                                )}
+
+                                            </>
+
+                                        ) : (
+                                            <div></div>
+                                        )}
+                                    </div>
+                                </>
+                            ) : (
+                                <div></div>
+                            )}
+
+                            {selectedWorkersList.length > 0 && (
+                                <div>
+                                    {selectedWorkersList.map((worker, index) => (
+                                        <div key={index} className="worker-container">
+                                            <p>{worker}</p>
+                                            {taskName === 'Pluck' && (
+                                                <div className="kg-input-container">
+                                                    <div className="kg-input">
+                                                        <input
+                                                            type="text"
+                                                            placeholder={t('numberofkg')}
+                                                            value={kgValues[index] || ''}
+                                                            onChange={(e) => handleKgChange(e, index)}
+                                                            className="dropdown-input"
+                                                        />
+                                                        <span className="add-kg-icon">
+                                                            <FontAwesomeIcon icon={faPlus} onClick={addQuantity} />
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
-                                    )}
+                                    ))}
                                 </div>
-                            ))}
+                            )}
                         </div>
                 )}
+
+                    ))}
+                </div>
+            )}
+
 
             {/* Finance Toggled View */}
             {selectedView === 'finance' && (
