@@ -629,7 +629,6 @@ const ManageOngoingTask = () => {
                                 </div>
                             )}
                         </div>
-                )}
 
                     ))}
                 </div>
