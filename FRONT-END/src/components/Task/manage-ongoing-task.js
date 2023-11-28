@@ -219,8 +219,6 @@ const ManageOngoingTask = () => {
         }));
     };
 
-
-
     const handleAddSelectedWorker = (taskCardId) => {
         const selectedWorkerValue = selectedWorker[taskCardId];
 
@@ -240,10 +238,8 @@ const ManageOngoingTask = () => {
                 }));
                 setSelectedWorker('');
 
-                axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${name}`)
 
-
-
+                axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${name}`)
                     .then((response) => {
                         const workerId = response.data.extra.workerId
                         console.log('Worker ID :', workerId);
@@ -478,7 +474,7 @@ const ManageOngoingTask = () => {
                 <div className='card-container'>
                     {taskDetails.map((taskDetail) => (
                         <div key={taskDetail.taskCardId} className='card'>
-                            <p>{t('date')} - <h6>{getFormattedDate(taskDetail.workDate)}</h6></p>
+                            <p>{t('date')} - <h6>{getFormattedDate(taskDetail.date)}</h6></p>
                             <h6> Current Staus - {taskDetail.cardStatus}</h6>
                             <p>---------------------------------------------</p>
 
