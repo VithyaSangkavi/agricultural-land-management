@@ -72,12 +72,20 @@ export class TaskExpenseDaoImpl implements TaskExpenseDao {
     let taskExpenseModel = await taskExpenseRepo.findOne({ where: { value: value, status: Status.Online } });
     return taskExpenseModel;
   }
+
+  async findByExpenseId(expenseId: number): Promise<TaskExpenseEntity[]> {
+    const taskExpenseRepo = getConnection().getRepository(TaskExpenseEntity);
+    const taskExpenses = await taskExpenseRepo.find({ where: { expense: expenseId } });
+    return taskExpenses;
+}
+
   async prepareTaskExpenseModel(taskExpenseModel: TaskExpenseEntity, taskExpenseDto: TaskExpenseDto) {
     taskExpenseModel.value = taskExpenseDto.getValue();
     taskExpenseModel.createdDate = new Date();
     taskExpenseModel.updatedDate = new Date();
     taskExpenseModel.status = Status.Online;
   }
+
   prepareSearchObject(taskExpenseDto: TaskExpenseDto): any {
     let searchObject: any = {};
     if (taskExpenseDto.getValue()) {

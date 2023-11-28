@@ -12,4 +12,5 @@ export interface TaskExpenseDao {
   findById(taskExpenseId: number): Promise<TaskExpenseEntity>;
   findByName(value: Double): Promise<TaskExpenseEntity>; //not sure
   findCount(taskExpenseDto: TaskExpenseDto): Promise<number> ;
+  findByExpenseId(expenseId: number): Promise<TaskExpenseEntity[]>;
 }
