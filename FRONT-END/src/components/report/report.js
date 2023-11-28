@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useHistory, Link } from "react-router-dom";
 import '../home/home.css';
+import './report.css'
 import Footer from '../footer/footer';
 import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
@@ -14,7 +15,13 @@ function Report() {
     const [lands, setLands] = useState([]);
     const [selectedLand, setSelectedLand] = useState('');
 
-   
+   useEffect(() => {
+    axios.get('http://localhost:8081/service/master/landFindAll').then((response) => {
+        setLands(response.data.extra);
+        console.log("Lands : ", response.data.extra);
+    });
+   })
+
     const handleSelectedLand = (eventkey) => {
         setSelectedLand(eventkey);
 
@@ -66,7 +73,7 @@ function Report() {
                 </Dropdown>
                 <br />
             </div>
-            <select
+            <select className='report-dropdown'
             //   value={gender}
             //   className="input-field"
             >

@@ -21,17 +21,6 @@ export class ExpensesServiceImpl implements ExpensesService {
   async save(expensesDto: ExpensesDto): Promise<CommonResponse> {
     let cr = new CommonResponse();
     try {
-   /*    // validation
-      if (expensesDto.getExpenseType) {
-        // check name already have
-        let nameExpensesMode = await this.expensesDao.findByName(expensesDto.getExpenseType());
-        if (nameExpensesMode) {
-          return CommonResSupport.getValidationException("Expenses Name Already In Use !");
-        }
-      } else {
-        return CommonResSupport.getValidationException("Expenses Name Cannot Be null !");
-      } */
-
       // save new expenses
       let newExpenses = await this.expensesDao.save(expensesDto);
       cr.setStatus(true);

@@ -55,6 +55,7 @@ import ManageTaskSheduled from './components/Task/manage-task-shedule';
 import HomeNewTasks from './components/home/home-new-tasks';
 
 import Report from './components/report/report';
+import ExpenseChart from './components/report/expenseChart';
 
 class App extends React.Component {
   _isMounted = false;
@@ -165,6 +166,7 @@ class App extends React.Component {
           <RoleBasedRouting path="/homeNewTasks"><HomeNewTasks /></RoleBasedRouting>
 
           <RoleBasedRouting path="/report"><Report/></RoleBasedRouting>
+          <RoleBasedRouting path="/expense-report"><ExpenseChart/></RoleBasedRouting>
 
           <RoleBasedRouting path="/dashboard" exact roles={[usrRoles.CM]}><DashboardComponent/></RoleBasedRouting>
 
