@@ -33,7 +33,7 @@ const ManageTask = () => {
     const [value, setValue] = useState('');
     const [expenseId, setExpenseId] = useState('');
     const [selectedWorkersList, setSelectedWorkersList] = useState([]);
-    const [kgValues, setKgValues] = useState('');
+    const [kgValues, setKgValues] = useState([]);
     //const [workerId, setWorkerId] = useState('');
     const [taskAssignedId, setTaskAssignedId] = useState('');
     const [lotId, setLotId] = useState('');
@@ -147,7 +147,42 @@ const ManageTask = () => {
                 setSelectedWorker('');
                 console.log('selected worker: ', selectedWorker);
                 localStorage.setItem('selectedWorker', selectedWorker);
-            }
+                if (selectedWorker) {
+                    setSelectedWorkersList([...selectedWorkersList, selectedWorker]);
+                    setSelectedWorker('');
+                    console.log('selected worker: ', selectedWorker);
+    
+                    if (!taskCardId) {
+                        const saveTaskCard = {
+                            taskAssignedDate,
+                            taskAssignedId,
+                        };
+    
+                        axios.post('http://localhost:8081/service/master/task-card-save', saveTaskCard)
+                            .then((response) => {
+                                console.log('Task card added', response.data);
+                                localStorage.setItem('taskassignedid', taskAssignedId);
+    
+                                axios.get(`http://localhost:8081/service/master/taskCardFindById?taskAssignedId=${taskAssignedId}`)
+                                    .then((response) => {
+                                        const taskCardId = response.data.extra.id;
+    
+                                        console.log('Task card id: ', taskCardId);
+                                        setTaskCardId(taskCardId);
+    
+                                        addWorkerToPluckTaskCard(taskCardId);
+                                    })
+                                    .catch((error) => {
+                                        console.error('Error fetching task card id:', error);
+                                    });
+                            })
+                            .catch((error) => {
+                                console.error('Error adding task card:', error);
+                            });
+                    } else {
+                        addWorkerToPluckTaskCard(taskCardId);
+                    }
+            }}
         } else {
             if (selectedWorker) {
                 setSelectedWorkersList([...selectedWorkersList, selectedWorker]);
@@ -188,7 +223,41 @@ const ManageTask = () => {
         }
     }
 
+    const addWorkerToPluckTaskCard = (taskCardId) => {
+        const selectedWorker = localStorage.getItem('selectedWorker');
+        console.log('add -> selected worker pluck task: ', selectedWorker);
+        console.log('Quantity: ', quantity);
+        axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${selectedWorker}`)
+            .then((response) => {
+                const workerId = response.data.extra.workerId;
+                console.log('Worker ID :', workerId);
+
+                const addWorkAssigned = {
+                    startDate,
+                    workerId,
+                    quantity,
+                    taskId,
+                    taskAssignedId,
+                    lotId,
+                    taskCardId,
+                };
+
+                axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
+                    .then((response) => {
+                        console.log('Work assigned added successfully:', response.data);
+                    })
+                    .catch((error) => {
+                        console.error('Error adding work assigned:', error);
+                    });
+            })
+            .catch((error) => {
+                console.error('Error getting worker id:', error);
+            });
+    }
+
     const addWorkerToTaskCard = (taskCardId) => {
+        const selectedWorker = localStorage.getItem('selectedWorker');
+        console.log('add -> selected worker: ', selectedWorker);
         axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${selectedWorker}`)
             .then((response) => {
                 const workerId = response.data.extra.workerId;
@@ -199,7 +268,7 @@ const ManageTask = () => {
                     workerId,
                     taskId,
                     taskAssignedId,
-                    lotId: 1,
+                    lotId,
                     taskCardId,
                 };
 
@@ -251,7 +320,8 @@ const ManageTask = () => {
         const updatedKgValues = [...kgValues];
         updatedKgValues[index] = e.target.value;
         setKgValues(updatedKgValues);
-        setQuantity(updatedKgValues);
+        const kg = e.target.value;
+        setQuantity(kg);
     };
 
     const addQuantity = () => {
@@ -277,7 +347,7 @@ const ManageTask = () => {
                             console.log('Task card id: ', taskCardId);
                             setTaskCardId(taskCardId);
 
-                            addWorkerToTaskCard(taskCardId);
+                            addWorkerToPluckTaskCard(taskCardId);
                         })
                         .catch((error) => {
                             console.error('Error fetching task card id:', error);
@@ -286,8 +356,9 @@ const ManageTask = () => {
                 .catch((error) => {
                     console.error('Error adding task card:', error);
                 });
+                addWorkerToPluckTaskCard(taskCardId);
         } else {
-            addWorkerToTaskCard(taskCardId);
+            addWorkerToPluckTaskCard(taskCardId);
         }
 
     }
@@ -299,7 +370,7 @@ const ManageTask = () => {
     const handleTaskCard = () => {
         const saveTaskCard = {
             taskAssignedDate,
-            taskAssignedId
+            taskAssignedId,
         }
 
         axios.post('http://localhost:8081/service/master/task-card-save', saveTaskCard)

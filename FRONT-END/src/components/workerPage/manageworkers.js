@@ -27,25 +27,25 @@ function ManageWorkers() {
 
   useEffect(() => {
 
-    // axios.post('http://localhost:8081/service/master/workerFindAll').then((response) => {
-    //   setWorkers(response.data.extra);
-    //   console.log("Workers : ", response.data.extra);
-    // });
+    axios.post('http://localhost:8081/service/master/workerFindAll').then((response) => {
+      setWorkers(response.data.extra);
+      console.log("Workers : ", response.data.extra);
+    });
 
-    submitSets(submitCollection.manageworker)
-      .then((res) => {
-        setWorkers(res.extra);
-      })
+    // submitSets(submitCollection.manageworker)
+    //   .then((res) => {
+    //     setWorkers(res.extra);
+    //   })
 
-    // axios.get('http://localhost:8081/service/master/landFindAll').then((response) => {
-    //   setLands(response.data.extra);
-    //   console.log("Lands : ", response.data.extra);
-    // });
+    axios.get('http://localhost:8081/service/master/landFindAll').then((response) => {
+      setLands(response.data.extra);
+      console.log("Lands : ", response.data.extra);
+    });
     
-    submitSets(submitCollection.manageland)
-    .then((res) => {
-      setLands(res.extra);
-    })
+    // submitSets(submitCollection.manageland)
+    // .then((res) => {
+    //   setLands(res.extra);
+    // })
   }, []);
 
   const handleSearchChange = (event) => {

@@ -217,55 +217,6 @@ const ManageOngoingTask = () => {
         }));
     };
 
-    // const handleAddSelectedWorker = (taskCardId) => {
-    //     const selectedWorkerValue = selectedWorker[taskCardId];
-
-    //     if (taskName === 'Pluck') {
-    //         console.log('Pluck task')
-    //         if (selectedWorkerValue) {
-    //             console.log('selected worker: ', selectedWorkerValue);
-    //             localStorage.setItem('selectedWorker', selectedWorkerValue);
-    //         }
-    //     } else {
-
-    //         if (selectedWorkerValue) {
-    //             console.log('selected worker: ', selectedWorkerValue);
-    //             const name = selectedWorkerValue;
-    //             setSelectedWorkersList([...selectedWorkersList, name]);
-    //             setSelectedWorker('');
-    //             axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${name}`)
-    //                 .then((response) => {
-    //                     const workerId = response.data.extra.workerId
-    //                     //setWorkerId(workerId);
-    //                     console.log('Worker ID :', workerId);
-
-    //                     const addWorkAssigned = {
-    //                         startDate,
-    //                         workerId,
-    //                         taskId,
-    //                         taskAssignedId: taskAssignedid,
-    //                         lotId,
-    //                         taskCardId: taskCardId || newTaskCardId
-    //                     }
-
-    //                     axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
-    //                         .then((response) => {
-    //                             console.log('Work assigned added successfully:', response.data);
-    //                             alertService.success('Worker added successfully');
-    //                             // window.location.reload();
-
-    //                         })
-    //                         .catch((error) => {
-    //                             console.error('Error adding work assigned:', error);
-    //                         });
-    //                 })
-    //                 .catch((error) => {
-    //                     console.error('Error getting worker id:', error);
-    //                 });
-    //         }
-    //     }
-    // };
-
     const handleAddSelectedWorker = (taskCardId) => {
         const selectedWorkerValue = selectedWorker[taskCardId];
 
@@ -283,9 +234,6 @@ const ManageOngoingTask = () => {
                 setSelectedWorker('');
 
                 axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${name}`)
-
-
-
                     .then((response) => {
                         const workerId = response.data.extra.workerId
                         console.log('Worker ID :', workerId);
@@ -518,7 +466,7 @@ const ManageOngoingTask = () => {
                 <div className='card-container'>
                     {taskDetails.map((taskDetail) => (
                         <div key={taskDetail.taskCardId} className='card'>
-                            <p>{t('date')} - <h6>{getFormattedDate(taskDetail.workDate)}</h6></p>
+                            <p>{t('date')} - <h6>{getFormattedDate(taskDetail.date)}</h6></p>
                             <h6> Current Staus - {taskDetail.cardStatus}</h6>
                             <p>---------------------------------------------</p>
 
