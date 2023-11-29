@@ -158,12 +158,16 @@ const ManageTask = () => {
                             taskAssignedId,
                         };
     
+
                         axios.post('http://localhost:8080/service/master/task-card-save', saveTaskCard)
+
                             .then((response) => {
                                 console.log('Task card added', response.data);
                                 localStorage.setItem('taskassignedid', taskAssignedId);
     
                                 axios.get(`http://localhost:8080/service/master/taskCardFindById?taskAssignedId=${taskAssignedId}`)
+
+      
                                     .then((response) => {
                                         const taskCardId = response.data.extra.id;
     
@@ -227,7 +231,11 @@ const ManageTask = () => {
         const selectedWorker = localStorage.getItem('selectedWorker');
         console.log('add -> selected worker pluck task: ', selectedWorker);
         console.log('Quantity: ', quantity);
+
+      
         axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${selectedWorker}`)
+        
+
             .then((response) => {
                 const workerId = response.data.extra.workerId;
                 console.log('Worker ID :', workerId);
@@ -259,7 +267,9 @@ const ManageTask = () => {
 
         const selectedWorker = localStorage.getItem('selectedWorker');
         console.log('add -> selected worker: ', selectedWorker);
+
         axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${selectedWorker}`)
+
             .then((response) => {
                 const workerId = response.data.extra.workerId;
                 console.log('Worker ID :', workerId);

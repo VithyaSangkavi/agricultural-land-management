@@ -1,6 +1,4 @@
 import { CommonResponse } from "../../../common/dto/common-response";
-import { TaskTypeDao } from "../../../dao/task-type-dao";
-import { TaskTypeDaoImpl } from "../../../dao/impl/task-type-dao-impl";
 import { ExpensesDto } from "../../../dto/master/expenses-dto";
 import { CommonResSupport } from "../../../support/common-res-sup";
 import { ErrorHandlerSup } from "../../../support/error-handler-sup";
