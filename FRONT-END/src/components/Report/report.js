@@ -81,6 +81,9 @@ function Report() {
               <option value="expense">Expenses</option>
               <option value="income">Income</option>
               <option value="income">Workers</option>
+              <option value="Summary">Summary</option>
+              <option value="Employee Perfomance">Employee Perfomance</option>
+              <option value="Cost Breakdown">Cost Breakdown</option>
             </select>
             < br />
             <Footer />
