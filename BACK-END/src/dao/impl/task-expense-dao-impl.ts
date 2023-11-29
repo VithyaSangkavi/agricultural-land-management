@@ -6,18 +6,20 @@ import { WorkerStatus } from "../../enum/workerStatus";
 import { TaskExpenseDao } from "../task-expense-dao";
 import { TaskTypeEntity } from "../../entity/master/task-type-entity";
 import { ExpensesEntity } from "../../entity/master/expense-entity";
+import { TaskAssignedEntity } from "../../entity/master/task-assigned-entity";
 
 /**
  * task-expense data access layer
  * contain crud method
  */
 export class TaskExpenseDaoImpl implements TaskExpenseDao {
-  async save(taskExpenseDto: TaskExpenseDto, taskTypeModel: TaskTypeEntity, expenseModel: ExpensesEntity): Promise<TaskExpenseEntity> {
+  async save(taskExpenseDto: TaskExpenseDto, taskTypeModel: TaskTypeEntity, expenseModel: ExpensesEntity, taskAssignedModel: TaskAssignedEntity): Promise<TaskExpenseEntity> {
     let taskExpenseRepo = getConnection().getRepository(TaskExpenseEntity);
     let taskExpenseModel = new TaskExpenseEntity();
 
     taskExpenseModel.taskType = taskTypeModel;
     taskExpenseModel.expense = expenseModel;
+    taskExpenseModel.taskAssigned = taskAssignedModel
     this.prepareTaskExpenseModel(taskExpenseModel, taskExpenseDto);
     let savedTask = await taskExpenseRepo.save(taskExpenseModel);
     return savedTask;

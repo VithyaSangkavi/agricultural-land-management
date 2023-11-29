@@ -3,9 +3,10 @@ import { TaskExpenseDto } from "../dto/master/task-expense-dto";
 import { TaskExpenseEntity } from "../entity/master/task-expense-entity";
 import { TaskTypeEntity } from "../entity/master/task-type-entity";
 import { ExpensesEntity } from "../entity/master/expense-entity";
+import { TaskAssignedEntity } from "../entity/master/task-assigned-entity";
 
 export interface TaskExpenseDao {
-  save(taskExpenseDto: TaskExpenseDto, taskTypeModel: TaskTypeEntity, expenseModel: ExpensesEntity): Promise<TaskExpenseEntity>;
+  save(taskExpenseDto: TaskExpenseDto, taskTypeModel: TaskTypeEntity, expenseModel: ExpensesEntity, taskAssignedModel:TaskAssignedEntity): Promise<TaskExpenseEntity>;
   update(taskExpenseDto: TaskExpenseDto): Promise<TaskExpenseEntity>;
   delete(taskExpenseDto: TaskExpenseDto): Promise<TaskExpenseEntity>;
   findAll(taskExpenseDto: TaskExpenseDto): Promise<TaskExpenseEntity[]>;

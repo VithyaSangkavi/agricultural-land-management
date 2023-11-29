@@ -227,10 +227,10 @@ const ManageTask = () => {
                 setExpenseId(expenseId);
 
                 const addTaskExpense = {
-                    value,
                     taskId,
                     expenseId,
                     taskAssignedId,
+                    value,
                 };
 
                 //save task expense 
