@@ -3,6 +3,8 @@ import { Status } from "../../enum/Status";
 import { double } from "aws-sdk/clients/storagegateway";
 import { TaskTypeEntity } from "./task-type-entity";
 import { ExpensesEntity } from "./expense-entity";
+import { TaskAssignedEntity } from "./task-assigned-entity";
+
 
 @Entity({
   name: "task-expense",
@@ -30,4 +32,8 @@ export class TaskExpenseEntity {
   @ManyToOne(()=> ExpensesEntity, (expense) => expense.taskExpense)
   @JoinColumn({ name: "expenseId" })
   expense: ExpensesEntity;
+
+  @ManyToOne(()=> TaskAssignedEntity, (taskAssigned) => taskAssigned.taskCard)
+  @JoinColumn({name: "taskAssignedId"})
+  taskAssigned: TaskAssignedEntity;
 }

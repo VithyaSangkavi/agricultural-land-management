@@ -5,6 +5,7 @@ import { TaskTypeEntity } from "./task-type-entity";
 import { WorkAssignedEntity } from "./work-assigned-entity";
 import { TaskStatus } from "../../enum/taskStatus";
 import { TaskCardEntity } from "./task-card-entity";
+import { ExpensesEntity } from "./expense-entity";
 import {Schedule} from "../../enum/schedule";
 
 @Entity({
@@ -43,4 +44,7 @@ export class TaskAssignedEntity {
 
     @OneToMany(() => TaskCardEntity, (taskCard) => taskCard.taskAssigned)
     taskCard: TaskCardEntity[];
+
+    @OneToMany(() => ExpensesEntity, (taskExpense) => taskExpense.taskExpense)
+    taskExpense: ExpensesEntity[];
 }
