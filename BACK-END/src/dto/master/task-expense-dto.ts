@@ -10,6 +10,8 @@ export class TaskExpenseDto extends PaginationDto {
   private status: Status;
   private taskId: number;
   private expenseId: number;
+  private taskAssignedId: number;
+
 
   filViaRequest(body) {
     
@@ -22,6 +24,8 @@ export class TaskExpenseDto extends PaginationDto {
     this.status= body.status;
     this.taskId = body.taskId;
     this.expenseId = body.expenseId;
+    this.taskAssignedId = body.taskAssignedId;
+
 
     if (body.startIndex && body.maxResult) {
       this.setStartIndex(body.startIndex);
@@ -37,6 +41,7 @@ export class TaskExpenseDto extends PaginationDto {
     this.status = TaskExpenseModel.status;
     this.taskId = TaskExpenseModel.taskType.id;  
     this.expenseId = TaskExpenseModel.expense.id;
+    this.taskAssignedId = TaskExpenseModel.taskAssigned.id;
   }
 
   public getTaskExpenseId(): number {
@@ -93,5 +98,13 @@ export class TaskExpenseDto extends PaginationDto {
 
   public setExpenseId(expenseId: number): void {
     this.expenseId = expenseId;
+  }
+
+  public getTaskAssignedId(): number {
+    return this.taskAssignedId;
+  }
+
+  public setTaskAssignedId(taskAssignedId: number): void {
+    this.taskAssignedId = taskAssignedId;
   }
 }

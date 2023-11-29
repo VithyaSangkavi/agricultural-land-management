@@ -300,6 +300,7 @@ const ManageTask = () => {
                     value,
                     taskId,
                     expenseId,
+                    taskAssignedId,
                 };
 
                 //save task expense 
@@ -478,7 +479,7 @@ const ManageTask = () => {
                     />
                 </div>
                 <div>
-                    <button onClick={handleShedule}>Shedule</button>
+                    <button className='shedule' onClick={handleShedule}>Shedule</button>
                 </div>
             </div>
             <br />

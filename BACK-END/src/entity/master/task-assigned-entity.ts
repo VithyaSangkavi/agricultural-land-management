@@ -1,46 +1,49 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Table } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Status } from "../../enum/Status";
 import { LandEntity } from "./land-entity";
 import { TaskTypeEntity } from "./task-type-entity";
 import { WorkAssignedEntity } from "./work-assigned-entity";
 import { TaskStatus } from "../../enum/taskStatus";
 import { TaskCardEntity } from "./task-card-entity";
-import {Schedule} from "../../enum/schedule";
+import { ExpensesEntity } from "./expense-entity";
+import { Schedule } from "../../enum/schedule";
 
 @Entity({
-    name: "task-assigned",
+  name: "task-assigned",
 })
-
 export class TaskAssignedEntity {
-    @PrimaryGeneratedColumn({name: "taskAssignedId"})
-    id: number;
+  @PrimaryGeneratedColumn({ name: "taskAssignedId" })
+  id: number;
 
-    @Column()
-    startDate: Date;
+  @Column()
+  startDate: Date;
 
-    @Column({ nullable: true })
-    endDate: Date | null;
-    
-    @Column({ type: "enum", enum:Status, default: Status.Online})
-    status: Status;
+  @Column({ nullable: true })
+  endDate: Date | null;
 
-    @Column({ type: "enum" ,enum:TaskStatus,default:TaskStatus.Ongoing})
-    taskStatus: TaskStatus;
+  @Column({ type: "enum", enum: Status, default: Status.Online })
+  status: Status;
 
-    @Column({ type: "enum" ,enum:Schedule,default:Schedule.NotScheduled})
-    schedule: Schedule;
+  @Column({ type: "enum", enum: TaskStatus, default: TaskStatus.Ongoing })
+  taskStatus: TaskStatus;
 
-    @ManyToOne(() => LandEntity, (land) => land.taskAssigned)
-    @JoinColumn({ name: "landId" })
-    land: LandEntity
+  @Column({ type: "enum", enum: Schedule, default: Schedule.NotScheduled })
+  schedule: Schedule;
 
-    @ManyToOne(() => TaskTypeEntity, (task) => task.taskAssigned)
-    @JoinColumn({ name: "taskId" })
-    task: TaskTypeEntity
+  @ManyToOne(() => LandEntity, (land) => land.taskAssigned)
+  @JoinColumn({ name: "landId" })
+  land: LandEntity;
 
-    @OneToMany(() => WorkAssignedEntity, (workAssigned) => workAssigned.taskAssigned)
-    workAssigned: WorkAssignedEntity[];
+  @ManyToOne(() => TaskTypeEntity, (task) => task.taskAssigned)
+  @JoinColumn({ name: "taskId" })
+  task: TaskTypeEntity;
 
-    @OneToMany(() => TaskCardEntity, (taskCard) => taskCard.taskAssigned)
-    taskCard: TaskCardEntity[];
+  @OneToMany(() => WorkAssignedEntity, (workAssigned) => workAssigned.taskAssigned)
+  workAssigned: WorkAssignedEntity[];
+
+  @OneToMany(() => TaskCardEntity, (taskCard) => taskCard.taskAssigned)
+  taskCard: TaskCardEntity[];
+
+  @OneToMany(() => ExpensesEntity, (taskExpense) => taskExpense.taskExpense)
+  taskExpense: ExpensesEntity[];
 }
