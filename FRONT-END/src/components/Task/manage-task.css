@@ -157,6 +157,15 @@
   border-radius: 5px;
 }
 
+.shedule {
+  width: 80px;
+  color: #fff;
+  background-color: #0e4f20;
+  border: none;
+  border-radius: 5px;
+  margin-left: 10px;
+}
+
 .complete-button {
   background-color: rgb(150, 150, 7);
   color: white;

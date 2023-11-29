@@ -406,7 +406,7 @@ const ManageTask = () => {
                     />
                 </div>
                 <div>
-                    <button onClick={handleShedule}>Shedule</button>
+                    <button className='shedule' onClick={handleShedule}>Shedule</button>
                 </div>
             </div>
             <br />
