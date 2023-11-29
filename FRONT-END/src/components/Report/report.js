@@ -14,13 +14,19 @@ function Report() {
 
     const [lands, setLands] = useState([]);
     const [selectedLand, setSelectedLand] = useState('');
+    const [selectedReport, setSelectedReport] = useState('');
+    const [dateRange, setDateRange] = useState({ fromDate: '', toDate: '' });
+    const [selectedLot, setSelectedLot] = useState('');
+    const [selectedWorker, setSelectedWorker] = useState('');
+    const [isFilterExpanded, setFilterExpanded] = useState(false);
 
-   useEffect(() => {
-    axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
-        setLands(response.data.extra);
-        console.log("Lands : ", response.data.extra);
-    });
-   })
+
+    useEffect(() => {
+        axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
+            setLands(response.data.extra);
+            console.log("Lands : ", response.data.extra);
+        });
+    }, [])
 
     const handleSelectedLand = (eventkey) => {
         setSelectedLand(eventkey);
@@ -39,13 +45,73 @@ function Report() {
             });
     }
 
+    const handleReportChange = (event) => {
+        setSelectedReport(event.target.value);
+    };
+
+    const handleDateRangeChange = (event) => {
+        const { name, value } = event.target;
+        setDateRange((prevDateRange) => ({ ...prevDateRange, [name]: value }));
+    };
+
+    const handleLotChange = (event) => {
+        setSelectedLot(event.target.value);
+    };
+
+    const handleWorkerChange = (event) => {
+        setSelectedWorker(event.target.value);
+    };
+
+    const handleToggleFilter = () => {
+        setFilterExpanded(!isFilterExpanded);
+    };
+
     const handleLanguageChange = (lang) => {
         i18n.changeLanguage(lang);
     };
-  
+
     return (
         <div className="home-app-screen">
-            <p className='main-heading'>Report</p>
+            <p className='main-heading'>Report
+            <div className="filter-icon" onClick={handleToggleFilter}>
+                <FaPlus />
+            </div>
+
+            {isFilterExpanded && (
+                <div>
+                    <div>
+                        <label>Date Range:</label>
+                        <input
+                            type="date"
+                            name="fromDate"
+                            value={dateRange.fromDate}
+                            onChange={handleDateRangeChange}
+                        />
+                        <span> - </span>
+                        <input
+                            type="date"
+                            name="toDate"
+                            value={dateRange.toDate}
+                            onChange={handleDateRangeChange}
+                        />
+                    </div>
+
+                    <div>
+                        <label>Select Lot:</label>
+                        <select value={selectedLot} onChange={handleLotChange}>
+                            <option value="">Select Lot</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Select Worker:</label>
+                        <select value={selectedWorker} onChange={handleWorkerChange}>
+                            <option value="">Select Worker</option>
+                        </select>
+                    </div>
+                </div>
+            )}
+            </p>
             <div className="position-absolute top-0 end-0 me-2">
                 <Dropdown alignRight onSelect={handleLanguageChange}>
                     <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
@@ -58,6 +124,11 @@ function Report() {
                     </Dropdown.Menu>
                 </Dropdown>
             </div>
+
+
+            
+
+
             <div className='drop-down-container'>
                 <Dropdown onSelect={handleSelectedLand} className='custom-dropdown'>
                     <Dropdown.Toggle className='drop-down' id="dropdown-land">
@@ -77,14 +148,15 @@ function Report() {
             //   value={gender}
             //   className="input-field"
             >
-              <option value="">Report Name</option>
-              <option value="expense">Expenses</option>
-              <option value="income">Income</option>
-              <option value="income">Workers</option>
-              <option value="Summary">Summary</option>
-              <option value="Employee Perfomance">Employee Perfomance</option>
-              <option value="Cost Breakdown">Cost Breakdown</option>
+                <option value="">Report Name</option>
+                <option value="expense">Expenses</option>
+                <option value="income">Income</option>
+                <option value="income">Workers</option>
+                <option value="Summary">Summary</option>
+                <option value="Employee Perfomance">Employee Perfomance</option>
+                <option value="Cost Breakdown">Cost Breakdown</option>
             </select>
+
             < br />
             <Footer />
         </div>

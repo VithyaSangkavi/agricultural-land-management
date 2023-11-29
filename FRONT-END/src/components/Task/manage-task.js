@@ -51,7 +51,7 @@ const ManageTask = () => {
     //     console.log(value);
     //     console.log("date : ", value.day);
     // };
-
+    console.log("task id : ", taskAssignedId)
 
     const handleShedule = (value) => {
 
@@ -60,7 +60,7 @@ const ManageTask = () => {
 
         history.push({
             pathname: '/addsheduledtask',
-            state: { selectedDates },
+            state: { selectedDates, taskAssignedId },
         })
 
     };
@@ -158,12 +158,16 @@ const ManageTask = () => {
                             taskAssignedId,
                         };
     
-                        axios.post('http://localhost:8081/service/master/task-card-save', saveTaskCard)
+
+                        axios.post('http://localhost:8080/service/master/task-card-save', saveTaskCard)
+
                             .then((response) => {
                                 console.log('Task card added', response.data);
                                 localStorage.setItem('taskassignedid', taskAssignedId);
     
-                                axios.get(`http://localhost:8081/service/master/taskCardFindById?taskAssignedId=${taskAssignedId}`)
+                                axios.get(`http://localhost:8080/service/master/taskCardFindById?taskAssignedId=${taskAssignedId}`)
+
+      
                                     .then((response) => {
                                         const taskCardId = response.data.extra.id;
     
@@ -227,7 +231,11 @@ const ManageTask = () => {
         const selectedWorker = localStorage.getItem('selectedWorker');
         console.log('add -> selected worker pluck task: ', selectedWorker);
         console.log('Quantity: ', quantity);
-        axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${selectedWorker}`)
+
+      
+        axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${selectedWorker}`)
+        
+
             .then((response) => {
                 const workerId = response.data.extra.workerId;
                 console.log('Worker ID :', workerId);
@@ -242,7 +250,7 @@ const ManageTask = () => {
                     taskCardId,
                 };
 
-                axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
+                axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
                     .then((response) => {
                         console.log('Work assigned added successfully:', response.data);
                     })
@@ -259,7 +267,9 @@ const ManageTask = () => {
 
         const selectedWorker = localStorage.getItem('selectedWorker');
         console.log('add -> selected worker: ', selectedWorker);
-        axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${selectedWorker}`)
+
+        axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${selectedWorker}`)
+
             .then((response) => {
                 const workerId = response.data.extra.workerId;
                 console.log('Worker ID :', workerId);
@@ -300,7 +310,6 @@ const ManageTask = () => {
                     value,
                     taskId,
                     expenseId,
-                    taskAssignedId,
                 };
 
                 //save task expense 
@@ -479,7 +488,7 @@ const ManageTask = () => {
                     />
                 </div>
                 <div>
-                    <button className='shedule' onClick={handleShedule}>Shedule</button>
+                    <button onClick={handleShedule}>Shedule</button>
                 </div>
             </div>
             <br />
