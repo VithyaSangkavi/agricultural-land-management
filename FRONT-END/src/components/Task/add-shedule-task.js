@@ -18,6 +18,8 @@ const ManageTask = () => {
 
     const location = useLocation();
     const { selectedDates } = location.state || {};
+    const { taskAssignedId } = location.state || {};
+
     const [formattedDates, setFormattedDates] = useState([]);
     const [currentDate, setCurrentDate] = useState(Array(selectedDates.length).fill(''));
 
@@ -44,17 +46,12 @@ const ManageTask = () => {
     const [selectedWorkersList, setSelectedWorkersList] = useState([]);
     const [kgValues, setKgValues] = useState('');
     //const [workerId, setWorkerId] = useState('');
-    const [taskAssignedId, setTaskAssignedId] = useState('');
+    // const [taskAssignedId, setTaskAssignedId] = useState('');
     const [lotId, setLotId] = useState('');
     const [quantity, setQuantity] = useState('');
     const [taskCardId, setTaskCardId] = useState('');
     const thisid = localStorage.getItem('taskassignedid')
     const [workers, setWorkers] = useState([]);
-
-    const taskAssId = location.state.taskAssignedId;
-
-    console.log("task id 1:", taskAssId);
-    setTaskAssignedId(taskAssId);
 
 
     console.log("Selected Dates : ", selectedDates)
