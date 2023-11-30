@@ -2,6 +2,7 @@ import { CommonResponse } from "../../../common/dto/common-response";
 import { TaskExpenseDao } from "../../../dao/task-expense-dao";
 import { TaskExpenseDaoImpl } from "../../../dao/impl/task-expense-dao-impl";
 import { TaskExpenseDto } from "../../../dto/master/task-expense-dto";
+import { TaskAssignedDto } from "../../../dto/master/task-assigned-dto";
 import { CommonResSupport } from "../../../support/common-res-sup";
 import { ErrorHandlerSup } from "../../../support/error-handler-sup";
 import { TaskExpenseService } from "../task-expense-service";
@@ -9,8 +10,11 @@ import { TaskTypeDao } from "../../../dao/task-type-dao";
 import { TaskTypeDaoImpl } from "../../../dao/impl/task-type-dao-impl";
 import { ExpensesDao } from "../../../dao/expenses-dao";
 import { ExpensesDaoImpl } from "../../../dao/impl/expenses-dao-impl";
+import { TaskAssignedDao } from "../../../dao/task-assigned-dao";
+import { TaskAssignedDaoImpl } from "../../../dao/impl/task-assigned-dao-impl";
 import { TaskTypeEntity } from "../../../entity/master/task-type-entity";
 import { ExpensesEntity } from "../../../entity/master/expense-entity";
+import { TaskAssignedEntity } from "../../../entity/master/task-assigned-entity";
 
 /**
  * taskExpense service layer
@@ -20,6 +24,7 @@ export class TaskExpenseServiceImpl implements TaskExpenseService {
   taskExpenseDao: TaskExpenseDao = new TaskExpenseDaoImpl();
   taskTypeDao: TaskTypeDao = new TaskTypeDaoImpl();
   expenseDao: ExpensesDao = new ExpensesDaoImpl();
+  taskAssignedDao: TaskAssignedDao = new TaskAssignedDaoImpl();
 
   /**
    * save new taskExpense
@@ -48,6 +53,14 @@ export class TaskExpenseServiceImpl implements TaskExpenseService {
         return CommonResSupport.getValidationException("Task type with the specified ID does not exist!");
       }
 
+        //check task type id
+        let taskAssignedModel: TaskAssignedEntity = null;
+        if(taskExpenseDto.getTaskAssignedId() > 0){
+          taskAssignedModel = await this.taskAssignedDao.findById(taskExpenseDto.getTaskAssignedId());
+        } else{ 
+          return CommonResSupport.getValidationException("Task Assigned with the specified ID does not exist!");
+        }
+
        //check expense id
        let expenseModel: ExpensesEntity = null;
        if(taskExpenseDto.getExpenseId() > 0){
@@ -57,7 +70,7 @@ export class TaskExpenseServiceImpl implements TaskExpenseService {
        }
 
       // save new taskExpense
-      let newtaskExpense = await this.taskExpenseDao.save(taskExpenseDto, taskTypeModel, expenseModel);
+      let newtaskExpense = await this.taskExpenseDao.save(taskExpenseDto, taskTypeModel, expenseModel, taskAssignedModel );
       cr.setStatus(true);
     } catch (error) {
       cr.setStatus(false);

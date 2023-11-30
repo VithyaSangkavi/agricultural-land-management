@@ -51,6 +51,11 @@ const ManageTask = () => {
     const thisid = localStorage.getItem('taskassignedid')
     const [workers, setWorkers] = useState([]);
 
+    const taskAssId = location.state.taskAssignedId;
+
+    console.log("task id 1:", taskAssId);
+    setTaskAssignedId(taskAssId);
+
 
     console.log("Selected Dates : ", selectedDates)
 
@@ -79,7 +84,6 @@ const ManageTask = () => {
         fetchTaskName();
         fetchWorkerNames();
         fetchExpenseTypes();
-        fetchTaskAssignedId();
         fetchLotId();
         console.log('check task assigned id: ', thisid);
     }, []);
@@ -116,21 +120,8 @@ const ManageTask = () => {
             });
     };
 
-    const fetchTaskAssignedId = () => {
-
         //get task-assigned id
-        axios.get(`http://localhost:8081/service/master/task-assigned?taskId=${taskId}`)
-
-            .then((response) => {
-                const taskAssignedId = response.data.extra.id;
-
-                console.log('Task assigned id: ', taskAssignedId);
-                setTaskAssignedId(taskAssignedId);
-            })
-            .catch((error) => {
-                console.error('Error fetching task assigned id:', error);
-            });
-    };
+        //axios.get(`http://localhost:8081/service/master/task-assigned?taskId=${taskId}`)
 
     const fetchLotId = () => {
         axios.get(`http://localhost:8081/service/master/findLotByLandId?landId=${landId}`)
