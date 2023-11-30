@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { TaskAssignedDto } from '../dto/master/task-assigned-dto';
 import { TaskAssignedServiceImpl } from '../services/master/impl/task-assigned-service-impl';
+import { Schedule } from '../enum/schedule'
 
 let taskAssignedService = new TaskAssignedServiceImpl();
 
@@ -113,4 +114,26 @@ exports.updateEndDate = async (req, res, next) => {
     next(error);
   }
 };
+
+export const updateStatus = async (req, res, next) => {
+  try {
+    const taskAssignedId = parseInt(req.params.taskAssignedId, 10);
+    const newStatus = req.body.newStatus;
+
+    if (isNaN(taskAssignedId) || !isValidSchedule(newStatus)) {
+      res.status(400).json({ message: 'Invalid taskCard ID or new status' });
+      return;
+    }
+
+    const result = await taskAssignedService.updateStatus(taskAssignedId, newStatus);
+
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+function isValidSchedule(status) {
+  return Object.values(Schedule).includes(status);
+}
 

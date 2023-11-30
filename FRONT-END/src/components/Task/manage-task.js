@@ -55,6 +55,18 @@ const ManageTask = () => {
 
     const handleShedule = (value) => {
 
+        const newStatus = 'scheduled'
+
+        axios.put(`http://localhost:8080/service/master/updateSchedulStatus/${taskAssignedId}`, {
+            newStatus,
+        })
+            .then((response) => {
+
+            })
+            .catch((error) => {
+                console.error(`Error updating TasskAssignedStatus ${taskAssignedId} status:`, error);
+            });
+
         console.log("Dates: ", value);
         setSelectedDates(value);
 
@@ -151,29 +163,29 @@ const ManageTask = () => {
                     setSelectedWorkersList([...selectedWorkersList, selectedWorker]);
                     setSelectedWorker('');
                     console.log('selected worker: ', selectedWorker);
-    
+
                     if (!taskCardId) {
                         const saveTaskCard = {
                             taskAssignedDate,
                             taskAssignedId,
                         };
-    
+
 
                         axios.post('http://localhost:8080/service/master/task-card-save', saveTaskCard)
 
                             .then((response) => {
                                 console.log('Task card added', response.data);
                                 localStorage.setItem('taskassignedid', taskAssignedId);
-    
+
                                 axios.get(`http://localhost:8080/service/master/taskCardFindById?taskAssignedId=${taskAssignedId}`)
 
-      
+
                                     .then((response) => {
                                         const taskCardId = response.data.extra.id;
-    
+
                                         console.log('Task card id: ', taskCardId);
                                         setTaskCardId(taskCardId);
-    
+
                                         addWorkerToPluckTaskCard(taskCardId);
                                     })
                                     .catch((error) => {
@@ -186,7 +198,8 @@ const ManageTask = () => {
                     } else {
                         addWorkerToPluckTaskCard(taskCardId);
                     }
-            }}
+                }
+            }
         } else {
             if (selectedWorker) {
                 setSelectedWorkersList([...selectedWorkersList, selectedWorker]);
@@ -232,9 +245,9 @@ const ManageTask = () => {
         console.log('add -> selected worker pluck task: ', selectedWorker);
         console.log('Quantity: ', quantity);
 
-      
+
         axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${selectedWorker}`)
-        
+
 
             .then((response) => {
                 const workerId = response.data.extra.workerId;
@@ -367,7 +380,7 @@ const ManageTask = () => {
                 .catch((error) => {
                     console.error('Error adding task card:', error);
                 });
-                addWorkerToPluckTaskCard(taskCardId);
+            addWorkerToPluckTaskCard(taskCardId);
         } else {
             addWorkerToPluckTaskCard(taskCardId);
         }

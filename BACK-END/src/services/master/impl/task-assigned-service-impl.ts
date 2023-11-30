@@ -260,5 +260,24 @@ export class TaskAssignedServiceImpl implements TaskAssignedService {
     return cr;
   }
 
+  async updateStatus(taskAssignedId: number, newStatus: string): Promise<CommonResponse> {
+    let cr = new CommonResponse();
+    try {
+      const updatedIncome = await this.taskAssignedDao.updateStatus(taskAssignedId, newStatus);
+
+      let updatedIncomeDto = new TaskAssignedDto();
+      updatedIncomeDto.filViaRequest(updatedIncome);
+
+      cr.setStatus(true);
+      cr.setExtra(updatedIncomeDto);
+
+    } catch (error) {
+      cr.setStatus(false);
+      cr.setExtra(error);
+      ErrorHandlerSup.handleError(error);
+    }
+    return cr;
+  }
+
 
 }
