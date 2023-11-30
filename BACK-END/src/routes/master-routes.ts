@@ -114,6 +114,11 @@ router.get("/taskCardFindById", taskCardController.findTaskCardByTaskId);
 router.put("/updateStatus/:taskCardId", taskCardController.updateStatus);
 
 //report routes
-router.post("/report-expenses", reportController.findAll);
+//employee-attendance report
+router.get('/employeeAttendance', reportController.getEmployeeAttendance);
+//monthly-crop report
+router.get('/monthly-crop-report', reportController.getMonthlyCropReport);
+//other-cost-yield report
+router.get('/other-cost-yield', reportController.getOtherCostYieldReport);
 
 module.exports = router;
