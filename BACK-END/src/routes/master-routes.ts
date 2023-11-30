@@ -115,7 +115,7 @@ router.put("/updateStatus/:taskCardId", taskCardController.updateStatus);
 
 //report routes
 //employee-attendance report
-router.get('/employeeAttendance', reportController.getEmployeeAttendance);
+router.get('/employee-attendance', reportController.getEmployeeAttendance);
 //monthly-crop report
 router.get('/monthly-crop-report', reportController.getMonthlyCropReport);
 //other-cost-yield report
