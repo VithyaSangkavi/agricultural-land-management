@@ -329,6 +329,7 @@ const ManageOngoingTask = () => {
                     value,
                     taskId,
                     expenseId,
+                    taskAssignedId: taskAssignedid,
                 };
 
                 //save task expense 

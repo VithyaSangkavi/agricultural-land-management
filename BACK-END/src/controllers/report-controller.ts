@@ -25,7 +25,7 @@ export const getMonthlyCropReport = async (req: Request, res: Response): Promise
     const monthlyCropReport = await reportServiceImpl.generateMonthlyCropReport();
 
     // Process the monthlyCropReport if needed...
-    
+
     res.json(monthlyCropReport);
   } catch (error) {
     res.status(500).json({ error: 'Failed to generate monthly crop report' });
@@ -38,5 +38,46 @@ export const getOtherCostYieldReport = async (req: Request, res: Response): Prom
     res.json(otherCostYieldReport);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch Other Cost / Yield report' });
+  }
+};
+
+export const getEmployeePerfomanceReport = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const employeePerfomanceReport = await reportServiceImpl.getEmployeePerfomanceReport();
+
+    res.json(employeePerfomanceReport);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to generate employee perfomanceReport report' });
+  }
+};
+
+export const getCostBreakdownLineReport = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const costBreakdownLineReport = await reportServiceImpl.getCostBreakdownLineReport();
+
+    res.json(costBreakdownLineReport);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to generate cost breakdown line Report report' });
+  }
+};
+
+export const getgetCostBreakdownPieReport = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const costBreakdownPieReport = await reportServiceImpl.getCostBreakdownPieReport();
+
+    res.json(costBreakdownPieReport);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to generate cost breakdown pie chart Report report' });
+  }
+}
+
+export const getSummaryReport = async (req: Request, res: Response): Promise<void> => {
+  const landId = req.params.landId;
+
+  try {
+    const costSummaryReport = await reportServiceImpl.getSummaryReport(landId);
+    res.json(costSummaryReport);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to generate cost Summary Report report' });
   }
 };

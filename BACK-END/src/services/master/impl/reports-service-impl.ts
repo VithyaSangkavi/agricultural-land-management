@@ -1,10 +1,21 @@
-import { getRepository } from 'typeorm';
+import { getConnection, getRepository } from 'typeorm';
 import { WorkAssignedEntity } from '../../../entity/master/work-assigned-entity';
 import { ReportService } from '../reports-service';
 import { TaskTypeEntity } from '../../../entity/master/task-type-entity';
 import { CropEntity } from '../../../entity/master/crop-entity';
 import { IncomeEntity } from '../../../entity/master/income-entity';
 import { TaskExpenseEntity } from '../../../entity/master/task-expense-entity';
+import { TaskCardEntity } from "../../../entity/master/task-card-entity";
+import { WorkerEntity } from "../../../entity/master/worker-entity";
+import { TaskAssignedEntity } from '../../../entity/master/task-assigned-entity';
+import { ExpensesEntity } from "../../../entity/master/expense-entity";
+import { LandEntity } from "../../../entity/master/land-entity";
+import { Units } from "../../../enum/units";
+import { Status } from '../../../enum/Status';
+import { TaskStatus } from '../../../enum/taskStatus';
+import { Schedule } from '../../../enum/schedule';
+
+
 
 export class ReportServiceImpl implements ReportService {
   //Employee attendance report
@@ -147,11 +158,11 @@ export class ReportServiceImpl implements ReportService {
       // Merge the cost and yield data for each month
       const monthlyData = {};
       const incomeMonths = incomes.map(item => item.income_month);
-  
+
       monthNames.forEach((monthName, index) => {
         const costEntry = taskExpenses.find(item => Number(item.month) === index + 1);
         const yieldEntry = incomes.find(item => item.income_month === monthName);
-  
+
         monthlyData[monthName] = {
           Cost: costEntry ? costEntry.cost || 0 : 0,
           Yield: yieldEntry ? yieldEntry.yield || 0 : 0
@@ -162,6 +173,111 @@ export class ReportServiceImpl implements ReportService {
     } catch (error) {
       throw new Error(`Error generating Other Cost / Yield report: ${error}`);
     }
+  }
+
+  async getEmployeePerfomanceReport(): Promise<any> {
+
+    const connection = getConnection();
+    const queryBuilder = connection.createQueryBuilder();
+
+    const result = await queryBuilder
+      .select([
+        "worker.name AS workerName",
+        "taskType.taskName AS taskName",
+        "CASE WHEN taskAssigned.schedule = 'Scheduled' THEN taskCard.workDate ELSE DATE(workAssigned.updatedDate) END AS workDate",
+        "workAssigned.quantity AS quantity",
+      ])
+      .from(WorkAssignedEntity, "workAssigned")
+      .leftJoin(TaskCardEntity, "taskCard", "workAssigned.taskCardId = taskCard.id")
+      .leftJoin(TaskAssignedEntity, "taskAssigned", "workAssigned.taskAssignedId = taskAssigned.id")
+      .innerJoin(TaskTypeEntity, "taskType", "workAssigned.taskId = taskType.id")
+      .innerJoin(WorkerEntity, "worker", "workAssigned.workerId = worker.id")
+      .where("taskType.taskName = :taskName", { taskName: "Pluck" })
+      .getRawMany();
+
+    return result;
+
+  }
+
+  async getCostBreakdownLineReport(): Promise<any> {
+    const connection = getConnection();
+    const queryBuilder = connection.createQueryBuilder();
+
+    const result = await queryBuilder
+      .select([
+        'DATE_FORMAT(te.createdDate, "%M") AS month',
+        'SUM(te.value) AS totalCost',
+        'e.expenseType AS expenseType',
+      ])
+      .from(TaskExpenseEntity, 'te')
+      .leftJoin('te.expense', 'e')
+      .groupBy('DATE_FORMAT(te.createdDate, "%M"), e.expenseType')
+      .getRawMany();
+
+    return result;
+  }
+
+  async getCostBreakdownPieReport(): Promise<any> {
+    const connection = getConnection();
+    const queryBuilder = connection.createQueryBuilder();
+
+    const result = await queryBuilder
+      .select("expense.expenseType", "expenseType")
+      .addSelect("SUM(taskExpense.value)", "totalCost")
+      .from(ExpensesEntity, "expense")
+      .leftJoin("expense.taskExpense", "taskExpense")
+      .groupBy("expense.expenseType")
+      .getRawMany();
+
+    return result;
+  }
+
+  async getSummaryReport(landId: number): Promise<any> {
+    const connection = getConnection();
+
+    const land = await connection.getRepository(LandEntity).findOne(landId);
+    if (!land) {
+      throw new Error(`Land with ID ${landId} not found`);
+    }
+
+    const queryBuilder = connection.createQueryBuilder();
+
+    const taskAssignedIds = await queryBuilder
+      .select("taskAssigned.id", "taskAssignedId")
+      .from(TaskAssignedEntity, "taskAssigned")
+      .where("taskAssigned.land = :landId", { landId })
+      .getRawMany();
+
+    const taskCardIds = await queryBuilder
+      .select("taskCard.id", "taskCardId")
+      .from(TaskCardEntity, "taskCard")
+      .leftJoin("taskCard.taskAssigned", "taskAssigned")
+      .where("taskAssigned.id IN (:...taskAssignedIds)", { taskAssignedIds: taskAssignedIds.map((t) => t.taskAssignedId) })
+      .getRawMany();
+
+    const workAssignedRecords = await queryBuilder
+      .select("workAssigned.quantity", "quantity")
+      .addSelect("workAssigned.units", "units")
+      .from(WorkAssignedEntity, "workAssigned")
+      .leftJoin("workAssigned.taskCard", "taskCard")
+      .leftJoin("workAssigned.taskAssigned", "taskAssigned")
+      .where("taskCard.id IN (:...taskCardIds) OR workAssigned.taskAssigned.id IN (:...taskAssignedIds)", {
+        taskCardIds: taskCardIds.map((t) => t.taskCardId),
+        taskAssignedIds: taskAssignedIds.map((t) => t.taskAssignedId),
+      })
+      .getRawMany();
+
+    const monthlyTotal = workAssignedRecords.reduce((result, record) => {
+      const month = record.workAssigned_taskCard_workDate || record.workAssigned_createdDate.getMonth() + 1;
+
+      if (!result[month]) {
+        result[month] = 0;
+      }
+      result[month] += record.quantity;
+      return result;
+    }, {});
+
+    return monthlyTotal;
   }
 
 }
