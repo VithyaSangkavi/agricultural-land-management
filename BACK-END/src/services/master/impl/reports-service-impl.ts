@@ -37,7 +37,7 @@ export class ReportServiceImpl implements ReportService {
 
 
   //Monthly crop report
-  async generateMonthlyCropReport(lotId?: number): Promise<any> {
+  async generateMonthlyCropReport(lotId?: number, startDate?: Date, endDate?: Date): Promise<any> {
     const workAssignedRepository = getRepository(WorkAssignedEntity);
 
     try {
@@ -58,10 +58,22 @@ export class ReportServiceImpl implements ReportService {
       .addSelect('EXTRACT(MONTH FROM work_assigned.updatedDate)', 'month')
       .where('EXTRACT(YEAR FROM work_assigned.updatedDate) = :pastYear', { pastYear });
 
-    // Apply lotId filter if provided
+    //filter by lot id
     if (lotId !== undefined) {
       queryForCurrentYear.andWhere('work_assigned.lotId = :lotId', { lotId });
       queryForPastYear.andWhere('work_assigned.lotId = :lotId', { lotId });
+    }
+
+     // Filter by date range
+     if (startDate && endDate) {
+      queryForCurrentYear.andWhere('work_assigned.updatedDate BETWEEN :startDate AND :endDate', {
+        startDate,
+        endDate,
+      });
+      queryForPastYear.andWhere('work_assigned.updatedDate BETWEEN :startDate AND :endDate', {
+        startDate,
+        endDate,
+      });
     }
 
     const quantitiesForCurrentYear = await queryForCurrentYear

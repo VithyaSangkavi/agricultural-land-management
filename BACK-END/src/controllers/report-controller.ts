@@ -31,10 +31,13 @@ export const getEmployeeAttendance = async (req: Request, res: Response): Promis
 
 export const getMonthlyCropReport = async (req: Request, res: Response): Promise<void> => {
   try {
-    const lotId = req.query.lotId as string | undefined; 
-    const parsedLotId = lotId ? parseInt(lotId, 10) : undefined; 
+    const { lotId, startDate, endDate } = req.query;
 
-    const monthlyCropReport = await reportServiceImpl.generateMonthlyCropReport(parsedLotId);
+    const monthlyCropReport = await reportServiceImpl.generateMonthlyCropReport(
+      lotId ? parseInt(lotId as string, 10) : undefined,
+      startDate ? new Date(startDate as string) : undefined,
+      endDate ? new Date(endDate as string) : undefined
+    );
     
     res.json(monthlyCropReport);
   } catch (error) {
