@@ -31,13 +31,17 @@ export const getEmployeeAttendance = async (req: Request, res: Response): Promis
 
 export const getMonthlyCropReport = async (req: Request, res: Response): Promise<void> => {
   try {
-    const monthlyCropReport = await reportServiceImpl.generateMonthlyCropReport();
+    const lotId = req.query.lotId as string | undefined; 
+    const parsedLotId = lotId ? parseInt(lotId, 10) : undefined; 
+
+    const monthlyCropReport = await reportServiceImpl.generateMonthlyCropReport(parsedLotId);
     
     res.json(monthlyCropReport);
   } catch (error) {
     res.status(500).json({ error: 'Failed to generate monthly crop report' });
   }
 };
+
 
 export const getOtherCostYieldReport = async (req: Request, res: Response): Promise<void> => {
   try {

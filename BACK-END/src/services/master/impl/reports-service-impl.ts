@@ -37,30 +37,40 @@ export class ReportServiceImpl implements ReportService {
 
 
   //Monthly crop report
-  async generateMonthlyCropReport(): Promise<any> {
+  async generateMonthlyCropReport(lotId?: number): Promise<any> {
     const workAssignedRepository = getRepository(WorkAssignedEntity);
 
     try {
       const currentYear = new Date().getFullYear();
       const pastYear = currentYear - 1;
 
-      const quantitiesForCurrentYear = await workAssignedRepository.createQueryBuilder('work_assigned')
-        .leftJoin(TaskTypeEntity, 'task', 'work_assigned.taskId = task.id')
-        .leftJoin(CropEntity, 'crop', 'task.cropId = crop.id')
-        .select('SUM(work_assigned.quantity)', 'totalQuantity')
-        .addSelect('EXTRACT(MONTH FROM work_assigned.updatedDate)', 'month')
-        .where('EXTRACT(YEAR FROM work_assigned.updatedDate) = :currentYear', { currentYear })
-        .groupBy('EXTRACT(MONTH FROM work_assigned.updatedDate)')
-        .getRawMany();
+      const queryForCurrentYear = workAssignedRepository.createQueryBuilder('work_assigned')
+      .leftJoin(TaskTypeEntity, 'task', 'work_assigned.taskId = task.id')
+      .leftJoin(CropEntity, 'crop', 'task.cropId = crop.id')
+      .select('SUM(work_assigned.quantity)', 'totalQuantity')
+      .addSelect('EXTRACT(MONTH FROM work_assigned.updatedDate)', 'month')
+      .where('EXTRACT(YEAR FROM work_assigned.updatedDate) = :currentYear', { currentYear });
 
-      const quantitiesForPastYear = await workAssignedRepository.createQueryBuilder('work_assigned')
-        .leftJoin(TaskTypeEntity, 'task', 'work_assigned.taskId = task.id')
-        .leftJoin(CropEntity, 'crop', 'task.cropId = crop.id')
-        .select('SUM(work_assigned.quantity)', 'totalQuantity')
-        .addSelect('EXTRACT(MONTH FROM work_assigned.updatedDate)', 'month')
-        .where('EXTRACT(YEAR FROM work_assigned.updatedDate) = :pastYear', { pastYear })
-        .groupBy('EXTRACT(MONTH FROM work_assigned.updatedDate)')
-        .getRawMany();
+    const queryForPastYear = workAssignedRepository.createQueryBuilder('work_assigned')
+      .leftJoin(TaskTypeEntity, 'task', 'work_assigned.taskId = task.id')
+      .leftJoin(CropEntity, 'crop', 'task.cropId = crop.id')
+      .select('SUM(work_assigned.quantity)', 'totalQuantity')
+      .addSelect('EXTRACT(MONTH FROM work_assigned.updatedDate)', 'month')
+      .where('EXTRACT(YEAR FROM work_assigned.updatedDate) = :pastYear', { pastYear });
+
+    // Apply lotId filter if provided
+    if (lotId !== undefined) {
+      queryForCurrentYear.andWhere('work_assigned.lotId = :lotId', { lotId });
+      queryForPastYear.andWhere('work_assigned.lotId = :lotId', { lotId });
+    }
+
+    const quantitiesForCurrentYear = await queryForCurrentYear
+    .groupBy('EXTRACT(MONTH FROM work_assigned.updatedDate)')
+    .getRawMany();
+
+  const quantitiesForPastYear = await queryForPastYear
+    .groupBy('EXTRACT(MONTH FROM work_assigned.updatedDate)')
+    .getRawMany();
 
       const getMonthName = (monthNumber: number): string => {
         const monthNames = [
