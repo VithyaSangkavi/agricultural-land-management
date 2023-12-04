@@ -8,23 +8,28 @@ import { TaskExpenseEntity } from '../../../entity/master/task-expense-entity';
 
 export class ReportServiceImpl implements ReportService {
   //Employee attendance report
-  async generateEmployeeAttendanceReport(): Promise<any> {
+  async generateEmployeeAttendanceReport(startDate?: Date, endDate?: Date): Promise<any> {
     const workAssignedRepository = getRepository(WorkAssignedEntity);
-
+    let query = workAssignedRepository
+      .createQueryBuilder('work_assigned')
+      .select('DATE(work_assigned.updatedDate)', 'date')
+      .addSelect('COUNT(DISTINCT work_assigned.workerId)', 'numberOfWorkers')
+      .groupBy('DATE(work_assigned.updatedDate)')
+      .orderBy('date', 'ASC');
+  
+    //Filter by a date range
+    if (startDate && endDate) {
+      query = query.where('work_assigned.updatedDate BETWEEN :startDate AND :endDate', { startDate, endDate });
+    }
+  
     try {
-      const employeeAttendance = await workAssignedRepository
-        .createQueryBuilder('work_assigned')
-        .select('DATE(work_assigned.updatedDate)', 'date')
-        .addSelect('COUNT(DISTINCT work_assigned.workerId)', 'numberOfWorkers')
-        .groupBy('DATE(work_assigned.updatedDate)')
-        .orderBy('date', 'ASC')
-        .getRawMany();
-
+      const employeeAttendance = await query.getRawMany();
       return employeeAttendance;
     } catch (error) {
       throw new Error(`Error fetching employee attendance: ${error}`);
     }
   }
+  
 
   //Monthly crop report
   async generateMonthlyCropReport(): Promise<any> {

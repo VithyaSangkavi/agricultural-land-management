@@ -5,7 +5,13 @@ const reportServiceImpl = new ReportServiceImpl();
 
 export const getEmployeeAttendance = async (req: Request, res: Response): Promise<void> => {
   try {
-    const employeeAttendanceReport = await reportServiceImpl.generateEmployeeAttendanceReport();
+    const startDate = req.query.startDate as string | undefined;
+    const endDate = req.query.endDate as string | undefined;
+
+    const employeeAttendanceReport = await reportServiceImpl.generateEmployeeAttendanceReport(
+      startDate ? new Date(startDate) : undefined,
+      endDate ? new Date(endDate) : undefined
+    );
 
     const formattedReport = employeeAttendanceReport.map((report) => {
       return {
@@ -20,11 +26,10 @@ export const getEmployeeAttendance = async (req: Request, res: Response): Promis
   }
 };
 
+
 export const getMonthlyCropReport = async (req: Request, res: Response): Promise<void> => {
   try {
     const monthlyCropReport = await reportServiceImpl.generateMonthlyCropReport();
-
-    // Process the monthlyCropReport if needed...
     
     res.json(monthlyCropReport);
   } catch (error) {

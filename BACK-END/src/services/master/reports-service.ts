@@ -1,5 +1,5 @@
-export interface ReportService {
-    generateEmployeeAttendanceReport(): Promise<any>;
+  export interface ReportService {
+    generateEmployeeAttendanceReport(startDate?: Date, endDate?: Date): Promise<any>;
     generateMonthlyCropReport(): Promise<any>;
     generateOtherCostYieldReport(): Promise<any>;
   }
