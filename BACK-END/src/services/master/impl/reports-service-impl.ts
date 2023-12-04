@@ -8,7 +8,7 @@ import { TaskExpenseEntity } from '../../../entity/master/task-expense-entity';
 
 export class ReportServiceImpl implements ReportService {
   //Employee attendance report
-  async generateEmployeeAttendanceReport(startDate?: Date, endDate?: Date): Promise<any> {
+  async generateEmployeeAttendanceReport(startDate?: Date, endDate?: Date, lotId?: number): Promise<any> {
     const workAssignedRepository = getRepository(WorkAssignedEntity);
     let query = workAssignedRepository
       .createQueryBuilder('work_assigned')
@@ -16,12 +16,17 @@ export class ReportServiceImpl implements ReportService {
       .addSelect('COUNT(DISTINCT work_assigned.workerId)', 'numberOfWorkers')
       .groupBy('DATE(work_assigned.updatedDate)')
       .orderBy('date', 'ASC');
-  
+
     //Filter by a date range
     if (startDate && endDate) {
-      query = query.where('work_assigned.updatedDate BETWEEN :startDate AND :endDate', { startDate, endDate });
+      query = query.andWhere('work_assigned.updatedDate BETWEEN :startDate AND :endDate', { startDate, endDate });
     }
-  
+
+    // Filter by lotId 
+    if (lotId) {
+      query = query.andWhere('work_assigned.lotId = :lotId', { lotId });
+    }
+
     try {
       const employeeAttendance = await query.getRawMany();
       return employeeAttendance;
@@ -29,7 +34,7 @@ export class ReportServiceImpl implements ReportService {
       throw new Error(`Error fetching employee attendance: ${error}`);
     }
   }
-  
+
 
   //Monthly crop report
   async generateMonthlyCropReport(): Promise<any> {
@@ -152,11 +157,11 @@ export class ReportServiceImpl implements ReportService {
       // Merge the cost and yield data for each month
       const monthlyData = {};
       const incomeMonths = incomes.map(item => item.income_month);
-  
+
       monthNames.forEach((monthName, index) => {
         const costEntry = taskExpenses.find(item => Number(item.month) === index + 1);
         const yieldEntry = incomes.find(item => item.income_month === monthName);
-  
+
         monthlyData[monthName] = {
           Cost: costEntry ? costEntry.cost || 0 : 0,
           Yield: yieldEntry ? yieldEntry.yield || 0 : 0

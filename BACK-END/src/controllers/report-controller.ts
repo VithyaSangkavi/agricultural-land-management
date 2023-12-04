@@ -7,10 +7,12 @@ export const getEmployeeAttendance = async (req: Request, res: Response): Promis
   try {
     const startDate = req.query.startDate as string | undefined;
     const endDate = req.query.endDate as string | undefined;
+    const lotId = req.query.lotId as string | undefined;
 
     const employeeAttendanceReport = await reportServiceImpl.generateEmployeeAttendanceReport(
       startDate ? new Date(startDate) : undefined,
-      endDate ? new Date(endDate) : undefined
+      endDate ? new Date(endDate) : undefined,
+      lotId ? parseInt(lotId, 10) : undefined 
     );
 
     const formattedReport = employeeAttendanceReport.map((report) => {
