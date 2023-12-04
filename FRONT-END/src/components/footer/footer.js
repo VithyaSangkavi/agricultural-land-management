@@ -4,6 +4,8 @@ import { faBars, faHome, faChartPie } from '@fortawesome/free-solid-svg-icons';
 import './footer.css'
 import { useHistory } from 'react-router-dom'
 import Navbar from 'react-bootstrap/Navbar';
+import axios from 'axios';
+
 
 const Footer = () => {
     const [isSideNavOpen, setIsSideNavOpen] = useState(false);
@@ -17,9 +19,13 @@ const Footer = () => {
     const clickHome = () => {
         history.push('/home')
     }
-    
+
     const clickReport = () => {
         history.push('/report')
+        axios.post('http://localhost:8080/service/master/work-assigned-saveWorkDates')
+            .then((response) => {
+                console.log('successfull', response);
+            })
     }
 
     return (
@@ -34,7 +40,7 @@ const Footer = () => {
                         <FontAwesomeIcon icon={faHome} size="2x" onClick={clickHome} />
                     </div>
                     <div className="footer-icon">
-                        <FontAwesomeIcon icon={faChartPie} size="2x" onClick={clickReport}/>
+                        <FontAwesomeIcon icon={faChartPie} size="2x" onClick={clickReport} />
                     </div>
                 </div>
             </div>

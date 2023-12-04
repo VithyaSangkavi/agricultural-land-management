@@ -233,51 +233,130 @@ export class ReportServiceImpl implements ReportService {
   }
 
   async getSummaryReport(landId: number): Promise<any> {
-    const connection = getConnection();
+    const workAssignedRepository = getRepository(WorkAssignedEntity);
 
-    const land = await connection.getRepository(LandEntity).findOne(landId);
-    if (!land) {
-      throw new Error(`Land with ID ${landId} not found`);
-    }
+    const workAssignedEntities = await workAssignedRepository
+      .createQueryBuilder("workAssigned")
+      .leftJoinAndSelect("workAssigned.taskCard", "taskCard")
+      .leftJoinAndSelect("taskCard.taskAssigned", "taskAssigned")
+      .leftJoinAndSelect("taskAssigned.land", "land")
+      .where("land.id = :landId", { landId })
+      .getMany();
 
-    const queryBuilder = connection.createQueryBuilder();
+    // Step 01
+    const pluckTaskIds = await (await getRepository(TaskTypeEntity)
+      .createQueryBuilder("task")
+      .where("task.taskName = :taskName", { taskName: "Pluck" })
+      .select("task.id")
+      .getMany())
+      .map(task => task.id);
 
-    const taskAssignedIds = await queryBuilder
-      .select("taskAssigned.id", "taskAssignedId")
-      .from(TaskAssignedEntity, "taskAssigned")
-      .where("taskAssigned.land = :landId", { landId })
+    // Step 02
+    const taskAssignedIds = await (await getRepository(TaskAssignedEntity)
+      .createQueryBuilder("taskAssigned")
+      .leftJoinAndSelect("taskAssigned.land", "land")
+      .where("land.id = :landId", { landId })
+      .andWhere("taskAssigned.taskId IN (:...pluckTaskIds)", { pluckTaskIds })
+      .select("taskAssigned.id")
+      .getMany())
+      .map(taskAssigned => taskAssigned.id);
+
+    // Step 03
+    const monthlyExpenses = await getRepository(TaskExpenseEntity)
+      .createQueryBuilder("taskExpense")
+      .select("SUM(taskExpense.value)", "totalExpense")
+      .addSelect("DATE_FORMAT(taskExpense.createdDate, '%M %Y')", "monthYear")
+      .where("taskExpense.taskAssignedId IN (:...taskAssignedIds)", { taskAssignedIds })
+      .groupBy("monthYear")
       .getRawMany();
 
-    const taskCardIds = await queryBuilder
-      .select("taskCard.id", "taskCardId")
-      .from(TaskCardEntity, "taskCard")
-      .leftJoin("taskCard.taskAssigned", "taskAssigned")
-      .where("taskAssigned.id IN (:...taskAssignedIds)", { taskAssignedIds: taskAssignedIds.map((t) => t.taskAssignedId) })
+    // Filter Non Pluck Task Id from Task Table
+    const pluckTaskIds2 = await getRepository(TaskTypeEntity)
+      .createQueryBuilder("task")
+      .where("task.taskName = :pluckTaskName", { pluckTaskName: "Pluck" })
+      .getMany();
+
+    const pluckTaskIdsArray = pluckTaskIds2.map((pluckTask) => pluckTask.id);
+
+    // Filter TaskAssignedIds Related to Excluded Pluck Tasks from TaskAssigned Table
+    const nonPluckTaskAssignedIds = await getRepository(TaskAssignedEntity)
+      .createQueryBuilder("taskAssigned")
+      .leftJoinAndSelect("taskAssigned.land", "land")
+      .where("land.id = :landId", { landId })
+      .andWhere("taskAssigned.taskId NOT IN (:pluckTaskIds2)", { pluckTaskIds2: pluckTaskIdsArray })
+      .getMany();
+
+    const nonPluckTaskAssignedIdsArray = nonPluckTaskAssignedIds.map((taskAssigned) => taskAssigned.id);
+
+    // Calculate Sum of Values for Each Month Based on Filtered TaskAssignedIds using TaskExpenses Table
+    const monthlyExpenses2 = await getRepository(TaskExpenseEntity)
+      .createQueryBuilder("taskExpense")
+      .select("SUM(taskExpense.value)", "totalExpense")
+      .addSelect("DATE_FORMAT(taskExpense.createdDate, '%M %Y')", "monthYear")
+      .where("taskExpense.taskAssignedId IN (:taskAssignedIds)", { taskAssignedIds: nonPluckTaskAssignedIdsArray })
+      .groupBy("monthYear")
       .getRawMany();
 
-    const workAssignedRecords = await queryBuilder
-      .select("workAssigned.quantity", "quantity")
-      .addSelect("workAssigned.units", "units")
-      .from(WorkAssignedEntity, "workAssigned")
-      .leftJoin("workAssigned.taskCard", "taskCard")
-      .leftJoin("workAssigned.taskAssigned", "taskAssigned")
-      .where("taskCard.id IN (:...taskCardIds) OR workAssigned.taskAssigned.id IN (:...taskAssignedIds)", {
-        taskCardIds: taskCardIds.map((t) => t.taskCardId),
-        taskAssignedIds: taskAssignedIds.map((t) => t.taskAssignedId),
-      })
+    // Filter Salary Expense Id from Expense Table
+    const salaryExpense = await getRepository(ExpensesEntity)
+      .createQueryBuilder("expense")
+      .where("expense.expenseType = :salaryExpenseType", { salaryExpenseType: "Salary" })
+      .getOne();
+
+    const salaryExpenseId = salaryExpense?.id;
+
+    // Filter Records Related to Excluded Salary Expense from Task-Expense Table
+    const excludedSalaryTaskExpenses = await getRepository(TaskExpenseEntity)
+      .createQueryBuilder("taskExpense")
+      .where("taskExpense.expenseId != :salaryExpenseId", { salaryExpenseId })
+      .getMany();
+
+    const excludedSalaryTaskExpenseIds = excludedSalaryTaskExpenses.map((taskExpense) => taskExpense.id);
+
+    // Step 03 - Calculate Sum of Values for Each Month Based on Filtered Records using Task-Expenses Table
+    const monthlyExpenses3 = await getRepository(TaskExpenseEntity)
+      .createQueryBuilder("taskExpense")
+      .select("SUM(taskExpense.value)", "totalExpense")
+      .addSelect("DATE_FORMAT(taskExpense.createdDate, '%M %Y')", "monthYear")
+      .where("taskExpense.id IN (:taskExpenseIds)", { taskExpenseIds: excludedSalaryTaskExpenseIds })
+      .groupBy("monthYear")
       .getRawMany();
 
-    const monthlyTotal = workAssignedRecords.reduce((result, record) => {
-      const month = record.workAssigned_taskCard_workDate || record.workAssigned_createdDate.getMonth() + 1;
+      
 
-      if (!result[month]) {
-        result[month] = 0;
+    const quantitySummary = workAssignedEntities.reduce((summary, workAssigned) => {
+      const workDate = workAssigned.taskCard.workDate || workAssigned.startDate.toISOString().split("T")[0];
+      const year = new Date(workDate).getFullYear();
+      const month = new Date(workDate).toLocaleString('en-US', { month: 'long' });
+      const key = `${month} ${year}`;
+
+      if (!summary[key]) {
+        summary[key] = 0;
       }
-      result[month] += record.quantity;
-      return result;
+
+      summary[key] += workAssigned.quantity || 0;
+
+      return summary;
     }, {});
 
-    return monthlyTotal;
-  }
+    const combinedSummary = Object.entries(quantitySummary).map(([key, totalQuantity]) => {
+      const [month, year] = key.split(' ');
 
+      // Find the corresponding expense for the month
+      const expenseForMonth = monthlyExpenses.find(expense => expense.monthYear === `${month} ${year}`);
+      const finalMonthlyExpenses = monthlyExpenses2.find(otherExpense => otherExpense.monthYear === `${month} ${year}`);
+      // const NonCrewMonthlyExpenses = monthlyExpenses3.find(noncrewExpense => noncrewExpense.monthYear === `${month} ${year}`);
+
+      return {
+        month,
+        year,
+        totalQuantity,
+        PluckExpense: expenseForMonth ? parseFloat(expenseForMonth.totalExpense) : 0,
+        OtherExpenses: finalMonthlyExpenses ? parseFloat(finalMonthlyExpenses.totalExpense) : 0,
+        // NonCrewExpenses: NonCrewMonthlyExpenses ? parseFloat(finalMonthlyExpenses.totalExpense) : 0,
+      };
+    });
+
+    return combinedSummary;
+  }
 }

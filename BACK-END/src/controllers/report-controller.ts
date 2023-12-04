@@ -81,3 +81,14 @@ export const getSummaryReport = async (req: Request, res: Response): Promise<voi
     res.status(500).json({ error: 'Failed to generate cost Summary Report report' });
   }
 };
+
+// export const getSummaryReport = async (req: Request, res: Response): Promise<void> => {
+//   const landId = req.params.landId;
+
+//   try {
+//     const costSummaryReport = await reportServiceImpl.getSummaryReport();
+//     res.json(costSummaryReport);
+//   } catch (error) {
+//     res.status(500).json({ error: 'Failed to generate cost Summary Report report' });
+//   }
+// };

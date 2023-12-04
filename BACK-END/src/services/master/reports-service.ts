@@ -6,5 +6,6 @@ export interface ReportService {
     getCostBreakdownLineReport(): Promise<any>;
     getCostBreakdownPieReport(): Promise<any>;
     getSummaryReport(landId: number): Promise<any>;
+    // getSummaryReport(): Promise<any>;
   }
   

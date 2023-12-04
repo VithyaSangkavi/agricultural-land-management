@@ -121,6 +121,7 @@ function SideNavBar() {
             </div>
           </button>
         </div>
+        
         </AnimatedPage>
         <div className='footer-alignment'>
           <Footer />
