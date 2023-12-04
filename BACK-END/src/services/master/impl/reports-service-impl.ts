@@ -133,8 +133,8 @@ export class ReportServiceImpl implements ReportService {
       // Get task expenses grouped by month
       const taskExpenses = await taskExpenseRepository.createQueryBuilder('task_expense')
         .select('SUM(task_expense.value)', 'cost')
-        .addSelect('EXTRACT(MONTH FROM task_expense.updatedDate)', 'month')
-        .groupBy('EXTRACT(MONTH FROM task_expense.updatedDate)')
+        .addSelect('EXTRACT(MONTH FROM task_expense.createdDate)', 'month')
+        .groupBy('EXTRACT(MONTH FROM task_expense.createdDate)')
         .getRawMany();
 
       // Get incomes grouped by month

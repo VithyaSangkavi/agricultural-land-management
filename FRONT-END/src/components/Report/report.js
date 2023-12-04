@@ -8,6 +8,9 @@ import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { FaPlus } from 'react-icons/fa';
+import EmployeeAttendanceReport from './employee-attendance-report';
+import MonthlyCropReport from './monthly-crop-report';
+import CostYieldReport from './other-cost-yield-report';
 
 function Report() {
     const [t, i18n] = useTranslation();
@@ -20,6 +23,31 @@ function Report() {
     const [selectedWorker, setSelectedWorker] = useState('');
     const [isFilterExpanded, setFilterExpanded] = useState(false);
 
+    const [showEmployeeAttendanceReport, setShowEmployeeAttendanceReport] = useState(false);
+    const [showMonthlyCropReport, setShowMonthlyCropReport] = useState(false);
+    const [showCostYieldReport, setShowCostYieldReport] = useState(false);
+
+    const handleReportChange = (event) => {
+        setSelectedReport(event.target.value);
+
+        if (event.target.value === 'Employee Attendance') {
+            setShowEmployeeAttendanceReport(true);
+        } else {
+            setShowEmployeeAttendanceReport(false);
+        }
+
+        if (event.target.value === 'Monthly Crop') {
+            setShowMonthlyCropReport(true);
+        } else {
+            setShowMonthlyCropReport(false);
+        }
+
+        if (event.target.value === 'Other Cost / Yield') {
+            setShowCostYieldReport(true);
+        } else {
+            setShowCostYieldReport(false);
+        }
+    };
 
     useEffect(() => {
         axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
@@ -45,9 +73,9 @@ function Report() {
             });
     }
 
-    const handleReportChange = (event) => {
-        setSelectedReport(event.target.value);
-    };
+    // const handleReportChange = (event) => {
+    //     setSelectedReport(event.target.value);
+    // };
 
     const handleDateRangeChange = (event) => {
         const { name, value } = event.target;
@@ -73,44 +101,44 @@ function Report() {
     return (
         <div className="home-app-screen">
             <p className='main-heading'>Report
-            <div className="filter-icon" onClick={handleToggleFilter}>
-                <FaPlus />
-            </div>
-
-            {isFilterExpanded && (
-                <div>
-                    <div>
-                        <label>Date Range:</label>
-                        <input
-                            type="date"
-                            name="fromDate"
-                            value={dateRange.fromDate}
-                            onChange={handleDateRangeChange}
-                        />
-                        <span> - </span>
-                        <input
-                            type="date"
-                            name="toDate"
-                            value={dateRange.toDate}
-                            onChange={handleDateRangeChange}
-                        />
-                    </div>
-
-                    <div>
-                        <label>Select Lot:</label>
-                        <select value={selectedLot} onChange={handleLotChange}>
-                            <option value="">Select Lot</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label>Select Worker:</label>
-                        <select value={selectedWorker} onChange={handleWorkerChange}>
-                            <option value="">Select Worker</option>
-                        </select>
-                    </div>
+                <div className="filter-icon" onClick={handleToggleFilter}>
+                    <FaPlus />
                 </div>
-            )}
+
+                {isFilterExpanded && (
+                    <div>
+                        <div>
+                            <label>Date Range:</label>
+                            <input
+                                type="date"
+                                name="fromDate"
+                                value={dateRange.fromDate}
+                                onChange={handleDateRangeChange}
+                            />
+                            <span> - </span>
+                            <input
+                                type="date"
+                                name="toDate"
+                                value={dateRange.toDate}
+                                onChange={handleDateRangeChange}
+                            />
+                        </div>
+
+                        <div>
+                            <label>Select Lot:</label>
+                            <select value={selectedLot} onChange={handleLotChange}>
+                                <option value="">Select Lot</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label>Select Worker:</label>
+                            <select value={selectedWorker} onChange={handleWorkerChange}>
+                                <option value="">Select Worker</option>
+                            </select>
+                        </div>
+                    </div>
+                )}
             </p>
             <div className="position-absolute top-0 end-0 me-2">
                 <Dropdown alignRight onSelect={handleLanguageChange}>
@@ -126,7 +154,7 @@ function Report() {
             </div>
 
 
-            
+
 
 
             <div className='drop-down-container'>
@@ -145,18 +173,20 @@ function Report() {
                 <br />
             </div>
             <select className='report-dropdown'
-            //   value={gender}
-            //   className="input-field"
+                value={selectedReport}
+                onChange={handleReportChange}
             >
                 <option value="">Report Name</option>
-                <option value="expense">Expenses</option>
-                <option value="income">Income</option>
-                <option value="income">Workers</option>
                 <option value="Summary">Summary</option>
                 <option value="Employee Perfomance">Employee Perfomance</option>
                 <option value="Cost Breakdown">Cost Breakdown</option>
+                <option value="Employee Attendance">Employee Attendance</option>
+                <option value="Monthly Crop">Monthly Crop</option>
+                <option value="Other Cost / Yield">Other Cost / Yield</option>
             </select>
-
+            {showEmployeeAttendanceReport && <EmployeeAttendanceReport />}
+            {showMonthlyCropReport && <MonthlyCropReport />}
+            {showCostYieldReport && <CostYieldReport />}
             < br />
             <Footer />
         </div>
