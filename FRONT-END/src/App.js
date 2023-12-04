@@ -54,7 +54,9 @@ import ManageTaskSheduled from './components/Task/manage-task-shedule';
 
 import HomeNewTasks from './components/home/home-new-tasks';
 import Report from './components/Report/report';
-
+import EmployeeAttendanceReport from './components/Report/employee-attendance-report';
+import MonthlyCropReport from './components/Report/monthly-crop-report';
+import CostYieldReport from './components/Report/other-cost-yield-report';
 
 class App extends React.Component {
   _isMounted = false;
@@ -163,6 +165,10 @@ class App extends React.Component {
           <RoleBasedRouting path="/manageTaskSheduled"><ManageTaskSheduled /></RoleBasedRouting>
 
           <RoleBasedRouting path="/homeNewTasks"><HomeNewTasks /></RoleBasedRouting>
+          
+          <RoleBasedRouting path="/employee-attendance-report"><EmployeeAttendanceReport /></RoleBasedRouting>
+          <RoleBasedRouting path="/monthly-crop-report"><MonthlyCropReport /></RoleBasedRouting>
+          <RoleBasedRouting path="/other-cost-yield-report"><CostYieldReport /></RoleBasedRouting>
 
           <RoleBasedRouting path="/dashboard" exact roles={[usrRoles.CM]}><DashboardComponent/></RoleBasedRouting>
 

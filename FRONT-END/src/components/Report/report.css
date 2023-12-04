@@ -5,3 +5,60 @@
     width: 90%;
     margin-left: 15px;
 }
+
+.report-app-screen {
+    max-width: 100%;
+    margin: 10px;
+    /* padding: 16px; */
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    /* background-image: url('../../assets/img/background.jpg'); */
+    background-size: cover;
+    border: none;
+    padding: 10px;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: relative;
+    background-color: white;
+}
+
+.attendance-report{
+    justify-content: center;
+}
+
+/* Define styles for the attendance table */
+.attendance-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  /* Styles for table headers */
+  .attendance-table th {
+    background-color: #f2f2f2;
+    text-align: left;
+    padding: 8px;
+    font-weight: bold;
+  }
+  
+  /* Styles for table rows */
+  .attendance-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  /* Styles for table data cells */
+  .attendance-table td {
+    padding: 8px;
+  }
+  
+  /* Styles for the overall report */
+  .attendance-report {
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    padding: 20px;
+  }
+  
+  /* Heading styles */
+  .attendance-report h2 {
+    margin-bottom: 10px;
+  }
+  
