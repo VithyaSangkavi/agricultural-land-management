@@ -215,7 +215,7 @@ function Report() {
             {showCostYieldReport && <CostYieldReport />}
             {showEmployeePerfomnce && <EmployeePerfomnce />}
             {showCostBreakdown && <CostBreakdownReport />}
-            {showSummary && <SummaryReport />}
+            {showSummary && <SummaryReport selectedLand={selectedLand} />}
             < br />
             <Footer />
         </div>

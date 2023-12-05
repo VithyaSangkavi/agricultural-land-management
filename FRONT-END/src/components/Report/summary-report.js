@@ -8,23 +8,43 @@ import { Line } from 'react-chartjs-2';
 ChartJS.register(LineElement, PointElement, Tooltip, Legend, LinearScale, TimeScale);
 
 
-const SummaryReport = () => {
-    var landId = localStorage.getItem('SelectedLandId');
-    const [summaryData, setSummaryeData] = useState([]);
+const SummaryReport = ({ selectedLand }) => {
+    const [landId, setLandId] = useState('');
 
     useEffect(() => {
-        const fetchSummaryeData = async () => {
+        // Update the landId whenever selectedLand changes
+        axios.post(`http://localhost:8080/service/master/findLandIdByName?name=${selectedLand}`)
+            .then((response) => {
+                const landIdTask = response.data.extra;
+                const taskLand = JSON.stringify(landIdTask);
+                const landData = JSON.parse(taskLand);
+                const newLandId = landData.landId;
+                console.log('Selected Land Id:', newLandId);
+                localStorage.setItem('SelectedLandId', newLandId);
+                setLandId(newLandId);
+            })
+            .catch((error) => {
+                console.error("Error fetching data:", error);
+            });
+    }, [selectedLand]);
+
+
+    const [summaryData, setSummaryData] = useState([]);
+
+    useEffect(() => {
+        // Fetch summaryData when landId changes
+        const fetchSummaryData = async () => {
             try {
                 const response = await axios.get(`http://localhost:8080/service/master/summary/${landId}`);
                 console.log(response.data);
-                setSummaryeData(response.data);
+                setSummaryData(response.data);
             } catch (error) {
                 console.error('Error fetching employee summary:', error);
             }
         };
 
-        fetchSummaryeData();
-    }, []);
+        fetchSummaryData();
+    }, [landId]);
 
     return (
         <>
