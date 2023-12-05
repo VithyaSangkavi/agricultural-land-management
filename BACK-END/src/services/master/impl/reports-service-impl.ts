@@ -17,6 +17,7 @@ import { Schedule } from '../../../enum/schedule';
 
 
 
+
 export class ReportServiceImpl implements ReportService {
   //Employee attendance report
   async generateEmployeeAttendanceReport(): Promise<any> {
@@ -272,6 +273,7 @@ export class ReportServiceImpl implements ReportService {
       .groupBy("monthYear")
       .getRawMany();
 
+
     // Filter Non Pluck Task Id from Task Table
     const pluckTaskIds2 = await getRepository(TaskTypeEntity)
       .createQueryBuilder("task")
@@ -299,6 +301,8 @@ export class ReportServiceImpl implements ReportService {
       .groupBy("monthYear")
       .getRawMany();
 
+
+
     // Filter Salary Expense Id from Expense Table
     const salaryExpense = await getRepository(ExpensesEntity)
       .createQueryBuilder("expense")
@@ -324,7 +328,29 @@ export class ReportServiceImpl implements ReportService {
       .groupBy("monthYear")
       .getRawMany();
 
-      
+
+    // income Records by Months
+    const groupedIncomeByMonthAndYear = await getRepository(IncomeEntity)
+      .createQueryBuilder("income")
+      .select([
+        "CONCAT(income.month, ' ', YEAR(income.createdDate)) AS monthYear",
+        "SUM(income.price) AS totalIncome"
+      ])
+      .where("income.landId = :landId", { landId })
+      .groupBy("monthYear")
+      .getRawMany();
+
+
+    //total expenses
+    const monthlyExpenses4 = await getRepository(TaskExpenseEntity)
+      .createQueryBuilder("taskExpense")
+      .select("SUM(taskExpense.value)", "totalExpense")
+      .addSelect("DATE_FORMAT(taskExpense.createdDate, '%M %Y')", "monthYear")
+      .where("taskExpense.taskAssignedId IN (:...taskAssignedIds)", { taskAssignedIds })
+      .groupBy("monthYear")
+      .getRawMany();
+
+
 
     const quantitySummary = workAssignedEntities.reduce((summary, workAssigned) => {
       const workDate = workAssigned.taskCard.workDate || workAssigned.startDate.toISOString().split("T")[0];
@@ -341,13 +367,18 @@ export class ReportServiceImpl implements ReportService {
       return summary;
     }, {});
 
+
     const combinedSummary = Object.entries(quantitySummary).map(([key, totalQuantity]) => {
       const [month, year] = key.split(' ');
 
-      // Find the corresponding expense for the month
       const expenseForMonth = monthlyExpenses.find(expense => expense.monthYear === `${month} ${year}`);
       const finalMonthlyExpenses = monthlyExpenses2.find(otherExpense => otherExpense.monthYear === `${month} ${year}`);
-      // const NonCrewMonthlyExpenses = monthlyExpenses3.find(noncrewExpense => noncrewExpense.monthYear === `${month} ${year}`);
+      const additionalMonthlyExpenses = monthlyExpenses3.find(taskExpense => taskExpense.monthYear === `${month} ${year}`);
+      const incomeForMonth = groupedIncomeByMonthAndYear.find(income => income.monthYear === `${month} ${year}`);
+      const taskExpenseForMonth = monthlyExpenses4.find(taskExpense => taskExpense.monthYear === `${month} ${year}`);
+
+      const CIR = ((taskExpenseForMonth ? parseFloat(taskExpenseForMonth.totalExpense) : 0) /
+        (incomeForMonth ? parseFloat(incomeForMonth.totalIncome) : 0)).toFixed(3);
 
       return {
         month,
@@ -355,10 +386,15 @@ export class ReportServiceImpl implements ReportService {
         totalQuantity,
         PluckExpense: expenseForMonth ? parseFloat(expenseForMonth.totalExpense) : 0,
         OtherExpenses: finalMonthlyExpenses ? parseFloat(finalMonthlyExpenses.totalExpense) : 0,
-        // NonCrewExpenses: NonCrewMonthlyExpenses ? parseFloat(finalMonthlyExpenses.totalExpense) : 0,
+        NonCrewExpenses: additionalMonthlyExpenses ? parseFloat(additionalMonthlyExpenses.totalExpense) : 0,
+        TotalIncome: incomeForMonth ? parseFloat(incomeForMonth.totalIncome) : 0,
+        TaskExpenses: taskExpenseForMonth ? parseFloat(taskExpenseForMonth.totalExpense) : 0,
+
+        Profit: (incomeForMonth ? parseFloat(incomeForMonth.totalIncome) : 0) - (taskExpenseForMonth ? parseFloat(taskExpenseForMonth.totalExpense) : 0),
+        CIR: parseFloat(CIR),
       };
     });
-
     return combinedSummary;
   }
 }
+

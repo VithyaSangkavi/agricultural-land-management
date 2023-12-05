@@ -13,6 +13,7 @@ import MonthlyCropReport from './monthly-crop-report';
 import CostYieldReport from './other-cost-yield-report';
 import EmployeePerfomnce from './employee-perfomnce-report';
 import CostBreakdownReport from './cost-breakdown-report';
+import SummaryReport from './summary-report';
 
 function Report() {
     const [t, i18n] = useTranslation();
@@ -31,6 +32,7 @@ function Report() {
 
     const [showEmployeePerfomnce, setEmployeePerfomnce] = useState(false);
     const [showCostBreakdown, setCostBreakdown] = useState(false);
+    const [showSummary, setSummary] = useState(false);
 
     const handleReportChange = (event) => {
         setSelectedReport(event.target.value);
@@ -63,6 +65,12 @@ function Report() {
             setCostBreakdown(true);
         } else {
             setCostBreakdown(false);
+        }
+
+        if (event.target.value === 'Summary') {
+            setSummary(true);
+        } else {
+            setSummary(false);
         }
     };
 
@@ -207,6 +215,7 @@ function Report() {
             {showCostYieldReport && <CostYieldReport />}
             {showEmployeePerfomnce && <EmployeePerfomnce />}
             {showCostBreakdown && <CostBreakdownReport />}
+            {showSummary && <SummaryReport />}
             < br />
             <Footer />
         </div>

@@ -59,6 +59,7 @@ import MonthlyCropReport from './components/Report/monthly-crop-report';
 import CostYieldReport from './components/Report/other-cost-yield-report';
 import EmployeePerfomnce from './components/Report/employee-perfomnce-report';
 import CostBreakdownReport from './components/Report/cost-breakdown-report';
+import SummaryReport from './components/Report/summary-report';
 
 class App extends React.Component {
   _isMounted = false;
@@ -173,6 +174,7 @@ class App extends React.Component {
           <RoleBasedRouting path="/other-cost-yield-report"><CostYieldReport /></RoleBasedRouting>
           <RoleBasedRouting path="/employee-perfomnce-report"><EmployeePerfomnce /></RoleBasedRouting>
           <RoleBasedRouting path="/cost-breakdown-report"><CostBreakdownReport /></RoleBasedRouting>
+          <RoleBasedRouting path="/summary-report"><SummaryReport /></RoleBasedRouting>
 
           <RoleBasedRouting path="/dashboard" exact roles={[usrRoles.CM]}><DashboardComponent/></RoleBasedRouting>
 
