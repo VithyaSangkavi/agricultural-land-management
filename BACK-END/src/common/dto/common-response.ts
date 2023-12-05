@@ -7,6 +7,8 @@ export class CommonResponse {
   private extra: Object = "";
 
   private count: number = 0;
+  success: boolean;
+  message: string;
 
   public getCount(): number {
     return this.count;

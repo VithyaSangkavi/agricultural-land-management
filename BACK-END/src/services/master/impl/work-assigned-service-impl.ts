@@ -17,7 +17,7 @@ import { WorkerEntity } from "../../../entity/master/worker-entity";
 import { TaskTypeEntity } from "../../../entity/master/task-type-entity";
 import { LotEntity } from "../../../entity/master/lot-entity";
 import { TaskAssignedEntity } from "../../../entity/master/task-assigned-entity";
-import { getConnection } from "typeorm";
+import { IsNull, Not, getConnection, getRepository } from "typeorm";
 import { WorkAssignedEntity } from "../../../entity/master/work-assigned-entity";
 import { Status } from "../../../enum/Status";
 import { TaskCardDao } from "../../../dao/task-card-dao";
@@ -330,7 +330,7 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
     try {
       // Delete work assignments by both workerId and taskCardId
       const deleted = await this.workAssignedDao.deleteByWorkerAndTaskCardId(workerId, taskCardId);
-  
+
       if (deleted) {
         cr.setStatus(true);
       } else {
@@ -344,6 +344,42 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
     }
     return cr;
   }
-  
+
+  async saveWorkDates(workAssignedDto: WorkAssignedDto): Promise<CommonResponse> {
+    let cr = new CommonResponse();
+
+    try {
+      const connection = getConnection();
+
+      // Step 1: Fetch taskCardIds from the work-assigned table
+      const workAssignedEntities = await connection
+        .getRepository(WorkAssignedEntity)
+        .find({ relations: ["taskCard"] });
+
+      // Step 2: Check and update work-assigned table
+      for (const workAssignedEntity of workAssignedEntities) {
+        const taskCardEntity = workAssignedEntity.taskCard;
+
+        if (taskCardEntity && taskCardEntity.workDate) {
+          // Step 3: Update the work-assigned table with workDate
+          await connection
+            .getRepository(WorkAssignedEntity)
+            .update(
+              { id: workAssignedEntity.id },
+              { workDate: taskCardEntity.workDate }
+            );
+        }
+      }
+
+      // Set success response
+      cr.setStatus(true);
+    } catch (error) {
+      console.error("Error saving work dates:", error);
+      cr.setStatus(false);
+    }
+
+    return cr;
+  }
+
 
 }

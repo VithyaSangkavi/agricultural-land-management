@@ -54,7 +54,7 @@ export class TaskAssignedDaoImpl implements TaskAssignedDao {
       where: searchObject,
       skip: taskAssignedDto.getStartIndex(),
       take: taskAssignedDto.getMaxResult(),
-      order:{id:"DESC"}
+      order: { id: "DESC" }
     });
     return taskAssignedModel;
   }
@@ -72,7 +72,7 @@ export class TaskAssignedDaoImpl implements TaskAssignedDao {
 
   async findByName(status: Status): Promise<TaskAssignedEntity> {
     let taskAssignedRepo = getConnection().getRepository(TaskAssignedEntity);
-    let taskAssignedModel = await taskAssignedRepo.findOne({ where: { status: status} });
+    let taskAssignedModel = await taskAssignedRepo.findOne({ where: { status: status } });
     return taskAssignedModel;
   }
 
@@ -81,31 +81,52 @@ export class TaskAssignedDaoImpl implements TaskAssignedDao {
     console.log("Searching for taskId:", taskId);
     const taskAssignedModel = await taskAssignedRepo.findOne({
       where: { task: taskId },
-    }); 
-    console.log("Query result:", taskAssignedModel); 
+    });
+    console.log("Query result:", taskAssignedModel);
     return taskAssignedModel;
-  } 
+  }
 
   async updateEndDate(taskAssignedId: number, endDate: Date, newStatus: string): Promise<TaskAssignedEntity | null> {
     const incomeRepository = getConnection().getRepository(TaskAssignedEntity);
 
     try {
-        const details = await incomeRepository.findOne(taskAssignedId);
+      const details = await incomeRepository.findOne(taskAssignedId);
 
-        details.endDate = new Date();
-        details.taskStatus = newStatus as TaskStatus;
+      details.endDate = new Date();
+      details.taskStatus = newStatus as TaskStatus;
 
-        const updatedDate = await incomeRepository.save(details);
+      const updatedDate = await incomeRepository.save(details);
 
-        return updatedDate;
+      return updatedDate;
     } catch (error) {
-        throw error;
+      throw error;
     }
-}
+  }
+
+  async updateStatus(taskAssignedId: number, newStatus: string): Promise<TaskAssignedEntity | null> {
+    const incomeRepository = getConnection().getRepository(TaskAssignedEntity);
+
+    try {
+      const existingStatus = await incomeRepository.findOne(taskAssignedId);
+
+      if (!existingStatus) {
+        return null;
+      }
+
+      // Use type casting to assign newStatus to schedule
+      existingStatus.schedule = newStatus as Schedule;
+
+      const updatedStatus = await incomeRepository.save(existingStatus);
+
+      return updatedStatus;
+    } catch (error) {
+      throw error;
+    }
+  }
 
   async preparetaskAssignedModel(taskAssignedModel: TaskAssignedEntity, taskAssignedDto: TaskAssignedDto) {
     taskAssignedModel.startDate = taskAssignedDto.getStartDate();
-    taskAssignedModel.endDate = taskAssignedDto.getEndDate(); 
+    taskAssignedModel.endDate = taskAssignedDto.getEndDate();
     taskAssignedModel.status = taskAssignedDto.getStatus();
     taskAssignedModel.taskStatus = taskAssignedDto.getTaskStatus();
     taskAssignedModel.schedule = Schedule.NotScheduled;
@@ -114,10 +135,10 @@ export class TaskAssignedDaoImpl implements TaskAssignedDao {
     let searchObject: any = {};
 
     if (taskAssignedDto.getStartDate()) {
-        searchObject.startDate = Like("%" + taskAssignedDto.getStartDate() + "%");
+      searchObject.startDate = Like("%" + taskAssignedDto.getStartDate() + "%");
     }
     if (taskAssignedDto.getEndDate()) {
-        searchObject.endDate = Like("%" + taskAssignedDto.getEndDate() + "%");
+      searchObject.endDate = Like("%" + taskAssignedDto.getEndDate() + "%");
     }
     searchObject.status = Status.Online;
 
@@ -126,10 +147,10 @@ export class TaskAssignedDaoImpl implements TaskAssignedDao {
     searchObject.schedule = Schedule.NotScheduled;
 
     if (taskAssignedDto.getLandId()) {
-        searchObject.landId = Like("%" + taskAssignedDto.getLandId() + "%");
+      searchObject.landId = Like("%" + taskAssignedDto.getLandId() + "%");
     }
     if (taskAssignedDto.getTaskId()) {
-        searchObject.taskId = Like("%" + taskAssignedDto.getTaskId() + "%");
+      searchObject.taskId = Like("%" + taskAssignedDto.getTaskId() + "%");
     }
     return searchObject;
   }

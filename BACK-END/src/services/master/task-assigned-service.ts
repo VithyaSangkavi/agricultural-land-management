@@ -11,5 +11,6 @@ export interface TaskAssignedService {
   getOngoingTasksWithTaskNames(): Promise<CommonResponse>;
   getCompletedTasksWithTaskNames(): Promise<CommonResponse>;
   updateEndDate(taskAssignedId: number, endDate: Date, newStatus: string): Promise<CommonResponse>;
+  updateStatus(taskAssignedId: number, newStatus: string): Promise<CommonResponse>;
 
 }

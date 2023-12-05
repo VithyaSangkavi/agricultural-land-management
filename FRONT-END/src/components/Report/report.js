@@ -11,6 +11,9 @@ import { FaPlus } from 'react-icons/fa';
 import EmployeeAttendanceReport from './employee-attendance-report';
 import MonthlyCropReport from './monthly-crop-report';
 import CostYieldReport from './other-cost-yield-report';
+import EmployeePerfomnce from './employee-perfomnce-report';
+import CostBreakdownReport from './cost-breakdown-report';
+import SummaryReport from './summary-report';
 
 function Report() {
     const [t, i18n] = useTranslation();
@@ -26,6 +29,10 @@ function Report() {
     const [showEmployeeAttendanceReport, setShowEmployeeAttendanceReport] = useState(false);
     const [showMonthlyCropReport, setShowMonthlyCropReport] = useState(false);
     const [showCostYieldReport, setShowCostYieldReport] = useState(false);
+
+    const [showEmployeePerfomnce, setEmployeePerfomnce] = useState(false);
+    const [showCostBreakdown, setCostBreakdown] = useState(false);
+    const [showSummary, setSummary] = useState(false);
 
     const handleReportChange = (event) => {
         setSelectedReport(event.target.value);
@@ -47,6 +54,24 @@ function Report() {
         } else {
             setShowCostYieldReport(false);
         }
+
+        if (event.target.value === 'Employee Perfomance') {
+            setEmployeePerfomnce(true);
+        } else {
+            setEmployeePerfomnce(false);
+        }
+
+        if (event.target.value === 'Cost Breakdown') {
+            setCostBreakdown(true);
+        } else {
+            setCostBreakdown(false);
+        }
+
+        if (event.target.value === 'Summary') {
+            setSummary(true);
+        } else {
+            setSummary(false);
+        }
     };
 
     useEffect(() => {
@@ -67,6 +92,7 @@ function Report() {
                 const landId = landData.landId;
                 console.log('Selected Land Id :', landId);
                 localStorage.setItem('SelectedLandId', landId);
+
             })
             .catch((error) => {
                 console.error("Error fetching data:", error);
@@ -187,6 +213,9 @@ function Report() {
             {showEmployeeAttendanceReport && <EmployeeAttendanceReport />}
             {showMonthlyCropReport && <MonthlyCropReport />}
             {showCostYieldReport && <CostYieldReport />}
+            {showEmployeePerfomnce && <EmployeePerfomnce />}
+            {showCostBreakdown && <CostBreakdownReport />}
+            {showSummary && <SummaryReport />}
             < br />
             <Footer />
         </div>
