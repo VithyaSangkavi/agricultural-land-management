@@ -12,6 +12,9 @@ import { Schedule } from "../../enum/schedule";
   name: "task-assigned",
 })
 export class TaskAssignedEntity {
+  map(arg0: (taskAssigned: any) => any): any {
+    throw new Error('Method not implemented.');
+  }
   @PrimaryGeneratedColumn({ name: "taskAssignedId" })
   id: number;
 

@@ -105,6 +105,7 @@ router.delete("/work-assigned-delete/:workAssignedId", workAssignedController.de
 router.post("/work-assigned-findAll", workAssignedController.findAll);
 router.get("/work-assigned-details/:taskAssignedId", workAssignedController.getDetailsByTaskAssignedId);
 router.delete('/work-assigned-delete/:workerId/:taskCardId', workAssignedController.deleteByWorkerAndTaskCardId);
+router.post('/work-assigned-saveWorkDates', workAssignedController.saveWorkDates);
 
 
 // task-card routes
@@ -122,5 +123,13 @@ router.get('/employee-attendance', reportController.getEmployeeAttendance);
 router.get('/monthly-crop-report', reportController.getMonthlyCropReport);
 //other-cost-yield report
 router.get('/other-cost-yield', reportController.getOtherCostYieldReport);
+//employee-perfomance report
+router.get('/employee-perfomance', reportController.getEmployeePerfomanceReport);
+//cost-breakdown-linechart report
+router.get('/cost-breakdown-line', reportController.getCostBreakdownLineReport);
+//cost-breakdown-pie report
+router.get('/cost-breakdown-pie', reportController.getgetCostBreakdownPieReport);
+//daily weekly monthly summary report
+router.get('/summary/:landId', reportController.getSummaryReport);
 
 module.exports = router;
