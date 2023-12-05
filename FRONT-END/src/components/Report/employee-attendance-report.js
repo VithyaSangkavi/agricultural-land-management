@@ -4,27 +4,36 @@ import './report.css';
 import { Chart as ChartJS, LineElement, PointElement, Tooltip, Legend, LinearScale, TimeScale } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { Line } from 'react-chartjs-2';
+import { useLocation } from 'react-router-dom';
 
 ChartJS.register(LineElement, PointElement, Tooltip, Legend, LinearScale, TimeScale);
 
 
-const EmployeeAttendanceReport = () => {
+const EmployeeAttendanceReport = (dateRange) => {
     const [attendanceData, setAttendanceData] = useState([]);
 
+    const { fromDate, toDate } = dateRange.dateRange;
+
     useEffect(() => {
-        const fetchAttendanceData = async () => {
+        const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:8081/service/master/employee-attendance');
+                let response;
+                if (fromDate && toDate) {
+                    response = await axios.get(`http://localhost:8081/service/master/employee-attendance?startDate=${fromDate}&endDate=${toDate}`);
+                } else {
+                    response = await axios.get('http://localhost:8081/service/master/employee-attendance');
+                }
                 setAttendanceData(response.data);
             } catch (error) {
                 console.error('Error fetching employee attendance:', error);
             }
         };
 
-        fetchAttendanceData();
-    }, []);
+        fetchData();
+    }, [fromDate, toDate]); 
 
     const chartData = {
+
         labels: attendanceData.map((item) => item.date),
         datasets: [
             {
@@ -45,14 +54,17 @@ const EmployeeAttendanceReport = () => {
                 type: 'time',
                 time: {
                     unit: 'day',
-                    tooltipFormat: 'yyyy-MM-dd', // Format for the tooltip
+                    tooltipFormat: 'yyyy-MM-dd', 
                     displayFormats: {
-                        day: 'yyyy-MM-dd' // Format for the x-axis label
+                        day: 'yyyy-MM-dd' 
                     },
                 },
                 title: {
                     display: true,
                     text: 'Day',
+                },
+                ticks: {
+                    autoSkip: false, 
                 },
             },
             y: {
