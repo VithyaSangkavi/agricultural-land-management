@@ -206,16 +206,23 @@ export class ReportServiceImpl implements ReportService {
       .groupBy("monthYear")
       .getRawMany();
 
+    const allTaskAssignedIds = await (await getRepository(TaskAssignedEntity)
+      .createQueryBuilder("taskAssigned")
+      .leftJoinAndSelect("taskAssigned.land", "land")
+      .where("land.id = :landId", { landId })
+      .select("taskAssigned.id")
+      .getMany())
+      .map(taskAssigned => taskAssigned.id);
+
 
     //total expenses
     const monthlyExpenses4 = await getRepository(TaskExpenseEntity)
       .createQueryBuilder("taskExpense")
       .select("SUM(taskExpense.value)", "totalExpense")
       .addSelect("DATE_FORMAT(taskExpense.createdDate, '%M %Y')", "monthYear")
-      .where("taskExpense.taskAssignedId IN (:...taskAssignedIds)", { taskAssignedIds })
+      .where("taskExpense.taskAssignedId IN (:...allTaskAssignedIds)", { allTaskAssignedIds })
       .groupBy("monthYear")
       .getRawMany();
-
 
 
     const quantitySummary = workAssignedEntities.reduce((summary, workAssigned) => {
