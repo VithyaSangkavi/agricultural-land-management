@@ -193,6 +193,7 @@ export class ReportServiceImpl implements ReportService {
       .innerJoin(TaskTypeEntity, "taskType", "workAssigned.taskId = taskType.id")
       .innerJoin(WorkerEntity, "worker", "workAssigned.workerId = worker.id")
       .where("taskType.taskName = :taskName", { taskName: "Pluck" })
+      .orderBy("workDate", "ASC")
       .getRawMany();
 
     return result;
@@ -212,6 +213,7 @@ export class ReportServiceImpl implements ReportService {
       .from(TaskExpenseEntity, 'te')
       .leftJoin('te.expense', 'e')
       .groupBy('DATE_FORMAT(te.createdDate, "%M"), e.expenseType')
+      .orderBy("month", "DESC")
       .getRawMany();
 
     return result;

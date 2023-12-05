@@ -13,7 +13,7 @@ const MonthlyCropReport = () => {
     useEffect(() => {
         const fetchMonthlyCropReport = async () => {
             try {
-                const response = await axios.get('http://localhost:8081/service/master/monthly-crop-report');
+                const response = await axios.get('http://localhost:8080/service/master/monthly-crop-report');
                 setMonthlyCropData(response.data);
             } catch (error) {
                 console.error('Error fetching monthly crop report:', error);
