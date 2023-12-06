@@ -41,20 +41,11 @@ export const getOtherCostYieldReport = async (req: Request, res: Response): Prom
   }
 };
 
-// export const getEmployeePerfomanceReport = async (req: Request, res: Response): Promise<void> => {
-//   try {
-//     const employeePerfomanceReport = await reportServiceImpl.getEmployeePerfomanceReport();
-
-//     res.json(employeePerfomanceReport);
-//   } catch (error) {
-//     res.status(500).json({ error: 'Failed to generate employee perfomanceReport report' });
-//   }
-// };
-
 export const getEmployeePerfomanceReport = async (req: Request, res: Response): Promise<void> => {
+  const fromDate = req.query.fromDate;
+  const toDate = req.query.toDate;
+
   try {
-    const { fromDate, toDate } = req.query;
-    console.log("Date Controller : ",fromDate, toDate);
     const employeePerfomanceReport = await reportServiceImpl.getEmployeePerfomanceReport(fromDate, toDate);
 
     res.json(employeePerfomanceReport);
@@ -62,6 +53,7 @@ export const getEmployeePerfomanceReport = async (req: Request, res: Response): 
     res.status(500).json({ error: 'Failed to generate employee perfomanceReport report' });
   }
 };
+
 
 export const getCostBreakdownLineReport = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -93,14 +85,3 @@ export const getSummaryReport = async (req: Request, res: Response): Promise<voi
     res.status(500).json({ error: 'Failed to generate cost Summary Report report' });
   }
 };
-
-// export const getSummaryReport = async (req: Request, res: Response): Promise<void> => {
-//   const landId = req.params.landId;
-
-//   try {
-//     const costSummaryReport = await reportServiceImpl.getSummaryReport();
-//     res.json(costSummaryReport);
-//   } catch (error) {
-//     res.status(500).json({ error: 'Failed to generate cost Summary Report report' });
-//   }
-// };

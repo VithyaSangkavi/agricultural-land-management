@@ -99,8 +99,6 @@ function Report() {
             });
     }
 
-    console.log("Data range : ",dateRange)
-
     // const handleReportChange = (event) => {
     //     setSelectedReport(event.target.value);
     // };
@@ -125,6 +123,8 @@ function Report() {
     const handleLanguageChange = (lang) => {
         i18n.changeLanguage(lang);
     };
+
+    console.log(dateRange);
 
     return (
         <div className="home-app-screen">
@@ -217,7 +217,7 @@ function Report() {
             {showCostYieldReport && <CostYieldReport />}
             {showEmployeePerfomnce && <EmployeePerfomnce dateRange={dateRange} />}
             {showCostBreakdown && <CostBreakdownReport />}
-            {showSummary && <SummaryReport />}
+            {showSummary && <SummaryReport selectedLand={selectedLand} />}
             < br />
             <Footer />
         </div>
