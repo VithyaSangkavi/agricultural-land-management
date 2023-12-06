@@ -4,7 +4,6 @@ export interface ReportService {
     generateMonthlyCropReport(): Promise<any>;
     generateOtherCostYieldReport(): Promise<any>;
     getEmployeePerfomanceReport(fromDate?: string, toDate?: string): Promise<any>;
-
     getCostBreakdownLineReport(): Promise<any>;
     getCostBreakdownPieReport(): Promise<any>;
     getSummaryReport(landId: number): Promise<any>;

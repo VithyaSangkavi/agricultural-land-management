@@ -103,6 +103,12 @@ function Report() {
     //     setSelectedReport(event.target.value);
     // };
 
+    const handleResetFilters = () => {
+        setDateRange({ fromDate: '', toDate: '' });
+        setSelectedLot('');
+        setSelectedWorker('');
+    };
+
     const handleDateRangeChange = (event) => {
         const { name, value } = event.target;
         setDateRange((prevDateRange) => ({ ...prevDateRange, [name]: value }));
@@ -165,6 +171,8 @@ function Report() {
                                 <option value="">Select Worker</option>
                             </select>
                         </div>
+
+                        <button onClick={handleResetFilters}>Reset Filters</button>
                     </div>
                 )}
             </p>
