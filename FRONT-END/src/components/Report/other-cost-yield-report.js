@@ -13,7 +13,7 @@ const CostYieldReport = () => {
     useEffect(() => {
         const fetchCostYieldData = async () => {
             try {
-                const response = await axios.get('http://localhost:8081/service/master/other-cost-yield');
+                const response = await axios.get('http://localhost:8080/service/master/other-cost-yield');
                 setCostYieldData(response.data);
             } catch (error) {
                 console.error('Error fetching cost-yield report:', error);

@@ -101,4 +101,17 @@ exports.deleteByWorkerAndTaskCardId = async (req: Request, res: Response, next: 
   }
 };
 
+exports.saveWorkDates = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    let workAssignedDto = new WorkAssignedDto();
+    workAssignedDto.filViaRequest(req.body);
+
+    let cr = await workAssignedService.saveWorkDates(workAssignedDto);
+
+    res.send(cr);
+  } catch (error) {
+    next(error);
+  }
+};
+
 

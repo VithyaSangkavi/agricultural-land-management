@@ -7,6 +7,7 @@ import { LotEntity } from "./lot-entity";
 import { TaskAssignedEntity } from "./task-assigned-entity";
 import { TaskCardEntity } from "./task-card-entity";
 
+
 @Entity({
   name: "work-assigned",
 })
@@ -31,6 +32,9 @@ export class WorkAssignedEntity {
 
   @Column()
   updatedDate: Date;
+
+  @Column({ nullable: true })
+  workDate: string | null;
 
   @Column({ type: "enum" ,enum:Status,default:Status.Online})
   status: Status;
