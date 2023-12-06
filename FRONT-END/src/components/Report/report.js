@@ -99,6 +99,8 @@ function Report() {
             });
     }
 
+    console.log("Data range : ",dateRange)
+
     // const handleReportChange = (event) => {
     //     setSelectedReport(event.target.value);
     // };
@@ -213,9 +215,9 @@ function Report() {
             {showEmployeeAttendanceReport && <EmployeeAttendanceReport />}
             {showMonthlyCropReport && <MonthlyCropReport />}
             {showCostYieldReport && <CostYieldReport />}
-            {showEmployeePerfomnce && <EmployeePerfomnce />}
+            {showEmployeePerfomnce && <EmployeePerfomnce dateRange={dateRange} />}
             {showCostBreakdown && <CostBreakdownReport />}
-            {showSummary && <SummaryReport selectedLand={selectedLand} />}
+            {showSummary && <SummaryReport />}
             < br />
             <Footer />
         </div>
