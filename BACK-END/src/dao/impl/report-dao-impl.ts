@@ -66,14 +66,14 @@ export class ReportDaoImpl implements ReportDao {
 
       // Filter by date range
       if (startDate && endDate) {
-        queryForCurrentYear.andWhere('work_assigned.updatedDate BETWEEN :startDate AND :endDate', {
-          startDate,
-          endDate,
-        });
-        queryForPastYear.andWhere('work_assigned.updatedDate BETWEEN :startDate AND :endDate', {
-          startDate,
-          endDate,
-        });
+        // Common condition for both queries
+        const dateCondition = startDate && endDate ? 'work_assigned.updatedDate BETWEEN :startDate AND :endDate' : '';
+
+        // Apply the common condition to the queries
+        if (dateCondition) {
+          queryForCurrentYear.andWhere(dateCondition, { startDate, endDate });
+          queryForPastYear.andWhere(dateCondition, { startDate, endDate });
+        }
       }
 
       const quantitiesForCurrentYear = await queryForCurrentYear
