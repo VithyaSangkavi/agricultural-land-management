@@ -4,27 +4,45 @@ import './report.css';
 import { Chart as ChartJS, LineElement, PointElement, Tooltip, Legend, LinearScale, TimeScale } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { Line } from 'react-chartjs-2';
+import { useLocation } from 'react-router-dom';
 
 ChartJS.register(LineElement, PointElement, Tooltip, Legend, LinearScale, TimeScale);
 
 
-const EmployeeAttendanceReport = () => {
+const EmployeeAttendanceReport = ({dateRange, lotId}) => {
     const [attendanceData, setAttendanceData] = useState([]);
 
+    const fromDate = dateRange && dateRange.fromDate;
+    const toDate = dateRange && dateRange.toDate;
+
     useEffect(() => {
-        const fetchAttendanceData = async () => {
+        const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/service/master/employee-attendance');
+                let response;
+                if (fromDate && toDate && lotId) {
+                    // filter by fromDate, toDate, and lotId 
+                    response = await axios.get(`http://localhost:8081/service/master/employee-attendance?startDate=${fromDate}&endDate=${toDate}&lotId=${lotId}`);
+                } else if (fromDate && toDate) {
+                    // filter by fromDate and toDate 
+                    response = await axios.get(`http://localhost:8081/service/master/employee-attendance?startDate=${fromDate}&endDate=${toDate}`);
+                } else if (lotId) {
+                    // filter by lotId
+                    response = await axios.get(`http://localhost:8081/service/master/employee-attendance?lotId=${lotId}`);
+                } else {
+                    // without any filters
+                    response = await axios.get('http://localhost:8081/service/master/employee-attendance');
+                }
                 setAttendanceData(response.data);
             } catch (error) {
                 console.error('Error fetching employee attendance:', error);
             }
         };
 
-        fetchAttendanceData();
-    }, []);
+        fetchData();
+    }, [fromDate, toDate, lotId]);
 
     const chartData = {
+
         labels: attendanceData.map((item) => item.date),
         datasets: [
             {
@@ -45,15 +63,16 @@ const EmployeeAttendanceReport = () => {
                 type: 'time',
                 time: {
                     unit: 'day',
-                    tooltipFormat: 'yyyy-MM-dd', // Format for the tooltip
+                    tooltipFormat: 'yyyy-MM-dd', 
                     displayFormats: {
-                        day: 'yyyy-MM-dd' // Format for the x-axis label
+                        day: 'yyyy-MM-dd' 
                     },
                 },
                 title: {
                     display: true,
                     text: 'Day',
                 },
+                offset: true,
             },
             y: {
                 type: 'linear',
@@ -65,6 +84,11 @@ const EmployeeAttendanceReport = () => {
                 ticks: {
                     stepSize: 1,
                 },
+            },
+        },
+        elements: {
+            point: {
+                radius: 3,
             },
         },
     };

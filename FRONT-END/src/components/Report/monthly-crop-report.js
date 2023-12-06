@@ -7,21 +7,46 @@ import './report.css'
 
 ChartJS.register(LineElement, PointElement, Tooltip, Legend, LinearScale, TimeScale, CategoryScale);
 
-const MonthlyCropReport = () => {
+const MonthlyCropReport = ({ dateRange, lotId }) => {
     const [monthlyCropData, setMonthlyCropData] = useState([]);
 
+    const fromDate = dateRange && dateRange.fromDate;
+    const toDate = dateRange && dateRange.toDate;
+
+    // const labels = Object.keys(monthlyCropData);
+    // const pastYearData = Object.values(monthlyCropData).map(data => data[0].PastYearTotalQuantity);
+    // const currentYearData = Object.values(monthlyCropData).map(data => data[0].CurrentYearTotalQuantity);
+
+    // // Add empty labels to create space at the start and end of the x-axis
+    // const emptyLabels = ['', ...labels, ''];
+    // const emptyData = [null, ...pastYearData, null];
+    // const emptyCurrentYearData = [null, ...currentYearData, null];
+
     useEffect(() => {
-        const fetchMonthlyCropReport = async () => {
+        const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/service/master/monthly-crop-report');
+                let response;
+                if (fromDate && toDate && lotId) {
+                    // filter by fromDate, toDate, and lotId 
+                    response = await axios.get(`http://localhost:8081/service/master/monthly-crop-report?startDate=${fromDate}&endDate=${toDate}&lotId=${lotId}`);
+                } else if (fromDate && toDate) {
+                    // filter by fromDate and toDate 
+                    response = await axios.get(`http://localhost:8081/service/master/monthly-crop-report?startDate=${fromDate}&endDate=${toDate}`);
+                } else if (lotId) {
+                    // filter by lotId
+                    response = await axios.get(`http://localhost:8081/service/master/monthly-crop-report?lotId=${lotId}`);
+                } else {
+                    // without any filters
+                    response = await axios.get('http://localhost:8081/service/master/monthly-crop-report');
+                }
                 setMonthlyCropData(response.data);
             } catch (error) {
                 console.error('Error fetching monthly crop report:', error);
             }
         };
 
-        fetchMonthlyCropReport();
-    }, []);
+        fetchData();
+    }, [fromDate, toDate, lotId]);
 
     const chartData = {
         labels: Object.keys(monthlyCropData),
@@ -32,7 +57,6 @@ const MonthlyCropReport = () => {
                 fill: false,
                 borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 2,
-                pointRadius: 0,
             },
             {
                 label: 'Current Year Quantity',
@@ -40,7 +64,6 @@ const MonthlyCropReport = () => {
                 fill: false,
                 borderColor: 'rgba(255, 99, 132, 1)',
                 borderWidth: 2,
-                pointRadius: 0,
             },
         ],
     };
@@ -53,6 +76,7 @@ const MonthlyCropReport = () => {
                     display: true,
                     text: 'Month',
                 },
+                offset: true,
             },
             y: {
                 type: 'linear',
@@ -64,6 +88,11 @@ const MonthlyCropReport = () => {
                 ticks: {
                     stepSize: 50,
                 },
+            },
+        },
+        elements: {
+            point: {
+                radius: 3,
             },
         },
     };
