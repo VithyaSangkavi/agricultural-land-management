@@ -15,13 +15,17 @@ import CostYieldReport from './other-cost-yield-report';
 function Report() {
     const [t, i18n] = useTranslation();
 
+    const history = useHistory();
+
     const [lands, setLands] = useState([]);
+    const [lots, setLots] = useState([]);
     const [selectedLand, setSelectedLand] = useState('');
     const [selectedReport, setSelectedReport] = useState('');
     const [dateRange, setDateRange] = useState({ fromDate: '', toDate: '' });
     const [selectedLot, setSelectedLot] = useState('');
     const [selectedWorker, setSelectedWorker] = useState('');
     const [isFilterExpanded, setFilterExpanded] = useState(false);
+    const [lotId, setLotId] = useState('');
 
     const [showEmployeeAttendanceReport, setShowEmployeeAttendanceReport] = useState(false);
     const [showMonthlyCropReport, setShowMonthlyCropReport] = useState(false);
@@ -50,16 +54,23 @@ function Report() {
     };
 
     useEffect(() => {
-        axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
+        //land find all
+        axios.get('http://localhost:8081/service/master/landFindAll').then((response) => {
             setLands(response.data.extra);
             console.log("Lands : ", response.data.extra);
+        });
+
+        //lot find all
+        axios.get('http://localhost:8081/service/master/lotFindAll').then((response) => {
+            setLots(response.data.extra);
+            console.log("Lots : ", response.data.extra);
         });
     }, [])
 
     const handleSelectedLand = (eventkey) => {
         setSelectedLand(eventkey);
 
-        axios.post(`http://localhost:8080/service/master/findLandIdByName?name=${eventkey}`)
+        axios.post(`http://localhost:8081/service/master/findLandIdByName?name=${eventkey}`)
             .then((response) => {
                 const landIdTask = response.data.extra;
                 const taskLand = JSON.stringify(landIdTask);
@@ -83,7 +94,21 @@ function Report() {
     };
 
     const handleLotChange = (event) => {
-        setSelectedLot(event.target.value);
+        const selectedLotName = event.target.value;
+        setSelectedLot(selectedLotName);
+        console.log('selected lot: ', selectedLotName);
+
+        const selectedLot = lots.find((lot) => lot.name === selectedLotName);
+
+        if (selectedLot) {
+            const selectedLotId = selectedLot.id;
+            setLotId(selectedLotId); 
+            console.log('Selected Lot ID:', selectedLotId);
+        } else {
+            setLotId('');
+            console.log('Lot not found');
+        }
+
     };
 
     const handleWorkerChange = (event) => {
@@ -128,6 +153,11 @@ function Report() {
                             <label>Select Lot:</label>
                             <select value={selectedLot} onChange={handleLotChange}>
                                 <option value="">Select Lot</option>
+                                {lots.map((lot) => (
+                                    <option key={lot.id} value={lot.name}>
+                                        {lot.name}
+                                    </option>
+                                ))}
                             </select>
                         </div>
 
@@ -137,6 +167,7 @@ function Report() {
                                 <option value="">Select Worker</option>
                             </select>
                         </div>
+
                     </div>
                 )}
             </p>
@@ -152,10 +183,6 @@ function Report() {
                     </Dropdown.Menu>
                 </Dropdown>
             </div>
-
-
-
-
 
             <div className='drop-down-container'>
                 <Dropdown onSelect={handleSelectedLand} className='custom-dropdown'>
@@ -184,8 +211,8 @@ function Report() {
                 <option value="Monthly Crop">Monthly Crop</option>
                 <option value="Other Cost / Yield">Other Cost / Yield</option>
             </select>
-            {showEmployeeAttendanceReport && <EmployeeAttendanceReport />}
-            {showMonthlyCropReport && <MonthlyCropReport />}
+            {showEmployeeAttendanceReport && <EmployeeAttendanceReport dateRange={dateRange} lotId={lotId}/>}
+            {showMonthlyCropReport && <MonthlyCropReport dateRange={dateRange} lotId={lotId}/>}
             {showCostYieldReport && <CostYieldReport />}
             < br />
             <Footer />

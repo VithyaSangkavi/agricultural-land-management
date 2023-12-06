@@ -9,18 +9,27 @@ import { useLocation } from 'react-router-dom';
 ChartJS.register(LineElement, PointElement, Tooltip, Legend, LinearScale, TimeScale);
 
 
-const EmployeeAttendanceReport = (dateRange) => {
+const EmployeeAttendanceReport = ({dateRange, lotId}) => {
     const [attendanceData, setAttendanceData] = useState([]);
 
-    const { fromDate, toDate } = dateRange.dateRange;
+    const fromDate = dateRange && dateRange.fromDate;
+    const toDate = dateRange && dateRange.toDate;
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 let response;
-                if (fromDate && toDate) {
+                if (fromDate && toDate && lotId) {
+                    // filter by fromDate, toDate, and lotId 
+                    response = await axios.get(`http://localhost:8081/service/master/employee-attendance?startDate=${fromDate}&endDate=${toDate}&lotId=${lotId}`);
+                } else if (fromDate && toDate) {
+                    // filter by fromDate and toDate 
                     response = await axios.get(`http://localhost:8081/service/master/employee-attendance?startDate=${fromDate}&endDate=${toDate}`);
+                } else if (lotId) {
+                    // filter by lotId
+                    response = await axios.get(`http://localhost:8081/service/master/employee-attendance?lotId=${lotId}`);
                 } else {
+                    // without any filters
                     response = await axios.get('http://localhost:8081/service/master/employee-attendance');
                 }
                 setAttendanceData(response.data);
@@ -30,7 +39,7 @@ const EmployeeAttendanceReport = (dateRange) => {
         };
 
         fetchData();
-    }, [fromDate, toDate]); 
+    }, [fromDate, toDate, lotId]);
 
     const chartData = {
 
@@ -63,9 +72,7 @@ const EmployeeAttendanceReport = (dateRange) => {
                     display: true,
                     text: 'Day',
                 },
-                ticks: {
-                    autoSkip: false, 
-                },
+                offset: true,
             },
             y: {
                 type: 'linear',
@@ -77,6 +84,11 @@ const EmployeeAttendanceReport = (dateRange) => {
                 ticks: {
                     stepSize: 1,
                 },
+            },
+        },
+        elements: {
+            point: {
+                radius: 3,
             },
         },
     };
