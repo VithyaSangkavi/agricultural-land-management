@@ -8,13 +8,18 @@ import { Line } from 'react-chartjs-2';
 ChartJS.register(LineElement, PointElement, Tooltip, Legend, LinearScale, TimeScale);
 
 
-const EmployeePerfomnceReport = () => {
+const EmployeePerfomnceReport = ({ dateRange }) => {
     const [perfomnceData, setPerfomnceData] = useState([]);
 
     useEffect(() => {
         const fetchPerfomnceData = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/service/master/employee-perfomance');
+                const response = await axios.get('http://localhost:8080/service/master/employee-perfomance', {
+                    params: {
+                        fromDate: dateRange.fromDate,
+                        toDate: dateRange.toDate,
+                    },
+                });
                 console.log(response.data);
                 setPerfomnceData(response.data);
             } catch (error) {
@@ -22,8 +27,12 @@ const EmployeePerfomnceReport = () => {
             }
         };
 
-        fetchPerfomnceData();
-    }, []);
+        // Ensure fromDate is earlier than or equal to toDate
+        if (dateRange.fromDate <= dateRange.toDate) {
+            fetchPerfomnceData();
+        }
+    }, [dateRange]);
+
 
     const chartData = {
         labels: perfomnceData.map((item) => item.workDate),

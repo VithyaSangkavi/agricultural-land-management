@@ -176,12 +176,37 @@ export class ReportServiceImpl implements ReportService {
     }
   }
 
-  async getEmployeePerfomanceReport(): Promise<any> {
+  // async getEmployeePerfomanceReport(): Promise<any> {
 
+  //   const connection = getConnection();
+  //   const queryBuilder = connection.createQueryBuilder();
+
+  //   const result = await queryBuilder
+  //     .select([
+  //       "worker.name AS workerName",
+  //       "taskType.taskName AS taskName",
+  //       "CASE WHEN taskAssigned.schedule = 'Scheduled' THEN taskCard.workDate ELSE DATE(workAssigned.updatedDate) END AS workDate",
+  //       "workAssigned.quantity AS quantity",
+  //     ])
+  //     .from(WorkAssignedEntity, "workAssigned")
+  //     .leftJoin(TaskCardEntity, "taskCard", "workAssigned.taskCardId = taskCard.id")
+  //     .leftJoin(TaskAssignedEntity, "taskAssigned", "workAssigned.taskAssignedId = taskAssigned.id")
+  //     .innerJoin(TaskTypeEntity, "taskType", "workAssigned.taskId = taskType.id")
+  //     .innerJoin(WorkerEntity, "worker", "workAssigned.workerId = worker.id")
+  //     .where("taskType.taskName = :taskName", { taskName: "Pluck" })
+  //     .orderBy("workDate", "ASC")
+  //     .getRawMany();
+
+  //   return result;
+
+  // }
+
+  async getEmployeePerfomanceReport(fromDate?: string, toDate?: string): Promise<any> {
     const connection = getConnection();
     const queryBuilder = connection.createQueryBuilder();
+    console.log("Date Service:", fromDate, toDate);
 
-    const result = await queryBuilder
+    let query = queryBuilder
       .select([
         "worker.name AS workerName",
         "taskType.taskName AS taskName",
@@ -194,12 +219,18 @@ export class ReportServiceImpl implements ReportService {
       .innerJoin(TaskTypeEntity, "taskType", "workAssigned.taskId = taskType.id")
       .innerJoin(WorkerEntity, "worker", "workAssigned.workerId = worker.id")
       .where("taskType.taskName = :taskName", { taskName: "Pluck" })
-      .orderBy("workDate", "ASC")
-      .getRawMany();
+      .orderBy("workDate", "ASC");
+
+    if (fromDate && toDate) {
+      query = query.andWhere("workDate BETWEEN :fromDate AND :toDate", { fromDate, toDate });
+    }
+
+    const result = await query.getRawMany();
 
     return result;
-
   }
+
+
 
   async getCostBreakdownLineReport(): Promise<any> {
     const connection = getConnection();
