@@ -184,9 +184,6 @@ export class ReportDaoImpl implements ReportDao {
         });
       }
 
-      console.log(taskExpensesQuery.getQueryAndParameters());
-      console.log(incomesQuery.getQueryAndParameters());
-
       const taskExpenses = await taskExpensesQuery
         .groupBy('EXTRACT(MONTH FROM task_expense.createdDate)')
         .getRawMany();
@@ -194,9 +191,6 @@ export class ReportDaoImpl implements ReportDao {
       const incomes = await incomesQuery
         .groupBy('income.month')
         .getRawMany();
-
-      //const taskExpenses = await taskExpensesQuery.getRawMany();
-      //const incomes = await incomesQuery.getRawMany();
 
       const monthlyData = {};
       const incomeMonths = incomes.map(item => item.income_month);

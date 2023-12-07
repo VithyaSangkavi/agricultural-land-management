@@ -14,7 +14,7 @@ const EmployeePerfomnceReport = ({ dateRange }) => {
     useEffect(() => {
         const fetchPerfomnceData = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/service/master/employee-perfomance', {
+                const response = await axios.get('http://localhost:8081/service/master/employee-perfomance', {
                     params: {
                         fromDate: dateRange.fromDate,
                         toDate: dateRange.toDate,

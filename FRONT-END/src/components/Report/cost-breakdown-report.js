@@ -14,7 +14,7 @@ const CostBreakdownReport = () => {
     useEffect(() => {
         const fetchCostBreakdownLineData = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/service/master/cost-breakdown-line');
+                const response = await axios.get('http://localhost:8081/service/master/cost-breakdown-line');
                 console.log("Line : ", response.data);
                 setCostBreakdownLineData(response.data);
             } catch (error) {
@@ -24,7 +24,7 @@ const CostBreakdownReport = () => {
 
         const fetchCostBreakdownPieData = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/service/master/cost-breakdown-pie');
+                const response = await axios.get('http://localhost:8081/service/master/cost-breakdown-pie');
                 console.log("Pie : ", response.data);
                 setCostBreakdownPieData(response.data);
             } catch (error) {

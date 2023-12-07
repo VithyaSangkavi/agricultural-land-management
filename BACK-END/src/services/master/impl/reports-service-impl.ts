@@ -2,7 +2,6 @@ import { ReportDao } from '../../../dao/report-dao';
 import { ReportService } from '../reports-service';
 import { getConnection, getRepository } from 'typeorm';
 import { WorkAssignedEntity } from '../../../entity/master/work-assigned-entity';
-import { ReportService } from '../reports-service';
 import { TaskTypeEntity } from '../../../entity/master/task-type-entity';
 import { CropEntity } from '../../../entity/master/crop-entity';
 import { IncomeEntity } from '../../../entity/master/income-entity';
@@ -40,7 +39,6 @@ export class ReportServiceImpl implements ReportService {
   async generateOtherCostYieldReport(startDate: Date, endDate: Date): Promise<any[]> {
     return this.reportDao.generateOtherCostYieldReport(startDate, endDate);
   }
-}
 
   // async getEmployeePerfomanceReport(): Promise<any> {
 
