@@ -7,16 +7,44 @@ import 'chartjs-plugin-datalabels';
 
 ChartJS.register(...registerables);
 
-const CostBreakdownReport = () => {
+const CostBreakdownReport = ({ selectedLand }) => {
     const [costBreakdownLineData, setCostBreakdownLineData] = useState([]);
     const [costBreakdownPieData, setCostBreakdownPieData] = useState([]);
+    const [landId, setLandId] = useState('');
+
+    useEffect(() => {
+        // Update the landId whenever selectedLand changes
+        axios.post(`http://localhost:8080/service/master/findLandIdByName?name=${selectedLand}`)
+            .then((response) => {
+                const landIdTask = response.data.extra;
+                const taskLand = JSON.stringify(landIdTask);
+                const landData = JSON.parse(taskLand);
+                const newLandId = landData.landId;
+                console.log('Selected Land Id:', newLandId);
+                localStorage.setItem('SelectedLandId', newLandId);
+                setLandId(newLandId);
+            })
+            .catch((error) => {
+                console.error("Error fetching data:", error);
+            });
+    }, [selectedLand]);
+
+    console.log("Cost-b-down : ", landId)
 
     useEffect(() => {
         const fetchCostBreakdownLineData = async () => {
             try {
-                const response = await axios.get('http://localhost:8081/service/master/cost-breakdown-line');
+
+                const baseURL = 'http://localhost:8080/service/master/cost-breakdown-line'
+                const fetchURL = landId ? `${baseURL}?landId=${landId}` : baseURL;
+
+                console.log(fetchURL)
+
+                const response = await axios.get(fetchURL)
+
                 console.log("Line : ", response.data);
                 setCostBreakdownLineData(response.data);
+
             } catch (error) {
                 console.error('Error fetching Cost Breakdown:', error);
             }
@@ -34,7 +62,7 @@ const CostBreakdownReport = () => {
 
         fetchCostBreakdownLineData();
         fetchCostBreakdownPieData();
-    }, []);
+    }, [landId]);
 
     costBreakdownLineData.forEach((item) => {
         item.totalCost = parseFloat(item.totalCost);

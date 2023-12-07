@@ -8,31 +8,31 @@ import { Line } from 'react-chartjs-2';
 ChartJS.register(LineElement, PointElement, Tooltip, Legend, LinearScale, TimeScale);
 
 
-const EmployeePerfomnceReport = ({ dateRange }) => {
+const EmployeePerfomnceReport = ({ dateRange: { fromDate, toDate } }) => {
+
+    // const fromDate = dateRange.fromDate
+    // const toDate = dateRange.toDate
+
     const [perfomnceData, setPerfomnceData] = useState([]);
+    console.log("emp-per-rep : ",fromDate, toDate);
 
     useEffect(() => {
         const fetchPerfomnceData = async () => {
             try {
-                const response = await axios.get('http://localhost:8081/service/master/employee-perfomance', {
-                    params: {
-                        fromDate: dateRange.fromDate,
-                        toDate: dateRange.toDate,
-                    },
-                });
-                console.log(response.data);
+
+                const baseURL = 'http://localhost:8080/service/master/employee-perfomance';
+                const fetchURL = fromDate && toDate ? `${baseURL}?fromDate=${fromDate}&toDate=${toDate}` : baseURL;
+
+                const response = await axios.get(fetchURL);
+
                 setPerfomnceData(response.data);
             } catch (error) {
                 console.error('Error fetching employee perfomnce:', error);
             }
         };
 
-        // Ensure fromDate is earlier than or equal to toDate
-        if (dateRange.fromDate <= dateRange.toDate) {
-            fetchPerfomnceData();
-        }
-    }, [dateRange]);
-
+        fetchPerfomnceData();
+    }, [fromDate, toDate]);
 
     const chartData = {
         labels: perfomnceData.map((item) => item.workDate),
