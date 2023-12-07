@@ -8,29 +8,64 @@ import { Line } from 'react-chartjs-2';
 ChartJS.register(LineElement, PointElement, Tooltip, Legend, LinearScale, TimeScale);
 
 
-const EmployeePerfomnceReport = ({ dateRange: { fromDate, toDate } }) => {
+const EmployeePerfomnceReport = ({ dateRange: { fromDate, toDate }, selectedLand }) => {
 
     // const fromDate = dateRange.fromDate
     // const toDate = dateRange.toDate
 
     const [perfomnceData, setPerfomnceData] = useState([]);
-    console.log("emp-per-rep : ",fromDate, toDate);
+    const [landId, setLandId] = useState('');
+    console.log("emp-per-rep : ", fromDate, toDate);
+
+
+    useEffect(() => {
+        // Update the landId whenever selectedLand changes
+        axios.post(`http://localhost:8080/service/master/findLandIdByName?name=${selectedLand}`)
+            .then((response) => {
+                const landIdTask = response.data.extra;
+                const taskLand = JSON.stringify(landIdTask);
+                const landData = JSON.parse(taskLand);
+                const newLandId = landData.landId;
+                console.log('Selected Land Id:', newLandId);
+                localStorage.setItem('SelectedLandId', newLandId);
+                setLandId(newLandId);
+            })
+            .catch((error) => {
+                console.error("Error fetching data:", error);
+            });
+    }, [selectedLand]);
 
     useEffect(() => {
         const fetchPerfomnceData = async () => {
             try {
                 const baseURL = 'http://localhost:8080/service/master/employee-perfomance';
-                const fetchURL = fromDate && toDate ? `${baseURL}?fromDate=${fromDate}&toDate=${toDate}` : baseURL;
 
-                const response = await axios.get(fetchURL);
-                setPerfomnceData(response.data);
+                if (landId) {
+                    if (fromDate && toDate) {
+                        const fetchURL = `${baseURL}?landId=${landId}&fromDate=${fromDate}&toDate=${toDate}`
+                        const response = await axios.get(fetchURL);
+                        setPerfomnceData(response.data);
+
+                    } else {
+                        const fetchURL = `${baseURL}?landId=${landId}`
+                        const response = await axios.get(fetchURL);
+                        setPerfomnceData(response.data);
+
+                    }
+
+                } else {
+                    const fetchURL = fromDate && toDate ? `${baseURL}?fromDate=${fromDate}&toDate=${toDate}` : baseURL;
+                    const response = await axios.get(fetchURL);
+                    setPerfomnceData(response.data);
+                }
+
             } catch (error) {
                 console.error('Error fetching employee perfomnce:', error);
             }
         };
 
         fetchPerfomnceData();
-    }, [fromDate, toDate]);
+    }, [fromDate, toDate, landId]);
 
     const chartData = {
         labels: perfomnceData.map((item) => item.workDate),

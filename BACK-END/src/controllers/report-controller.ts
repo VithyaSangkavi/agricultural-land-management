@@ -48,9 +48,10 @@ export const getOtherCostYieldReport = async (req: Request, res: Response): Prom
 export const getEmployeePerfomanceReport = async (req: Request, res: Response): Promise<void> => {
   const fromDate = req.query.fromDate;
   const toDate = req.query.toDate;
+  const landId = req.query.landId;
 
   try {
-    const employeePerfomanceReport = await reportServiceImpl.getEmployeePerfomanceReport(fromDate, toDate);
+    const employeePerfomanceReport = await reportServiceImpl.getEmployeePerfomanceReport(fromDate, toDate, landId);
 
     res.json(employeePerfomanceReport);
   } catch (error) {

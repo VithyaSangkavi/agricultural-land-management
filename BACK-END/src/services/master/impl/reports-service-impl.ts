@@ -185,8 +185,8 @@ export class ReportServiceImpl implements ReportService {
   }
 
   //employee prefomnce report
-  async getEmployeePerfomanceReport(fromDate?: string, toDate?: string): Promise<any> {
-    return this.reportDao.getEmployeePerfomanceReport(fromDate, toDate);
+  async getEmployeePerfomanceReport(fromDate?: string, toDate?: string, landId?: number): Promise<any> {
+    return this.reportDao.getEmployeePerfomanceReport(fromDate, toDate, landId);
   }
   //Cost Breakdown Line Report
   async getCostBreakdownLineReport(landId: number): Promise<any> {

@@ -224,7 +224,7 @@ export class ReportDaoImpl implements ReportDao {
   }
 
   //Employee Perfomance Report
-  async getEmployeePerfomanceReport(fromDate?: string, toDate?: string): Promise<any> {
+  async getEmployeePerfomanceReport(fromDate?: string, toDate?: string, landId?: number): Promise<any> {
 
     const connection = getConnection();
     const queryBuilder = connection.createQueryBuilder();
@@ -241,8 +241,16 @@ export class ReportDaoImpl implements ReportDao {
       .leftJoin(TaskCardEntity, "taskCard", "workAssigned.taskCardId = taskCard.id")
       .leftJoin(TaskAssignedEntity, "taskAssigned", "workAssigned.taskAssignedId = taskAssigned.id")
       .innerJoin(TaskTypeEntity, "taskType", "workAssigned.taskId = taskType.id")
-      .innerJoin(WorkerEntity, "worker", "workAssigned.workerId = worker.id")
-      .where("taskType.taskName = :taskName", { taskName: "Pluck" });
+      .innerJoin(WorkerEntity, "worker", "workAssigned.workerId = worker.id");
+
+    if (landId !== null && landId !== undefined) {
+      query
+        .innerJoin('taskAssigned.land', 'land')
+        .where('land.id = :landId', { landId })
+        .andWhere("taskType.taskName = :taskName", { taskName: "Pluck" });
+    } else {
+      query.where("taskType.taskName = :taskName", { taskName: "Pluck" });
+    }
 
     if (fromDate && toDate) {
       query.andWhere(
@@ -257,6 +265,7 @@ export class ReportDaoImpl implements ReportDao {
 
     return result;
   }
+
 
   //Cost Breakdown Line Report
   async getCostBreakdownLineReport(landId: number): Promise<any> {
@@ -316,7 +325,7 @@ export class ReportDaoImpl implements ReportDao {
       .where("land.id = :landId", { landId })
       .getMany();
 
-  
+
     const pluckTaskIds = await (await getRepository(TaskTypeEntity)
       .createQueryBuilder("task")
       .where("task.taskName = :taskName", { taskName: "Pluck" })
@@ -324,7 +333,7 @@ export class ReportDaoImpl implements ReportDao {
       .getMany())
       .map(task => task.id);
 
- 
+
     const taskAssignedIds = await (await getRepository(TaskAssignedEntity)
       .createQueryBuilder("taskAssigned")
       .leftJoinAndSelect("taskAssigned.land", "land")
