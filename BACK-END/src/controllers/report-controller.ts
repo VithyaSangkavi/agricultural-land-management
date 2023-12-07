@@ -1,9 +1,12 @@
 import { Request, Response } from 'express';
-import { ReportService } from '../services/master/reports-service'; 
-import { ReportServiceImpl } from '../services/master/impl/reports-service-impl'; 
+import { ReportServiceImpl } from '../services/master/impl/reports-service-impl';
 import { ReportDaoImpl } from '../dao/impl/report-dao-impl';
+import { ReportService } from '../services/master/reports-service';
 
 const reportDaoInstance = new ReportDaoImpl(); 
+
+const reportServiceImpl: ReportService = new ReportServiceImpl(reportDaoInstance); 
+
 
 const reportServiceImpl: ReportService = new ReportServiceImpl(reportDaoInstance); 
 
