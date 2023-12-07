@@ -1,13 +1,13 @@
 export interface ReportService {
 
-    generateEmployeeAttendanceReport(): Promise<any>;
-    generateMonthlyCropReport(): Promise<any>;
-    generateOtherCostYieldReport(): Promise<any>;
+    generateEmployeeAttendanceReport(startDate: Date, endDate: Date, lotId: number): Promise<any>;
+    generateMonthlyCropReport(lotId: number, startDate: Date, endDate: Date): Promise<any>;
+    generateOtherCostYieldReport(startDate: Date, endDate: Date): Promise<any>;
 
     getEmployeePerfomanceReport(fromDate?: string, toDate?: string): Promise<any>;
 
     // getCostBreakdownLineReport(): Promise<any>;
-    getCostBreakdownLineReport(landId: number): Promise<any>;
+    getCostBreakdownLineReport(): Promise<any>;
 
     getCostBreakdownPieReport(): Promise<any>;
     // getCostBreakdownPieReport(landId: number): Promise<any>;
