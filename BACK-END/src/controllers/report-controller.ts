@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
 import { ReportServiceImpl } from '../services/master/impl/reports-service-impl';
+import { ReportDaoImpl } from '../dao/impl/report-dao-impl';
+import { ReportService } from '../services/master/reports-service';
 
-const reportServiceImpl = new ReportServiceImpl();
+const reportDaoInstance = new ReportDaoImpl(); 
+
+const reportServiceImpl: ReportService = new ReportServiceImpl(reportDaoInstance); 
 
 export const getEmployeeAttendance = async (req: Request, res: Response): Promise<void> => {
   try {
