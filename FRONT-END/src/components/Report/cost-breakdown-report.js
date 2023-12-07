@@ -14,7 +14,7 @@ const CostBreakdownReport = ({ selectedLand }) => {
 
     useEffect(() => {
         // Update the landId whenever selectedLand changes
-        axios.post(`http://localhost:8080/service/master/findLandIdByName?name=${selectedLand}`)
+        axios.post(`http://localhost:8081/service/master/findLandIdByName?name=${selectedLand}`)
             .then((response) => {
                 const landIdTask = response.data.extra;
                 const taskLand = JSON.stringify(landIdTask);
@@ -35,7 +35,7 @@ const CostBreakdownReport = ({ selectedLand }) => {
         const fetchCostBreakdownLineData = async () => {
             try {
 
-                const baseURL = 'http://localhost:8080/service/master/cost-breakdown-line'
+                const baseURL = 'http://localhost:8081/service/master/cost-breakdown-line'
                 const fetchURL = landId ? `${baseURL}?landId=${landId}` : baseURL;
 
                 console.log(fetchURL)
