@@ -134,7 +134,7 @@ function Report() {
 
         if (selectedLot) {
             const selectedLotId = selectedLot.id;
-            setLotId(selectedLotId); 
+            setLotId(selectedLotId);
             console.log('Selected Lot ID:', selectedLotId);
         } else {
             setLotId('');
@@ -190,6 +190,11 @@ function Report() {
                                     <label>Select Lot:</label>
                                     <select value={selectedLot} onChange={handleLotChange}>
                                         <option value="">Select Lot</option>
+                                        {lots.map((lot) => (
+                                            <option key={lot.id} value={lot.name}>
+                                                {lot.name}
+                                            </option>
+                                        ))}
                                     </select>
                                 </div>
 
@@ -248,11 +253,12 @@ function Report() {
                 <option value="Monthly Crop">Monthly Crop</option>
                 <option value="Other Cost / Yield">Other Cost / Yield</option>
             </select>
-            {showEmployeeAttendanceReport && <EmployeeAttendanceReport dateRange={dateRange} lotId={lotId}/>}
-            {showMonthlyCropReport && <MonthlyCropReport dateRange={dateRange} lotId={lotId}/>}
-            {showCostYieldReport && <CostYieldReport />}
+
+            {showEmployeeAttendanceReport && <EmployeeAttendanceReport dateRange={dateRange} lotId={lotId} />}
+            {showMonthlyCropReport && <MonthlyCropReport dateRange={dateRange} lotId={lotId} />}
+            {showCostYieldReport && <CostYieldReport dateRange={dateRange} />}
             {showEmployeePerfomnce && <EmployeePerfomnce dateRange={dateRange} selectedLand={selectedLand}/>}
-            {showCostBreakdown && <CostBreakdownReport selectedLand={selectedLand}/>}
+            {showCostBreakdown && <CostBreakdownReport selectedLand={selectedLand} />}
             {showSummary && <SummaryReport selectedLand={selectedLand} />}
             < br />
             <Footer />
