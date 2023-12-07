@@ -223,6 +223,7 @@ export class ReportDaoImpl implements ReportDao {
     const connection = getConnection();
     const queryBuilder = connection.createQueryBuilder();
     console.log("ser-imp : ", fromDate, toDate);
+    console.log("ser-imp land: ", landId);
 
     const query = queryBuilder
       .select([
