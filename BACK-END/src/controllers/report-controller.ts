@@ -55,9 +55,21 @@ export const getEmployeePerfomanceReport = async (req: Request, res: Response): 
 };
 
 
+// export const getCostBreakdownLineReport = async (req: Request, res: Response): Promise<void> => {
+//   try {
+//     const costBreakdownLineReport = await reportServiceImpl.getCostBreakdownLineReport();
+
+//     res.json(costBreakdownLineReport);
+//   } catch (error) {
+//     res.status(500).json({ error: 'Failed to generate cost breakdown line Report report' });
+//   }
+// };
+
 export const getCostBreakdownLineReport = async (req: Request, res: Response): Promise<void> => {
+  const landId = req.params.landId;
+  
   try {
-    const costBreakdownLineReport = await reportServiceImpl.getCostBreakdownLineReport();
+    const costBreakdownLineReport = await reportServiceImpl.getCostBreakdownLineReport(landId);
 
     res.json(costBreakdownLineReport);
   } catch (error) {
@@ -74,6 +86,18 @@ export const getgetCostBreakdownPieReport = async (req: Request, res: Response):
     res.status(500).json({ error: 'Failed to generate cost breakdown pie chart Report report' });
   }
 }
+
+// export const getgetCostBreakdownPieReport = async (req: Request, res: Response): Promise<void> => {
+//   const landId = req.params.landId;
+
+//   try {
+//     const costBreakdownPieReport = await reportServiceImpl.getCostBreakdownPieReport(landId);
+
+//     res.json(costBreakdownPieReport);
+//   } catch (error) {
+//     res.status(500).json({ error: 'Failed to generate cost breakdown pie chart Report report' });
+//   }
+// }
 
 export const getSummaryReport = async (req: Request, res: Response): Promise<void> => {
   const landId = req.params.landId;

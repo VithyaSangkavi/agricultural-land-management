@@ -158,19 +158,24 @@ function Report() {
                             />
                         </div>
 
-                        <div>
-                            <label>Select Lot:</label>
-                            <select value={selectedLot} onChange={handleLotChange}>
-                                <option value="">Select Lot</option>
-                            </select>
-                        </div>
+                        {selectedReport !== 'Employee Perfomance' && selectedReport !== 'Summary' && (
+                            <>
+                                <div>
+                                    <label>Select Lot:</label>
+                                    <select value={selectedLot} onChange={handleLotChange}>
+                                        <option value="">Select Lot</option>
+                                    </select>
+                                </div>
 
-                        <div>
-                            <label>Select Worker:</label>
-                            <select value={selectedWorker} onChange={handleWorkerChange}>
-                                <option value="">Select Worker</option>
-                            </select>
-                        </div>
+                                <div>
+                                    <label>Select Worker:</label>
+                                    <select value={selectedWorker} onChange={handleWorkerChange}>
+                                        <option value="">Select Worker</option>
+                                    </select>
+                                </div>
+                            </>
+                        )}
+                        <br />
 
                         <button onClick={handleResetFilters}>Reset Filters</button>
                     </div>
@@ -224,7 +229,7 @@ function Report() {
             {showMonthlyCropReport && <MonthlyCropReport />}
             {showCostYieldReport && <CostYieldReport />}
             {showEmployeePerfomnce && <EmployeePerfomnce dateRange={dateRange} />}
-            {showCostBreakdown && <CostBreakdownReport />}
+            {showCostBreakdown && <CostBreakdownReport selectedLand={selectedLand}/>}
             {showSummary && <SummaryReport selectedLand={selectedLand} />}
             < br />
             <Footer />

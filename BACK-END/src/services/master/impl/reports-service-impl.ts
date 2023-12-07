@@ -210,11 +210,32 @@ export class ReportServiceImpl implements ReportService {
     return result;
   }
 
-  async getCostBreakdownLineReport(): Promise<any> {
+  // async getCostBreakdownLineReport(): Promise<any> {
+  //   const connection = getConnection();
+  //   const queryBuilder = connection.createQueryBuilder();
+
+  //   const result = await queryBuilder
+  //     .select([
+  //       'DATE_FORMAT(te.createdDate, "%M") AS month',
+  //       'SUM(te.value) AS totalCost',
+  //       'e.expenseType AS expenseType',
+  //     ])
+  //     .from(TaskExpenseEntity, 'te')
+  //     .leftJoin('te.expense', 'e')
+  //     .groupBy('DATE_FORMAT(te.createdDate, "%M"), e.expenseType')
+  //     .orderBy("month", "DESC")
+  //     .getRawMany();
+
+  //   return result;
+  // }
+
+  async getCostBreakdownLineReport(landId: number): Promise<any> {
     const connection = getConnection();
     const queryBuilder = connection.createQueryBuilder();
 
-    const result = await queryBuilder
+    console.log("back-end landId : ", landId)
+
+    const query = queryBuilder
       .select([
         'DATE_FORMAT(te.createdDate, "%M") AS month',
         'SUM(te.value) AS totalCost',
@@ -222,8 +243,16 @@ export class ReportServiceImpl implements ReportService {
       ])
       .from(TaskExpenseEntity, 'te')
       .leftJoin('te.expense', 'e')
+      .leftJoin('te.taskAssigned', 'taskAssigned')
+      .leftJoin('taskAssigned.land', 'land');
+
+    if (landId !== null && landId !== undefined) {
+      query.where('land.id = :landId', { landId });
+    }
+
+    const result = await query
       .groupBy('DATE_FORMAT(te.createdDate, "%M"), e.expenseType')
-      .orderBy("month", "DESC")
+      .orderBy('month', 'DESC')
       .getRawMany();
 
     return result;
@@ -243,6 +272,8 @@ export class ReportServiceImpl implements ReportService {
 
     return result;
   }
+
+
 
   async getSummaryReport(landId: number): Promise<any> {
     const workAssignedRepository = getRepository(WorkAssignedEntity);
