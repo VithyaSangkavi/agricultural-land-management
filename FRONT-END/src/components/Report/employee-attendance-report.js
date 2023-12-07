@@ -21,16 +21,16 @@ const EmployeeAttendanceReport = ({dateRange, lotId}) => {
                 let response;
                 if (fromDate && toDate && lotId) {
                     // filter by fromDate, toDate, and lotId 
-                    response = await axios.get(`http://localhost:8080/service/master/employee-attendance?startDate=${fromDate}&endDate=${toDate}&lotId=${lotId}`);
+                    response = await axios.get(`http://localhost:8081/service/master/employee-attendance?startDate=${fromDate}&endDate=${toDate}&lotId=${lotId}`);
                 } else if (fromDate && toDate) {
                     // filter by fromDate and toDate 
-                    response = await axios.get(`http://localhost:8080/service/master/employee-attendance?startDate=${fromDate}&endDate=${toDate}`);
+                    response = await axios.get(`http://localhost:8081/service/master/employee-attendance?startDate=${fromDate}&endDate=${toDate}`);
                 } else if (lotId) {
                     // filter by lotId
-                    response = await axios.get(`http://localhost:8080/service/master/employee-attendance?lotId=${lotId}`);
+                    response = await axios.get(`http://localhost:8081/service/master/employee-attendance?lotId=${lotId}`);
                 } else {
                     // without any filters
-                    response = await axios.get('http://localhost:8080/service/master/employee-attendance');
+                    response = await axios.get('http://localhost:8081/service/master/employee-attendance');
                 }
                 setAttendanceData(response.data);
             } catch (error) {
