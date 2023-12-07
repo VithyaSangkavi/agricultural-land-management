@@ -7,9 +7,16 @@ const reportDaoInstance = new ReportDaoImpl();
 
 const reportServiceImpl: ReportService = new ReportServiceImpl(reportDaoInstance); 
 
+//employee-attendance report
 export const getEmployeeAttendance = async (req: Request, res: Response): Promise<void> => {
   try {
-    const employeeAttendanceReport = await reportServiceImpl.generateEmployeeAttendanceReport();
+    const { startDate, endDate, lotId } = req.query;
+
+    const employeeAttendanceReport = await reportServiceImpl.generateEmployeeAttendanceReport(
+      startDate ? new Date(startDate as string) : undefined,
+      endDate ? new Date(endDate as string) : undefined,
+      lotId ? parseInt(lotId as string, 10) : undefined,
+    );
 
     const formattedReport = employeeAttendanceReport.map((report) => {
       return {
@@ -19,16 +26,23 @@ export const getEmployeeAttendance = async (req: Request, res: Response): Promis
     });
 
     res.json(formattedReport);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch employee attendance report' });
+  }catch (error) {
+    console.error('Error in fetching employee attendance:', error);
+    res.status(500).json({ error: error.message || 'Failed to fetch employee attendance report' });
   }
+  
 };
 
+//monthly-crop report
 export const getMonthlyCropReport = async (req: Request, res: Response): Promise<void> => {
   try {
-    const monthlyCropReport = await reportServiceImpl.generateMonthlyCropReport();
+    const { lotId, startDate, endDate } = req.query;
 
-    // Process the monthlyCropReport if needed...
+    const monthlyCropReport = await reportServiceImpl.generateMonthlyCropReport(
+      lotId ? parseInt(lotId as string, 10) : undefined,
+      startDate ? new Date(startDate as string) : undefined,
+      endDate ? new Date(endDate as string) : undefined,
+    );
 
     res.json(monthlyCropReport);
   } catch (error) {
@@ -36,9 +50,16 @@ export const getMonthlyCropReport = async (req: Request, res: Response): Promise
   }
 };
 
+//other-cost-yield report
 export const getOtherCostYieldReport = async (req: Request, res: Response): Promise<void> => {
   try {
-    const otherCostYieldReport = await reportServiceImpl.generateOtherCostYieldReport();
+  
+    const { startDate, endDate } = req.query;
+
+    const otherCostYieldReport = await reportServiceImpl.generateOtherCostYieldReport(
+      startDate ? new Date(startDate as string) : undefined,
+      endDate ? new Date(endDate as string) : undefined,
+  );
     res.json(otherCostYieldReport);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch Other Cost / Yield report' });
@@ -103,3 +124,4 @@ export const getSummaryReport = async (req: Request, res: Response): Promise<voi
     res.status(500).json({ error: 'Failed to generate cost Summary Report report' });
   }
 };
+

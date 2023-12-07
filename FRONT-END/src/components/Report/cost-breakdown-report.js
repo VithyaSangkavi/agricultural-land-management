@@ -14,7 +14,7 @@ const CostBreakdownReport = ({ selectedLand }) => {
 
     useEffect(() => {
         // Update the landId whenever selectedLand changes
-        axios.post(`http://localhost:8080/service/master/findLandIdByName?name=${selectedLand}`)
+        axios.post(`http://localhost:8081/service/master/findLandIdByName?name=${selectedLand}`)
             .then((response) => {
                 const landIdTask = response.data.extra;
                 const taskLand = JSON.stringify(landIdTask);
@@ -34,12 +34,14 @@ const CostBreakdownReport = ({ selectedLand }) => {
     useEffect(() => {
         const fetchCostBreakdownLineData = async () => {
             try {
-                const baseURL = 'http://localhost:8080/service/master/cost-breakdown-line'
+
+                const baseURL = 'http://localhost:8081/service/master/cost-breakdown-line'
                 const fetchURL = landId ? `${baseURL}?landId=${landId}` : baseURL;
 
                 console.log(fetchURL)
 
                 const response = await axios.get(fetchURL)
+
                 console.log("Line : ", response.data);
                 setCostBreakdownLineData(response.data);
 
@@ -50,7 +52,7 @@ const CostBreakdownReport = ({ selectedLand }) => {
 
         const fetchCostBreakdownPieData = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/service/master/cost-breakdown-pie');
+                const response = await axios.get('http://localhost:8081/service/master/cost-breakdown-pie');
                 console.log("Pie : ", response.data);
                 setCostBreakdownPieData(response.data);
             } catch (error) {
