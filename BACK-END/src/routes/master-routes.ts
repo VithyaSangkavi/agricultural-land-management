@@ -124,7 +124,7 @@ router.get('/monthly-crop-report', reportController.getMonthlyCropReport);
 //other-cost-yield report
 router.get('/other-cost-yield', reportController.getOtherCostYieldReport);
 //employee-perfomance report
-router.get('/employee-perfomance', reportController.getEmployeePerfomanceReport);
+//router.get('/employee-perfomance', reportController.getEmployeePerfomanceReport);
 //cost-breakdown-linechart report
 router.get('/cost-breakdown-line', reportController.getCostBreakdownLineReport);
 //cost-breakdown-pie report

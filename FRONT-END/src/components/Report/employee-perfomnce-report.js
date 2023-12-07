@@ -19,10 +19,12 @@ const EmployeePerfomnceReport = ({ dateRange: { fromDate, toDate } }) => {
     useEffect(() => {
         const fetchPerfomnceData = async () => {
             try {
+
                 const baseURL = 'http://localhost:8080/service/master/employee-perfomance';
                 const fetchURL = fromDate && toDate ? `${baseURL}?fromDate=${fromDate}&toDate=${toDate}` : baseURL;
 
                 const response = await axios.get(fetchURL);
+
                 setPerfomnceData(response.data);
             } catch (error) {
                 console.error('Error fetching employee perfomnce:', error);
