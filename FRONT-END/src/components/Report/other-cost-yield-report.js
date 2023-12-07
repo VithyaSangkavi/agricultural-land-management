@@ -7,21 +7,30 @@ import 'chartjs-adapter-date-fns';
 
 ChartJS.register(LineElement, BarElement, PointElement, Tooltip, Legend, LinearScale, TimeScale, CategoryScale);
 
-const CostYieldReport = () => {
+const CostYieldReport = ({dateRange}) => {
     const [costYieldData, setCostYieldData] = useState({});
 
+    const fromDate = dateRange && dateRange.fromDate;
+    const toDate = dateRange && dateRange.toDate;
+
     useEffect(() => {
-        const fetchCostYieldData = async () => {
+        const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:8081/service/master/other-cost-yield');
+                let response;
+                if (fromDate && toDate) {
+                    // filter by fromDate and toDate 
+                    response = await axios.get(`http://localhost:8081/service/master/other-cost-yield?startDate=${fromDate}&endDate=${toDate}`);
+                }else {
+                    // without any filters
+                    response = await axios.get('http://localhost:8081/service/master/other-cost-yield');
+                }
                 setCostYieldData(response.data);
             } catch (error) {
-                console.error('Error fetching cost-yield report:', error);
+                console.error('Error fetching employee attendance:', error);
             }
         };
-
-        fetchCostYieldData();
-    }, []);
+        fetchData();
+    }, [fromDate, toDate]);
 
     const chartData = {
         labels: Object.keys(costYieldData),

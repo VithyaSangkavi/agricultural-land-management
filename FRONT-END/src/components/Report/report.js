@@ -255,7 +255,7 @@ function Report() {
             </select>
             {showEmployeeAttendanceReport && <EmployeeAttendanceReport dateRange={dateRange} lotId={lotId} />}
             {showMonthlyCropReport && <MonthlyCropReport dateRange={dateRange} lotId={lotId} />}
-            {showCostYieldReport && <CostYieldReport />}
+            {showCostYieldReport && <CostYieldReport dateRange={dateRange} />}
             {showEmployeePerfomnce && <EmployeePerfomnce dateRange={dateRange} />}
             {showCostBreakdown && <CostBreakdownReport selectedLand={selectedLand} />}
             {showSummary && <SummaryReport selectedLand={selectedLand} />}
