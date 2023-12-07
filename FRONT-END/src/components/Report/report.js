@@ -80,13 +80,13 @@ function Report() {
 
     useEffect(() => {
         //land find all
-        axios.get('http://localhost:8081/service/master/landFindAll').then((response) => {
+        axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
             setLands(response.data.extra);
             console.log("Lands : ", response.data.extra);
         });
 
         //lot find all
-        axios.get('http://localhost:8081/service/master/lotFindAll').then((response) => {
+        axios.get('http://localhost:8080/service/master/lotFindAll').then((response) => {
             setLots(response.data.extra);
             console.log("Lots : ", response.data.extra);
         });
@@ -95,7 +95,7 @@ function Report() {
     const handleSelectedLand = (eventkey) => {
         setSelectedLand(eventkey);
 
-        axios.post(`http://localhost:8081/service/master/findLandIdByName?name=${eventkey}`)
+        axios.post(`http://localhost:8080/service/master/findLandIdByName?name=${eventkey}`)
             .then((response) => {
                 const landIdTask = response.data.extra;
                 const taskLand = JSON.stringify(landIdTask);
