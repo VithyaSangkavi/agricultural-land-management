@@ -15,7 +15,6 @@ import { Units } from "../../../enum/units";
 import { Status } from '../../../enum/Status';
 import { TaskStatus } from '../../../enum/taskStatus';
 import { Schedule } from '../../../enum/schedule';
-import { ReportDao } from '../../../dao/report-dao';
 
 
 
@@ -27,10 +26,6 @@ export class ReportServiceImpl implements ReportService {
   constructor(reportDao: ReportDao) {
     this.reportDao = reportDao;
   }
-
-  //Employee attendance report
-  async generateEmployeeAttendanceReport(): Promise<any> {
-    const workAssignedRepository = getRepository(WorkAssignedEntity);
     
 
   //employee-attendance report
