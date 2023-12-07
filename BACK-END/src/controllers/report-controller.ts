@@ -54,20 +54,9 @@ export const getEmployeePerfomanceReport = async (req: Request, res: Response): 
   }
 };
 
-
-// export const getCostBreakdownLineReport = async (req: Request, res: Response): Promise<void> => {
-//   try {
-//     const costBreakdownLineReport = await reportServiceImpl.getCostBreakdownLineReport();
-
-//     res.json(costBreakdownLineReport);
-//   } catch (error) {
-//     res.status(500).json({ error: 'Failed to generate cost breakdown line Report report' });
-//   }
-// };
-
 export const getCostBreakdownLineReport = async (req: Request, res: Response): Promise<void> => {
-  const landId = req.params.landId;
-  
+  const landId = req.query.landId;
+  console.log("Back-end ctr land: ", landId);
   try {
     const costBreakdownLineReport = await reportServiceImpl.getCostBreakdownLineReport(landId);
 
