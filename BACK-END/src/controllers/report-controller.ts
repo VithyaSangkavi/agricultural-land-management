@@ -10,12 +10,13 @@ const reportServiceImpl: ReportService = new ReportServiceImpl(reportDaoInstance
 //employee-attendance report
 export const getEmployeeAttendance = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { startDate, endDate, lotId } = req.query;
+    const { startDate, endDate, lotId, landId } = req.query;
 
     const employeeAttendanceReport = await reportServiceImpl.generateEmployeeAttendanceReport(
       startDate ? new Date(startDate as string) : undefined,
       endDate ? new Date(endDate as string) : undefined,
       lotId ? parseInt(lotId as string, 10) : undefined,
+      landId ? parseInt(landId as string, 10) : undefined,
     );
 
     const formattedReport = employeeAttendanceReport.map((report) => {
@@ -54,12 +55,16 @@ export const getMonthlyCropReport = async (req: Request, res: Response): Promise
 export const getOtherCostYieldReport = async (req: Request, res: Response): Promise<void> => {
   try {
 
-    const { startDate, endDate } = req.query;
+  
+    const { startDate, endDate, landId } = req.query;
 
     const otherCostYieldReport = await reportServiceImpl.generateOtherCostYieldReport(
       startDate ? new Date(startDate as string) : undefined,
       endDate ? new Date(endDate as string) : undefined,
-    );
+
+      landId ? parseInt(landId as string, 10) : undefined,
+  );
+
     res.json(otherCostYieldReport);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch Other Cost / Yield report' });

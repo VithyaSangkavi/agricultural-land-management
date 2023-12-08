@@ -29,6 +29,7 @@ function Report() {
     const [selectedWorker, setSelectedWorker] = useState('');
     const [isFilterExpanded, setFilterExpanded] = useState(false);
     const [lotId, setLotId] = useState('');
+    const [landId, setLandId] = useState('');
 
     const [showEmployeeAttendanceReport, setShowEmployeeAttendanceReport] = useState(false);
     const [showMonthlyCropReport, setShowMonthlyCropReport] = useState(false);
@@ -90,13 +91,13 @@ function Report() {
 
     useEffect(() => {
         //land find all
-        axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
+        axios.get('http://localhost:8081/service/master/landFindAll').then((response) => {
             setLands(response.data.extra);
             console.log("Lands : ", response.data.extra);
         });
 
         //lot find all
-        axios.get('http://localhost:8080/service/master/lotFindAll').then((response) => {
+        axios.get('http://localhost:8081/service/master/lotFindAll').then((response) => {
             setLots(response.data.extra);
             console.log("Lots : ", response.data.extra);
         });
@@ -105,12 +106,13 @@ function Report() {
     const handleSelectedLand = (eventkey) => {
         setSelectedLand(eventkey);
 
-        axios.post(`http://localhost:8080/service/master/findLandIdByName?name=${eventkey}`)
+        axios.post(`http://localhost:8081/service/master/findLandIdByName?name=${eventkey}`)
             .then((response) => {
                 const landIdTask = response.data.extra;
                 const taskLand = JSON.stringify(landIdTask);
                 const landData = JSON.parse(taskLand);
                 const landId = landData.landId;
+                setLandId(landId);
                 console.log('Selected Land Id :', landId);
                 localStorage.setItem('SelectedLandId', landId);
 
@@ -207,28 +209,28 @@ function Report() {
                             )}
                         </div>
 
+                        {selectedReport !== 'Employee Perfomance' && selectedReport !== 'Summary' && (
 
-                        {selectedReport !== 'Employee Perfomance' || selectedReport !== 'Summary' || selectedReport !== 'Cost Breakdown'(
-                            <>
-                                <div>
-                                    <label>Select Lot:</label>
-                                    <select value={selectedLot} onChange={handleLotChange}>
-                                        <option value="">Select Lot</option>
-                                        {lots.map((lot) => (
-                                            <option key={lot.id} value={lot.name}>
-                                                {lot.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
+                            <div>
+                                <label>Select Lot:</label>
+                                <select value={selectedLot} onChange={handleLotChange}>
+                                    <option value="">Select Lot</option>
+                                    {lots.map((lot) => (
+                                        <option key={lot.id} value={lot.name}>
+                                            {lot.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        )}
 
-                                <div>
-                                    <label>Select Worker:</label>
-                                    <select value={selectedWorker} onChange={handleWorkerChange}>
-                                        <option value="">Select Worker</option>
-                                    </select>
-                                </div>
-                            </>
+                        {selectedReport !== 'Employee Perfomance' && selectedReport !== 'Summary' && selectedReport != 'Employee Attendance' && selectedReport != 'Monthly Crop' && (
+                            <div>
+                                <label>Select Worker:</label>
+                                <select value={selectedWorker} onChange={handleWorkerChange}>
+                                    <option value="">Select Worker</option>
+                                </select>
+                            </div>
                         )}
                         <br />
 
@@ -294,9 +296,11 @@ function Report() {
                 </>
             ) : null}
 
-            {showEmployeeAttendanceReport && <EmployeeAttendanceReport dateRange={dateRange} lotId={lotId} />}
+ 
+
+            {showEmployeeAttendanceReport && <EmployeeAttendanceReport dateRange={dateRange} lotId={lotId} landId={landId}/>}
             {showMonthlyCropReport && <MonthlyCropReport dateRange={dateRange} lotId={lotId} />}
-            {showCostYieldReport && <CostYieldReport dateRange={dateRange} />}
+            {showCostYieldReport && <CostYieldReport dateRange={dateRange} landId={landId} />}
             {showEmployeePerfomnce && <EmployeePerfomnce dateRange={dateRange} selectedLand={selectedLand}/>}
             {showCostBreakdown && <CostBreakdownReport selectedLand={selectedLand} dateRange={dateRange} />}
             {showSummary && <SummaryReport selectedLand={selectedLand} category={category} />}

@@ -9,7 +9,7 @@ import { useLocation } from 'react-router-dom';
 ChartJS.register(LineElement, PointElement, Tooltip, Legend, LinearScale, TimeScale);
 
 
-const EmployeeAttendanceReport = ({dateRange, lotId}) => {
+const EmployeeAttendanceReport = ({dateRange, lotId, landId}) => {
     const [attendanceData, setAttendanceData] = useState([]);
 
     const fromDate = dateRange && dateRange.fromDate;
@@ -21,16 +21,22 @@ const EmployeeAttendanceReport = ({dateRange, lotId}) => {
                 let response;
                 if (fromDate && toDate && lotId) {
                     // filter by fromDate, toDate, and lotId 
-                    response = await axios.get(`http://localhost:8080/service/master/employee-attendance?startDate=${fromDate}&endDate=${toDate}&lotId=${lotId}`);
-                } else if (fromDate && toDate) {
+                    response = await axios.get(`http://localhost:8081/service/master/employee-attendance?startDate=${fromDate}&endDate=${toDate}&lotId=${lotId}`);
+                } else if (fromDate && toDate && landId) {
+                    // filter by fromDate and toDate and landId
+                    response = await axios.get(`http://localhost:8081/service/master/employee-attendance?startDate=${fromDate}&endDate=${toDate}&landId=${landId}`);
+                }else if (fromDate && toDate) {
                     // filter by fromDate and toDate 
-                    response = await axios.get(`http://localhost:8080/service/master/employee-attendance?startDate=${fromDate}&endDate=${toDate}`);
-                } else if (lotId) {
+                    response = await axios.get(`http://localhost:8081/service/master/employee-attendance?startDate=${fromDate}&endDate=${toDate}`);
+                }  else if (lotId) {
                     // filter by lotId
-                    response = await axios.get(`http://localhost:8080/service/master/employee-attendance?lotId=${lotId}`);
+                    response = await axios.get(`http://localhost:8081/service/master/employee-attendance?lotId=${lotId}`);
+                }else if (landId) {
+                    // filter by landId
+                    response = await axios.get(`http://localhost:8081/service/master/employee-attendance?landId=${landId}`);
                 } else {
                     // without any filters
-                    response = await axios.get('http://localhost:8080/service/master/employee-attendance');
+                    response = await axios.get('http://localhost:8081/service/master/employee-attendance');
                 }
                 setAttendanceData(response.data);
             } catch (error) {
@@ -39,8 +45,10 @@ const EmployeeAttendanceReport = ({dateRange, lotId}) => {
         };
 
         fetchData();
-    }, [fromDate, toDate, lotId]);
+    }, [fromDate, toDate, lotId, landId]);
 
+    //Lined chart
+    
     const chartData = {
 
         labels: attendanceData.map((item) => item.date),

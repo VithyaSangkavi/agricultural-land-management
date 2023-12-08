@@ -13,7 +13,7 @@ import { ExpensesEntity } from '../../entity/master/expense-entity';
 export class ReportDaoImpl implements ReportDao {
 
   //employee-attendance report
-  async generateEmployeeAttendanceReport(startDate: Date, endDate: Date, lotId: number): Promise<any> {
+  async generateEmployeeAttendanceReport(startDate: Date, endDate: Date, lotId: number, landId: number): Promise<any> {
     const workAssignedRepository = getRepository(WorkAssignedEntity);
     let query = workAssignedRepository
       .createQueryBuilder('work_assigned')
@@ -32,6 +32,14 @@ export class ReportDaoImpl implements ReportDao {
       query = query.andWhere('work_assigned.lotId = :lotId', { lotId });
     }
 
+    // Filter by landId
+    if (landId) {
+      query = query
+      .innerJoin('work_assigned.lot', 'lot')
+      .innerJoin('lot.land', 'land')
+      .andWhere('land.id = :landId', { landId });
+    }
+
     try {
       const employeeAttendance = await query.getRawMany();
       return employeeAttendance;
@@ -46,7 +54,7 @@ export class ReportDaoImpl implements ReportDao {
   }
 
   //other-cost-yield report
-  async generateOtherCostYieldReport(startDate: Date, endDate: Date): Promise<any> {
+  async generateOtherCostYieldReport(startDate: Date, endDate: Date, landId: number): Promise<any> {
     const taskExpenseRepository = getRepository(TaskExpenseEntity);
     const incomeRepository = getRepository(IncomeEntity);
 
@@ -59,12 +67,10 @@ export class ReportDaoImpl implements ReportDao {
       const taskExpensesQuery = taskExpenseRepository.createQueryBuilder('task_expense')
         .select('SUM(task_expense.value)', 'cost')
         .addSelect('EXTRACT(MONTH FROM task_expense.createdDate)', 'month')
-      //.groupBy('EXTRACT(MONTH FROM task_expense.createdDate)');
 
       const incomesQuery = incomeRepository.createQueryBuilder('income')
         .select('SUM(income.price)', 'yield')
         .addSelect('income.month')
-      //.groupBy('income.month');
 
       // Filter by date range
       if (startDate && endDate) {
@@ -76,6 +82,17 @@ export class ReportDaoImpl implements ReportDao {
           startDate,
           endDate,
         });
+      }
+
+      // Add landId filter for both tables
+      if (landId) {
+        taskExpensesQuery
+          .innerJoin('task_expense.taskType', 'taskType')
+          .innerJoin('taskType.crop', 'crop')
+          .innerJoin('crop.land', 'land')
+          .andWhere('land.id = :landId', { landId });
+
+        incomesQuery.andWhere('income.landId = :landId', { landId });
       }
 
       const taskExpenses = await taskExpensesQuery
