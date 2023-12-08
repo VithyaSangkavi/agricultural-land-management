@@ -82,13 +82,13 @@ function Report() {
 
     useEffect(() => {
         //land find all
-        axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
+        axios.get('http://localhost:8081/service/master/landFindAll').then((response) => {
             setLands(response.data.extra);
             console.log("Lands : ", response.data.extra);
         });
 
         //lot find all
-        axios.get('http://localhost:8080/service/master/lotFindAll').then((response) => {
+        axios.get('http://localhost:8081/service/master/lotFindAll').then((response) => {
             setLots(response.data.extra);
             console.log("Lots : ", response.data.extra);
         });
@@ -97,7 +97,7 @@ function Report() {
     const handleSelectedLand = (eventkey) => {
         setSelectedLand(eventkey);
 
-        axios.post(`http://localhost:8080/service/master/findLandIdByName?name=${eventkey}`)
+        axios.post(`http://localhost:8081/service/master/findLandIdByName?name=${eventkey}`)
             .then((response) => {
                 const landIdTask = response.data.extra;
                 const taskLand = JSON.stringify(landIdTask);
@@ -199,28 +199,28 @@ function Report() {
                             )}
                         </div>
 
+                        {selectedReport !== 'Employee Perfomance' && selectedReport !== 'Summary' && (
 
-                        {selectedReport !== 'Employee Perfomance' || selectedReport !== 'Summary' || selectedReport !== 'Cost Breakdown'(
-                            <>
-                                <div>
-                                    <label>Select Lot:</label>
-                                    <select value={selectedLot} onChange={handleLotChange}>
-                                        <option value="">Select Lot</option>
-                                        {lots.map((lot) => (
-                                            <option key={lot.id} value={lot.name}>
-                                                {lot.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
+                            <div>
+                                <label>Select Lot:</label>
+                                <select value={selectedLot} onChange={handleLotChange}>
+                                    <option value="">Select Lot</option>
+                                    {lots.map((lot) => (
+                                        <option key={lot.id} value={lot.name}>
+                                            {lot.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        )}
 
-                                <div>
-                                    <label>Select Worker:</label>
-                                    <select value={selectedWorker} onChange={handleWorkerChange}>
-                                        <option value="">Select Worker</option>
-                                    </select>
-                                </div>
-                            </>
+                        {selectedReport !== 'Employee Perfomance' && selectedReport !== 'Summary' && selectedReport != 'Employee Attendance' && selectedReport != 'Monthly Crop' && (
+                            <div>
+                                <label>Select Worker:</label>
+                                <select value={selectedWorker} onChange={handleWorkerChange}>
+                                    <option value="">Select Worker</option>
+                                </select>
+                            </div>
                         )}
                         <br />
 
@@ -272,7 +272,6 @@ function Report() {
                 <option value="Monthly Crop">Monthly Crop</option>
                 <option value="Other Cost / Yield">Other Cost / Yield</option>
             </select>
-
 
             {showEmployeeAttendanceReport && <EmployeeAttendanceReport dateRange={dateRange} lotId={lotId} />}
             {showMonthlyCropReport && <MonthlyCropReport dateRange={dateRange} lotId={lotId} />}

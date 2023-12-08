@@ -39,8 +39,8 @@ export class ReportServiceImpl implements ReportService {
   }
 
   //other-cost-yield report
-  async generateOtherCostYieldReport(startDate: Date, endDate: Date): Promise<any[]> {
-    return this.reportDao.generateOtherCostYieldReport(startDate, endDate);
+  async generateOtherCostYieldReport(startDate: Date, endDate: Date, landId: number): Promise<any[]> {
+    return this.reportDao.generateOtherCostYieldReport(startDate, endDate, landId);
   }
 
 

@@ -32,6 +32,8 @@ const CostYieldReport = ({dateRange}) => {
         fetchData();
     }, [fromDate, toDate]);
 
+    //Grouped bar chart
+    
     const chartData = {
         labels: Object.keys(costYieldData),
         datasets: [

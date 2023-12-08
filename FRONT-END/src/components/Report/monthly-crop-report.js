@@ -13,31 +13,22 @@ const MonthlyCropReport = ({ dateRange, lotId }) => {
     const fromDate = dateRange && dateRange.fromDate;
     const toDate = dateRange && dateRange.toDate;
 
-    // const labels = Object.keys(monthlyCropData);
-    // const pastYearData = Object.values(monthlyCropData).map(data => data[0].PastYearTotalQuantity);
-    // const currentYearData = Object.values(monthlyCropData).map(data => data[0].CurrentYearTotalQuantity);
-
-    // // Add empty labels to create space at the start and end of the x-axis
-    // const emptyLabels = ['', ...labels, ''];
-    // const emptyData = [null, ...pastYearData, null];
-    // const emptyCurrentYearData = [null, ...currentYearData, null];
-
     useEffect(() => {
         const fetchData = async () => {
             try {
                 let response;
                 if (fromDate && toDate && lotId) {
                     // filter by fromDate, toDate, and lotId 
-                    response = await axios.get(`http://localhost:8080/service/master/monthly-crop-report?startDate=${fromDate}&endDate=${toDate}&lotId=${lotId}`);
+                    response = await axios.get(`http://localhost:8081/service/master/monthly-crop-report?startDate=${fromDate}&endDate=${toDate}&lotId=${lotId}`);
                 } else if (fromDate && toDate) {
                     // filter by fromDate and toDate 
-                    response = await axios.get(`http://localhost:8080/service/master/monthly-crop-report?startDate=${fromDate}&endDate=${toDate}`);
+                    response = await axios.get(`http://localhost:8081/service/master/monthly-crop-report?startDate=${fromDate}&endDate=${toDate}`);
                 } else if (lotId) {
                     // filter by lotId
-                    response = await axios.get(`http://localhost:8080/service/master/monthly-crop-report?lotId=${lotId}`);
+                    response = await axios.get(`http://localhost:8081/service/master/monthly-crop-report?lotId=${lotId}`);
                 } else {
                     // without any filters
-                    response = await axios.get('http://localhost:8080/service/master/monthly-crop-report');
+                    response = await axios.get('http://localhost:8081/service/master/monthly-crop-report');
                 }
                 setMonthlyCropData(response.data);
             } catch (error) {
@@ -48,6 +39,8 @@ const MonthlyCropReport = ({ dateRange, lotId }) => {
         fetchData();
     }, [fromDate, toDate, lotId]);
 
+    //Lined chart
+    
     const chartData = {
         labels: Object.keys(monthlyCropData),
         datasets: [
