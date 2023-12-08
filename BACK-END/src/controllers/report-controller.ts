@@ -81,10 +81,12 @@ export const getEmployeePerfomanceReport = async (req: Request, res: Response): 
 };
 
 export const getCostBreakdownLineReport = async (req: Request, res: Response): Promise<void> => {
+  const fromDate = req.query.fromDate;
   const landId = req.query.landId;
   console.log("Back-end ctr land: ", landId);
+  console.log("Back-end ctr fromDate: ", fromDate);
   try {
-    const costBreakdownLineReport = await reportServiceImpl.getCostBreakdownLineReport(landId);
+    const costBreakdownLineReport = await reportServiceImpl.getCostBreakdownLineReport(fromDate, landId);
 
     res.json(costBreakdownLineReport);
   } catch (error) {

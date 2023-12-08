@@ -271,15 +271,45 @@ export class ReportDaoImpl implements ReportDao {
 
 
   //Cost Breakdown Line Report
-  async getCostBreakdownLineReport(landId: number): Promise<any> {
+  // async getCostBreakdownLineReport(landId: number): Promise<any> {
+  //   const connection = getConnection();
+  //   const queryBuilder = connection.createQueryBuilder();
+
+  //   console.log("back-end landId : ", landId)
+
+  //   const query = queryBuilder
+  //     .select([
+  //       'DATE_FORMAT(te.createdDate, "%M") AS month',
+  //       'SUM(te.value) AS totalCost',
+  //       'e.expenseType AS expenseType',
+  //     ])
+  //     .from(TaskExpenseEntity, 'te')
+  //     .leftJoin('te.expense', 'e')
+  //     .leftJoin('te.taskAssigned', 'taskAssigned')
+  //     .leftJoin('taskAssigned.land', 'land');
+
+  //   if (landId !== null && landId !== undefined) {
+  //     query.where('land.id = :landId', { landId });
+  //   }
+
+  //   const result = await query
+  //     .groupBy('DATE_FORMAT(te.createdDate, "%M"), e.expenseType')
+  //     .orderBy('month', 'DESC')
+  //     .getRawMany();
+
+  //   return result;
+  // }
+
+  async getCostBreakdownLineReport(fromDate?: string, landId?: number): Promise<any> {
     const connection = getConnection();
     const queryBuilder = connection.createQueryBuilder();
 
-    console.log("back-end landId : ", landId)
+    console.log("back-end landId : ", landId);
+    console.log("ser-imp date: ", fromDate);
 
     const query = queryBuilder
       .select([
-        'DATE_FORMAT(te.createdDate, "%M") AS month',
+        'DATE_FORMAT(te.createdDate, "%Y-%b") AS yearMonth',
         'SUM(te.value) AS totalCost',
         'e.expenseType AS expenseType',
       ])
@@ -292,13 +322,19 @@ export class ReportDaoImpl implements ReportDao {
       query.where('land.id = :landId', { landId });
     }
 
+    if (fromDate) {
+      query.andWhere('DATE_FORMAT(te.createdDate, "%Y-%m") = :yearMonth', { yearMonth: fromDate });
+    }
+
     const result = await query
-      .groupBy('DATE_FORMAT(te.createdDate, "%M"), e.expenseType')
-      .orderBy('month', 'DESC')
+      .groupBy('DATE_FORMAT(te.createdDate, "%Y-%b"), e.expenseType')
+      .orderBy('yearMonth', 'DESC')
       .getRawMany();
 
     return result;
   }
+
+
 
   //Cost Breakdown Pie Report
   async getCostBreakdownPieReport(): Promise<any> {
