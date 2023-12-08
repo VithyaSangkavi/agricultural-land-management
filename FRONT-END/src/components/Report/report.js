@@ -203,7 +203,7 @@ function Report() {
                             </>
                         ) : (
                             <>
-                                <label>Date Range:</label>
+                                <label>{t('daterange')} : </label>
                                 <input
                                     type="date"
                                     name="fromDate"
@@ -224,9 +224,9 @@ function Report() {
                     {selectedReport !== 'Employee Perfomance' && selectedReport !== 'Summary' && (
 
                         <div>
-                            <label> {t('selectlot')}</label>
+                            <label> {t('selectlot')} : </label>
                             <select value={selectedLot} onChange={handleLotChange}>
-                                <option value="">Select Lot</option>
+                                <option value="">{t('selectlot')}</option>
                                 {lots.map((lot) => (
                                     <option key={lot.id} value={lot.name}>
                                         {lot.name}
@@ -238,15 +238,15 @@ function Report() {
 
                     {selectedReport !== 'Employee Perfomance' && selectedReport !== 'Summary' && selectedReport != 'Employee Attendance' && selectedReport != 'Monthly Crop' && (
                         <div>
-                            <label>Select Worker:</label>
+                            <label>{t('selectworker')} : </label>
                             <select value={selectedWorker} onChange={handleWorkerChange}>
-                                <option value="">Select Worker</option>
+                                <option value="">{t('selectworker')}</option>
                             </select>
                         </div>
                     )}
                     <br />
 
-                    <button onClick={handleResetFilters}>{t('resetFilters')}</button>
+                    <button onClick={handleResetFilters}>{t('resetfilters')}</button>
 
                 </div>
             )}
