@@ -13,15 +13,6 @@ const MonthlyCropReport = ({ dateRange, lotId }) => {
     const fromDate = dateRange && dateRange.fromDate;
     const toDate = dateRange && dateRange.toDate;
 
-    // const labels = Object.keys(monthlyCropData);
-    // const pastYearData = Object.values(monthlyCropData).map(data => data[0].PastYearTotalQuantity);
-    // const currentYearData = Object.values(monthlyCropData).map(data => data[0].CurrentYearTotalQuantity);
-
-    // // Add empty labels to create space at the start and end of the x-axis
-    // const emptyLabels = ['', ...labels, ''];
-    // const emptyData = [null, ...pastYearData, null];
-    // const emptyCurrentYearData = [null, ...currentYearData, null];
-
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -48,6 +39,8 @@ const MonthlyCropReport = ({ dateRange, lotId }) => {
         fetchData();
     }, [fromDate, toDate, lotId]);
 
+    //Lined chart
+    
     const chartData = {
         labels: Object.keys(monthlyCropData),
         datasets: [

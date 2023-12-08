@@ -41,6 +41,8 @@ const EmployeeAttendanceReport = ({dateRange, lotId}) => {
         fetchData();
     }, [fromDate, toDate, lotId]);
 
+    //Lined chart
+    
     const chartData = {
 
         labels: attendanceData.map((item) => item.date),
