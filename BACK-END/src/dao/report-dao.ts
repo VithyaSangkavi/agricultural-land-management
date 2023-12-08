@@ -5,6 +5,6 @@ export interface ReportDao {
   getEmployeePerfomanceReport(fromDate: string, toDate: string, landId: number): Promise<any>;
   getCostBreakdownLineReport(fromDate:string, landId: number): Promise<any>;
   getCostBreakdownPieReport(): Promise<any>;
-  getSummaryReport(landId: number): Promise<any>
+  getSummaryReport(landId: number, cateNum: number): Promise<any>
   
 }

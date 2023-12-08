@@ -61,8 +61,8 @@ export class ReportServiceImpl implements ReportService {
 
 
   //Summary Report
-  async getSummaryReport(landId: number): Promise<any> {
-    return this.reportDao.getSummaryReport(landId);
+  async getSummaryReport(landId?: number, cateNum?: number): Promise<any> {
+    return this.reportDao.getSummaryReport(landId, cateNum);
   }
 
 }
