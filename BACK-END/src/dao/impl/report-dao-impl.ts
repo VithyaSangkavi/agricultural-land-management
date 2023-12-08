@@ -14,7 +14,7 @@ import moment from 'moment';
 export class ReportDaoImpl implements ReportDao {
 
   //employee-attendance report
-  async generateEmployeeAttendanceReport(startDate: Date, endDate: Date, lotId: number): Promise<any> {
+  async generateEmployeeAttendanceReport(startDate: Date, endDate: Date, lotId: number, landId: number): Promise<any> {
     const workAssignedRepository = getRepository(WorkAssignedEntity);
     let query = workAssignedRepository
       .createQueryBuilder('work_assigned')
@@ -31,6 +31,14 @@ export class ReportDaoImpl implements ReportDao {
     // Filter by lotId 
     if (lotId) {
       query = query.andWhere('work_assigned.lotId = :lotId', { lotId });
+    }
+
+    // Filter by landId
+    if (landId) {
+      query = query
+      .innerJoin('work_assigned.lot', 'lot')
+      .innerJoin('lot.land', 'land')
+      .andWhere('land.id = :landId', { landId });
     }
 
     try {
