@@ -29,8 +29,8 @@ export class ReportServiceImpl implements ReportService {
     
 
   //employee-attendance report
-  async generateEmployeeAttendanceReport(startDate: Date, endDate: Date, lotId: number): Promise<any[]> {
-    return this.reportDao.generateEmployeeAttendanceReport(startDate, endDate, lotId);
+  async generateEmployeeAttendanceReport(startDate: Date, endDate: Date, lotId: number, landId: number): Promise<any[]> {
+    return this.reportDao.generateEmployeeAttendanceReport(startDate, endDate, lotId, landId);
   }
   
   //monthly-crop report

@@ -275,7 +275,7 @@ function Report() {
                 <option value="Other Cost / Yield">Other Cost / Yield</option>
             </select>
 
-            {showEmployeeAttendanceReport && <EmployeeAttendanceReport dateRange={dateRange} lotId={lotId} />}
+            {showEmployeeAttendanceReport && <EmployeeAttendanceReport dateRange={dateRange} lotId={lotId} landId={landId}/>}
             {showMonthlyCropReport && <MonthlyCropReport dateRange={dateRange} lotId={lotId} />}
             {showCostYieldReport && <CostYieldReport dateRange={dateRange} landId={landId} />}
             {showEmployeePerfomnce && <EmployeePerfomnce dateRange={dateRange} selectedLand={selectedLand}/>}

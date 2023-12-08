@@ -10,12 +10,13 @@ const reportServiceImpl: ReportService = new ReportServiceImpl(reportDaoInstance
 //employee-attendance report
 export const getEmployeeAttendance = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { startDate, endDate, lotId } = req.query;
+    const { startDate, endDate, lotId, landId } = req.query;
 
     const employeeAttendanceReport = await reportServiceImpl.generateEmployeeAttendanceReport(
       startDate ? new Date(startDate as string) : undefined,
       endDate ? new Date(endDate as string) : undefined,
       lotId ? parseInt(lotId as string, 10) : undefined,
+      landId ? parseInt(landId as string, 10) : undefined,
     );
 
     const formattedReport = employeeAttendanceReport.map((report) => {
