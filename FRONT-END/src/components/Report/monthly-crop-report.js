@@ -7,7 +7,7 @@ import './report.css'
 
 ChartJS.register(LineElement, PointElement, Tooltip, Legend, LinearScale, TimeScale, CategoryScale);
 
-const MonthlyCropReport = ({ dateRange, lotId }) => {
+const MonthlyCropReport = ({ dateRange, lotId, landId }) => {
     const [monthlyCropData, setMonthlyCropData] = useState([]);
 
     const fromDate = dateRange && dateRange.fromDate;
@@ -18,14 +18,20 @@ const MonthlyCropReport = ({ dateRange, lotId }) => {
             try {
                 let response;
                 if (fromDate && toDate && lotId) {
-                    // filter by fromDate, toDate, and lotId 
+                    // filter by fromDate, toDate, and landId 
                     response = await axios.get(`http://localhost:8081/service/master/monthly-crop-report?startDate=${fromDate}&endDate=${toDate}&lotId=${lotId}`);
+                } else if (fromDate && toDate && landId) {
+                    // filter by fromDate and toDate 
+                    response = await axios.get(`http://localhost:8081/service/master/monthly-crop-report?startDate=${fromDate}&endDate=${toDate}&landId=${landId}`);
                 } else if (fromDate && toDate) {
                     // filter by fromDate and toDate 
                     response = await axios.get(`http://localhost:8081/service/master/monthly-crop-report?startDate=${fromDate}&endDate=${toDate}`);
                 } else if (lotId) {
                     // filter by lotId
                     response = await axios.get(`http://localhost:8081/service/master/monthly-crop-report?lotId=${lotId}`);
+                }else if (landId) {
+                    // filter by landId
+                    response = await axios.get(`http://localhost:8081/service/master/monthly-crop-report?landId=${landId}`);
                 } else {
                     // without any filters
                     response = await axios.get('http://localhost:8081/service/master/monthly-crop-report');
@@ -37,7 +43,7 @@ const MonthlyCropReport = ({ dateRange, lotId }) => {
         };
 
         fetchData();
-    }, [fromDate, toDate, lotId]);
+    }, [fromDate, toDate, lotId, landId]);
 
     //Lined chart
     
