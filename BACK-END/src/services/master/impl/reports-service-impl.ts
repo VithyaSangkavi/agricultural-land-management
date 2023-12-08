@@ -34,13 +34,13 @@ export class ReportServiceImpl implements ReportService {
   }
   
   //monthly-crop report
-  async generateMonthlyCropReport(lotId: number, startDate: Date, endDate: Date): Promise<any[]> {
-    return this.reportDao.generateMonthlyCropReport(lotId, startDate, endDate);
+  async generateMonthlyCropReport(lotId: number, startDate: Date, endDate: Date, landId: number): Promise<any[]> {
+    return this.reportDao.generateMonthlyCropReport(lotId, startDate, endDate, landId);
   }
 
   //other-cost-yield report
-  async generateOtherCostYieldReport(startDate: Date, endDate: Date, landId: number): Promise<any[]> {
-    return this.reportDao.generateOtherCostYieldReport(startDate, endDate, landId);
+  async generateOtherCostYieldReport(startDate: Date, endDate: Date, landId: number, lotId: number): Promise<any[]> {
+    return this.reportDao.generateOtherCostYieldReport(startDate, endDate, landId, lotId);
   }
 
 

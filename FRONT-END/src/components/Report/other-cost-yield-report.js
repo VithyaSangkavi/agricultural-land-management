@@ -7,7 +7,7 @@ import 'chartjs-adapter-date-fns';
 
 ChartJS.register(LineElement, BarElement, PointElement, Tooltip, Legend, LinearScale, TimeScale, CategoryScale);
 
-const CostYieldReport = ({dateRange, landId}) => {
+const CostYieldReport = ({dateRange, landId, lotId}) => {
     const [costYieldData, setCostYieldData] = useState({});
 
     const fromDate = dateRange && dateRange.fromDate;
@@ -23,13 +23,18 @@ const CostYieldReport = ({dateRange, landId}) => {
                 if (fromDate && toDate && landId) {
                     // filter by fromDate, toDate and landId
                     response = await axios.get(`http://localhost:8081/service/master/other-cost-yield?startDate=${fromDate}&endDate=${toDate}&landId=${landId}`);
+                }else if (fromDate && toDate && lotId) {
+                    // filter by fromDate, toDate and lotId
+                    response = await axios.get(`http://localhost:8081/service/master/other-cost-yield?startDate=${fromDate}&endDate=${toDate}&lotId=${lotId}`);
                 }else if (fromDate && toDate ) {
                     // filter by fromDate, toDate
                     response = await axios.get(`http://localhost:8081/service/master/other-cost-yield?startDate=${fromDate}&endDate=${toDate}`);
                 }else if (landId) {
                     // filter by landId 
                     response = await axios.get(`http://localhost:8081/service/master/other-cost-yield?landId=${landId}`);
-
+                }else if (lotId) {
+                    // filter by lotId 
+                    response = await axios.get(`http://localhost:8081/service/master/other-cost-yield?lotId=${lotId}`);
                 }else {
                     // without any filters
                     response = await axios.get('http://localhost:8080/service/master/other-cost-yield');
@@ -40,7 +45,7 @@ const CostYieldReport = ({dateRange, landId}) => {
             }
         };
         fetchData();
-    }, [fromDate, toDate, landId]);
+    }, [fromDate, toDate, landId, lotId]);
 
     //Grouped bar chart
     

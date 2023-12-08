@@ -299,8 +299,8 @@ function Report() {
  
 
             {showEmployeeAttendanceReport && <EmployeeAttendanceReport dateRange={dateRange} lotId={lotId} landId={landId}/>}
-            {showMonthlyCropReport && <MonthlyCropReport dateRange={dateRange} lotId={lotId} />}
-            {showCostYieldReport && <CostYieldReport dateRange={dateRange} landId={landId} />}
+            {showMonthlyCropReport && <MonthlyCropReport dateRange={dateRange} lotId={lotId} landId={landId}/>}
+            {showCostYieldReport && <CostYieldReport dateRange={dateRange} landId={landId} lotId={lotId}/>}
             {showEmployeePerfomnce && <EmployeePerfomnce dateRange={dateRange} selectedLand={selectedLand}/>}
             {showCostBreakdown && <CostBreakdownReport selectedLand={selectedLand} dateRange={dateRange} />}
             {showSummary && <SummaryReport selectedLand={selectedLand} category={category} />}
