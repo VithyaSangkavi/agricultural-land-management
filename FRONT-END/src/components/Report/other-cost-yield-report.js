@@ -19,10 +19,10 @@ const CostYieldReport = ({dateRange}) => {
                 let response;
                 if (fromDate && toDate) {
                     // filter by fromDate and toDate 
-                    response = await axios.get(`http://localhost:8081/service/master/other-cost-yield?startDate=${fromDate}&endDate=${toDate}`);
+                    response = await axios.get(`http://localhost:8080/service/master/other-cost-yield?startDate=${fromDate}&endDate=${toDate}`);
                 }else {
                     // without any filters
-                    response = await axios.get('http://localhost:8081/service/master/other-cost-yield');
+                    response = await axios.get('http://localhost:8080/service/master/other-cost-yield');
                 }
                 setCostYieldData(response.data);
             } catch (error) {

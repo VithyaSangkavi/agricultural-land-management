@@ -10,7 +10,6 @@ import { TaskAssignedEntity } from '../../entity/master/task-assigned-entity';
 import { WorkerEntity } from '../../entity/master/worker-entity';
 import { ExpensesEntity } from '../../entity/master/expense-entity';
 
-import moment from 'moment';
 export class ReportDaoImpl implements ReportDao {
 
   //employee-attendance report
@@ -43,124 +42,7 @@ export class ReportDaoImpl implements ReportDao {
 
   //Monthly-crop report
   async generateMonthlyCropReport(lotId: number, startDate: Date, endDate: Date): Promise<any> {
-    const workAssignedRepository = getRepository(WorkAssignedEntity);
-
-    try {
-      const currentYear = new Date().getFullYear();
-      const pastYear = currentYear - 1;
-
-      const queryForCurrentYear = workAssignedRepository.createQueryBuilder('work_assigned')
-        .leftJoin(TaskTypeEntity, 'task', 'work_assigned.taskId = task.id')
-        .leftJoin(CropEntity, 'crop', 'task.cropId = crop.id')
-        .select('SUM(work_assigned.quantity)', 'totalQuantity')
-        .addSelect('EXTRACT(MONTH FROM work_assigned.updatedDate)', 'month')
-        .where('EXTRACT(YEAR FROM work_assigned.updatedDate) = :currentYear', { currentYear });
-
-      const queryForPastYear = workAssignedRepository.createQueryBuilder('work_assigned')
-        .leftJoin(TaskTypeEntity, 'task', 'work_assigned.taskId = task.id')
-        .leftJoin(CropEntity, 'crop', 'task.cropId = crop.id')
-        .select('SUM(work_assigned.quantity)', 'totalQuantity')
-        .addSelect('EXTRACT(MONTH FROM work_assigned.updatedDate)', 'month')
-        .where('EXTRACT(YEAR FROM work_assigned.updatedDate) = :pastYear', { pastYear });
-
-      //filter by lot id
-      if (lotId !== undefined) {
-        queryForCurrentYear.andWhere('work_assigned.lotId = :lotId', { lotId });
-        queryForPastYear.andWhere('work_assigned.lotId = :lotId', { lotId });
-      }
-
-      // Filter by date range
-      if (startDate && endDate) {
-
-        const currentYearStartDate = moment(startDate).toDate();
-        const currentYearEndDate = moment(endDate).toDate();
-        const pastYearStartDate = moment(startDate).subtract(1, 'year').startOf('year').toDate();
-        const pastYearEndDate = moment(endDate).subtract(1, 'year').endOf('year').toDate();
-
-        queryForCurrentYear.andWhere('work_assigned.updatedDate BETWEEN :currentYearStartDate AND :currentYearEndDate', { currentYearStartDate, currentYearEndDate });
-        queryForPastYear.andWhere('work_assigned.updatedDate BETWEEN :pastYearStartDate AND :pastYearEndDate', { pastYearStartDate, pastYearEndDate });
-      }
-
-      const quantitiesForCurrentYear = await queryForCurrentYear
-        .groupBy('EXTRACT(MONTH FROM work_assigned.updatedDate)')
-        .getRawMany();
-
-      const quantitiesForPastYear = await queryForPastYear
-        .groupBy('EXTRACT(MONTH FROM work_assigned.updatedDate)')
-        .getRawMany();
-
-      //console
-      console.log('Current year: ', queryForCurrentYear.getSql());
-      console.log('Past year: ', queryForPastYear.getSql());
-
-      const getMonthName = (monthNumber: number): string => {
-        const monthNames = [
-          'January', 'February', 'March', 'April', 'May', 'June',
-          'July', 'August', 'September', 'October', 'November', 'December'
-        ];
-
-        if (monthNumber >= 1 && monthNumber <= 12) {
-          return monthNames[monthNumber - 1];
-        }
-        return 'Invalid Month';
-      };
-
-      const formattedQuantitiesForCurrentYear = {};
-      const formattedQuantitiesForPastYear = {};
-
-      quantitiesForCurrentYear.forEach(item => {
-        const monthName = getMonthName(item.month);
-        if (!formattedQuantitiesForCurrentYear[monthName]) {
-          formattedQuantitiesForCurrentYear[monthName] = [];
-        }
-        formattedQuantitiesForCurrentYear[monthName].push({
-          PastYearTotalQuantity: '-',
-          CurrentYearTotalQuantity: item.totalQuantity
-        });
-      });
-
-      quantitiesForPastYear.forEach(item => {
-        const monthName = getMonthName(item.month);
-        if (!formattedQuantitiesForPastYear[monthName]) {
-          formattedQuantitiesForPastYear[monthName] = [];
-        }
-        formattedQuantitiesForPastYear[monthName].push({
-          PastYearTotalQuantity: item.totalQuantity,
-          CurrentYearTotalQuantity: '-'
-        });
-      });
-
-      console.log(formattedQuantitiesForCurrentYear);
-      console.log(formattedQuantitiesForPastYear);
-
-      // Merging quantities for each month
-      const monthlyQuantities = {};
-
-      const months = new Set([
-        ...Object.keys(formattedQuantitiesForCurrentYear),
-        ...Object.keys(formattedQuantitiesForPastYear)
-      ]);
-
-      months.forEach(month => {
-        if (!monthlyQuantities[month]) {
-          monthlyQuantities[month] = [];
-        }
-        const pastYearData = formattedQuantitiesForPastYear[month] || [{ PastYearTotalQuantity: 0 }];
-        const currentYearData = formattedQuantitiesForCurrentYear[month] || [{ CurrentYearTotalQuantity: 0 }];
-
-        pastYearData.forEach(pastYearItem => {
-          const currentYearItem = currentYearData.find(currentYearItem => currentYearItem.CurrentYearTotalQuantity !== '-');
-          monthlyQuantities[month].push({
-            PastYearTotalQuantity: pastYearItem.PastYearTotalQuantity || 0,
-            CurrentYearTotalQuantity: currentYearItem ? currentYearItem.CurrentYearTotalQuantity : '-'
-          });
-        });
-      });
-
-      return monthlyQuantities;
-    } catch (error) {
-      throw new Error(`Error generating monthly crop report: ${error}`);
-    }
+    
   }
 
   //other-cost-yield report
