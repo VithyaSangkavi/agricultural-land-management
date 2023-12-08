@@ -38,7 +38,15 @@ function Report() {
     const [showEmployeePerfomnce, setEmployeePerfomnce] = useState(false);
     const [showCostBreakdown, setCostBreakdown] = useState(false);
     const [showSummary, setSummary] = useState(false);
+    const [category, setSelectedCategory] = useState('');
     const extraValue = 'All Lands';
+
+
+    const handleCateChange = (event) => {
+        setSelectedCategory(event.target.value);
+    }
+
+    console.log("report cat : ", category)
 
 
     const handleReportChange = (event) => {
@@ -173,13 +181,13 @@ function Report() {
                         <div>
                             {showCostBreakdown ? (
                                 <>
-                                <label>Month : </label>
-                                <input
-                                    type="month"
-                                    name="fromDate"
-                                    value={dateRange.fromDate}
-                                    onChange={handleDateRangeChange}
-                                />
+                                    <label>Month : </label>
+                                    <input
+                                        type="month"
+                                        name="fromDate"
+                                        value={dateRange.fromDate}
+                                        onChange={handleDateRangeChange}
+                                    />
                                 </>
                             ) : (
                                 <>
@@ -260,8 +268,8 @@ function Report() {
                         </div>
                     </Dropdown.Menu>
                 </Dropdown>
-                <br />
             </div>
+
             <select className='report-dropdown'
                 value={selectedReport}
                 onChange={handleReportChange}
@@ -275,12 +283,27 @@ function Report() {
                 <option value="Other Cost / Yield">Other Cost / Yield</option>
             </select>
 
+            {selectedReport === 'Summary' ? (
+                <>
+                    <select className='report-dropdown'
+                        // value={selectedReportCate}
+                        onChange={handleCateChange}
+                    >
+                        <option value="">Monthly</option>
+                        <option value="1">Weekly</option>
+                        <option value="2">Daily</option>
+                    </select>
+                </>
+            ) : null}
+
+ 
+
             {showEmployeeAttendanceReport && <EmployeeAttendanceReport dateRange={dateRange} lotId={lotId} landId={landId}/>}
             {showMonthlyCropReport && <MonthlyCropReport dateRange={dateRange} lotId={lotId} landId={landId}/>}
             {showCostYieldReport && <CostYieldReport dateRange={dateRange} landId={landId} lotId={lotId}/>}
             {showEmployeePerfomnce && <EmployeePerfomnce dateRange={dateRange} selectedLand={selectedLand}/>}
             {showCostBreakdown && <CostBreakdownReport selectedLand={selectedLand} dateRange={dateRange} />}
-            {showSummary && <SummaryReport selectedLand={selectedLand} />}
+            {showSummary && <SummaryReport selectedLand={selectedLand} category={category} />}
             < br />
             <Footer />
         </div>
