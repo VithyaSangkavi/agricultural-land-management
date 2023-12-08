@@ -37,12 +37,13 @@ export const getEmployeeAttendance = async (req: Request, res: Response): Promis
 //monthly-crop report
 export const getMonthlyCropReport = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { lotId, startDate, endDate } = req.query;
+    const { lotId, startDate, endDate, landId } = req.query;
 
     const monthlyCropReport = await reportServiceImpl.generateMonthlyCropReport(
       lotId ? parseInt(lotId as string, 10) : undefined,
       startDate ? new Date(startDate as string) : undefined,
       endDate ? new Date(endDate as string) : undefined,
+      landId ? parseInt(landId as string, 10) : undefined,
     );
 
     res.json(monthlyCropReport);
@@ -55,12 +56,13 @@ export const getMonthlyCropReport = async (req: Request, res: Response): Promise
 export const getOtherCostYieldReport = async (req: Request, res: Response): Promise<void> => {
   try {
   
-    const { startDate, endDate, landId } = req.query;
+    const { startDate, endDate, landId, lotId } = req.query;
 
     const otherCostYieldReport = await reportServiceImpl.generateOtherCostYieldReport(
       startDate ? new Date(startDate as string) : undefined,
       endDate ? new Date(endDate as string) : undefined,
       landId ? parseInt(landId as string, 10) : undefined,
+      lotId ? parseInt(lotId as string, 10) : undefined,
   );
     res.json(otherCostYieldReport);
   } catch (error) {
