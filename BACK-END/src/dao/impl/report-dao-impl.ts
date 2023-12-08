@@ -10,6 +10,7 @@ import { TaskAssignedEntity } from '../../entity/master/task-assigned-entity';
 import { WorkerEntity } from '../../entity/master/worker-entity';
 import { ExpensesEntity } from '../../entity/master/expense-entity';
 
+import moment from 'moment';
 export class ReportDaoImpl implements ReportDao {
 
   //employee-attendance report
@@ -70,14 +71,14 @@ export class ReportDaoImpl implements ReportDao {
 
       // Filter by date range
       if (startDate && endDate) {
-        // Common condition for both queries
-        const dateCondition = startDate && endDate ? 'work_assigned.updatedDate BETWEEN :startDate AND :endDate' : '';
 
-        // Apply the common condition to the queries
-        if (dateCondition) {
-          queryForCurrentYear.andWhere(dateCondition, { startDate, endDate });
-          queryForPastYear.andWhere(dateCondition, { startDate, endDate });
-        }
+        const currentYearStartDate = moment(startDate).toDate();
+        const currentYearEndDate = moment(endDate).toDate();
+        const pastYearStartDate = moment(startDate).subtract(1, 'year').startOf('year').toDate();
+        const pastYearEndDate = moment(endDate).subtract(1, 'year').endOf('year').toDate();
+
+        queryForCurrentYear.andWhere('work_assigned.updatedDate BETWEEN :currentYearStartDate AND :currentYearEndDate', { currentYearStartDate, currentYearEndDate });
+        queryForPastYear.andWhere('work_assigned.updatedDate BETWEEN :pastYearStartDate AND :pastYearEndDate', { pastYearStartDate, pastYearEndDate });
       }
 
       const quantitiesForCurrentYear = await queryForCurrentYear
@@ -87,6 +88,10 @@ export class ReportDaoImpl implements ReportDao {
       const quantitiesForPastYear = await queryForPastYear
         .groupBy('EXTRACT(MONTH FROM work_assigned.updatedDate)')
         .getRawMany();
+
+      //console
+      console.log('Current year: ', queryForCurrentYear.getSql());
+      console.log('Past year: ', queryForPastYear.getSql());
 
       const getMonthName = (monthNumber: number): string => {
         const monthNames = [
@@ -124,6 +129,9 @@ export class ReportDaoImpl implements ReportDao {
           CurrentYearTotalQuantity: '-'
         });
       });
+
+      console.log(formattedQuantitiesForCurrentYear);
+      console.log(formattedQuantitiesForPastYear);
 
       // Merging quantities for each month
       const monthlyQuantities = {};
