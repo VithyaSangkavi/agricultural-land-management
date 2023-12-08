@@ -29,6 +29,7 @@ function Report() {
     const [selectedWorker, setSelectedWorker] = useState('');
     const [isFilterExpanded, setFilterExpanded] = useState(false);
     const [lotId, setLotId] = useState('');
+    const [landId, setLandId] = useState('');
 
     const [showEmployeeAttendanceReport, setShowEmployeeAttendanceReport] = useState(false);
     const [showMonthlyCropReport, setShowMonthlyCropReport] = useState(false);
@@ -103,6 +104,7 @@ function Report() {
                 const taskLand = JSON.stringify(landIdTask);
                 const landData = JSON.parse(taskLand);
                 const landId = landData.landId;
+                setLandId(landId);
                 console.log('Selected Land Id :', landId);
                 localStorage.setItem('SelectedLandId', landId);
 
@@ -275,7 +277,7 @@ function Report() {
 
             {showEmployeeAttendanceReport && <EmployeeAttendanceReport dateRange={dateRange} lotId={lotId} />}
             {showMonthlyCropReport && <MonthlyCropReport dateRange={dateRange} lotId={lotId} />}
-            {showCostYieldReport && <CostYieldReport dateRange={dateRange} />}
+            {showCostYieldReport && <CostYieldReport dateRange={dateRange} landId={landId} />}
             {showEmployeePerfomnce && <EmployeePerfomnce dateRange={dateRange} selectedLand={selectedLand}/>}
             {showCostBreakdown && <CostBreakdownReport selectedLand={selectedLand} dateRange={dateRange} />}
             {showSummary && <SummaryReport selectedLand={selectedLand} />}

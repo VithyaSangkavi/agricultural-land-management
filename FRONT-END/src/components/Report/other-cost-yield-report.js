@@ -7,19 +7,27 @@ import 'chartjs-adapter-date-fns';
 
 ChartJS.register(LineElement, BarElement, PointElement, Tooltip, Legend, LinearScale, TimeScale, CategoryScale);
 
-const CostYieldReport = ({dateRange}) => {
+const CostYieldReport = ({dateRange, landId}) => {
     const [costYieldData, setCostYieldData] = useState({});
 
     const fromDate = dateRange && dateRange.fromDate;
     const toDate = dateRange && dateRange.toDate;
 
+    console.log('passed land id: ', landId)
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 let response;
-                if (fromDate && toDate) {
-                    // filter by fromDate and toDate 
+                if (fromDate && toDate && landId) {
+                    // filter by fromDate, toDate and landId
+                    response = await axios.get(`http://localhost:8081/service/master/other-cost-yield?startDate=${fromDate}&endDate=${toDate}&landId=${landId}`);
+                }else if (fromDate && toDate ) {
+                    // filter by fromDate, toDate
                     response = await axios.get(`http://localhost:8081/service/master/other-cost-yield?startDate=${fromDate}&endDate=${toDate}`);
+                }else if (landId) {
+                    // filter by landId 
+                    response = await axios.get(`http://localhost:8081/service/master/other-cost-yield?landId=${landId}`);
                 }else {
                     // without any filters
                     response = await axios.get('http://localhost:8081/service/master/other-cost-yield');
@@ -30,7 +38,7 @@ const CostYieldReport = ({dateRange}) => {
             }
         };
         fetchData();
-    }, [fromDate, toDate]);
+    }, [fromDate, toDate, landId]);
 
     //Grouped bar chart
     
