@@ -37,6 +37,8 @@ function Report() {
     const [showEmployeePerfomnce, setEmployeePerfomnce] = useState(false);
     const [showCostBreakdown, setCostBreakdown] = useState(false);
     const [showSummary, setSummary] = useState(false);
+    const extraValue = 'All Lands';
+
 
     const handleReportChange = (event) => {
         setSelectedReport(event.target.value);
@@ -167,22 +169,35 @@ function Report() {
                 {isFilterExpanded && (
                     <div>
                         <div>
-                            <label>Date Range:</label>
-                            <input
-                                type="date"
-                                name="fromDate"
-                                value={dateRange.fromDate}
-                                onChange={handleDateRangeChange}
-                            />
-                            <span> - </span>
-                            <input
-                                type="date"
-                                name="toDate"
-                                value={dateRange.toDate}
-                                onChange={handleDateRangeChange}
-                            />
+                            {showCostBreakdown ? (
+                                <>
+                                <label>Month : </label>
+                                <input
+                                    type="month"
+                                    name="fromDate"
+                                    value={dateRange.fromDate}
+                                    onChange={handleDateRangeChange}
+                                />
+                                </>
+                            ) : (
+                                <>
+                                    <label>Date Range:</label>
+                                    <input
+                                        type="date"
+                                        name="fromDate"
+                                        value={dateRange.fromDate}
+                                        onChange={handleDateRangeChange}
+                                    />
+                                    <span> - </span>
+                                    <input
+                                        type="date"
+                                        name="toDate"
+                                        value={dateRange.toDate}
+                                        onChange={handleDateRangeChange}
+                                    />
+                                </>
+                            )}
                         </div>
-
 
                         {selectedReport !== 'Employee Perfomance' && selectedReport !== 'Summary' && (
 
@@ -206,7 +221,6 @@ function Report() {
                                     <option value="">Select Worker</option>
                                 </select>
                             </div>
-
                         )}
                         <br />
 
@@ -239,6 +253,9 @@ function Report() {
                                 <Dropdown.Item eventKey={land.name}>{land.name}</Dropdown.Item>
                             </div>
                         ))}
+                        <div key={extraValue}>
+                            <Dropdown.Item eventKey={extraValue}>{extraValue}</Dropdown.Item>
+                        </div>
                     </Dropdown.Menu>
                 </Dropdown>
                 <br />
@@ -255,11 +272,12 @@ function Report() {
                 <option value="Monthly Crop">Monthly Crop</option>
                 <option value="Other Cost / Yield">Other Cost / Yield</option>
             </select>
+
             {showEmployeeAttendanceReport && <EmployeeAttendanceReport dateRange={dateRange} lotId={lotId} />}
             {showMonthlyCropReport && <MonthlyCropReport dateRange={dateRange} lotId={lotId} />}
             {showCostYieldReport && <CostYieldReport dateRange={dateRange} />}
-            {showEmployeePerfomnce && <EmployeePerfomnce dateRange={dateRange} />}
-            {showCostBreakdown && <CostBreakdownReport selectedLand={selectedLand} />}
+            {showEmployeePerfomnce && <EmployeePerfomnce dateRange={dateRange} selectedLand={selectedLand}/>}
+            {showCostBreakdown && <CostBreakdownReport selectedLand={selectedLand} dateRange={dateRange} />}
             {showSummary && <SummaryReport selectedLand={selectedLand} />}
             < br />
             <Footer />

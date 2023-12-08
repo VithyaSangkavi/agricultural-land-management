@@ -2,15 +2,16 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './report.css';
 import { Chart as ChartJS, registerables } from 'chart.js';
-import { Line, Pie } from 'react-chartjs-2';
+import { Line, Pie, Bar } from 'react-chartjs-2';
 import 'chartjs-plugin-datalabels';
 
 ChartJS.register(...registerables);
 
-const CostBreakdownReport = ({ selectedLand }) => {
+const CostBreakdownReport = ({ dateRange: { fromDate }, selectedLand }) => {
     const [costBreakdownLineData, setCostBreakdownLineData] = useState([]);
     const [costBreakdownPieData, setCostBreakdownPieData] = useState([]);
     const [landId, setLandId] = useState('');
+    const [yearMonth, setYearMonth] = useState('');
 
     useEffect(() => {
         // Update the landId whenever selectedLand changes
@@ -29,7 +30,8 @@ const CostBreakdownReport = ({ selectedLand }) => {
             });
     }, [selectedLand]);
 
-    console.log("Cost-b-down : ", landId)
+    console.log("Cost-b-down land: ", landId)
+    console.log("Cost-b-down fromDate: ", fromDate)
 
     useEffect(() => {
         const fetchCostBreakdownLineData = async () => {
@@ -38,17 +40,39 @@ const CostBreakdownReport = ({ selectedLand }) => {
                 const baseURL = 'http://localhost:8081/service/master/cost-breakdown-line'
                 const fetchURL = landId ? `${baseURL}?landId=${landId}` : baseURL;
 
-                console.log(fetchURL)
+                if (landId) {
+                    if (fromDate) {
 
-                const response = await axios.get(fetchURL)
+                        const fetchURL = `${baseURL}?fromDate=${fromDate}&landId=${landId}`
+                        const response = await axios.get(fetchURL)
+                        console.log("Line : ", response.data);
+                        setCostBreakdownLineData(response.data);
+                        setYearMonth(response.data)
 
-                console.log("Line : ", response.data);
-                setCostBreakdownLineData(response.data);
+                    } else {
+
+                        const fetchURL = `${baseURL}?landId=${landId}`
+                        const response = await axios.get(fetchURL)
+                        console.log("Line : ", response.data);
+                        setCostBreakdownLineData(response.data);
+
+                    }
+
+                } else {
+
+                    const fetchURL = fromDate ? `${baseURL}?fromDate=${fromDate}` : baseURL;
+                    const response = await axios.get(fetchURL)
+                    console.log("Line : ", response.data);
+                    setCostBreakdownLineData(response.data);
+                    setYearMonth(response.data)
+
+                }
 
             } catch (error) {
                 console.error('Error fetching Cost Breakdown:', error);
             }
         };
+
 
         const fetchCostBreakdownPieData = async () => {
             try {
@@ -62,50 +86,90 @@ const CostBreakdownReport = ({ selectedLand }) => {
 
         fetchCostBreakdownLineData();
         fetchCostBreakdownPieData();
-    }, [landId]);
+    }, [fromDate, landId]);
 
     costBreakdownLineData.forEach((item) => {
         item.totalCost = parseFloat(item.totalCost);
     });
 
-    const uniqueMonths = [...new Set(costBreakdownLineData.map((item) => item.month))];
+    const uniqueMonths = [...new Set(costBreakdownLineData.map((item) => item.yearMonth))];
 
-    const chartData = {
-        labels: uniqueMonths,
-        datasets: [...new Set(costBreakdownLineData.map((item) => item.expenseType))].map((expenseType, index) => ({
-            label: expenseType,
-            data: costBreakdownLineData
-                .filter((item) => item.expenseType === expenseType)
-                .map((item) => ({ x: item.month, y: item.totalCost })),
-            fill: false,
-            borderColor: `rgba(${index * 100}, 0, 0, 1)`,
-            borderWidth: 2,
-            lineTension: 0.1,
-        })),
-    };
+    let chartData
+    let chartOptions
 
-    const chartOptions = {
-        scales: {
-            x: {
-                type: 'category',
-                title: {
-                    display: true,
-                    text: 'Month',
+    if (!fromDate) {
+
+        chartData = {
+            labels: uniqueMonths,
+            datasets: [...new Set(costBreakdownLineData.map((item) => item.expenseType))].map((expenseType, index) => ({
+                label: expenseType,
+                data: costBreakdownLineData
+                    .filter((item) => item.expenseType === expenseType)
+                    .map((item) => ({ x: item.yearMonth, y: item.totalCost })),
+                fill: false,
+                borderColor: `rgba(${index * 100}, 0, 0, 1)`,
+                borderWidth: 2,
+                lineTension: 0.1,
+            })),
+        };
+
+        chartOptions = {
+            scales: {
+                x: {
+                    type: 'category',
+                    title: {
+                        display: true,
+                        text: 'Month',
+                    },
+                },
+                y: {
+                    type: 'linear',
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Cost',
+                    },
+                    ticks: {
+                        // stepSize: 10,
+                    },
                 },
             },
-            y: {
-                type: 'linear',
-                beginAtZero: true,
-                title: {
-                    display: true,
-                    text: 'Cost',
+        };
+
+    } else {
+
+        chartData = {
+            labels: [...new Set(costBreakdownLineData.map(item => item.expenseType))],
+            datasets: [
+                {
+                    label: 'Total Cost',
+                    data: [...new Set(costBreakdownLineData.map(item => item.totalCost))],
+                    backgroundColor: generateRandomColors(1)[0],
+                    borderWidth: 1,
                 },
-                ticks: {
-                    stepSize: 1,
+            ],
+        };
+
+        chartOptions = {
+            scales: {
+                x: {
+                    type: 'category',
+                    title: {
+                        display: true,
+                        text: 'Expense Type',
+                    },
+                },
+                y: {
+                    type: 'linear',
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Total Cost',
+                    },
                 },
             },
-        },
-    };
+        };
+    }
 
     // pie chart
 
@@ -144,13 +208,21 @@ const CostBreakdownReport = ({ selectedLand }) => {
     return (
         <>
             <div className='report-app-screen'>
-                <h2>Cost Breakdown Line Chart</h2>
+                {fromDate ? (
+                    <h2>Cost Breakdown {yearMonth[0].yearMonth}</h2>
+                ) : (
+                    <h2>Cost Breakdown Line Chart</h2>
+                )}
             </div>
             <br />
             <div className='report-app-screen'>
                 <div className='attendance-chart'>
                     {costBreakdownLineData.length > 0 ? (
-                        <Line data={chartData} options={chartOptions} />
+                        fromDate ? (
+                            <Bar data={chartData} options={chartOptions} />
+                        ) : (
+                            <Line data={chartData} options={chartOptions} />
+                        )
                     ) : (
                         <p>Loading...</p>
                     )}
