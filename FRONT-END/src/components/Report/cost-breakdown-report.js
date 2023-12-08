@@ -7,7 +7,7 @@ import 'chartjs-plugin-datalabels';
 
 ChartJS.register(...registerables);
 
-const CostBreakdownReport = ({ selectedLand }) => {
+const CostBreakdownReport = ({ dateRange: { fromDate }, selectedLand }) => {
     const [costBreakdownLineData, setCostBreakdownLineData] = useState([]);
     const [costBreakdownPieData, setCostBreakdownPieData] = useState([]);
     const [landId, setLandId] = useState('');
@@ -29,21 +29,40 @@ const CostBreakdownReport = ({ selectedLand }) => {
             });
     }, [selectedLand]);
 
-    console.log("Cost-b-down : ", landId)
+    console.log("Cost-b-down land: ", landId)
+    console.log("Cost-b-down fromDate: ", fromDate)
 
     useEffect(() => {
         const fetchCostBreakdownLineData = async () => {
             try {
 
                 const baseURL = 'http://localhost:8080/service/master/cost-breakdown-line'
-                const fetchURL = landId ? `${baseURL}?landId=${landId}` : baseURL;
 
-                console.log(fetchURL)
+                if (landId) {
+                    if (fromDate) {
 
-                const response = await axios.get(fetchURL)
+                        const fetchURL = `${baseURL}?fromDate=${fromDate}&landId=${landId}`
+                        const response = await axios.get(fetchURL)
+                        console.log("Line : ", response.data);
+                        setCostBreakdownLineData(response.data);
 
-                console.log("Line : ", response.data);
-                setCostBreakdownLineData(response.data);
+                    } else {
+
+                        const fetchURL = `${baseURL}?landId=${landId}`
+                        const response = await axios.get(fetchURL)
+                        console.log("Line : ", response.data);
+                        setCostBreakdownLineData(response.data);
+
+                    }
+
+                } else {
+
+                    const fetchURL = fromDate ? `${baseURL}?fromDate=${fromDate}` : baseURL;
+                    const response = await axios.get(fetchURL)
+                    console.log("Line : ", response.data);
+                    setCostBreakdownLineData(response.data);
+
+                }
 
             } catch (error) {
                 console.error('Error fetching Cost Breakdown:', error);
@@ -62,13 +81,13 @@ const CostBreakdownReport = ({ selectedLand }) => {
 
         fetchCostBreakdownLineData();
         fetchCostBreakdownPieData();
-    }, [landId]);
+    }, [fromDate, landId]);
 
     costBreakdownLineData.forEach((item) => {
         item.totalCost = parseFloat(item.totalCost);
     });
 
-    const uniqueMonths = [...new Set(costBreakdownLineData.map((item) => item.month))];
+    const uniqueMonths = [...new Set(costBreakdownLineData.map((item) => item.yearMonth))];
 
     const chartData = {
         labels: uniqueMonths,
@@ -76,7 +95,7 @@ const CostBreakdownReport = ({ selectedLand }) => {
             label: expenseType,
             data: costBreakdownLineData
                 .filter((item) => item.expenseType === expenseType)
-                .map((item) => ({ x: item.month, y: item.totalCost })),
+                .map((item) => ({ x: item.yearMonth, y: item.totalCost })),
             fill: false,
             borderColor: `rgba(${index * 100}, 0, 0, 1)`,
             borderWidth: 2,
