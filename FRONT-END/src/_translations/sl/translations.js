@@ -113,4 +113,18 @@ export const TRANSLATIONS_SL = {
     home: 'මුල් පිටුව',
     newtask: 'නව කාර්යය',
     ongoingtasks: 'සිදුවෙමින් පවතින කාර්යයන්',
+
+    //report
+    report: 'වාර්තාව',
+    daterange: 'දින පරාසය',
+    selectlot: 'කොටස් තෝරන්න',
+    selectworker: 'සේවකයා තෝරන්න',
+    resetfilters: 'පෙරහන් නැවත සකසන්න',
+    reportname: 'වාර්තාවේ නම',
+    summary: 'සාරාංශය',
+    employeeperformance: 'සේවක කාර්ය සාධනය',
+    costbreakdown: 'පිරිවැය බිඳවැටීම',
+    employeeattendance: 'සේවක පැමිණීම',
+    monthlycrop: 'මාසික බෝගය',
+    othercostyield: 'වෙනත් පිරිවැය / අස්වැන්න',
 };
