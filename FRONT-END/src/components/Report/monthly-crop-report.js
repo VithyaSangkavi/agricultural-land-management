@@ -19,16 +19,16 @@ const MonthlyCropReport = ({ dateRange, lotId }) => {
                 let response;
                 if (fromDate && toDate && lotId) {
                     // filter by fromDate, toDate, and lotId 
-                    response = await axios.get(`http://localhost:8081/service/master/monthly-crop-report?startDate=${fromDate}&endDate=${toDate}&lotId=${lotId}`);
+                    response = await axios.get(`http://localhost:8080/service/master/monthly-crop-report?startDate=${fromDate}&endDate=${toDate}&lotId=${lotId}`);
                 } else if (fromDate && toDate) {
                     // filter by fromDate and toDate 
-                    response = await axios.get(`http://localhost:8081/service/master/monthly-crop-report?startDate=${fromDate}&endDate=${toDate}`);
+                    response = await axios.get(`http://localhost:8080/service/master/monthly-crop-report?startDate=${fromDate}&endDate=${toDate}`);
                 } else if (lotId) {
                     // filter by lotId
-                    response = await axios.get(`http://localhost:8081/service/master/monthly-crop-report?lotId=${lotId}`);
+                    response = await axios.get(`http://localhost:8080/service/master/monthly-crop-report?lotId=${lotId}`);
                 } else {
                     // without any filters
-                    response = await axios.get('http://localhost:8081/service/master/monthly-crop-report');
+                    response = await axios.get('http://localhost:8080/service/master/monthly-crop-report');
                 }
                 setMonthlyCropData(response.data);
             } catch (error) {

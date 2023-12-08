@@ -22,13 +22,13 @@ const CostYieldReport = ({dateRange, landId}) => {
 
                 if (fromDate && toDate && landId) {
                     // filter by fromDate, toDate and landId
-                    response = await axios.get(`http://localhost:8081/service/master/other-cost-yield?startDate=${fromDate}&endDate=${toDate}&landId=${landId}`);
+                    response = await axios.get(`http://localhost:8080/service/master/other-cost-yield?startDate=${fromDate}&endDate=${toDate}&landId=${landId}`);
                 }else if (fromDate && toDate ) {
                     // filter by fromDate, toDate
-                    response = await axios.get(`http://localhost:8081/service/master/other-cost-yield?startDate=${fromDate}&endDate=${toDate}`);
+                    response = await axios.get(`http://localhost:8080/service/master/other-cost-yield?startDate=${fromDate}&endDate=${toDate}`);
                 }else if (landId) {
                     // filter by landId 
-                    response = await axios.get(`http://localhost:8081/service/master/other-cost-yield?landId=${landId}`);
+                    response = await axios.get(`http://localhost:8080/service/master/other-cost-yield?landId=${landId}`);
 
                 }else {
                     // without any filters
