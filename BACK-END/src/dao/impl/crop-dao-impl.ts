@@ -33,7 +33,7 @@ export class CropDaoImpl implements CropDao {
   }
   async delete(cropDto: CropDto): Promise<CropEntity> {
     let cropRepo = getConnection().getRepository(CropEntity);
-    let cropModel = await cropRepo.findOne(cropDto.getCropId());
+    let cropModel = await cropRepo.findOne({where: { id: cropDto.getCropId() }});
     if (cropModel) {
       cropModel.status = Status.Offline;
       let updatedModel = await cropRepo.save(cropModel);

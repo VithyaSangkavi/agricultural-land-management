@@ -15,7 +15,7 @@ export class ReportDaoImpl implements ReportDao {
 
   //employee-attendance report
   async generateEmployeeAttendanceReport(startDate: Date, endDate: Date, lotId: number, landId: number): Promise<any> {
-    const workAssignedRepository = getRepository(WorkAssignedEntity);
+    const workAssignedRepository = getConnection().getRepository(WorkAssignedEntity);
     let query = workAssignedRepository
       .createQueryBuilder('work_assigned')
       .select('DATE(work_assigned.updatedDate)', 'date')
@@ -51,7 +51,7 @@ export class ReportDaoImpl implements ReportDao {
 
   //Monthly-crop report
   async generateMonthlyCropReport(lotId: number, startDate: Date, endDate: Date, landId: number): Promise<any> {
-    const workAssignedRepository = getRepository(WorkAssignedEntity);
+    const workAssignedRepository = getConnection().getRepository(WorkAssignedEntity);
 
     try {
       const currentYear = new Date().getFullYear();
@@ -185,8 +185,8 @@ export class ReportDaoImpl implements ReportDao {
 
   //other-cost-yield report
   async generateOtherCostYieldReport(startDate: Date, endDate: Date, landId: number, lotId: number): Promise<any> {
-    const taskExpenseRepository = getRepository(TaskExpenseEntity);
-    const incomeRepository = getRepository(IncomeEntity);
+    const taskExpenseRepository = getConnection().getRepository(TaskExpenseEntity);
+    const incomeRepository = getConnection().getRepository(IncomeEntity);
 
     try {
       const monthNames = [
