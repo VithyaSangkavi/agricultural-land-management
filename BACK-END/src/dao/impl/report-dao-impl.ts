@@ -344,8 +344,12 @@ export class ReportDaoImpl implements ReportDao {
     return result;
   }
 
-  //Summary Report
-  async getSummaryReport(landId: number): Promise<any> {
+  //Total - Monthly Summary Report
+  async getSummaryReport(landId?: number, cateNum?: number): Promise<any> {
+
+    console.log("catenum dao-impl : ", cateNum);
+    console.log("landnum dao-impl : ", cateNum);
+
     const workAssignedRepository = getRepository(WorkAssignedEntity);
 
     const workAssignedEntities = await workAssignedRepository
