@@ -3,9 +3,9 @@ import { ReportServiceImpl } from '../services/master/impl/reports-service-impl'
 import { ReportDaoImpl } from '../dao/impl/report-dao-impl';
 import { ReportService } from '../services/master/reports-service';
 
-const reportDaoInstance = new ReportDaoImpl(); 
+const reportDaoInstance = new ReportDaoImpl();
 
-const reportServiceImpl: ReportService = new ReportServiceImpl(reportDaoInstance); 
+const reportServiceImpl: ReportService = new ReportServiceImpl(reportDaoInstance);
 
 //employee-attendance report
 export const getEmployeeAttendance = async (req: Request, res: Response): Promise<void> => {
@@ -27,11 +27,11 @@ export const getEmployeeAttendance = async (req: Request, res: Response): Promis
     });
 
     res.json(formattedReport);
-  }catch (error) {
+  } catch (error) {
     console.error('Error in fetching employee attendance:', error);
     res.status(500).json({ error: error.message || 'Failed to fetch employee attendance report' });
   }
-  
+
 };
 
 //monthly-crop report
@@ -54,14 +54,17 @@ export const getMonthlyCropReport = async (req: Request, res: Response): Promise
 //other-cost-yield report
 export const getOtherCostYieldReport = async (req: Request, res: Response): Promise<void> => {
   try {
+
   
     const { startDate, endDate, landId } = req.query;
 
     const otherCostYieldReport = await reportServiceImpl.generateOtherCostYieldReport(
       startDate ? new Date(startDate as string) : undefined,
       endDate ? new Date(endDate as string) : undefined,
+
       landId ? parseInt(landId as string, 10) : undefined,
   );
+
     res.json(otherCostYieldReport);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch Other Cost / Yield report' });
@@ -119,10 +122,12 @@ export const getgetCostBreakdownPieReport = async (req: Request, res: Response):
 // }
 
 export const getSummaryReport = async (req: Request, res: Response): Promise<void> => {
-  const landId = req.params.landId;
-
+  const landId = req.query.landId;
+  const cateNum = req.query.cateNum;
+  console.log("Back-end ctr land: ", landId);
+  console.log("Back-end ctr cateNum: ", cateNum);
   try {
-    const costSummaryReport = await reportServiceImpl.getSummaryReport(landId);
+    const costSummaryReport = await reportServiceImpl.getSummaryReport(landId, cateNum);
     res.json(costSummaryReport);
   } catch (error) {
     res.status(500).json({ error: 'Failed to generate cost Summary Report report' });

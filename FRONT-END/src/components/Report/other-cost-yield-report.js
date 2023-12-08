@@ -19,6 +19,7 @@ const CostYieldReport = ({dateRange, landId}) => {
         const fetchData = async () => {
             try {
                 let response;
+
                 if (fromDate && toDate && landId) {
                     // filter by fromDate, toDate and landId
                     response = await axios.get(`http://localhost:8081/service/master/other-cost-yield?startDate=${fromDate}&endDate=${toDate}&landId=${landId}`);
@@ -28,9 +29,10 @@ const CostYieldReport = ({dateRange, landId}) => {
                 }else if (landId) {
                     // filter by landId 
                     response = await axios.get(`http://localhost:8081/service/master/other-cost-yield?landId=${landId}`);
+
                 }else {
                     // without any filters
-                    response = await axios.get('http://localhost:8081/service/master/other-cost-yield');
+                    response = await axios.get('http://localhost:8080/service/master/other-cost-yield');
                 }
                 setCostYieldData(response.data);
             } catch (error) {

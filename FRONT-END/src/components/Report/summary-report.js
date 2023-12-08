@@ -8,8 +8,11 @@ import { Line } from 'react-chartjs-2';
 ChartJS.register(LineElement, PointElement, Tooltip, Legend, LinearScale, TimeScale);
 
 
-const SummaryReport = ({ selectedLand }) => {
+const SummaryReport = ({ selectedLand, category }) => {
     const [landId, setLandId] = useState('');
+    const [summaryData, setSummaryData] = useState([]);
+
+    console.log("category num in summary page: ", category)
 
     useEffect(() => {
         // Update the landId whenever selectedLand changes
@@ -29,22 +32,35 @@ const SummaryReport = ({ selectedLand }) => {
     }, [selectedLand]);
 
 
-    const [summaryData, setSummaryData] = useState([]);
-
     useEffect(() => {
         // Fetch summaryData when landId changes
         const fetchSummaryData = async () => {
             try {
-                const response = await axios.get(`http://localhost:8081/service/master/summary/${landId}`);
-                console.log(response.data);
-                setSummaryData(response.data);
+
+                const baseURL = 'http://localhost:8080/service/master/summary'
+
+                if (category) {
+
+                    const fetchURL = `${baseURL}?landId=${landId}&cateNum=${category}`
+                    const response = await axios.get(fetchURL)
+                    setSummaryData(response.data);
+                    console.log("Category Exists");
+
+                } else {
+
+                    const response = await axios.get(`http://localhost:8080/service/master/summary?landId=${landId}`);
+                    console.log(response.data);
+                    setSummaryData(response.data);
+                }
+
+
             } catch (error) {
                 console.error('Error fetching employee summary:', error);
             }
         };
 
         fetchSummaryData();
-    }, [landId]);
+    }, [landId, category]);
 
     return (
         <>

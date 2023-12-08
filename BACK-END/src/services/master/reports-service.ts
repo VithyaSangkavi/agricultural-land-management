@@ -6,6 +6,6 @@ export interface ReportService {
     generateOtherCostYieldReport(startDate: Date, endDate: Date, landId: number): Promise<any>;
     getCostBreakdownLineReport(fromDate?: string, landId?: number): Promise<any>;
     getCostBreakdownPieReport(): Promise<any>;
-    getSummaryReport(landId: number): Promise<any>;   
+    getSummaryReport(landId?: number, cateNum?: number): Promise<any>;   
   }
   
