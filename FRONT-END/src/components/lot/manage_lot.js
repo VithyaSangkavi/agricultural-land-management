@@ -11,14 +11,15 @@ import { alertService } from '../../_services/alert.service';
 import { useTranslation } from 'react-i18next';
 import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 
 
 
 
-const ManageLot = () => {
+const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
     const [data, setData] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
-    const [selectedLandId, setSelectedLandId] = useState('1');
     const [landNames, setLandNames] = useState([]);
     const history = useHistory();
     const { t, i18n } = useTranslation();
@@ -29,6 +30,7 @@ const ManageLot = () => {
 
     const handleLandChange = (event) => {
         const newSelectedLandId = event.target.value;
+        console.log(newSelectedLandId);
         setSelectedLandId(newSelectedLandId);
     };
 
@@ -107,7 +109,7 @@ const ManageLot = () => {
                     type="text"
                     placeholder={t('search')}
                     value={searchQuery}
-                    // onChange={handleSearchChange}
+                // onChange={handleSearchChange}
                 />
             </div>
 
@@ -119,11 +121,11 @@ const ManageLot = () => {
                     </div>
                 ))}
             </div>
-            
+
             <div>
-                <br/>
-                <br/>
-                <br/>
+                <br />
+                <br />
+                <br />
             </div>
 
             <div className='footer-alignment'>
@@ -134,4 +136,12 @@ const ManageLot = () => {
     );
 };
 
-export default ManageLot;
+const mapStateToProps = (state) => ({
+    selectedLandId: state.selectedLandId,
+});
+
+const mapDispatchToProps = {
+    setSelectedLandId: setSelectedLandIdAction,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ManageLot);
