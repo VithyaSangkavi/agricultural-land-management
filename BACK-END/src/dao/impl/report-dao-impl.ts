@@ -15,7 +15,7 @@ export class ReportDaoImpl implements ReportDao {
 
   //employee-attendance report
   async generateEmployeeAttendanceReport(startDate: Date, endDate: Date, lotId: number, landId: number): Promise<any> {
-    const workAssignedRepository = getRepository(WorkAssignedEntity);
+    const workAssignedRepository = getConnection().getRepository(WorkAssignedEntity);
     let query = workAssignedRepository
       .createQueryBuilder('work_assigned')
       .select('DATE(work_assigned.updatedDate)', 'date')
@@ -50,8 +50,8 @@ export class ReportDaoImpl implements ReportDao {
   }
 
   //Monthly-crop report
-  async generateMonthlyCropReport(lotId: number, startDate: Date, endDate: Date): Promise<any> {
-    const workAssignedRepository = getRepository(WorkAssignedEntity);
+  async generateMonthlyCropReport(lotId: number, startDate: Date, endDate: Date, landId: number): Promise<any> {
+    const workAssignedRepository = getConnection().getRepository(WorkAssignedEntity);
 
     try {
       const currentYear = new Date().getFullYear();
@@ -87,6 +87,18 @@ export class ReportDaoImpl implements ReportDao {
 
         queryForCurrentYear.andWhere('work_assigned.updatedDate BETWEEN :currentYearStartDate AND :currentYearEndDate', { currentYearStartDate, currentYearEndDate });
         queryForPastYear.andWhere('work_assigned.updatedDate BETWEEN :pastYearStartDate AND :pastYearEndDate', { pastYearStartDate, pastYearEndDate });
+      }
+
+      if (landId) {
+        queryForCurrentYear
+          .innerJoin('work_assigned.lot', 'lot')
+          .innerJoin('lot.land', 'land')
+          .andWhere('land.id = :landId', { landId });
+
+        queryForPastYear
+          .innerJoin('work_assigned.lot', 'lot')
+          .innerJoin('lot.land', 'land')
+          .andWhere('land.id = :landId', { landId });
       }
 
       const quantitiesForCurrentYear = await queryForCurrentYear
@@ -172,9 +184,9 @@ export class ReportDaoImpl implements ReportDao {
   }
 
   //other-cost-yield report
-  async generateOtherCostYieldReport(startDate: Date, endDate: Date, landId: number): Promise<any> {
-    const taskExpenseRepository = getRepository(TaskExpenseEntity);
-    const incomeRepository = getRepository(IncomeEntity);
+  async generateOtherCostYieldReport(startDate: Date, endDate: Date, landId: number, lotId: number): Promise<any> {
+    const taskExpenseRepository = getConnection().getRepository(TaskExpenseEntity);
+    const incomeRepository = getConnection().getRepository(IncomeEntity);
 
     try {
       const monthNames = [
@@ -202,7 +214,7 @@ export class ReportDaoImpl implements ReportDao {
         });
       }
 
-      // Add landId filter for both tables
+      // filtering by landId
       if (landId) {
         taskExpensesQuery
           .innerJoin('task_expense.taskType', 'taskType')
@@ -211,6 +223,21 @@ export class ReportDaoImpl implements ReportDao {
           .andWhere('land.id = :landId', { landId });
 
         incomesQuery.andWhere('income.landId = :landId', { landId });
+      }
+
+      // filtering by lotId
+      if (lotId) {
+        taskExpensesQuery
+          .innerJoin('task_expense.taskType', 'taskType')
+          .innerJoin('taskType.crop', 'crop')
+          .innerJoin('crop.land', 'land')
+          .innerJoin('land.lot', 'lot')
+          .andWhere('lot.id = :lotId', { lotId });
+
+        incomesQuery
+          .innerJoin('income.land', 'land')
+          .innerJoin('land.lot', 'lot')
+          .andWhere('lot.id = :lotId', { lotId });
       }
 
       const taskExpenses = await taskExpensesQuery

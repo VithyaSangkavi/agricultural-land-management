@@ -171,16 +171,28 @@ function Report() {
 
     return (
         <div className="home-app-screen">
-            <p className='main-heading'>Report
-                <div className="filter-icon" onClick={handleToggleFilter}>
-                    <FaPlus />
-                </div>
+            <p className='main-heading'>{t('report')}</p>
+            <div className="position-absolute top-0 end-0 me-2">
+                <Dropdown alignRight onSelect={handleLanguageChange}>
+                    <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                        <FaGlobeAmericas style={{ color: 'white' }} />
+                    </Dropdown.Toggle>
 
-                {isFilterExpanded && (
+                    <Dropdown.Menu>
+                        <Dropdown.Item eventKey="en">English</Dropdown.Item>
+                        <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
+            </div>
+            <div className="filter-icon" onClick={handleToggleFilter}>
+                <FaPlus />
+            </div>
+
+            {isFilterExpanded && (
+                <div>
                     <div>
-                        <div>
-                            {showCostBreakdown ? (
-                                <>
+                        {showCostBreakdown ? (
+                            <>
                                     <label>Month : </label>
                                     <input
                                         type="month"
@@ -222,7 +234,9 @@ function Report() {
                                     ))}
                                 </select>
                             </div>
+
                         )}
+                    </div>
 
                         {selectedReport !== 'Employee Perfomance' && selectedReport !== 'Summary' && selectedReport != 'Cost Breakdown' && selectedReport != 'Monthly Crop' && (
                             <div>
@@ -234,23 +248,21 @@ function Report() {
                         )}
                         <br />
 
-                        <button onClick={handleResetFilters}>Reset Filters</button>
 
-                    </div>
-                )}
-            </p>
-            <div className="position-absolute top-0 end-0 me-2">
-                <Dropdown alignRight onSelect={handleLanguageChange}>
-                    <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                        <FaGlobeAmericas style={{ color: 'white' }} />
-                    </Dropdown.Toggle>
+                    {selectedReport !== 'Employee Perfomance' && selectedReport !== 'Summary' && selectedReport != 'Employee Attendance' && selectedReport != 'Monthly Crop' && (
+                        <div>
+                            <label>{t('selectworker')} : </label>
+                            <select value={selectedWorker} onChange={handleWorkerChange}>
+                                <option value="">{t('selectworker')}</option>
+                            </select>
+                        </div>
+                    )}
+                    <br />
 
-                    <Dropdown.Menu>
-                        <Dropdown.Item eventKey="en">English</Dropdown.Item>
-                        <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-                    </Dropdown.Menu>
-                </Dropdown>
-            </div>
+                    <button onClick={handleResetFilters}>{t('resetfilters')}</button>
+
+                </div>
+            )}
 
             <div className='drop-down-container'>
                 <Dropdown onSelect={handleSelectedLand} className='custom-dropdown'>
@@ -274,13 +286,13 @@ function Report() {
                 value={selectedReport}
                 onChange={handleReportChange}
             >
-                <option value="">Report Name</option>
-                <option value="Summary">Summary</option>
-                <option value="Employee Perfomance">Employee Perfomance</option>
-                <option value="Cost Breakdown">Cost Breakdown</option>
-                <option value="Employee Attendance">Employee Attendance</option>
-                <option value="Monthly Crop">Monthly Crop</option>
-                <option value="Other Cost / Yield">Other Cost / Yield</option>
+                <option value="">{t('reportname')}</option>
+                <option value="Summary">{t('summary')}</option>
+                <option value="Employee Perfomance">{t('employeeperformance')}</option>
+                <option value="Cost Breakdown">{t('costbreakdown')}</option>
+                <option value="Employee Attendance">{t('employeeattendance')}</option>
+                <option value="Monthly Crop">{t('monthlycrop')}</option>
+                <option value="Other Cost / Yield">{t('othercostyield')}</option>
             </select>
 
             {selectedReport === 'Summary' ? (
@@ -298,10 +310,25 @@ function Report() {
 
  
 
-            {showEmployeeAttendanceReport && <EmployeeAttendanceReport dateRange={dateRange} lotId={lotId} landId={landId}/>}
-            {showMonthlyCropReport && <MonthlyCropReport dateRange={dateRange} lotId={lotId} />}
-            {showCostYieldReport && <CostYieldReport dateRange={dateRange} landId={landId} />}
-            {showEmployeePerfomnce && <EmployeePerfomnce dateRange={dateRange} selectedLand={selectedLand}/>}
+            {selectedReport === 'Summary' ? (
+                <>
+                    <select className='report-dropdown'
+                        // value={selectedReportCate}
+                        onChange={handleCateChange}
+                    >
+                        <option value="">Monthly</option>
+                        <option value="1">Weekly</option>
+                        <option value="2">Daily</option>
+                    </select>
+                </>
+            ) : null}
+
+ 
+
+            {showEmployeeAttendanceReport && <EmployeeAttendanceReport dateRange={dateRange} lotId={lotId} landId={landId} />}
+            {showMonthlyCropReport && <MonthlyCropReport dateRange={dateRange} lotId={lotId} landId={landId} />}
+            {showCostYieldReport && <CostYieldReport dateRange={dateRange} landId={landId} lotId={lotId} />}
+            {showEmployeePerfomnce && <EmployeePerfomnce dateRange={dateRange} selectedLand={selectedLand} />} 
             {showCostBreakdown && <CostBreakdownReport selectedLand={selectedLand} dateRange={dateRange} />}
             {showSummary && <SummaryReport selectedLand={selectedLand} category={category} />}
             < br />

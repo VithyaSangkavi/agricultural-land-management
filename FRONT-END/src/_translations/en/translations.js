@@ -111,4 +111,18 @@ export const TRANSLATIONS_EN = {
     home: 'Home',
     newtask: 'New Task',
     ongoingtasks: 'Ongoing Tasks',
+
+    //report
+    report: 'Report',
+    daterange: 'Date Range',
+    selectlot: 'Select Lot',
+    selectworker: 'Select Worker',
+    resetfilters: 'Reset Filters',
+    reportname: 'Report Name',
+    summary: 'Summary',
+    employeeperformance: 'Employee Performance',
+    costbreakdown: 'Cost Breakdown',
+    employeeattendance: 'Employee Attendance',
+    monthlycrop: 'Monthly Crop',
+    othercostyield: 'Other Cost / Yield',
 };

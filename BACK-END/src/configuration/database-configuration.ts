@@ -17,7 +17,7 @@ const connectionManager = getConnectionManager();
 const environmentConfiguration = new EnvironmentConfiguration();
 const appConfig = environmentConfiguration.readAppConfiguration();
 
-const Connection = connectionManager.create({
+export const Connection = connectionManager.create({
   type: "mysql",
   host: appConfig.getHost(),
   port: appConfig.getDataBasePort(),
