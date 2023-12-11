@@ -191,22 +191,62 @@ export class TaskAssignedServiceImpl implements TaskAssignedService {
     return cr;
   }
 
-  async getOngoingTasksWithTaskNames(): Promise<CommonResponse> {
+  async getOngoingTasksWithTaskNames(landId: number): Promise<CommonResponse> {
     let cr = new CommonResponse();
+    try {
+      const tasks = await this.taskAssignedDao.getOngoingTasksWithTaskNames(landId);
+
+      // let taskList = new Array();
+
+      // for (const taskAssignedModel of tasks) {
+      //   let taskAssignedDao = new TaskAssignedDto();
+      //   taskAssignedDao.filViaRequest(taskAssignedModel);
+      //   taskList.push(taskAssignedDao);
+      // }
+
+      cr.setStatus(true);
+      cr.setExtra(tasks);
+
+    } catch (error) {
+      cr.setStatus(false);
+      cr.setExtra(error);
+      ErrorHandlerSup.handleError(error);
+    }
+
+    return cr;
+  }
+  
+
+  async getCompletedTasksWithTaskNames(landId?: number): Promise<CommonResponse> {
+    const cr = new CommonResponse();
     try {
       const taskAssignedRepo = getConnection().getRepository(TaskAssignedEntity);
 
       const taskDetails = await taskAssignedRepo
         .createQueryBuilder('taskAssigned')
         .innerJoin('taskAssigned.task', 'task')
-        .where('taskAssigned.taskStatus = :taskStatus', { taskStatus: "ongoing" })
-        .andWhere('taskAssigned.status = :status', { status: Status.Online })
+        .leftJoin('taskAssigned.land', 'land')
+
+        .where('taskAssigned.taskStatus = :taskStatus', { taskStatus: 'completed' })
+        .andWhere('taskAssigned.status = :status', { status: Status.Online });
+
+      if (landId !== null && landId !== undefined) {
+        taskDetails.andWhere('land.id = :landId', { landId });
+      }
+
+      const result = await taskDetails
         .groupBy('taskAssigned.taskAssignedId')
-        .select(['taskAssigned.taskAssignedId as taskAssignedId', 'MAX(task.id) as taskId', 'MAX(task.taskName) as taskName','taskAssigned.startDate as taskStartDate','taskAssigned.landId as landId'])
+        .select([
+          'taskAssigned.taskAssignedId as taskAssignedId',
+          'MAX(task.id) as taskId',
+          'MAX(task.taskName) as taskName',
+          'taskAssigned.startDate as taskStartDate',
+          'taskAssigned.landId as landId'
+        ])
         .getRawMany();
 
       cr.setStatus(true);
-      cr.setExtra(taskDetails);
+      cr.setExtra(result);
     } catch (error) {
       cr.setStatus(false);
       cr.setExtra(error);
@@ -216,30 +256,7 @@ export class TaskAssignedServiceImpl implements TaskAssignedService {
     return cr;
   }
 
-  async getCompletedTasksWithTaskNames(): Promise<CommonResponse> {
-    let cr = new CommonResponse();
-    try {
-      const taskAssignedRepo = getConnection().getRepository(TaskAssignedEntity);
-
-      const taskDetails = await taskAssignedRepo
-        .createQueryBuilder('taskAssigned')
-        .innerJoin('taskAssigned.task', 'task')
-        .where('taskAssigned.taskStatus = :taskStatus', { taskStatus: "completed" })
-        .andWhere('taskAssigned.status = :status', { status: Status.Online })
-        .groupBy('taskAssigned.taskAssignedId')
-        .select(['taskAssigned.taskAssignedId as taskAssignedId', 'MAX(task.id) as taskId', 'MAX(task.taskName) as taskName','taskAssigned.startDate as taskStartDate','taskAssigned.landId as landId'])
-        .getRawMany();
-
-      cr.setStatus(true);
-      cr.setExtra(taskDetails);
-    } catch (error) {
-      cr.setStatus(false);
-      cr.setExtra(error);
-      ErrorHandlerSup.handleError(error);
-    }
-
-    return cr;
-  }
+  
 
   async updateEndDate(taskAssignedId: number, endDate: Date, newStatus: string): Promise<CommonResponse> {
     let cr = new CommonResponse();

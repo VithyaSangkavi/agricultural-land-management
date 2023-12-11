@@ -29,6 +29,7 @@ const CostYieldReport = ({ dateRange, landId, lotId, selectedLot }) => {
 
                 if (fromDate && toDate && landId) {
                     // filter by fromDate, toDate and landId
+
                     response = await axios.get(`http://localhost:8081/service/master/other-cost-yield?startDate=${fromDate}&endDate=${toDate}&landId=${landId}`);
                 } else if (fromDate && toDate && lotId) {
                     // filter by fromDate, toDate and lotId
@@ -38,6 +39,7 @@ const CostYieldReport = ({ dateRange, landId, lotId, selectedLot }) => {
                     response = await axios.get(`http://localhost:8081/service/master/other-cost-yield?startDate=${fromDate}&endDate=${toDate}`);
                 } else if (landId) {
                     // filter by landId 
+
                     response = await axios.get(`http://localhost:8081/service/master/other-cost-yield?landId=${landId}`);
                 } else if (lotId) {
                     // filter by lotId 
