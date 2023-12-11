@@ -73,8 +73,8 @@ export class LandDaoImpl implements LandDao {
     try {
       const landRepo = getConnection().getRepository(LandEntity);
       const landModel = await landRepo.findOne({
-        where: { name, status: Status.Online }, // Assuming you have a status field
-        select: ['id'], // Select only the 'id' field
+        where: { name, status: Status.Online },
+        select: ['id'],
       });
   
       return landModel ? landModel.id : null;

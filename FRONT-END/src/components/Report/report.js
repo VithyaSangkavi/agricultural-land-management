@@ -209,7 +209,7 @@ function Report() {
                             )}
                         </div>
 
-                        {selectedReport !== 'Employee Perfomance' && selectedReport !== 'Summary' && (
+                        {selectedReport !== 'Employee Perfomance' || selectedReport !== 'Summary' ||  selectedReport !== 'Summary'(
 
                             <div>
                                 <label>Select Lot:</label>
@@ -224,7 +224,7 @@ function Report() {
                             </div>
                         )}
 
-                        {selectedReport !== 'Employee Perfomance' && selectedReport !== 'Summary' && selectedReport != 'Employee Attendance' && selectedReport != 'Monthly Crop' && (
+                        {selectedReport !== 'Employee Perfomance' && selectedReport !== 'Summary' && selectedReport != 'Cost Breakdown' && selectedReport != 'Monthly Crop' && (
                             <div>
                                 <label>Select Worker:</label>
                                 <select value={selectedWorker} onChange={handleWorkerChange}>
