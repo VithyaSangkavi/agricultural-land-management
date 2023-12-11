@@ -127,6 +127,7 @@ export const TRANSLATIONS_SL = {
     employeeattendance: 'සේවක පැමිණීම',
     monthlycrop: 'මාසික බෝගය',
     othercostyield: 'වෙනත් පිරිවැය / අස්වැන්න',
+    selectedlot: 'තෝරාගත් කොටස්',
 
     //employee-attendance report
     employeeattendancereport: 'සේවක පැමිණීමේ වාර්තාව',

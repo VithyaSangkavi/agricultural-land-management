@@ -125,6 +125,7 @@ export const TRANSLATIONS_EN = {
     employeeattendance: 'Employee Attendance',
     monthlycrop: 'Monthly Crop',
     othercostyield: 'Other Cost / Yield',
+    selectedlot: 'Selected Lot',
 
     //employee-attendance report
     employeeattendancereport : 'Employee Attendance Report',
