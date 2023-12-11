@@ -29,7 +29,7 @@ function ManageWorkers() {
   useEffect(() => {
 
 
-    axios.post('http://localhost:8080/service/master/workerFindAll').then((response) => {
+    axios.post('http://localhost:8081/service/master/workerFindAll').then((response) => {
       setWorkers(response.data.extra);
       console.log("Workers : ", response.data.extra);
     });
@@ -39,12 +39,12 @@ function ManageWorkers() {
     //     setWorkers(res.extra);
     //   })
 
-    axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
+    axios.get('http://localhost:8081/service/master/landFindAll').then((response) => {
       setLands(response.data.extra);
       console.log("Lands : ", response.data.extra);
     });
 
-    // axios.post('http://localhost:8080/service/master/workerFindAll').then((response) => {
+    // axios.post('http://localhost:8081/service/master/workerFindAll').then((response) => {
     //   setWorkers(response.data.extra);
     //   console.log("Workers : ", response.data.extra);
     // });
@@ -70,7 +70,7 @@ function ManageWorkers() {
   const handleSelectLand = (eventKey) => {
     setSelectedLand(eventKey);
 
-    axios.post(`http://localhost:8080/service/master/findLandIdByName?name=${eventKey}`)
+    axios.post(`http://localhost:8081/service/master/findLandIdByName?name=${eventKey}`)
       .then((response) => {
         const landIdWorker = response.data.extra;
         const thislandId = landIdWorker.landId;
@@ -79,7 +79,7 @@ function ManageWorkers() {
 
         setLandId(thislandId);
 
-        axios.get(`http://localhost:8080/service/master/findByLandId?landId=${thislandId}`)
+        axios.get(`http://localhost:8081/service/master/findByLandId?landId=${thislandId}`)
           .then((response) => {
             console.log("Workers for selected land:", response.data.extra);
             setFilteredWorkersForSelectedLand(response.data.extra);

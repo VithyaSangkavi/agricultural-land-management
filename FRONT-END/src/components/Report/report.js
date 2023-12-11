@@ -91,13 +91,13 @@ function Report() {
 
     useEffect(() => {
         //land find all
-        axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
+        axios.get('http://localhost:8081/service/master/landFindAll').then((response) => {
             setLands(response.data.extra);
             console.log("Lands : ", response.data.extra);
         });
 
         //lot find all
-        axios.get('http://localhost:8080/service/master/lotFindAll').then((response) => {
+        axios.get('http://localhost:8081/service/master/lotFindAll').then((response) => {
             setLots(response.data.extra);
             console.log("Lots : ", response.data.extra);
         });
@@ -106,7 +106,7 @@ function Report() {
     const handleSelectedLand = (eventkey) => {
         setSelectedLand(eventkey);
 
-        axios.post(`http://localhost:8080/service/master/findLandIdByName?name=${eventkey}`)
+        axios.post(`http://localhost:8081/service/master/findLandIdByName?name=${eventkey}`)
             .then((response) => {
                 const landIdTask = response.data.extra;
                 const taskLand = JSON.stringify(landIdTask);
@@ -286,80 +286,39 @@ function Report() {
                                     </select>
                                 </div>
                             )}
-                           
+
                             <button onClick={handleResetFilters} className='reset-filter'>{t('resetfilters')}</button>
 
-                    </div>
-                )}
-            </p>
-            <div className="position-absolute top-0 end-0 me-2">
-                <Dropdown alignRight onSelect={handleLanguageChange}>
-                    <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                        <FaGlobeAmericas style={{ color: 'white' }} />
-                    </Dropdown.Toggle>
-
-                    <Dropdown.Menu>
-                        <Dropdown.Item eventKey="en">English</Dropdown.Item>
-                        <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-                    </Dropdown.Menu>
-                </Dropdown>
-            </div>
-
-            <div className='drop-down-container'>
-                <Dropdown onSelect={handleSelectedLand} className='custom-dropdown'>
-                    <Dropdown.Toggle className='drop-down' id="dropdown-land">
-                        {selectedLand || t('selectland')}
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu className='drop-down-menu'>
-                        {lands.map((land) => (
-                            <div key={land.id}>
-                                <Dropdown.Item eventKey={land.name}>{land.name}</Dropdown.Item>
-                            </div>
-                        ))}
-                        <div key={extraValue}>
-                            <Dropdown.Item eventKey={extraValue}>{extraValue}</Dropdown.Item>
                         </div>
-                    </Dropdown.Menu>
-                </Dropdown>
+                    )}
+                </div>
+                
+
+                
+                {selectedReport === 'Summary' ? (
+                    <>
+                        <select className='report-dropdown'
+                            // value={selectedReportCate}
+                            onChange={handleCateChange}
+                        >
+                            <option value="">Monthly</option>
+                            <option value="1">Weekly</option>
+                            <option value="2">Daily</option>
+                        </select>
+                    </>
+                ) : null}
+
+                {showEmployeeAttendanceReport && <EmployeeAttendanceReport dateRange={dateRange} lotId={lotId} landId={landId} selectedLot={selectedLot} />}
+                {showMonthlyCropReport && <MonthlyCropReport dateRange={dateRange} lotId={lotId} landId={landId} selectedLot={selectedLot} />}
+                {showCostYieldReport && <CostYieldReport dateRange={dateRange} landId={landId} lotId={lotId} selectedLot={selectedLot} />}
+                {showEmployeePerfomnce && <EmployeePerfomnce dateRange={dateRange} selectedLand={selectedLand} />}
+                {showCostBreakdown && <CostBreakdownReport selectedLand={selectedLand} dateRange={dateRange} />}
+                {showSummary && <SummaryReport selectedLand={selectedLand} category={category} />}
+                < br />
+                <Footer />
             </div>
-            {selectedReport === 'Summary' ? (
-                <>
-                    <select className='report-dropdown'
-                        // value={selectedReportCate}
-                        onChange={handleCateChange}
-                    >
-                        <option value="">Monthly</option>
-                        <option value="1">Weekly</option>
-                        <option value="2">Daily</option>
-                    </select>
-                </>
-            ) : null}
-
-            {selectedReport === 'Summary' ? (
-                <>
-                    <select className='report-dropdown'
-                        // value={selectedReportCate}
-                        onChange={handleCateChange}
-                    >
-                        <option value="">Monthly</option>
-                        <option value="1">Weekly</option>
-                        <option value="2">Daily</option>
-                    </select>
-                </>
-            ) : null}
-
-
-
-            {showEmployeeAttendanceReport && <EmployeeAttendanceReport dateRange={dateRange} lotId={lotId} landId={landId} selectedLot={selectedLot}/>}
-            {showMonthlyCropReport && <MonthlyCropReport dateRange={dateRange} lotId={lotId} landId={landId} selectedLot={selectedLot}/>}
-            {showCostYieldReport && <CostYieldReport dateRange={dateRange} landId={landId} lotId={lotId} selectedLot={selectedLot}/>}
-            {showEmployeePerfomnce && <EmployeePerfomnce dateRange={dateRange} selectedLand={selectedLand} />}
-            {showCostBreakdown && <CostBreakdownReport selectedLand={selectedLand} dateRange={dateRange} />}
-            {showSummary && <SummaryReport selectedLand={selectedLand} category={category} />}
-            < br />
-            <Footer />
-        </div>
-    );
+            </div>
+            );
 }
 
-export default Report;
+            export default Report;
