@@ -5,15 +5,22 @@ import { Chart as ChartJS, LineElement, PointElement, Tooltip, Legend, LinearSca
 import 'chartjs-adapter-date-fns';
 import { Line } from 'react-chartjs-2';
 import { useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 ChartJS.register(LineElement, PointElement, Tooltip, Legend, LinearScale, TimeScale);
 
 
-const EmployeeAttendanceReport = ({dateRange, lotId, landId}) => {
+const EmployeeAttendanceReport = ({ dateRange, lotId, landId, selectedLot }) => {
+    const [t, i18n] = useTranslation();
+
     const [attendanceData, setAttendanceData] = useState([]);
 
     const fromDate = dateRange && dateRange.fromDate;
     const toDate = dateRange && dateRange.toDate;
+
+    const handleLanguageChange = (lang) => {
+        i18n.changeLanguage(lang);
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -25,13 +32,13 @@ const EmployeeAttendanceReport = ({dateRange, lotId, landId}) => {
                 } else if (fromDate && toDate && landId) {
                     // filter by fromDate and toDate and landId
                     response = await axios.get(`http://localhost:8081/service/master/employee-attendance?startDate=${fromDate}&endDate=${toDate}&landId=${landId}`);
-                }else if (fromDate && toDate) {
+                } else if (fromDate && toDate) {
                     // filter by fromDate and toDate 
                     response = await axios.get(`http://localhost:8081/service/master/employee-attendance?startDate=${fromDate}&endDate=${toDate}`);
-                }  else if (lotId) {
+                } else if (lotId) {
                     // filter by lotId
                     response = await axios.get(`http://localhost:8081/service/master/employee-attendance?lotId=${lotId}`);
-                }else if (landId) {
+                } else if (landId) {
                     // filter by landId
                     response = await axios.get(`http://localhost:8081/service/master/employee-attendance?landId=${landId}`);
                 } else {
@@ -48,7 +55,7 @@ const EmployeeAttendanceReport = ({dateRange, lotId, landId}) => {
     }, [fromDate, toDate, lotId, landId]);
 
     //Lined chart
-    
+
     const chartData = {
 
         labels: attendanceData.map((item) => item.date),
@@ -71,9 +78,9 @@ const EmployeeAttendanceReport = ({dateRange, lotId, landId}) => {
                 type: 'time',
                 time: {
                     unit: 'day',
-                    tooltipFormat: 'yyyy-MM-dd', 
+                    tooltipFormat: 'yyyy-MM-dd',
                     displayFormats: {
-                        day: 'yyyy-MM-dd' 
+                        day: 'yyyy-MM-dd'
                     },
                 },
                 title: {
@@ -104,12 +111,13 @@ const EmployeeAttendanceReport = ({dateRange, lotId, landId}) => {
     return (
         <>
             <div className='report-app-screen'>
-                <h2>Employee Attendance Report</h2>
+
+                <h2>{t('employeeattendancereport')}</h2>
                 <table className='attendance-table'>
                     <thead>
                         <tr>
-                            <th>Day</th>
-                            <th>No. of Workers</th>
+                            <th>{t('day')}</th>
+                            <th>{t('noofworkers')}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -125,11 +133,11 @@ const EmployeeAttendanceReport = ({dateRange, lotId, landId}) => {
             <br />
             <div className='report-app-screen'>
                 <div className='attendance-chart'>
-                    <h2>Employee Attendance Chart</h2>
+                    <h2>{t('employeeattendancechart')}</h2>
                     {attendanceData.length > 0 ? (
                         <Line data={chartData} options={chartOptions} />
                     ) : (
-                        <p>Loading...</p>
+                        <p>{t('loading')}...</p>
                     )}
                 </div>
             </div>

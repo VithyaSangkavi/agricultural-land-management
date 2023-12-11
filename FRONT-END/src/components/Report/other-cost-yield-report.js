@@ -4,16 +4,23 @@ import { Bar } from 'react-chartjs-2';
 import './report.css'
 import { Chart as ChartJS, LineElement, PointElement, Tooltip, Legend, LinearScale, TimeScale, CategoryScale, BarElement } from 'chart.js';
 import 'chartjs-adapter-date-fns';
+import { useTranslation } from 'react-i18next';
 
 ChartJS.register(LineElement, BarElement, PointElement, Tooltip, Legend, LinearScale, TimeScale, CategoryScale);
 
 const CostYieldReport = ({dateRange, landId, lotId}) => {
+    const [t, i18n] = useTranslation();
+
     const [costYieldData, setCostYieldData] = useState({});
 
     const fromDate = dateRange && dateRange.fromDate;
     const toDate = dateRange && dateRange.toDate;
 
     console.log('passed land id: ', landId)
+
+    const handleLanguageChange = (lang) => {
+        i18n.changeLanguage(lang);
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -37,11 +44,11 @@ const CostYieldReport = ({dateRange, landId, lotId}) => {
                     response = await axios.get(`http://localhost:8081/service/master/other-cost-yield?lotId=${lotId}`);
                 }else {
                     // without any filters
-                    response = await axios.get('http://localhost:8080/service/master/other-cost-yield');
+                    response = await axios.get('http://localhost:8081/service/master/other-cost-yield');
                 }
                 setCostYieldData(response.data);
             } catch (error) {
-                console.error('Error fetching employee attendance:', error);
+                console.error('Error fetching other cost yield report:', error);
             }
         };
         fetchData();
@@ -96,13 +103,13 @@ const CostYieldReport = ({dateRange, landId, lotId}) => {
         <>
             <br />
             <div className='report-app-screen'>
-                <h2>Cost Yield Report</h2>
+                <h2>{t('costyieldreport')}</h2>
                 <table className='attendance-table'>
                     <thead>
                         <tr>
-                            <th>Month</th>
-                            <th>Cost</th>
-                            <th>Yield</th>
+                            <th>{t('month')}</th>
+                            <th>{t('cost')}</th>
+                            <th>{t('yield')}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -119,11 +126,11 @@ const CostYieldReport = ({dateRange, landId, lotId}) => {
             <br />
             <div className='report-app-screen'>
                 <div className='bar-chart'>
-                    <h2>Cost vs Yield Comparison Chart</h2>
+                    <h2>{t('costvsyieldcomparisionchart')}</h2>
                     {Object.keys(costYieldData).length > 0 ? (
                         <Bar data={chartData} options={chartOptions} />
                     ) : (
-                        <p>Loading...</p>
+                        <p>{t('loading')}...</p>
                     )}
                 </div>
             </div>
