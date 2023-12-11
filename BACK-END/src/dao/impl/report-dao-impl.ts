@@ -402,7 +402,7 @@ export class ReportDaoImpl implements ReportDao {
     console.log("catenum dao-impl : ", cateNum);
     console.log("landnum dao-impl : ", cateNum);
 
-    const workAssignedRepository = getRepository(WorkAssignedEntity);
+    const workAssignedRepository = getConnection().getRepository(WorkAssignedEntity);
 
     const workAssignedEntities = await workAssignedRepository
       .createQueryBuilder("workAssigned")
@@ -412,90 +412,37 @@ export class ReportDaoImpl implements ReportDao {
       .where("land.id = :landId", { landId })
       .getMany();
 
-
-    const pluckTaskIds = await (await getRepository(TaskTypeEntity)
-      .createQueryBuilder("task")
-      .where("task.taskName = :taskName", { taskName: "Pluck" })
-      .select("task.id")
-      .getMany())
-      .map(task => task.id);
-
-
-    const taskAssignedIds = await (await getRepository(TaskAssignedEntity)
-      .createQueryBuilder("taskAssigned")
-      .leftJoinAndSelect("taskAssigned.land", "land")
-      .where("land.id = :landId", { landId })
-      .andWhere("taskAssigned.taskId IN (:...pluckTaskIds)", { pluckTaskIds })
-      .select("taskAssigned.id")
-      .getMany())
-      .map(taskAssigned => taskAssigned.id);
-
-
     const monthlyExpenses = await getRepository(TaskExpenseEntity)
       .createQueryBuilder("taskExpense")
-      .select("SUM(taskExpense.value)", "totalExpense")
-      .addSelect("DATE_FORMAT(taskExpense.createdDate, '%M %Y')", "monthYear")
-      .where("taskExpense.taskAssignedId IN (:...taskAssignedIds)", { taskAssignedIds })
-      .groupBy("monthYear")
+      .innerJoin("taskExpense.taskAssigned", "taskAssigned")
+      .innerJoin("taskAssigned.land", "land")
+      .innerJoin(TaskTypeEntity, "task", "task.taskName = :taskName AND task.id = taskAssigned.taskId", { taskName: "Pluck" })
+      .where("land.id = :landId", { landId })
+      .groupBy("DATE_FORMAT(taskExpense.createdDate, '%M %Y')")
+      .select("DATE_FORMAT(taskExpense.createdDate, '%M %Y')", "monthYear")
+      .addSelect("SUM(taskExpense.value)", "totalExpense")
       .getRawMany();
 
-
-    // Filter Non Pluck Task Id from Task Table
-    const pluckTaskIds2 = await getRepository(TaskTypeEntity)
-      .createQueryBuilder("task")
-      .where("task.taskName = :pluckTaskName", { pluckTaskName: "Pluck" })
-      .getMany();
-
-    const pluckTaskIdsArray = pluckTaskIds2.map((pluckTask) => pluckTask.id);
-
-    // Filter TaskAssignedIds Related to Excluded Pluck Tasks from TaskAssigned Table
-    const nonPluckTaskAssignedIds = await getRepository(TaskAssignedEntity)
-      .createQueryBuilder("taskAssigned")
-      .leftJoinAndSelect("taskAssigned.land", "land")
-      .where("land.id = :landId", { landId })
-      .andWhere("taskAssigned.taskId NOT IN (:pluckTaskIds2)", { pluckTaskIds2: pluckTaskIdsArray })
-      .getMany();
-
-    const nonPluckTaskAssignedIdsArray = nonPluckTaskAssignedIds.map((taskAssigned) => taskAssigned.id);
-
-    // Calculate Sum of Values for Each Month Based on Filtered TaskAssignedIds using TaskExpenses Table
     const monthlyExpenses2 = await getRepository(TaskExpenseEntity)
       .createQueryBuilder("taskExpense")
-      .select("SUM(taskExpense.value)", "totalExpense")
-      .addSelect("DATE_FORMAT(taskExpense.createdDate, '%M %Y')", "monthYear")
-      .where("taskExpense.taskAssignedId IN (:taskAssignedIds)", { taskAssignedIds: nonPluckTaskAssignedIdsArray })
-      .groupBy("monthYear")
+      .innerJoin("taskExpense.taskAssigned", "taskAssigned")
+      .innerJoin("taskAssigned.land", "land")
+      .innerJoin(TaskTypeEntity, "task", "task.taskName <> :pluckTaskName AND task.id = taskAssigned.taskId", { pluckTaskName: "Pluck" })
+      .where("land.id = :landId", { landId })
+      .groupBy("DATE_FORMAT(taskExpense.createdDate, '%M %Y')")
+      .select("DATE_FORMAT(taskExpense.createdDate, '%M %Y')", "monthYear")
+      .addSelect("SUM(taskExpense.value)", "totalExpense")
       .getRawMany();
 
-
-
-    // Filter Salary Expense Id from Expense Table
-    const salaryExpense = await getRepository(ExpensesEntity)
-      .createQueryBuilder("expense")
-      .where("expense.expenseType = :salaryExpenseType", { salaryExpenseType: "Salary" })
-      .getOne();
-
-    const salaryExpenseId = salaryExpense?.id;
-
-    // Filter Records Related to Excluded Salary Expense from Task-Expense Table
-    const excludedSalaryTaskExpenses = await getRepository(TaskExpenseEntity)
-      .createQueryBuilder("taskExpense")
-      .where("taskExpense.expenseId != :salaryExpenseId", { salaryExpenseId })
-      .getMany();
-
-    const excludedSalaryTaskExpenseIds = excludedSalaryTaskExpenses.map((taskExpense) => taskExpense.id);
-
-    // Step 03 - Calculate Sum of Values for Each Month Based on Filtered Records using Task-Expenses Table
     const monthlyExpenses3 = await getRepository(TaskExpenseEntity)
       .createQueryBuilder("taskExpense")
-      .select("SUM(taskExpense.value)", "totalExpense")
-      .addSelect("DATE_FORMAT(taskExpense.createdDate, '%M %Y')", "monthYear")
-      .where("taskExpense.id IN (:taskExpenseIds)", { taskExpenseIds: excludedSalaryTaskExpenseIds })
-      .groupBy("monthYear")
+      .innerJoin("taskExpense.expense", "expense")
+      .where("expense.expenseType != :salaryExpenseType", { salaryExpenseType: "Salary" })
+      .groupBy("DATE_FORMAT(taskExpense.createdDate, '%M %Y')")
+      .select("DATE_FORMAT(taskExpense.createdDate, '%M %Y')", "monthYear")
+      .addSelect("SUM(taskExpense.value)", "totalExpense")
       .getRawMany();
 
-
-    // income Records by Months
     const groupedIncomeByMonthAndYear = await getRepository(IncomeEntity)
       .createQueryBuilder("income")
       .select([
@@ -506,23 +453,18 @@ export class ReportDaoImpl implements ReportDao {
       .groupBy("monthYear")
       .getRawMany();
 
-    const allTaskAssignedIds = await (await getRepository(TaskAssignedEntity)
-      .createQueryBuilder("taskAssigned")
-      .leftJoinAndSelect("taskAssigned.land", "land")
-      .where("land.id = :landId", { landId })
-      .select("taskAssigned.id")
-      .getMany())
-      .map(taskAssigned => taskAssigned.id);
-
-
-    //total expenses
     const monthlyExpenses4 = await getRepository(TaskExpenseEntity)
       .createQueryBuilder("taskExpense")
-      .select("SUM(taskExpense.value)", "totalExpense")
-      .addSelect("DATE_FORMAT(taskExpense.createdDate, '%M %Y')", "monthYear")
-      .where("taskExpense.taskAssignedId IN (:...allTaskAssignedIds)", { allTaskAssignedIds })
+      .innerJoin("taskExpense.taskAssigned", "taskAssigned")
+      .innerJoin("taskAssigned.land", "land")
+      .select([
+        "DATE_FORMAT(taskExpense.createdDate, '%M %Y') AS monthYear",
+        "SUM(taskExpense.value) AS totalExpense"
+      ])
+      .where("land.id = :landId", { landId })
       .groupBy("monthYear")
       .getRawMany();
+
 
 
     const quantitySummary = workAssignedEntities.reduce((summary, workAssigned) => {
