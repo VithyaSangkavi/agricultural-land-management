@@ -1,65 +1,100 @@
-.report-dropdown{
-    color: white;
-    padding: 10px;
-    background-color: #0e4f20;
-    width: 90%;
-    margin-left: 15px;
-    margin-bottom: 15px;
+.report-dropdown {
+  color: white;
+  padding: 10px;
+  background-color: #0e4f20;
+  width: 80%;
+  margin-left: 15px;
+  margin-bottom: 15px;
+}
+
+.report-dropdown-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.filter-icon {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 10px;
+  margin-right: 10px;
+  cursor: pointer;
+  color: #0e4f20;
+  /* background-color: #0e4f20; */
+  padding: 5px;
+}
+
+.filter-icon svg {
+  font-size: 24px;
+}
+
+.filter-container {
+  margin: 10px;
+}
+
+.filtering-card {
+  padding: 16px;
+}
+
+.reset-filter{
+  background-color: #0e4f20;
+  color: white;
+  padding: 5px;
+  width: 50%;
+  margin-top: 10px;
 }
 
 .report-app-screen {
-    max-width: 100%;
-    margin: 10px;
-    /* padding: 16px; */
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-    /* background-image: url('../../assets/img/background.jpg'); */
-    background-size: cover;
-    border: none;
-    padding: 10px;
-    background-repeat: no-repeat;
-    background-position: center;
-    position: relative;
-    background-color: white;
+  max-width: 100%;
+  margin: 10px;
+  background-size: cover;
+  border: none;
+  padding: 10px;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: relative;
+  background-color: white;
 }
 
-.attendance-report{
-    justify-content: center;
+.attendance-report {
+  justify-content: center;
 }
 
 /* Define styles for the attendance table */
 .attendance-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-  }
-  
-  /* Styles for table headers */
-  .attendance-table th {
-    background-color: #f2f2f2;
-    text-align: left;
-    padding: 8px;
-    font-weight: bold;
-  }
-  
-  /* Styles for table rows */
-  .attendance-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  /* Styles for table data cells */
-  .attendance-table td {
-    padding: 8px;
-  }
-  
-  /* Styles for the overall report */
-  .attendance-report {
-    margin-top: 20px;
-    border: 1px solid #ccc;
-    padding: 20px;
-  }
-  
-  /* Heading styles */
-  .attendance-report h2 {
-    margin-bottom: 10px;
-  }
-  
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+/* Styles for table headers */
+.attendance-table th {
+  background-color: #f2f2f2;
+  text-align: left;
+  padding: 8px;
+  font-weight: bold;
+}
+
+/* Styles for table rows */
+.attendance-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Styles for table data cells */
+.attendance-table td {
+  padding: 8px;
+}
+
+/* Styles for the overall report */
+.attendance-report {
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
+  border: 1px solid #ccc;
+  padding: 20px;
+}
+
+/* Heading styles */
+.attendance-report h2 {
+  margin-bottom: 10px;
+}

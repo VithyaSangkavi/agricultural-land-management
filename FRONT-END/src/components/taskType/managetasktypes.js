@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useHistory } from "react-router-dom";
 import './managetasktypes.css';
 import Footer from '../footer/footer';
-import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
+import { FaGlobeAmericas, FaLanguage, FaSearch } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
@@ -110,20 +110,27 @@ function ManageTaskTypes() {
           {t('addtasktype')}
         </button>
       </div>
-      <br/>
-      <div>
-        <input
-          className='search-field'
-          type="text"
-          placeholder={t('searchtasktypes')}
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
+      <br />
+
+      <div className="search-container">
+        <div className="search-wrapper">
+          <input
+            className='search-field'
+            type="text"
+            placeholder={t('searchtasktypes')}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <div className="search-icon">
+            <FaSearch />
+          </div>
+        </div>
       </div>
+
       <div className="task-list">
         {filteredTasks.map((task) => (
           <div key={task.id} className="task-card">
-            <p>{t('tasktype')}: {task.taskName}</p>
+            <p>{task.taskName}</p>
           </div>
         ))}
       </div>

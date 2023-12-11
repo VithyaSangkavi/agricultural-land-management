@@ -3,12 +3,13 @@ import axios from 'axios';
 import { useHistory } from "react-router-dom";
 import './manageworkers.css';
 import Footer from '../footer/footer';
-import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
+import { FaGlobeAmericas, FaLanguage, FaSearch } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
 import { alertService } from '../../_services/alert.service';
+import SearchComponent from '../search/search';
 
 function ManageWorkers() {
 
@@ -47,7 +48,7 @@ function ManageWorkers() {
     //   setWorkers(response.data.extra);
     //   console.log("Workers : ", response.data.extra);
     // });
-    
+
     // submitSets(submitCollection.manageland)
     // .then((res) => {
     //   setLands(res.extra);
@@ -133,22 +134,28 @@ function ManageWorkers() {
           {t('addworker')}
         </button>
       </div>
-      <br/>
-      <div>
-        <input
-          className='search-field'
-          type="text"
-          placeholder={t('searchworkers')}
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
+      <br />
+      <div className="search-container">
+        <div className="search-wrapper">
+          <input
+            className='search-field'
+            type="text"
+            placeholder={t('searchworkers')}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <div className="search-icon">
+            <FaSearch />
+          </div>
+        </div>
       </div>
+
       <div className="worker-list">
         {selectedLand
           ? filteredWorkersForSelectedLand.map((worker) => (
             <div key={worker.id} className="worker-card" onClick={() => handleWorkerCardClick(worker)}>
               <h3>{t('name')}: {worker.name}</h3>
-              <p>{t('phone')}: {worker.phone}</p>
+              <p>{t('phone')}: {worker.phone}</p> 
             </div>
           ))
           : filteredWorkers.map((worker) => (

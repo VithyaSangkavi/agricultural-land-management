@@ -112,6 +112,9 @@ const EmployeeAttendanceReport = ({ dateRange, lotId, landId, selectedLot }) => 
         <>
             <div className='report-app-screen'>
 
+                <p>{t('daterange')} : {fromDate} - {toDate}</p>
+                <p>{t('selectedlot')} : {selectedLot}</p>
+
                 <h2>{t('employeeattendancereport')}</h2>
                 <table className='attendance-table'>
                     <thead>

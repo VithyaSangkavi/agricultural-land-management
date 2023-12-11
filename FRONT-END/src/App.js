@@ -14,6 +14,7 @@ import { submitSets } from './components/UiComponents/SubmitSets';
 import LazyLoading from './components/common_layouts/lazyloading';
 import RoleBasedRouting from './components/common_layouts/rolebaserouting';
 
+import SearchComponent from './components/search/search';
 import SignInComponent from './components/signin/signin';
 import NoMatchComponent from './components/nomatch/nomatch';
 import ResetPassword from './components/resetPassword/ResetPassword';
