@@ -8,6 +8,8 @@ import { TaskAssignedDao } from "../task-assigned-dao";
 import { LandEntity } from "../../entity/master/land-entity";
 import { TaskTypeEntity } from "../../entity/master/task-type-entity";
 import { Schedule } from "../../enum/schedule";
+import { CommonResponse } from "../../common/dto/common-response";
+import { ErrorHandlerSup } from "../../support/error-handler-sup";
 
 /**
  * task-expense data access layer
@@ -123,6 +125,26 @@ export class TaskAssignedDaoImpl implements TaskAssignedDao {
       throw error;
     }
   }
+
+  async getOngoingTasksWithTaskNames(landId: number): Promise<TaskAssignedEntity[]> {
+    let taskAssignedRepo = getConnection().getRepository(TaskAssignedEntity);
+
+    const tasks = await taskAssignedRepo
+
+      .createQueryBuilder('taskAssigned')
+      .innerJoin('taskAssigned.task', 'task')
+      .innerJoin('taskAssigned.land', 'land')
+      .where('land.id = :landId', { landId })
+      .andWhere('taskAssigned.taskStatus = :taskStatus', { taskStatus: "ongoing" })
+      .andWhere('taskAssigned.status = :status', { status: Status.Online })
+      .groupBy('taskAssigned.taskAssignedId')
+      .select(['taskAssigned.taskAssignedId as taskAssignedId', 'MAX(task.id) as taskId', 'MAX(task.taskName) as taskName', 'taskAssigned.startDate as taskStartDate', 'taskAssigned.landId as landId'])
+      .getRawMany();
+
+      return tasks;
+
+  }
+
 
   async preparetaskAssignedModel(taskAssignedModel: TaskAssignedEntity, taskAssignedDto: TaskAssignedDto) {
     taskAssignedModel.startDate = taskAssignedDto.getStartDate();

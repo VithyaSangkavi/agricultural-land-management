@@ -13,6 +13,7 @@ function Home() {
 
     const [lands, setLands] = useState([]);
     const [selectedLand, setSelectedLand] = useState('');
+    const [LandId, setLandId] = useState('');
 
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -31,12 +32,14 @@ function Home() {
         const day = date.getDate();
         const month = date.getMonth() + 1;
         const year = date.getFullYear();
-    
+
         const formattedDate = `${day}/${month}/${year}`;
-    
+
         return formattedDate;
     };
-    
+
+    console.log("selected land : ", selectedLand)
+
 
     useEffect(() => {
         axios.post('http://localhost:8080/service/master/taskAssignedFindAll').then((response) => {
@@ -54,11 +57,6 @@ function Home() {
             console.log("Lands : ", response.data.extra);
         });
 
-        axios.get('http://localhost:8080/service/master/ongoing-tasks-with-names').then((response) => {
-            setOngoingTasks(response.data.extra);
-            console.log("Ongoing tasks : ", response.data.extra);
-
-        });
     }, []);
 
     const handleSearchChange = (event) => {
@@ -83,8 +81,17 @@ function Home() {
                 const taskLand = JSON.stringify(landIdTask);
                 const landData = JSON.parse(taskLand);
                 const landId = landData.landId;
+                setLandId(landId)
                 console.log('Selected Land Id :', landId);
                 localStorage.setItem('SelectedLandId', landId);
+
+                console.log("selected land : ", selectedLand)
+                console.log("landId : ", landId)
+                axios.get(`http://localhost:8080/service/master/ongoing-tasks-with-names?landId=${LandId}`).then((response) => {
+                    setOngoingTasks(response.data.extra);
+                    console.log("Ongoing tasks : ", response.data.extra);
+
+                });
             })
             .catch((error) => {
                 console.error("Error fetching data:", error);
@@ -143,7 +150,7 @@ function Home() {
             <div className="task-list">
                 {OngoingTasks.map((taskAssigned) => (
                     <div key={taskAssigned.id} className="task-card" onClick={() => handleTaskClick(taskAssigned.taskAssignedId)}>
-                        <p>{taskAssigned.taskName} - {getFormattedDate(taskAssigned.taskStartDate)} - land {taskAssigned.landId}</p>
+                        <p>{taskAssigned.taskName} - {getFormattedDate(taskAssigned.taskStartDate)}</p>
                     </div>
                 ))}
             </div>

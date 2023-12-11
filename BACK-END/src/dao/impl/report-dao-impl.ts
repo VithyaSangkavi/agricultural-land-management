@@ -396,6 +396,7 @@ export class ReportDaoImpl implements ReportDao {
       .addSelect("SUM(taskExpense.value)", "totalExpense")
       .getRawMany();
 
+
     const monthlyExpenses2 = await getRepository(TaskExpenseEntity)
       .createQueryBuilder("taskExpense")
       .innerJoin("taskExpense.taskAssigned", "taskAssigned")
