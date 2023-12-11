@@ -47,7 +47,7 @@ function ManageWorkers() {
     //   setWorkers(response.data.extra);
     //   console.log("Workers : ", response.data.extra);
     // });
-    
+
     // submitSets(submitCollection.manageland)
     // .then((res) => {
     //   setLands(res.extra);
@@ -133,7 +133,7 @@ function ManageWorkers() {
           {t('addworker')}
         </button>
       </div>
-      <br/>
+      <br />
       <div>
         <input
           className='search-field'
