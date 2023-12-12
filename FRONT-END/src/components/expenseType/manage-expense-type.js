@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useHistory } from "react-router-dom";
 import './manage-expense-type.css';
 import Footer from '../footer/footer';
-import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
+import { FaGlobeAmericas, FaLanguage, FaSearch } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { submitCollection } from '../../_services/submit.service';
@@ -20,19 +20,39 @@ function ManageExpenseTypes() {
   const [searchQuery, setSearchQuery] = useState('');
   const [expense, setExpenseType] = useState([]);
 
+  const [landId, setLandId] = useState();
+
   const history = useHistory();
 
   useEffect(() => {
     submitSets(submitCollection.manageexpense)
-    .then((res) => {
-      setExpenseType(res.extra);
-    })
+      .then((res) => {
+        setExpenseType(res.extra);
+      })
 
     submitSets(submitCollection.manageland)
-    .then((res) => {
-      setLands(res.extra);
-    })
+      .then((res) => {
+        setLands(res.extra);
+      })
   }, []);
+
+  const handleSelectLand = (eventKey) => {
+    setSelectedLand(eventKey);
+
+    axios.post(`http://localhost:8081/service/master/findLandIdByName?name=${eventKey}`)
+      .then((response) => {
+        const landIdWorker = response.data.extra;
+        const thislandId = landIdWorker.landId;
+
+        localStorage.setItem('selectedLandIdWorker', JSON.stringify(landIdWorker));
+
+        setLandId(thislandId);
+
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
@@ -65,7 +85,7 @@ function ManageExpenseTypes() {
         </Dropdown>
       </div>
       <div className='drop-down-container'>
-        <Dropdown className='custom-dropdown'>
+        <Dropdown onSelect={handleSelectLand} className='custom-dropdown'>
           <Dropdown.Toggle className='drop-down' id="dropdown-land">
             {selectedLand || t('selectland')}
           </Dropdown.Toggle>
@@ -82,20 +102,27 @@ function ManageExpenseTypes() {
           {t('addexpensetype')}
         </button>
       </div>
-      <br/>
-      <div>
-        <input
-          className='search-field'
-          type="text"
-          placeholder={t('searchexpensetypes')}
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
+      <br />
+
+      <div className="search-container">
+        <div className="search-wrapper">
+          <input
+            className='search-field'
+            type="text"
+            placeholder={t('searchexpensetypes')}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <div className="search-icon">
+            <FaSearch />
+          </div>
+        </div>
       </div>
+
       <div className="expense-list">
         {filteredTasks.map((expense) => (
           <div key={expense.id} className="expense-card">
-            <p>{t('expensetype')}: {expense.expenseType}</p>
+            <p>{expense.expenseType}</p>
           </div>
         ))}
         <br />

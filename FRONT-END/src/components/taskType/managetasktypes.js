@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useHistory } from "react-router-dom";
 import './managetasktypes.css';
 import Footer from '../footer/footer';
-import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
+import { FaGlobeAmericas, FaLanguage, FaSearch } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
@@ -21,12 +21,12 @@ function ManageTaskTypes() {
 
   useEffect(() => {
 
-    axios.post('http://localhost:8080/service/master/taskFindAll').then((response) => {
+    axios.post('http://localhost:8081/service/master/taskFindAll').then((response) => {
       setTasks(response.data.extra);
       console.log("Tasks : ", response.data.extra);
     });
 
-    axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
+    axios.get('http://localhost:8081/service/master/landFindAll').then((response) => {
       setLands(response.data.extra);
       console.log("Lands : ", response.data.extra);
     });
@@ -42,7 +42,7 @@ function ManageTaskTypes() {
   const handleSelectLand = (eventKey) => {
     setSelectedLand(eventKey);
 
-    axios.post(`http://localhost:8080/service/master/findLandIdByName?name=${eventKey}`)
+    axios.post(`http://localhost:8081/service/master/findLandIdByName?name=${eventKey}`)
       .then((response) => {
         const landIdTask = response.data.extra;
         const taskLand = JSON.stringify(landIdTask);
@@ -51,7 +51,7 @@ function ManageTaskTypes() {
         console.log('Land ID Task :', landId);
 
         //get crop id by using landid
-        axios.get(`http://localhost:8080/service/master/cropFindByLandId/${landId}`)
+        axios.get(`http://localhost:8081/service/master/cropFindByLandId/${landId}`)
           .then((response) => {
             const cropIdLand = response.data.cropId.extra;
             localStorage.setItem('CropIdLand', cropIdLand);
@@ -110,20 +110,27 @@ function ManageTaskTypes() {
           {t('addtasktype')}
         </button>
       </div>
-      <br/>
-      <div>
-        <input
-          className='search-field'
-          type="text"
-          placeholder={t('searchtasktypes')}
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
+      <br />
+
+      <div className="search-container">
+        <div className="search-wrapper">
+          <input
+            className='search-field'
+            type="text"
+            placeholder={t('searchtasktypes')}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <div className="search-icon">
+            <FaSearch />
+          </div>
+        </div>
       </div>
+
       <div className="task-list">
         {filteredTasks.map((task) => (
           <div key={task.id} className="task-card">
-            <p>{t('tasktype')}: {task.taskName}</p>
+            <p>{task.taskName}</p>
           </div>
         ))}
       </div>

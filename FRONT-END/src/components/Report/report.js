@@ -7,7 +7,7 @@ import Footer from '../footer/footer';
 import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { FaPlus } from 'react-icons/fa';
+import { FaFilter } from 'react-icons/fa';
 import EmployeeAttendanceReport from './employee-attendance-report';
 import MonthlyCropReport from './monthly-crop-report';
 import CostYieldReport from './other-cost-yield-report';
@@ -91,13 +91,13 @@ function Report() {
 
     useEffect(() => {
         //land find all
-        axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
+        axios.get('http://localhost:8081/service/master/landFindAll').then((response) => {
             setLands(response.data.extra);
             console.log("Lands : ", response.data.extra);
         });
 
         //lot find all
-        axios.get('http://localhost:8080/service/master/lotFindAll').then((response) => {
+        axios.get('http://localhost:8081/service/master/lotFindAll').then((response) => {
             setLots(response.data.extra);
             console.log("Lots : ", response.data.extra);
         });
@@ -106,7 +106,7 @@ function Report() {
     const handleSelectedLand = (eventkey) => {
         setSelectedLand(eventkey);
 
-        axios.post(`http://localhost:8080/service/master/findLandIdByName?name=${eventkey}`)
+        axios.post(`http://localhost:8081/service/master/findLandIdByName?name=${eventkey}`)
             .then((response) => {
                 const landIdTask = response.data.extra;
                 const taskLand = JSON.stringify(landIdTask);
@@ -171,74 +171,7 @@ function Report() {
 
     return (
         <div className="home-app-screen">
-            <p className='main-heading'>Report
-                <div className="filter-icon" onClick={handleToggleFilter}>
-                    <FaPlus />
-                </div>
-
-                {isFilterExpanded && (
-                    <div>
-                        <div>
-                            {showCostBreakdown ? (
-                                <>
-                                    <label>Month : </label>
-                                    <input
-                                        type="month"
-                                        name="fromDate"
-                                        value={dateRange.fromDate}
-                                        onChange={handleDateRangeChange}
-                                    />
-                                </>
-                            ) : (
-                                <>
-                                    <label>Date Range:</label>
-                                    <input
-                                        type="date"
-                                        name="fromDate"
-                                        value={dateRange.fromDate}
-                                        onChange={handleDateRangeChange}
-                                    />
-                                    <span> - </span>
-                                    <input
-                                        type="date"
-                                        name="toDate"
-                                        value={dateRange.toDate}
-                                        onChange={handleDateRangeChange}
-                                    />
-                                </>
-                            )}
-                        </div>
-
-                        {selectedReport !== 'Employee Perfomance' && selectedReport !== 'Summary' && (
-
-                            <div>
-                                <label>Select Lot:</label>
-                                <select value={selectedLot} onChange={handleLotChange}>
-                                    <option value="">Select Lot</option>
-                                    {lots.map((lot) => (
-                                        <option key={lot.id} value={lot.name}>
-                                            {lot.name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                        )}
-
-                        {selectedReport !== 'Employee Perfomance' && selectedReport !== 'Summary' && selectedReport != 'Employee Attendance' && selectedReport != 'Monthly Crop' && (
-                            <div>
-                                <label>Select Worker:</label>
-                                <select value={selectedWorker} onChange={handleWorkerChange}>
-                                    <option value="">Select Worker</option>
-                                </select>
-                            </div>
-                        )}
-                        <br />
-
-                        <button onClick={handleResetFilters}>Reset Filters</button>
-
-                    </div>
-                )}
-            </p>
+            <p className='main-heading'>{t('report')}</p>
             <div className="position-absolute top-0 end-0 me-2">
                 <Dropdown alignRight onSelect={handleLanguageChange}>
                     <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
@@ -251,6 +184,9 @@ function Report() {
                     </Dropdown.Menu>
                 </Dropdown>
             </div>
+            {/* <div className="filter-icon" onClick={handleToggleFilter}>
+                <FaFilter />
+            </div> */}
 
             <div className='drop-down-container'>
                 <Dropdown onSelect={handleSelectedLand} className='custom-dropdown'>
@@ -270,44 +206,116 @@ function Report() {
                 </Dropdown>
             </div>
 
-            <select className='report-dropdown'
-                value={selectedReport}
-                onChange={handleReportChange}
-            >
-                <option value="">Report Name</option>
-                <option value="Summary">Summary</option>
-                <option value="Employee Perfomance">Employee Perfomance</option>
-                <option value="Cost Breakdown">Cost Breakdown</option>
-                <option value="Employee Attendance">Employee Attendance</option>
-                <option value="Monthly Crop">Monthly Crop</option>
-                <option value="Other Cost / Yield">Other Cost / Yield</option>
-            </select>
+            <div className='report-dropdown-container'>
+                <select className='report-dropdown'
+                    value={selectedReport}
+                    onChange={handleReportChange}
+                >
+                    <option value="">{t('reportname')}</option>
+                    <option value="Summary">{t('summary')}</option>
+                    <option value="Employee Perfomance">{t('employeeperformance')}</option>
+                    <option value="Cost Breakdown">{t('costbreakdown')}</option>
+                    <option value="Employee Attendance">{t('employeeattendance')}</option>
+                    <option value="Monthly Crop">{t('monthlycrop')}</option>
+                    <option value="Other Cost / Yield">{t('othercostyield')}</option>
+                </select>
 
-            {selectedReport === 'Summary' ? (
-                <>
-                    <select className='report-dropdown'
-                        // value={selectedReportCate}
-                        onChange={handleCateChange}
-                    >
-                        <option value="">Monthly</option>
-                        <option value="1">Weekly</option>
-                        <option value="2">Daily</option>
-                    </select>
-                </>
-            ) : null}
+                <div className="filter-icon" onClick={handleToggleFilter}>
+                    <FaFilter />
+                </div>
+            </div>
+            <div className='filter-container'>
+                <div className='filtering-card'>
+                    {isFilterExpanded && (
+                        <div>
+                            <div>
+                                {showCostBreakdown ? (
+                                    <>
+                                        <label>Month : </label>
+                                        <input
+                                            type="month"
+                                            name="fromDate"
+                                            value={dateRange.fromDate}
+                                            onChange={handleDateRangeChange}
+                                        />
+                                    </>
+                                ) : (
+                                    <>
+                                        <label>{t('daterange')} : </label>
+                                        <input
+                                            type="date"
+                                            name="fromDate"
+                                            value={dateRange.fromDate}
+                                            onChange={handleDateRangeChange}
+                                        />
+                                        <span> - </span>
+                                        <input
+                                            type="date"
+                                            name="toDate"
+                                            value={dateRange.toDate}
+                                            onChange={handleDateRangeChange}
+                                        />
+                                    </>
+                                )}
+                            </div>
 
- 
+                            <br />
 
-            {showEmployeeAttendanceReport && <EmployeeAttendanceReport dateRange={dateRange} lotId={lotId} landId={landId}/>}
-            {showMonthlyCropReport && <MonthlyCropReport dateRange={dateRange} lotId={lotId} />}
-            {showCostYieldReport && <CostYieldReport dateRange={dateRange} landId={landId} />}
-            {showEmployeePerfomnce && <EmployeePerfomnce dateRange={dateRange} selectedLand={selectedLand}/>}
-            {showCostBreakdown && <CostBreakdownReport selectedLand={selectedLand} dateRange={dateRange} />}
-            {showSummary && <SummaryReport selectedLand={selectedLand} category={category} />}
-            < br />
-            <Footer />
-        </div>
-    );
+                            {selectedReport !== 'Employee Perfomance' && selectedReport !== 'Summary' && (
+
+                                <div>
+                                    <label> {t('selectlot')} : </label>
+                                    <select value={selectedLot} onChange={handleLotChange}>
+                                        <option value="">{t('selectlot')}</option>
+                                        {lots.map((lot) => (
+                                            <option key={lot.id} value={lot.name}>
+                                                {lot.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            )}
+
+                            <br />
+
+                            {selectedReport !== 'Employee Perfomance' && selectedReport !== 'Summary' && selectedReport != 'Employee Attendance' && selectedReport != 'Monthly Crop' && (
+                                <div>
+                                    <label>{t('selectworker')} : </label>
+                                    <select value={selectedWorker} onChange={handleWorkerChange}>
+                                        <option value="">{t('selectworker')}</option>
+                                    </select>
+                                </div>
+                            )}
+
+                            <button onClick={handleResetFilters} className='reset-filter'>{t('resetfilters')}</button>
+
+                        </div>
+                    )}
+                </div>
+                
+                {selectedReport === 'Summary' ? (
+                    <>
+                        <select className='report-dropdown'
+                            // value={selectedReportCate}
+                            onChange={handleCateChange}
+                        >
+                            <option value="">Monthly</option>
+                            <option value="1">Weekly</option>
+                            <option value="2">Daily</option>
+                        </select>
+                    </>
+                ) : null}
+
+                {showEmployeeAttendanceReport && <EmployeeAttendanceReport dateRange={dateRange} lotId={lotId} landId={landId} selectedLot={selectedLot} />}
+                {showMonthlyCropReport && <MonthlyCropReport dateRange={dateRange} lotId={lotId} landId={landId} selectedLot={selectedLot} />}
+                {showCostYieldReport && <CostYieldReport dateRange={dateRange} landId={landId} lotId={lotId} selectedLot={selectedLot} />}
+                {showEmployeePerfomnce && <EmployeePerfomnce dateRange={dateRange} selectedLand={selectedLand} />}
+                {showCostBreakdown && <CostBreakdownReport selectedLand={selectedLand} dateRange={dateRange} />}
+                {showSummary && <SummaryReport selectedLand={selectedLand} category={category} />}
+                < br />
+                <Footer />
+            </div>
+            </div>
+            );
 }
-
 export default Report;

@@ -3,12 +3,13 @@ import axios from 'axios';
 import { useHistory } from "react-router-dom";
 import './manageworkers.css';
 import Footer from '../footer/footer';
-import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
+import { FaGlobeAmericas, FaLanguage, FaSearch } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
 import { alertService } from '../../_services/alert.service';
+import SearchComponent from '../search/search';
 
 function ManageWorkers() {
 
@@ -28,7 +29,7 @@ function ManageWorkers() {
   useEffect(() => {
 
 
-    axios.post('http://localhost:8080/service/master/workerFindAll').then((response) => {
+    axios.post('http://localhost:8081/service/master/workerFindAll').then((response) => {
       setWorkers(response.data.extra);
       console.log("Workers : ", response.data.extra);
     });
@@ -38,15 +39,16 @@ function ManageWorkers() {
     //     setWorkers(res.extra);
     //   })
 
-    axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
+    axios.get('http://localhost:8081/service/master/landFindAll').then((response) => {
       setLands(response.data.extra);
       console.log("Lands : ", response.data.extra);
     });
 
-    // axios.post('http://localhost:8080/service/master/workerFindAll').then((response) => {
+    // axios.post('http://localhost:8081/service/master/workerFindAll').then((response) => {
     //   setWorkers(response.data.extra);
     //   console.log("Workers : ", response.data.extra);
     // });
+
 
     // submitSets(submitCollection.manageland)
     // .then((res) => {
@@ -68,7 +70,7 @@ function ManageWorkers() {
   const handleSelectLand = (eventKey) => {
     setSelectedLand(eventKey);
 
-    axios.post(`http://localhost:8080/service/master/findLandIdByName?name=${eventKey}`)
+    axios.post(`http://localhost:8081/service/master/findLandIdByName?name=${eventKey}`)
       .then((response) => {
         const landIdWorker = response.data.extra;
         const thislandId = landIdWorker.landId;
@@ -77,7 +79,7 @@ function ManageWorkers() {
 
         setLandId(thislandId);
 
-        axios.get(`http://localhost:8080/service/master/findByLandId?landId=${thislandId}`)
+        axios.get(`http://localhost:8081/service/master/findByLandId?landId=${thislandId}`)
           .then((response) => {
             console.log("Workers for selected land:", response.data.extra);
             setFilteredWorkersForSelectedLand(response.data.extra);
@@ -134,21 +136,27 @@ function ManageWorkers() {
         </button>
       </div>
       <br />
-      <div>
-        <input
-          className='search-field'
-          type="text"
-          placeholder={t('searchworkers')}
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
+      <div className="search-container">
+        <div className="search-wrapper">
+          <input
+            className='search-field'
+            type="text"
+            placeholder={t('searchworkers')}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <div className="search-icon">
+            <FaSearch />
+          </div>
+        </div>
       </div>
+
       <div className="worker-list">
         {selectedLand
           ? filteredWorkersForSelectedLand.map((worker) => (
             <div key={worker.id} className="worker-card" onClick={() => handleWorkerCardClick(worker)}>
               <h3>{t('name')}: {worker.name}</h3>
-              <p>{t('phone')}: {worker.phone}</p>
+              <p>{t('phone')}: {worker.phone}</p> 
             </div>
           ))
           : filteredWorkers.map((worker) => (

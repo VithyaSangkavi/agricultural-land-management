@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 ChartJS.register(LineElement, BarElement, PointElement, Tooltip, Legend, LinearScale, TimeScale, CategoryScale);
 
-const CostYieldReport = ({dateRange, landId, lotId}) => {
+const CostYieldReport = ({ dateRange, landId, lotId, selectedLot }) => {
     const [t, i18n] = useTranslation();
 
     const [costYieldData, setCostYieldData] = useState({});
@@ -31,20 +31,20 @@ const CostYieldReport = ({dateRange, landId, lotId}) => {
                     // filter by fromDate, toDate and landId
 
                     response = await axios.get(`http://localhost:8081/service/master/other-cost-yield?startDate=${fromDate}&endDate=${toDate}&landId=${landId}`);
-                }else if (fromDate && toDate && lotId) {
+                } else if (fromDate && toDate && lotId) {
                     // filter by fromDate, toDate and lotId
                     response = await axios.get(`http://localhost:8081/service/master/other-cost-yield?startDate=${fromDate}&endDate=${toDate}&lotId=${lotId}`);
-                }else if (fromDate && toDate ) {
+                } else if (fromDate && toDate) {
                     // filter by fromDate, toDate
-                    response = await axios.get(`http://localhost:8080/service/master/other-cost-yield?startDate=${fromDate}&endDate=${toDate}`);
-                }else if (landId) {
+                    response = await axios.get(`http://localhost:8081/service/master/other-cost-yield?startDate=${fromDate}&endDate=${toDate}`);
+                } else if (landId) {
                     // filter by landId 
 
                     response = await axios.get(`http://localhost:8081/service/master/other-cost-yield?landId=${landId}`);
-                }else if (lotId) {
+                } else if (lotId) {
                     // filter by lotId 
                     response = await axios.get(`http://localhost:8081/service/master/other-cost-yield?lotId=${lotId}`);
-                }else {
+                } else {
                     // without any filters
                     response = await axios.get('http://localhost:8081/service/master/other-cost-yield');
                 }
@@ -57,7 +57,7 @@ const CostYieldReport = ({dateRange, landId, lotId}) => {
     }, [fromDate, toDate, landId, lotId]);
 
     //Grouped bar chart
-    
+
     const chartData = {
         labels: Object.keys(costYieldData),
         datasets: [
@@ -103,8 +103,9 @@ const CostYieldReport = ({dateRange, landId, lotId}) => {
 
     return (
         <>
-            <br />
             <div className='report-app-screen'>
+                <p>{t('daterange')} : {fromDate} - {toDate}</p>
+                <p>{t('selectedlot')} : {selectedLot}</p>
                 <h2>{t('costyieldreport')}</h2>
                 <table className='attendance-table'>
                     <thead>

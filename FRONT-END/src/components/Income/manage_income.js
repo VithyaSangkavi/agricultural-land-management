@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useHistory, Link } from 'react-router-dom';
 import { Container, Row, Col, Form, FormControl, Card } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
+import { FaGlobeAmericas, FaLanguage, FaSearch } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
@@ -40,7 +40,7 @@ function ManageIncome() {
 
     useEffect(() => {
         if (selectedLandId) {
-            axios.get(`http://localhost:8080/service/master/incomeFindByLandId/${selectedLandId}`)
+            axios.get(`http://localhost:8081/service/master/incomeFindByLandId/${selectedLandId}`)
                 .then((res) => {
                     setData(res.data.extra);
                     console.log(res.data.extra);
@@ -106,14 +106,19 @@ function ManageIncome() {
                 </button>
             </div>
 
-            <div>
-                <input
-                    className='search-field'
-                    type="text"
-                    placeholder={t('search')}
-                    value={searchQuery}
-                // onChange={handleSearchChange}
-                />
+            <div className="search-container">
+                <div className="search-wrapper">
+                    <input
+                        className='search-field'
+                        type="text"
+                        placeholder={t('search')}
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                    <div className="search-icon">
+                        <FaSearch />
+                    </div>
+                </div>
             </div>
 
             <div className='income-list'>
