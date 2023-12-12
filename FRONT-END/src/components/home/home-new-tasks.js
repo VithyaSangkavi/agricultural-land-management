@@ -7,11 +7,11 @@ import { Col, Form } from 'react-bootstrap';
 import { FaGlobeAmericas } from 'react-icons/fa';
 import { Dropdown } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { MdArrowBackIos } from "react-icons/md";
 import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
 import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
-
 
 function HomeNewTasks({ setSelectedLandId, selectedLandId }) {
     const [t, i18n] = useTranslation();
@@ -23,9 +23,7 @@ function HomeNewTasks({ setSelectedLandId, selectedLandId }) {
     const [taskAssigned, setTaskAssigned] = useState([]);
     const [landNames, setLandNames] = useState([]);
 
-
     const history = useHistory();
-
 
     useEffect(() => {
         axios.post('http://localhost:8081/service/master/taskAssignedFindAll').then((response) => {
@@ -77,26 +75,35 @@ function HomeNewTasks({ setSelectedLandId, selectedLandId }) {
     const handleLanguageChange = (lang) => {
         i18n.changeLanguage(lang);
     };
+
     const handleTaskClick = (taskAssignedid) => {
         history.push(`/manageOngoingTask/${taskAssignedid}`);
         console.log("task assigned : ", taskAssignedid);
     };
 
+    const goBack = () => {
+        history.goBack(); // Go back to the previous page
+    };
+
     return (
         <div className="home-app-screen">
-            <p className='main-heading'>{t('newtask')}</p>
-            <div className="position-absolute top-0 end-0 me-2">
-                <Dropdown alignRight onSelect={handleLanguageChange}>
-                    <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                        <FaGlobeAmericas style={{ color: 'white' }} />
-                    </Dropdown.Toggle>
+            <div className="header-bar">
+                <MdArrowBackIos className="back-button" onClick={goBack} />
+                <p className="main-heading">{t('newtask')}</p>
+                <div className="position-absolute top-0 end-0 me-2">
+                    <Dropdown alignRight onSelect={handleLanguageChange}>
+                        <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                            <FaGlobeAmericas style={{ color: 'white' }} />
+                        </Dropdown.Toggle>
 
-                    <Dropdown.Menu>
-                        <Dropdown.Item eventKey="en">English</Dropdown.Item>
-                        <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-                    </Dropdown.Menu>
-                </Dropdown>
+                        <Dropdown.Menu>
+                            <Dropdown.Item eventKey="en">English</Dropdown.Item>
+                            <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </div>
             </div>
+
             <div className='drop-down-container'>
                 <Dropdown className='custom-dropdown'>
                     <Col md={6}>

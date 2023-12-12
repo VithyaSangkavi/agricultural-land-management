@@ -5,8 +5,8 @@ import './managetasktypes.css';
 import Footer from '../footer/footer';
 import { FaGlobeAmericas } from 'react-icons/fa';
 import { Dropdown } from 'react-bootstrap';
-
 import { useTranslation } from 'react-i18next';
+import { MdArrowBackIos } from "react-icons/md";
 import { submitCollection } from '../../_services/submit.service';
 import { Col, Form } from 'react-bootstrap';
 import { submitSets } from '../UiComponents/SubmitSets';
@@ -83,20 +83,27 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
     i18n.changeLanguage(lang);
   };
 
+  const goBack = () => {
+    history.goBack();
+  };
+
   return (
     <div className="task-app-screen">
-      <p className='main-heading'>{t('tasktypemanagement')}</p>
-      <div className="position-absolute top-0 end-0 me-2">
-        <Dropdown alignRight onSelect={handleLanguageChange}>
-          <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-            <FaGlobeAmericas style={{ color: 'white' }} />
-          </Dropdown.Toggle>
+      <div className="header-bar">
+        <MdArrowBackIos className="back-button" onClick={goBack} />
+        <p className="main-heading">{t('tasktypemanagement')}</p>
+        <div className="position-absolute top-0 end-0 me-2">
+          <Dropdown alignRight onSelect={handleLanguageChange}>
+            <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+              <FaGlobeAmericas style={{ color: 'white' }} />
+            </Dropdown.Toggle>
 
-          <Dropdown.Menu>
-            <Dropdown.Item eventKey="en">English</Dropdown.Item>
-            <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
+            <Dropdown.Menu>
+              <Dropdown.Item eventKey="en">English</Dropdown.Item>
+              <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
       </div>
       <div className='drop-down-container'>
         <Dropdown className='custom-dropdown'>

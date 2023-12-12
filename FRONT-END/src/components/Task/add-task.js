@@ -7,14 +7,12 @@ import './add-task.css';
 import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-
+import { MdArrowBackIos } from "react-icons/md";
 
 
 const AddTask = () => {
 
   const [t, i18n] = useTranslation();
-
-
 
   const history = useHistory();
 
@@ -34,8 +32,6 @@ const AddTask = () => {
   const handleDateChange = (dates) => {
     setSelectedDates(dates);
   };
-
-
 
   useEffect(() => {
     console.log('get land id: ', landId);
@@ -120,21 +116,29 @@ const AddTask = () => {
     history.push('/addsheduledtask');
   };
 
+  const goBack = () => {
+    history.goBack();
+  };
+
   return (
     <div className="task-app-screen">
-      <p className='main-heading'>{t('addtask')}</p>
-      <div className="position-absolute top-0 end-0 me-2">
-        <Dropdown alignRight onSelect={handleLanguageChange}>
-          <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-            <FaGlobeAmericas style={{ color: 'white' }} />
-          </Dropdown.Toggle>
+      <div className="header-bar">
+        <MdArrowBackIos className="back-button" onClick={goBack} />
+        <p className="main-heading">{t('addtask')}</p>
+        <div className="position-absolute top-0 end-0 me-2">
+          <Dropdown alignRight onSelect={handleLanguageChange}>
+            <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+              <FaGlobeAmericas style={{ color: 'white' }} />
+            </Dropdown.Toggle>
 
-          <Dropdown.Menu>
-            <Dropdown.Item eventKey="en">English</Dropdown.Item>
-            <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
+            <Dropdown.Menu>
+              <Dropdown.Item eventKey="en">English</Dropdown.Item>
+              <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
       </div>
+
       <div>
         <select value={initialSelectedValue} onChange={(e) => setTaskName(e.target.value)} className="inputs">
           {taskNames.map((taskName) => (

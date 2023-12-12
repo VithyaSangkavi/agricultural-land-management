@@ -11,7 +11,7 @@ import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import MultiDatePicker from "react-multi-date-picker";
 import { useLocation } from 'react-router-dom';
-
+import { MdArrowBackIos } from "react-icons/md";
 
 
 const ManageTask = () => {
@@ -71,9 +71,6 @@ const ManageTask = () => {
 
 
     console.log("Formatted date page 02: ", formattedDates)
-
-
-
 
     const taskAssignedDate = startDate;
 
@@ -261,7 +258,6 @@ const ManageTask = () => {
             });
     };
 
-
     ////////// NEW //////////////////
 
     const handleAddSelectedWorker = (dateIndex) => {
@@ -348,23 +344,29 @@ const ManageTask = () => {
 
     /////////// END /////////////////
 
+    const goBack = () => {
+        history.goBack();
+    };
 
     return (
         <div className="manage-task-app-screen">
-            <p className='main-heading'>Sheduled Task</p>
-            <div className="position-absolute top-0 end-0 mt-2 me-2">
+            <div className="header-bar">
+                <MdArrowBackIos className="back-button" onClick={goBack}/>
+                <p className="main-heading">Scheduled Task</p>
+                <div className="position-absolute top-0 end-0 me-2">
+                    <Dropdown alignRight onSelect={handleLanguageChange}>
+                        <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                            <FaGlobeAmericas style={{ color: 'white' }} />
+                        </Dropdown.Toggle>
 
-                <Dropdown alignRight onSelect={handleLanguageChange}>
-                    <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                        <FaGlobeAmericas style={{ color: 'white' }} />
-                    </Dropdown.Toggle>
-
-                    <Dropdown.Menu>
-                        <Dropdown.Item eventKey="en">English</Dropdown.Item>
-                        <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-                    </Dropdown.Menu>
-                </Dropdown>
+                        <Dropdown.Menu>
+                            <Dropdown.Item eventKey="en">English</Dropdown.Item>
+                            <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </div>
             </div>
+
             <div className='task-heading'>
                 <p> {taskName} {t('task')} - </p>
                 <p> {t('from')} - {startDate} </p>

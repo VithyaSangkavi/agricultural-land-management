@@ -3,16 +3,16 @@ import axios from 'axios';
 import { useHistory } from "react-router-dom";
 import './manageworkers.css';
 import Footer from '../footer/footer';
-import { FaGlobeAmericas } from 'react-icons/fa';
+import { FaGlobeAmericas, FaLanguage, FaSearch } from 'react-icons/fa';
+import { MdArrowBackIos } from "react-icons/md";
+import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { Col, Form } from 'react-bootstrap';
-import { Dropdown } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
 import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 import SearchComponent from '../search/search';
-
 
 function ManageWorkers({ setSelectedLandId, selectedLandId }) {
 
@@ -28,8 +28,7 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
 
   useEffect(() => {
 
-    axios.post('http://localhost:8080/service/master/workerFindAll').then((response) => {
-
+    axios.post('http://localhost:8081/service/master/workerFindAll').then((response) => {
       setWorkers(response.data.extra);
       console.log("Workers : ", response.data.extra);
     });
@@ -80,21 +79,29 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
     i18n.changeLanguage(lang);
   };
 
+  const goBack = () => {
+    history.goBack();
+  };
+
   return (
     <div className="worker-app-screen">
-      <p className='main-heading'>{t('workermanagement')}</p>
-      <div className="position-absolute top-0 end-0 me-2">
-        <Dropdown alignRight onSelect={handleLanguageChange}>
-          <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-            <FaGlobeAmericas style={{ color: 'white' }} />
-          </Dropdown.Toggle>
+      <div className="header-bar">
+        <MdArrowBackIos className="back-button" onClick={goBack} />
+        <p className="main-heading">{t('workermanagement')}</p>
+        <div className="position-absolute top-0 end-0 me-2">
+          <Dropdown alignRight onSelect={handleLanguageChange}>
+            <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+              <FaGlobeAmericas style={{ color: 'white' }} />
+            </Dropdown.Toggle>
 
-          <Dropdown.Menu>
-            <Dropdown.Item eventKey="en">English</Dropdown.Item>
-            <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
+            <Dropdown.Menu>
+              <Dropdown.Item eventKey="en">English</Dropdown.Item>
+              <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
       </div>
+
       <div className='drop-down-container'>
         <Dropdown className='custom-dropdown'>
           <Col md={6}>
@@ -136,7 +143,7 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
           ? filteredWorkersForSelectedLand.map((worker) => (
             <div key={worker.id} className="worker-card" onClick={() => handleWorkerCardClick(worker)}>
               <h3>{t('name')}: {worker.name}</h3>
-              <p>{t('phone')}: {worker.phone}</p> 
+              <p>{t('phone')}: {worker.phone}</p>
             </div>
           ))
           : filteredWorkers.map((worker) => (
