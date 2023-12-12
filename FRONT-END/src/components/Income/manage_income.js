@@ -1,21 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useHistory, Link } from 'react-router-dom';
-import { Container, Row, Col, Form, FormControl, Card } from 'react-bootstrap';
+import { Col, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { FaGlobeAmericas, FaLanguage, FaSearch } from 'react-icons/fa';
-import { Dropdown, DropdownButton } from 'react-bootstrap';
+import { FaGlobeAmericas } from 'react-icons/fa';
+import { Dropdown } from 'react-bootstrap';
 import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
+import { connect } from 'react-redux';
+import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 
 import Footer from '../footer/footer';
 import '../Income/manage_income.css';
 
 
-function ManageIncome() {
+function ManageIncome({ setSelectedLandId, selectedLandId }) {
     const [data, setData] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
-    const [selectedLandId, setSelectedLandId] = useState('1');
+    // const [selectedLandId, setSelectedLandId] = useState('1');
     const [landNames, setLandNames] = useState([]);
 
 
@@ -151,4 +153,12 @@ function ManageIncome() {
     );
 }
 
-export default ManageIncome;
+const mapStateToProps = (state) => ({
+    selectedLandId: state.selectedLandId,
+});
+
+const mapDispatchToProps = {
+    setSelectedLandId: setSelectedLandIdAction,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ManageIncome);

@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 
+
 const UpdateIncome = () => {
     const { incomeId } = useParams();
     const history = useHistory();

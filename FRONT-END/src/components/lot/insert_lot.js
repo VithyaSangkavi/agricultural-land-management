@@ -11,14 +11,15 @@ import { alertService } from '../../_services/alert.service';
 import { useTranslation } from 'react-i18next';
 import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 
 
 
-const InsertLot = () => {
+const InsertLot = ({ setSelectedLandId, selectedLandId }) => {
     const [name, setName] = useState('');
     const [area, setArea] = useState('');
     const [areaUom, setAreaUom] = useState('');
-    const [selectedLandId, setSelectedLandId] = useState('1');
     const [landNames, setLandNames] = useState([]);
     const [selectedLanguage, setSelectedLanguage] = useState('en');
 
@@ -36,6 +37,7 @@ const InsertLot = () => {
 
     const handleLandChange = (event) => {
         const newSelectedLandId = event.target.value;
+        console.log(newSelectedLandId);
         setSelectedLandId(newSelectedLandId);
     };
 
@@ -83,7 +85,6 @@ const InsertLot = () => {
                     <Col md={6}>
                         <Form.Group>
                             <Form.Control as="select" value={selectedLandId} onChange={handleLandChange}>
-                                <option value="">All Lands</option>
                                 {landNames.map((land) => (
                                     <option key={land.id} value={land.id}>
                                         {land.name}
@@ -143,4 +144,12 @@ const InsertLot = () => {
     );
 };
 
-export default InsertLot;
+const mapStateToProps = (state) => ({
+    selectedLandId: state.selectedLandId,
+});
+
+const mapDispatchToProps = {
+    setSelectedLandId: setSelectedLandIdAction,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(InsertLot);

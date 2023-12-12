@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import Footer from '../footer/footer';
 import '../lot/manage_lot.css';
-import Navbar from '../navBar/navbar';
 import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
-import { Container, Row, Col, Form, FormControl, Card } from 'react-bootstrap';
+import { Col, Form } from 'react-bootstrap';
 import { alertService } from '../../_services/alert.service';
 import { useTranslation } from 'react-i18next';
-import { FaGlobeAmericas, FaLanguage, FaSearch } from 'react-icons/fa';
-import { Dropdown, DropdownButton } from 'react-bootstrap';
+import { FaGlobeAmericas } from 'react-icons/fa';
+import { Dropdown } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 
 
 
 
-const ManageLot = () => {
+
+const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
     const [data, setData] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
-    const [selectedLandId, setSelectedLandId] = useState('1');
     const [landNames, setLandNames] = useState([]);
     const history = useHistory();
     const { t, i18n } = useTranslation();
@@ -29,6 +29,7 @@ const ManageLot = () => {
 
     const handleLandChange = (event) => {
         const newSelectedLandId = event.target.value;
+        console.log(newSelectedLandId);
         setSelectedLandId(newSelectedLandId);
     };
 
@@ -84,7 +85,6 @@ const ManageLot = () => {
                     <Col md={6}>
                         <Form.Group>
                             <Form.Control as="select" value={selectedLandId} onChange={handleLandChange}>
-                                <option value="">All Lands</option>
                                 {landNames.map((land) => (
                                     <option key={land.id} value={land.id}>
                                         {land.name}
@@ -100,6 +100,7 @@ const ManageLot = () => {
                     {t('addlot')}
                 </button>
             </div>
+
 
             <div className="search-container">
                 <div className="search-wrapper">
@@ -139,4 +140,12 @@ const ManageLot = () => {
     );
 };
 
-export default ManageLot;
+const mapStateToProps = (state) => ({
+    selectedLandId: state.selectedLandId,
+});
+
+const mapDispatchToProps = {
+    setSelectedLandId: setSelectedLandIdAction,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ManageLot);
