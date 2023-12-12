@@ -20,6 +20,7 @@ function ManageExpenseTypes({ setSelectedLandId, selectedLandId }) {
 
   const [landNames, setLandNames] = useState([]);
 
+
   const history = useHistory();
 
   useEffect(() => {
@@ -40,6 +41,24 @@ function ManageExpenseTypes({ setSelectedLandId, selectedLandId }) {
         setExpenseType(res.extra);
       })
   }, []);
+
+  const handleSelectLand = (eventKey) => {
+    setSelectedLand(eventKey);
+
+    axios.post(`http://localhost:8081/service/master/findLandIdByName?name=${eventKey}`)
+      .then((response) => {
+        const landIdWorker = response.data.extra;
+        const thislandId = landIdWorker.landId;
+
+        localStorage.setItem('selectedLandIdWorker', JSON.stringify(landIdWorker));
+
+        setLandId(thislandId);
+
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
@@ -84,6 +103,7 @@ function ManageExpenseTypes({ setSelectedLandId, selectedLandId }) {
               </Form.Control>
             </Form.Group>
           </Col>
+
         </Dropdown>
         
         <br />
@@ -100,11 +120,13 @@ function ManageExpenseTypes({ setSelectedLandId, selectedLandId }) {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
+
       </div>
+
       <div className="expense-list">
         {filteredTasks.map((expense) => (
           <div key={expense.id} className="expense-card">
-            <p>{t('expensetype')}: {expense.expenseType}</p>
+            <p>{expense.expenseType}</p>
           </div>
         ))}
         <br />

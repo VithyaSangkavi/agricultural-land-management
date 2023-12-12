@@ -125,4 +125,26 @@ export const TRANSLATIONS_EN = {
     employeeattendance: 'Employee Attendance',
     monthlycrop: 'Monthly Crop',
     othercostyield: 'Other Cost / Yield',
+    selectedlot: 'Selected Lot',
+
+    //employee-attendance report
+    employeeattendancereport : 'Employee Attendance Report',
+    day: 'Day',
+    noofworkers: 'No. of workers',
+    employeeattendancechart: 'Employee Attendance Chart',
+    loading: 'Loading',
+
+    //monthly-crop report
+    monthlycropreport: 'Monthly Crop Report',
+    month: 'Month',
+    pastyearquantity: 'Past Year Quantity',
+    currentyearquantity: 'Current Year Quantity',
+    monthlycropcomparisionchart: 'Monthly Crop Comparision Chart',
+    
+    //other-cost-yield report
+    costyieldreport: 'Cost / Yield Report',
+    cost: 'Cost',
+    yield: 'Yield',
+    costvsyieldcomparisionchart: 'Cost vs Yield Comparison Chart',
+
 };

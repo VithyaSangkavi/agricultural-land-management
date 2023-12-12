@@ -42,7 +42,7 @@ function ManageIncome({ setSelectedLandId, selectedLandId }) {
 
     useEffect(() => {
         if (selectedLandId) {
-            axios.get(`http://localhost:8080/service/master/incomeFindByLandId/${selectedLandId}`)
+            axios.get(`http://localhost:8081/service/master/incomeFindByLandId/${selectedLandId}`)
                 .then((res) => {
                     setData(res.data.extra);
                     console.log(res.data.extra);
@@ -108,14 +108,19 @@ function ManageIncome({ setSelectedLandId, selectedLandId }) {
                 </button>
             </div>
 
-            <div>
-                <input
-                    className='search-field'
-                    type="text"
-                    placeholder={t('search')}
-                    value={searchQuery}
-                // onChange={handleSearchChange}
-                />
+            <div className="search-container">
+                <div className="search-wrapper">
+                    <input
+                        className='search-field'
+                        type="text"
+                        placeholder={t('search')}
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                    <div className="search-icon">
+                        <FaSearch />
+                    </div>
+                </div>
             </div>
 
             <div className='income-list'>

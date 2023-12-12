@@ -4,12 +4,9 @@ import { Link, useHistory } from 'react-router-dom';
 import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
 import { Container, Row, Col, Form, FormControl, Button, Card } from 'react-bootstrap';
-import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
+import { FaGlobeAmericas, FaLanguage, FaSearch} from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-
-
-
 
 import '../land/manage_lands.css';
 import Footer from '../footer/footer';
@@ -71,7 +68,7 @@ const ManageLand = () => {
                         <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
-                
+
             </div>
 
             <div className="drop-down-container">
@@ -80,14 +77,19 @@ const ManageLand = () => {
                 </button>
             </div>
 
-            <div>
-                <input
-                    className='search-field'
-                    type="text"
-                    placeholder={t('search')}
-                    value={searchQuery}
-                    onChange={handleSearchChange}
-                />
+            <div className="search-container">
+                <div className="search-wrapper">
+                    <input
+                        className='search-field'
+                        type="text"
+                        placeholder={t('search')}
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                    <div className="search-icon">
+                        <FaSearch />
+                    </div>
+                </div>
             </div>
 
             <div className='land-list'>
@@ -101,8 +103,8 @@ const ManageLand = () => {
                 ))}
             </div>
             <div>
-                <br/>
-                <br/>
+                <br />
+                <br />
             </div>
 
             <br />

@@ -47,12 +47,12 @@ function Home({ setSelectedLandId, selectedLandId }) {
 
 
     useEffect(() => {
-        axios.post('http://localhost:8080/service/master/taskAssignedFindAll').then((response) => {
+        axios.post('http://localhost:8081/service/master/taskAssignedFindAll').then((response) => {
             setTaskAssigned(response.data);
             console.log("Task Assigned: ", response.data);
         });
 
-        axios.post('http://localhost:8080/service/master/taskFindAll').then((response) => {
+        axios.post('http://localhost:8081/service/master/taskFindAll').then((response) => {
             setTask(response.data.extra);
             console.log("Tasks : ", response.data.extra);
         });
@@ -60,6 +60,7 @@ function Home({ setSelectedLandId, selectedLandId }) {
         axios.get(`http://localhost:8080/service/master/ongoing-tasks-with-names?landId=${selectedLandId}`).then((response) => {
             setOngoingTasks(response.data.extra);
             console.log("Ongoing tasks : ", response.data.extra);
+
 
         });
 

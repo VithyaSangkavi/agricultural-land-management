@@ -15,6 +15,7 @@ import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 
 
 
+
 const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
     const [data, setData] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
@@ -100,14 +101,20 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
                 </button>
             </div>
 
-            <div>
-                <input
-                    className='search-field'
-                    type="text"
-                    placeholder={t('search')}
-                    value={searchQuery}
-                // onChange={handleSearchChange}
-                />
+
+            <div className="search-container">
+                <div className="search-wrapper">
+                    <input
+                        className='search-field'
+                        type="text"
+                        placeholder={t('search')}
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                    <div className="search-icon">
+                        <FaSearch />
+                    </div>
+                </div>
             </div>
 
             <div className='lot-list'>

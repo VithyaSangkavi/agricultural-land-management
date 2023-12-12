@@ -5,6 +5,7 @@ import './managetasktypes.css';
 import Footer from '../footer/footer';
 import { FaGlobeAmericas } from 'react-icons/fa';
 import { Dropdown } from 'react-bootstrap';
+
 import { useTranslation } from 'react-i18next';
 import { submitCollection } from '../../_services/submit.service';
 import { Col, Form } from 'react-bootstrap';
@@ -39,12 +40,12 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
 
   useEffect(() => {
 
-    axios.post('http://localhost:8080/service/master/taskFindAll').then((response) => {
+    axios.post('http://localhost:8081/service/master/taskFindAll').then((response) => {
       setTasks(response.data.extra);
       console.log("Tasks : ", response.data.extra);
     });
 
-    axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
+    axios.get('http://localhost:8081/service/master/landFindAll').then((response) => {
       setLands(response.data.extra);
       console.log("Lands : ", response.data.extra);
     });
@@ -67,6 +68,7 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
         console.log('Crop API Response:', response.data);
 
         console.log('Crop ID From Land :', cropIdLand);
+
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -116,19 +118,27 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
         </button>
       </div>
       <br />
-      <div>
-        <input
-          className='search-field'
-          type="text"
-          placeholder={t('searchtasktypes')}
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
+
+
+      <div className="search-container">
+        <div className="search-wrapper">
+          <input
+            className='search-field'
+            type="text"
+            placeholder={t('searchtasktypes')}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <div className="search-icon">
+            <FaSearch />
+          </div>
+        </div>
       </div>
+
       <div className="task-list">
         {filteredTasks.map((task) => (
           <div key={task.id} className="task-card">
-            <p>{t('tasktype')}: {task.taskName}</p>
+            <p>{task.taskName}</p>
           </div>
         ))}
       </div>

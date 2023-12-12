@@ -16,7 +16,7 @@ const SummaryReport = ({ selectedLand, category }) => {
 
     useEffect(() => {
         // Update the landId whenever selectedLand changes
-        axios.post(`http://localhost:8080/service/master/findLandIdByName?name=${selectedLand}`)
+        axios.post(`http://localhost:8081/service/master/findLandIdByName?name=${selectedLand}`)
             .then((response) => {
                 const landIdTask = response.data.extra;
                 const taskLand = JSON.stringify(landIdTask);
@@ -37,7 +37,7 @@ const SummaryReport = ({ selectedLand, category }) => {
         const fetchSummaryData = async () => {
             try {
 
-                const baseURL = 'http://localhost:8080/service/master/summary'
+                const baseURL = 'http://localhost:8081/service/master/summary'
 
                 if (category) {
 
@@ -48,7 +48,7 @@ const SummaryReport = ({ selectedLand, category }) => {
 
                 } else {
 
-                    const response = await axios.get(`http://localhost:8080/service/master/summary?landId=${landId}`);
+                    const response = await axios.get(`http://localhost:8081/service/master/summary?landId=${landId}`);
                     console.log(response.data);
                     setSummaryData(response.data);
                 }

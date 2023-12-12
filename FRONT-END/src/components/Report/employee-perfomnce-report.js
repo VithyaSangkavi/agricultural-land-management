@@ -20,7 +20,7 @@ const EmployeePerfomnceReport = ({ dateRange: { fromDate, toDate }, selectedLand
 
     useEffect(() => {
         // Update the landId whenever selectedLand changes
-        axios.post(`http://localhost:8080/service/master/findLandIdByName?name=${selectedLand}`)
+        axios.post(`http://localhost:8081/service/master/findLandIdByName?name=${selectedLand}`)
             .then((response) => {
                 const landIdTask = response.data.extra;
                 const taskLand = JSON.stringify(landIdTask);
@@ -38,7 +38,7 @@ const EmployeePerfomnceReport = ({ dateRange: { fromDate, toDate }, selectedLand
     useEffect(() => {
         const fetchPerfomnceData = async () => {
             try {
-                const baseURL = 'http://localhost:8080/service/master/employee-perfomance';
+                const baseURL = 'http://localhost:8081/service/master/employee-perfomance';
 
                 if (landId) {
                     if (fromDate && toDate) {
