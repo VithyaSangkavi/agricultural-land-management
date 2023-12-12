@@ -13,6 +13,7 @@ import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { MdArrowBackIos } from "react-icons/md";
 
+
 const UpdateIncome = () => {
     const { incomeId } = useParams();
     const history = useHistory();

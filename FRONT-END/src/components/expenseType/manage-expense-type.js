@@ -1,39 +1,46 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
 import './manage-expense-type.css';
 import Footer from '../footer/footer';
-import { FaGlobeAmericas, FaLanguage, FaSearch } from 'react-icons/fa';
-import { Dropdown, DropdownButton } from 'react-bootstrap';
+import { FaGlobeAmericas } from 'react-icons/fa';
+import { Dropdown } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { Col, Form } from 'react-bootstrap';
 import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
 import { alertService } from '../../_services/alert.service';
 import { MdArrowBackIos } from "react-icons/md";
+import { connect } from 'react-redux';
+import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 
-function ManageExpenseTypes() {
+function ManageExpenseTypes({ setSelectedLandId, selectedLandId }) {
 
   const { t, i18n } = useTranslation();
-
-  const [lands, setLands] = useState([]);
-  const [selectedLand, setSelectedLand] = useState('');
 
   const [searchQuery, setSearchQuery] = useState('');
   const [expense, setExpenseType] = useState([]);
 
-  const [landId, setLandId] = useState();
+  const [landNames, setLandNames] = useState([]);
+
 
   const history = useHistory();
+
+  useEffect(() => {
+    submitSets(submitCollection.manageland, false).then((res) => {
+      setLandNames(res.extra);
+    });
+  }, [submitCollection.manageland]);
+
+  const handleLandChange = (event) => {
+    const newSelectedLandId = event.target.value;
+    console.log(newSelectedLandId);
+    setSelectedLandId(newSelectedLandId);
+  };
 
   useEffect(() => {
     submitSets(submitCollection.manageexpense)
       .then((res) => {
         setExpenseType(res.extra);
-      })
-
-    submitSets(submitCollection.manageland)
-      .then((res) => {
-        setLands(res.extra);
       })
   }, []);
 
@@ -93,38 +100,36 @@ function ManageExpenseTypes() {
         </div>
       </div>
       <div className='drop-down-container'>
-        <Dropdown onSelect={handleSelectLand} className='custom-dropdown'>
-          <Dropdown.Toggle className='drop-down' id="dropdown-land">
-            {selectedLand || t('selectland')}
-          </Dropdown.Toggle>
-          <Dropdown.Menu className='drop-down-menu'>
-            {lands.map((land) => (
-              <div key={land.id}>
-                <Dropdown.Item eventKey={land.name}>{land.name}</Dropdown.Item>
-              </div>
-            ))}
-          </Dropdown.Menu>
+      <Dropdown className='custom-dropdown'>
+          <Col md={6}>
+            <Form.Group>
+              <Form.Control as="select" value={selectedLandId} onChange={handleLandChange}>
+                {landNames.map((land) => (
+                  <option key={land.id} value={land.id}>
+                    {land.name}
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
+          </Col>
+
         </Dropdown>
+        
         <br />
         <button className="add-expense-type-button" onClick={AddExpenseType}>
           {t('addexpensetype')}
         </button>
       </div>
       <br />
+      <div>
+        <input
+          className='search-field'
+          type="text"
+          placeholder={t('searchexpensetypes')}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
 
-      <div className="search-container">
-        <div className="search-wrapper">
-          <input
-            className='search-field'
-            type="text"
-            placeholder={t('searchexpensetypes')}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <div className="search-icon">
-            <FaSearch />
-          </div>
-        </div>
       </div>
 
       <div className="expense-list">
@@ -140,4 +145,12 @@ function ManageExpenseTypes() {
   );
 }
 
-export default ManageExpenseTypes;
+const mapStateToProps = (state) => ({
+  selectedLandId: state.selectedLandId,
+});
+
+const mapDispatchToProps = {
+  setSelectedLandId: setSelectedLandIdAction,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ManageExpenseTypes);

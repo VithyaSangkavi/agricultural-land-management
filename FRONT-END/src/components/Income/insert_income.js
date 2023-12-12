@@ -1,26 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom'; // Import useLocation
-import axios from 'axios';
+import { useState, useEffect } from 'react';
 import '../Income/insert_income.css';
 import Footer from '../footer/footer';
-import Navbar from '../navBar/navbar';
 import { submitCollection } from '../../_services/submit.service';
-import { Form, Button, Container, Col, Row, Card } from 'react-bootstrap';
+import { Form, Button, Col } from 'react-bootstrap';
 import { submitSets } from '../UiComponents/SubmitSets';
 import { alertService } from '../../_services/alert.service';
 import { useTranslation } from 'react-i18next';
-import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
-import { Dropdown, DropdownButton } from 'react-bootstrap';
+import { FaGlobeAmericas } from 'react-icons/fa';
+import { Dropdown } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 import { MdArrowBackIos } from "react-icons/md";
 import { useHistory} from "react-router-dom";
 
-const InsertIncome = () => {
-    const history = useHistory();
+const InsertIncome = ({ setSelectedLandId, selectedLandId }) => {
 
+    const history = useHistory();
     const [month, setMonth] = useState('');
     const [price, setValue] = useState('');
-    const [selectedLandId, setSelectedLandId] = useState('1');
-    const [selectedLanguage, setSelectedLanguage] = useState('en');
     const [landNames, setLandNames] = useState([]);
 
     const { t, i18n } = useTranslation();
@@ -150,4 +147,12 @@ const InsertIncome = () => {
     );
 };
 
-export default InsertIncome;
+const mapStateToProps = (state) => ({
+    selectedLandId: state.selectedLandId,
+});
+
+const mapDispatchToProps = {
+    setSelectedLandId: setSelectedLandIdAction,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(InsertIncome);
