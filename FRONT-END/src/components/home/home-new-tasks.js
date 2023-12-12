@@ -80,15 +80,20 @@ function HomeNewTasks() {
     const handleLanguageChange = (lang) => {
         i18n.changeLanguage(lang);
     };
+
     const handleTaskClick = (taskAssignedid) => {
         history.push(`/manageOngoingTask/${taskAssignedid}`);
         console.log("task assigned : ", taskAssignedid);
     };
 
+    const goBack = () => {
+        history.goBack(); // Go back to the previous page
+    };
+
     return (
         <div className="home-app-screen">
             <div className="header-bar">
-                <MdArrowBackIos className="back-button" />
+                <MdArrowBackIos className="back-button" onClick={goBack} />
                 <p className="main-heading">{t('newtask')}</p>
                 <div className="position-absolute top-0 end-0 me-2">
                     <Dropdown alignRight onSelect={handleLanguageChange}>

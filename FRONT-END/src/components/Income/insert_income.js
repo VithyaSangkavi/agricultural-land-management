@@ -12,15 +12,16 @@ import { useTranslation } from 'react-i18next';
 import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { MdArrowBackIos } from "react-icons/md";
+import { useHistory} from "react-router-dom";
 
 const InsertIncome = () => {
+    const history = useHistory();
 
     const [month, setMonth] = useState('');
     const [price, setValue] = useState('');
     const [selectedLandId, setSelectedLandId] = useState('1');
     const [selectedLanguage, setSelectedLanguage] = useState('en');
     const [landNames, setLandNames] = useState([]);
-
 
     const { t, i18n } = useTranslation();
 
@@ -38,8 +39,6 @@ const InsertIncome = () => {
         const newSelectedLandId = event.target.value;
         setSelectedLandId(newSelectedLandId);
     };
-
-
 
     const handleSubmit = () => {
         const dataToSend = {
@@ -60,10 +59,14 @@ const InsertIncome = () => {
         });
     }
 
+    const goBack = () => {
+        history.goBack();
+    };
+
     return (
         <div className='insertincome-app-screen'>
             <div className="header-bar">
-                <MdArrowBackIos className="back-button" />
+                <MdArrowBackIos className="back-button" onClick={goBack} />
                 <p className="main-heading">{t('addincome')}</p>
                 <div className="position-absolute top-0 end-0 me-2">
                     <Dropdown alignRight onSelect={handleLanguageChange}>

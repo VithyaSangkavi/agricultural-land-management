@@ -73,13 +73,16 @@ const UpdateIncome = () => {
                 alertService.error("Error updating price");
             };
         });
-
     }
+
+    const goBack = () => {
+        history.goBack();
+    };
 
     return (
         <div className='updateincome-app-screen'>
             <div className="header-bar">
-                <MdArrowBackIos className="back-button" />
+                <MdArrowBackIos className="back-button" onClick={goBack} />
                 <p className="main-heading">{t('updateincome')}</p>
                 <div className="position-absolute top-0 end-0 me-2">
                     <Dropdown alignRight onSelect={handleLanguageChange}>

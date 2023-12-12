@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom'; // Import useLocation
+import { useLocation, useHistory } from 'react-router-dom'; // Import useLocation
 import axios from 'axios';
 import '../lot/insert_lot.css';
 import Footer from '../footer/footer';
@@ -14,6 +14,8 @@ import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { MdArrowBackIos } from "react-icons/md";
 
 const InsertLot = () => {
+    const history = useHistory();
+
     const [name, setName] = useState('');
     const [area, setArea] = useState('');
     const [areaUom, setAreaUom] = useState('');
@@ -61,10 +63,14 @@ const InsertLot = () => {
         });
     }
 
+    const goBack = () => {
+        history.goBack();
+    };
+
     return (
         <div className='inserlot-app-screen'>
             <div className="header-bar">
-                <MdArrowBackIos className="back-button" />
+                <MdArrowBackIos className="back-button" onClick={goBack}/>
                 <p className="main-heading">{t('addlots')}</p>
                 <div className="position-absolute top-0 end-0 me-2">
                     <Dropdown alignRight onSelect={handleLanguageChange}>

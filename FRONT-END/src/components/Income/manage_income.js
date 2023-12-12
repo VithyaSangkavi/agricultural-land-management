@@ -68,10 +68,14 @@ function ManageIncome() {
         });
     };
 
+    const goBack = () => {
+        history.goBack();
+    };
+
     return (
         <div className='manageincome-app-screen'>
             <div className="header-bar">
-                <MdArrowBackIos className="back-button" />
+                <MdArrowBackIos className="back-button" onClick={goBack} />
                 <p className="main-heading">{t('manageincome')}</p>
                 <div className="position-absolute top-0 end-0 me-2">
                     <Dropdown alignRight onSelect={handleLanguageChange}>

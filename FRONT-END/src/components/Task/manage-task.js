@@ -463,10 +463,14 @@ const ManageTask = () => {
         }
     };
 
+    const goBack = () => {
+        history.goBack();
+    };
+
     return (
         <div className="manage-task-app-screen">
             <div className="header-bar">
-                <MdArrowBackIos className="back-button" />
+                <MdArrowBackIos className="back-button" onClick={goBack}/>
                 <p className="main-heading">{t('managetask')}</p>
                 <div className="position-absolute top-0 end-0 me-2">
                     <Dropdown alignRight onSelect={handleLanguageChange}>

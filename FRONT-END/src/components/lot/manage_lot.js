@@ -57,10 +57,14 @@ const ManageLot = () => {
         }
     };
 
+    const goBack = () => {
+        history.goBack();
+    };
+
     return (
         <div className='managelot-app-screen'>
             <div className="header-bar">
-                <MdArrowBackIos className="back-button" />
+                <MdArrowBackIos className="back-button" onClick={goBack}/>
                 <p className="main-heading">{t('managelots')}</p>
                 <div className="position-absolute top-0 end-0 me-2">
                     <Dropdown alignRight onSelect={handleLanguageChange}>
