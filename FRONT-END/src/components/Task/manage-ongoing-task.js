@@ -12,6 +12,7 @@ import { Trash } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { alertService } from '../../_services/alert.service';
+import { MdArrowBackIos } from "react-icons/md";
 
 const ManageOngoingTask = () => {
     const [t, i18n] = useTranslation();
@@ -422,19 +423,23 @@ const ManageOngoingTask = () => {
 
     return (
         <div className="manage-task-app-screen">
-            <p className='main-heading'>{t('ongoingtasks')}</p>
-            <div className="position-absolute top-0 end-0 me-2">
-                <Dropdown alignRight onSelect={handleLanguageChange}>
-                    <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                        <FaGlobeAmericas style={{ color: 'white' }} />
-                    </Dropdown.Toggle>
+            <div className="header-bar">
+                <MdArrowBackIos className="back-button" />
+                <p className="main-heading">{t('ongoindtasks')}</p>
+                <div className="position-absolute top-0 end-0 me-2">
+                    <Dropdown alignRight onSelect={handleLanguageChange}>
+                        <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                            <FaGlobeAmericas style={{ color: 'white' }} />
+                        </Dropdown.Toggle>
 
-                    <Dropdown.Menu>
-                        <Dropdown.Item eventKey="en">English</Dropdown.Item>
-                        <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-                    </Dropdown.Menu>
-                </Dropdown>
+                        <Dropdown.Menu>
+                            <Dropdown.Item eventKey="en">English</Dropdown.Item>
+                            <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </div>
             </div>
+
             <div className='task-heading'>
 
                 {commanTaskDetails.taskStatus === 'completed' ? (

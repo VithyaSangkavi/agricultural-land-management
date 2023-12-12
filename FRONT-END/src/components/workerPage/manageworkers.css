@@ -1,3 +1,19 @@
+.header-bar{
+  display: flex;
+  align-items: center;
+  background-color: #0e4f20;
+  height: 40px;
+}
+
+.back-button {
+  font-size: 24px; 
+  margin-left: 10px; 
+  cursor: pointer;
+  color: white;
+  font: bold;
+  padding: 0;
+}
+
 .worker-list {
   display: flex;
   flex-wrap: wrap;

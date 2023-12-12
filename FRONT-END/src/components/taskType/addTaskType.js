@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
 import { alertService } from '../../_services/alert.service';
+import { MdArrowBackIos } from "react-icons/md";
 
 const AddTaskType = () => {
   const { t, i18n } = useTranslation();
@@ -25,15 +26,15 @@ const AddTaskType = () => {
       cropId
     };
 
-  submitSets(submitCollection.savetasktype, addTask, false)
-    .then(res => {
-      if (res && res.status) {
-        alertService.success("Task type added successfully")
-        history.push('/manageTaskType')
-      } else {
-        alertService.error("Error adding Task type")
-      }
-    })
+    submitSets(submitCollection.savetasktype, addTask, false)
+      .then(res => {
+        if (res && res.status) {
+          alertService.success("Task type added successfully")
+          history.push('/manageTaskType')
+        } else {
+          alertService.error("Error adding Task type")
+        }
+      })
   };
 
   const handleLanguageChange = (lang) => {
@@ -42,18 +43,21 @@ const AddTaskType = () => {
 
   return (
     <div className="task-app-screen">
-      <p className='main-heading'>{t('addtasktype')}</p>
-      <div className="position-absolute top-0 end-0 me-2">
-      <Dropdown alignRight onSelect={handleLanguageChange}>
-          <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-            <FaGlobeAmericas style={{ color: 'white' }} />
-          </Dropdown.Toggle>
+      <div className="header-bar">
+        <MdArrowBackIos className="back-button" />
+        <p className="main-heading">{t('addtasktype')}</p>
+        <div className="position-absolute top-0 end-0 me-2">
+          <Dropdown alignRight onSelect={handleLanguageChange}>
+            <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+              <FaGlobeAmericas style={{ color: 'white' }} />
+            </Dropdown.Toggle>
 
-          <Dropdown.Menu>
-            <Dropdown.Item eventKey="en">English</Dropdown.Item>
-            <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
+            <Dropdown.Menu>
+              <Dropdown.Item eventKey="en">English</Dropdown.Item>
+              <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
       </div>
       <div className="basic-details">
         <input
@@ -68,7 +72,7 @@ const AddTaskType = () => {
           {t('add')}
         </button>
       </div>
-      <br/> <br/> <br/>
+      <br /> <br /> <br />
       <div className='footer-alignment'>
         <Footer />
       </div>

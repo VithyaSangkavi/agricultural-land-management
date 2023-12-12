@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import './manageworkers.css';
 import Footer from '../footer/footer';
 import { FaGlobeAmericas, FaLanguage, FaSearch } from 'react-icons/fa';
+import { MdArrowBackIos } from "react-icons/md";
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { submitCollection } from '../../_services/submit.service';
@@ -104,19 +105,23 @@ function ManageWorkers() {
 
   return (
     <div className="worker-app-screen">
-      <p className='main-heading'>{t('workermanagement')}</p>
-      <div className="position-absolute top-0 end-0 me-2">
-        <Dropdown alignRight onSelect={handleLanguageChange}>
-          <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-            <FaGlobeAmericas style={{ color: 'white' }} />
-          </Dropdown.Toggle>
+      <div className="header-bar">
+        <MdArrowBackIos className="back-button" />
+        <p className="main-heading">{t('workermanagement')}</p>
+        <div className="position-absolute top-0 end-0 me-2">
+          <Dropdown alignRight onSelect={handleLanguageChange}>
+            <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+              <FaGlobeAmericas style={{ color: 'white' }} />
+            </Dropdown.Toggle>
 
-          <Dropdown.Menu>
-            <Dropdown.Item eventKey="en">English</Dropdown.Item>
-            <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
+            <Dropdown.Menu>
+              <Dropdown.Item eventKey="en">English</Dropdown.Item>
+              <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
       </div>
+
       <div className='drop-down-container'>
         <Dropdown onSelect={handleSelectLand} className='custom-dropdown'>
           <Dropdown.Toggle className='drop-down' id="dropdown-land">
@@ -156,7 +161,7 @@ function ManageWorkers() {
           ? filteredWorkersForSelectedLand.map((worker) => (
             <div key={worker.id} className="worker-card" onClick={() => handleWorkerCardClick(worker)}>
               <h3>{t('name')}: {worker.name}</h3>
-              <p>{t('phone')}: {worker.phone}</p> 
+              <p>{t('phone')}: {worker.phone}</p>
             </div>
           ))
           : filteredWorkers.map((worker) => (

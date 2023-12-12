@@ -11,6 +11,7 @@ import { alertService } from '../../_services/alert.service';
 import { useTranslation } from 'react-i18next';
 import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
+import { MdArrowBackIos } from "react-icons/md";
 
 const UpdateIncome = () => {
     const { incomeId } = useParams();
@@ -77,23 +78,24 @@ const UpdateIncome = () => {
 
     return (
         <div className='updateincome-app-screen'>
-            <p className='main-heading'>{t('updateincome')}</p>
+            <div className="header-bar">
+                <MdArrowBackIos className="back-button" />
+                <p className="main-heading">{t('updateincome')}</p>
+                <div className="position-absolute top-0 end-0 me-2">
+                    <Dropdown alignRight onSelect={handleLanguageChange}>
+                        <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                            <FaGlobeAmericas style={{ color: 'white' }} />
+                        </Dropdown.Toggle>
 
-            <div className="position-absolute top-0 end-0 me-2">
-                <Dropdown alignRight onSelect={handleLanguageChange}>
-                    <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                        <FaGlobeAmericas style={{ color: 'white' }} />
-                    </Dropdown.Toggle>
-
-                    <Dropdown.Menu>
-                        <Dropdown.Item eventKey="en">English</Dropdown.Item>
-                        <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-                    </Dropdown.Menu>
-                </Dropdown>
+                        <Dropdown.Menu>
+                            <Dropdown.Item eventKey="en">English</Dropdown.Item>
+                            <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </div>
             </div>
-
             <div className="AddLandCard">
-                
+
                 <div className="content">
                     <input
                         className="input-field"
