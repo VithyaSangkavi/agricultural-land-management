@@ -1,29 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useHistory, Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import './home.css';
 import Footer from '../footer/footer';
-import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
-import { Dropdown, DropdownButton } from 'react-bootstrap';
+import { Col, Form } from 'react-bootstrap';
+import { FaGlobeAmericas } from 'react-icons/fa';
+import { Dropdown } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { submitCollection } from '../../_services/submit.service';
+import { submitSets } from '../UiComponents/SubmitSets';
+import { connect } from 'react-redux';
+import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 
 
-function HomeNewTasks() {
+function HomeNewTasks({ setSelectedLandId, selectedLandId }) {
     const [t, i18n] = useTranslation();
-
-    const [lands, setLands] = useState([]);
-    const [selectedLand, setSelectedLand] = useState('');
 
     const [searchQuery, setSearchQuery] = useState('');
 
     const [query, setQuery] = useState('');
     const [task, setTask] = useState([]);
-    const [taskNames, setTaskNames] = useState([]);
     const [taskAssigned, setTaskAssigned] = useState([]);
+    const [landNames, setLandNames] = useState([]);
 
 
     const history = useHistory();
-    
+
 
     useEffect(() => {
         axios.post('http://localhost:8080/service/master/taskAssignedFindAll').then((response) => {
@@ -36,11 +38,19 @@ function HomeNewTasks() {
             console.log("Tasks : ", response.data.extra);
         });
 
-        axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
-            setLands(response.data.extra);
-            console.log("Lands : ", response.data.extra);
-        });
     }, []);
+
+    const handleLandChange = (event) => {
+        const newSelectedLandId = event.target.value;
+        console.log(newSelectedLandId);
+        setSelectedLandId(newSelectedLandId);
+    };
+
+    useEffect(() => {
+        submitSets(submitCollection.manageland, false).then((res) => {
+            setLandNames(res.extra);
+        });
+    }, [submitCollection.manageland]);
 
     const handleSearchChange = (event) => {
         setSearchQuery(event.target.value);
@@ -54,23 +64,6 @@ function HomeNewTasks() {
         console.log("Selected Task ID: ", taskId);
         history.push(`/addTask`);
     };
-
-    const handleSelectedLand = (eventkey) => {
-        setSelectedLand(eventkey);
-
-        axios.post(`http://localhost:8080/service/master/findLandIdByName?name=${eventkey}`)
-            .then((response) => {
-                const landIdTask = response.data.extra;
-                const taskLand = JSON.stringify(landIdTask);
-                const landData = JSON.parse(taskLand);
-                const landId = landData.landId;
-                console.log('Selected Land Id :', landId);
-                localStorage.setItem('SelectedLandId', landId);
-            })
-            .catch((error) => {
-                console.error("Error fetching data:", error);
-            });
-    }
 
     const handleChange = (event) => {
         setQuery(event.target.value);
@@ -103,17 +96,19 @@ function HomeNewTasks() {
                 </Dropdown>
             </div>
             <div className='drop-down-container'>
-                <Dropdown onSelect={handleSelectedLand} className='custom-dropdown'>
-                    <Dropdown.Toggle className='drop-down' id="dropdown-land">
-                        {selectedLand || t('selectland')}
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu className='drop-down-menu'>
-                        {lands.map((land) => (
-                            <div key={land.id}>
-                                <Dropdown.Item eventKey={land.name}>{land.name}</Dropdown.Item>
-                            </div>
-                        ))}
-                    </Dropdown.Menu>
+                <Dropdown className='custom-dropdown'>
+                    <Col md={6}>
+                        <Form.Group>
+                            <Form.Control as="select" value={selectedLandId} onChange={handleLandChange}>
+                                {landNames.map((land) => (
+                                    <option key={land.id} value={land.id}>
+                                        {land.name}
+                                    </option>
+                                ))}
+                            </Form.Control>
+                        </Form.Group>
+                    </Col>
+
                 </Dropdown>
                 <br />
             </div>
@@ -137,4 +132,12 @@ function HomeNewTasks() {
     );
 }
 
-export default HomeNewTasks;
+const mapStateToProps = (state) => ({
+    selectedLandId: state.selectedLandId,
+});
+
+const mapDispatchToProps = {
+    setSelectedLandId: setSelectedLandIdAction,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeNewTasks);

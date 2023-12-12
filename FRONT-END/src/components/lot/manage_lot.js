@@ -1,16 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import Footer from '../footer/footer';
 import '../lot/manage_lot.css';
-import Navbar from '../navBar/navbar';
 import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
-import { Container, Row, Col, Form, FormControl, Card } from 'react-bootstrap';
+import { Col, Form } from 'react-bootstrap';
 import { alertService } from '../../_services/alert.service';
 import { useTranslation } from 'react-i18next';
-import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
-import { Dropdown, DropdownButton } from 'react-bootstrap';
+import { FaGlobeAmericas } from 'react-icons/fa';
+import { Dropdown } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 
@@ -86,7 +84,6 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
                     <Col md={6}>
                         <Form.Group>
                             <Form.Control as="select" value={selectedLandId} onChange={handleLandChange}>
-                                <option value="">All Lands</option>
                                 {landNames.map((land) => (
                                     <option key={land.id} value={land.id}>
                                         {land.name}

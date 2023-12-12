@@ -85,7 +85,6 @@ const InsertLot = ({ setSelectedLandId, selectedLandId }) => {
                     <Col md={6}>
                         <Form.Group>
                             <Form.Control as="select" value={selectedLandId} onChange={handleLandChange}>
-                                <option value="">All Lands</option>
                                 {landNames.map((land) => (
                                     <option key={land.id} value={land.id}>
                                         {land.name}

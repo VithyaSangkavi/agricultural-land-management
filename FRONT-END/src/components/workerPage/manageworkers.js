@@ -1,57 +1,36 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useHistory } from "react-router-dom";
 import './manageworkers.css';
 import Footer from '../footer/footer';
-import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
-import { Dropdown, DropdownButton } from 'react-bootstrap';
+import { FaGlobeAmericas } from 'react-icons/fa';
+import { Col, Form } from 'react-bootstrap';
+import { Dropdown } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
-import { alertService } from '../../_services/alert.service';
+import { connect } from 'react-redux';
+import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 
-function ManageWorkers() {
+function ManageWorkers({ setSelectedLandId, selectedLandId }) {
 
   const { t, i18n } = useTranslation();
-
-  const [lands, setLands] = useState([]);
-  const [selectedLand, setSelectedLand] = useState('');
 
   const [searchQuery, setSearchQuery] = useState('');
   const [workers, setWorkers] = useState([]);
   const [filteredWorkersForSelectedLand, setFilteredWorkersForSelectedLand] = useState([]);
 
-  const [landId, setLandId] = useState();
+  const [landNames, setLandNames] = useState([]);
 
   const history = useHistory();
 
   useEffect(() => {
-
 
     axios.post('http://localhost:8080/service/master/workerFindAll').then((response) => {
       setWorkers(response.data.extra);
       console.log("Workers : ", response.data.extra);
     });
 
-    // submitSets(submitCollection.manageworker)
-    //   .then((res) => {
-    //     setWorkers(res.extra);
-    //   })
-
-    axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
-      setLands(response.data.extra);
-      console.log("Lands : ", response.data.extra);
-    });
-
-    // axios.post('http://localhost:8080/service/master/workerFindAll').then((response) => {
-    //   setWorkers(response.data.extra);
-    //   console.log("Workers : ", response.data.extra);
-    // });
-
-    // submitSets(submitCollection.manageland)
-    // .then((res) => {
-    //   setLands(res.extra);
-    // })
   }, []);
 
   const handleSearchChange = (event) => {
@@ -65,32 +44,29 @@ function ManageWorkers() {
     history.push('/addWorker')
   }
 
-  const handleSelectLand = (eventKey) => {
-    setSelectedLand(eventKey);
+  useEffect(() => {
+    submitSets(submitCollection.manageland, false).then((res) => {
+      setLandNames(res.extra);
+    });
+  }, [submitCollection.manageland]);
 
-    axios.post(`http://localhost:8080/service/master/findLandIdByName?name=${eventKey}`)
+  const handleLandChange = (event) => {
+    const newSelectedLandId = event.target.value;
+    console.log(newSelectedLandId);
+    setSelectedLandId(newSelectedLandId);
+  };
+
+  useEffect(() => {
+    axios.get(`http://localhost:8080/service/master/findByLandId?landId=${selectedLandId}`)
       .then((response) => {
-        const landIdWorker = response.data.extra;
-        const thislandId = landIdWorker.landId;
-
-        localStorage.setItem('selectedLandIdWorker', JSON.stringify(landIdWorker));
-
-        setLandId(thislandId);
-
-        axios.get(`http://localhost:8080/service/master/findByLandId?landId=${thislandId}`)
-          .then((response) => {
-            console.log("Workers for selected land:", response.data.extra);
-            setFilteredWorkersForSelectedLand(response.data.extra);
-          })
-          .catch((error) => {
-            console.error("Error fetching workers for the selected land:", error);
-          });
-
+        console.log("Workers for selected land:", response.data.extra);
+        setFilteredWorkersForSelectedLand(response.data.extra);
       })
       .catch((error) => {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching workers for the selected land:", error);
       });
-  };
+  }, [selectedLandId]);
+
 
   const handleWorkerCardClick = (worker) => {
     history.push('/addWorker', { basicDetails: worker });
@@ -116,18 +92,20 @@ function ManageWorkers() {
         </Dropdown>
       </div>
       <div className='drop-down-container'>
-        <Dropdown onSelect={handleSelectLand} className='custom-dropdown'>
-          <Dropdown.Toggle className='drop-down' id="dropdown-land">
-            {selectedLand || t('selectland')}
-          </Dropdown.Toggle>
-          <Dropdown.Menu className='drop-down-menu'>
-            {lands.map((land) => (
-              <div key={land.id}>
-                <Dropdown.Item eventKey={land.name}>{land.name}</Dropdown.Item>
-              </div>
-            ))}
-          </Dropdown.Menu>
+        <Dropdown className='custom-dropdown'>
+          <Col md={6}>
+            <Form.Group>
+              <Form.Control as="select" value={selectedLandId} onChange={handleLandChange}>
+                {landNames.map((land) => (
+                  <option key={land.id} value={land.id}>
+                    {land.name}
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
+          </Col>
         </Dropdown>
+
         <br />
         <button className="add-worker-button" onClick={AddWorker}>
           {t('addworker')}
@@ -144,7 +122,7 @@ function ManageWorkers() {
         />
       </div>
       <div className="worker-list">
-        {selectedLand
+        {selectedLandId
           ? filteredWorkersForSelectedLand.map((worker) => (
             <div key={worker.id} className="worker-card" onClick={() => handleWorkerCardClick(worker)}>
               <h3>{t('name')}: {worker.name}</h3>
@@ -168,4 +146,12 @@ function ManageWorkers() {
   );
 }
 
-export default ManageWorkers;
+const mapStateToProps = (state) => ({
+  selectedLandId: state.selectedLandId,
+});
+
+const mapDispatchToProps = {
+  setSelectedLandId: setSelectedLandIdAction,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ManageWorkers);
