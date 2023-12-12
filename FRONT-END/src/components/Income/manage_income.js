@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useHistory, Link } from 'react-router-dom';
 import { Col, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { FaGlobeAmericas } from 'react-icons/fa';
+import { FaGlobeAmericas, FaSearch } from 'react-icons/fa';
 import { Dropdown } from 'react-bootstrap';
 import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
