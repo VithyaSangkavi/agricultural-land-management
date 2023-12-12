@@ -293,8 +293,6 @@ function Report() {
                     )}
                 </div>
                 
-
-                
                 {selectedReport === 'Summary' ? (
                     <>
                         <select className='report-dropdown'
@@ -320,5 +318,4 @@ function Report() {
             </div>
             );
 }
-
-            export default Report;
+export default Report;
