@@ -60,7 +60,7 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
 
 
   useEffect(() => {
-    axios.get(`http://localhost:8080/service/master/findByLandId?landId=${selectedLandId}`)
+    axios.get(`http://localhost:8081/service/master/findByLandId?landId=${selectedLandId}`)
       .then((response) => {
         console.log("Workers for selected land:", response.data.extra);
         setFilteredWorkersForSelectedLand(response.data.extra);
@@ -104,17 +104,18 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
 
       <div className='drop-down-container'>
         <Dropdown className='custom-dropdown'>
-          <Col md={6}>
-            <Form.Group>
-              <Form.Control as="select" value={selectedLandId} onChange={handleLandChange}>
-                {landNames.map((land) => (
-                  <option key={land.id} value={land.id}>
-                    {land.name}
-                  </option>
-                ))}
-              </Form.Control>
-            </Form.Group>
-          </Col>
+
+          <Form.Group >
+            <Form.Control as="select" value={selectedLandId} onChange={handleLandChange}>
+            <option value="">All Lands</option>
+              {landNames.map((land) => (
+                <option key={land.id} value={land.id}>
+                  {land.name}
+                </option>
+              ))}
+            </Form.Control>
+          </Form.Group>
+
         </Dropdown>
 
         <br />
