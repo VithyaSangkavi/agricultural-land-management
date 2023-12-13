@@ -30,7 +30,7 @@ const SummaryReport = ({ selectedLand, category }) => {
 
                 } else {
 
-                    const response = await axios.get(`http://localhost:8080/service/master/summary?landId=${selectedLand}`);
+                    const response = await axios.get(`http://localhost:8081/service/master/summary?landId=${selectedLand}`);
 
                     console.log(response.data);
                     setSummaryData(response.data);

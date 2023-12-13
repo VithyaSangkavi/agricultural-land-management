@@ -65,7 +65,7 @@ const InsertIncome = ({ setSelectedLandId, selectedLandId }) => {
             <div className="header-bar">
                 <MdArrowBackIos className="back-button" onClick={goBack} />
                 <p className="main-heading">{t('addincome')}</p>
-                <div className="position-absolute top-0 end-0 me-2">
+                <div className="position-absolute top-0 end-0 me-0">
                     <Dropdown alignRight onSelect={handleLanguageChange}>
                         <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
                             <FaGlobeAmericas style={{ color: 'white' }} />

@@ -158,7 +158,7 @@ function Home({ setSelectedLandId, selectedLandId }) {
                         </Dropdown>
                     </div>
 
-                    <div className="language-filter me-2">
+                    <div className="language-filter me-0">
                         <Dropdown alignRight onSelect={handleLanguageChange}>
                             <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
                                 <FaGlobeAmericas style={{ color: 'white' }} />
