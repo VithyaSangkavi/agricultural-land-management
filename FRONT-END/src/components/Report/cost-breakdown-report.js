@@ -21,7 +21,7 @@ const CostBreakdownReport = ({ dateRange: { fromDate }, selectedLand }) => {
         const fetchCostBreakdownLineData = async () => {
             try {
 
-                const baseURL = 'http://localhost:8080/service/master/cost-breakdown-line'
+                const baseURL = 'http://localhost:8081/service/master/cost-breakdown-line'
                 const fetchURL = selectedLand ? `${baseURL}?landId=${selectedLand}` : baseURL;
 
 
