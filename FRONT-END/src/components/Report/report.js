@@ -240,6 +240,7 @@ function Report() {
                                 <>
                                     <label>{t('daterange')} : </label>
                                     <input
+                                        className='custom-select'
                                         type="date"
                                         name="fromDate"
                                         value={dateRange.fromDate}
@@ -247,6 +248,7 @@ function Report() {
                                     />
                                     <span> - </span>
                                     <input
+                                        className='custom-select'
                                         type="date"
                                         name="toDate"
                                         value={dateRange.toDate}
@@ -260,7 +262,7 @@ function Report() {
 
                             <div>
                                 <label> {t('selectlot')} : </label>
-                                <select value={selectedLot} onChange={handleLotChange}>
+                                <select className="custom-select" value={selectedLot} onChange={handleLotChange}>
                                     <option value="">{t('selectlot')}</option>
                                     {lots.map((lot) => (
                                         <option key={lot.id} value={lot.name}>
@@ -274,7 +276,7 @@ function Report() {
                         {selectedReport !== 'Employee Perfomance' && selectedReport !== 'Summary' && selectedReport != 'Employee Attendance' && selectedReport != 'Monthly Crop' && (
                             <div>
                                 <label>{t('selectworker')} : </label>
-                                <select value={selectedWorker} onChange={handleWorkerChange}>
+                                <select className="custom-select" value={selectedWorker} onChange={handleWorkerChange}>
                                     <option value="">{t('selectworker')}</option>
                                 </select>
                             </div>
@@ -316,9 +318,9 @@ function Report() {
 
 
 
-            {showEmployeeAttendanceReport && <EmployeeAttendanceReport dateRange={dateRange} lotId={lotId} landId={landId} />}
-            {showMonthlyCropReport && <MonthlyCropReport dateRange={dateRange} lotId={lotId} landId={landId} />}
-            {showCostYieldReport && <CostYieldReport dateRange={dateRange} landId={landId} lotId={lotId} />}
+            {showEmployeeAttendanceReport && <EmployeeAttendanceReport dateRange={dateRange} lotId={lotId} landId={landId} selectedLot={selectedLot} />}
+            {showMonthlyCropReport && <MonthlyCropReport dateRange={dateRange} lotId={lotId} landId={landId} selectedLot={selectedLot} />}
+            {showCostYieldReport && <CostYieldReport dateRange={dateRange} landId={landId} lotId={lotId} selectedLot={selectedLot} />}
             {showEmployeePerfomnce && <EmployeePerfomnce dateRange={dateRange} selectedLand={selectedLand} />}
             {showCostBreakdown && <CostBreakdownReport selectedLand={selectedLand} dateRange={dateRange} />}
             {showSummary && <SummaryReport selectedLand={selectedLand} category={category} />}
