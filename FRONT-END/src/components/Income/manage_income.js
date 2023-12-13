@@ -72,41 +72,52 @@ function ManageIncome({ setSelectedLandId, selectedLandId }) {
 
     return (
         <div className='manageincome-app-screen'>
-            <p className='main-heading'>{t('manageincome')}</p>
-            <div className="position-absolute top-0 end-0 me-2">
-                <Dropdown alignRight onSelect={handleLanguageChange}>
-                    <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                        <FaGlobeAmericas style={{ color: 'white' }} />
-                    </Dropdown.Toggle>
 
-                    <Dropdown.Menu>
-                        <Dropdown.Item eventKey="en">English</Dropdown.Item>
-                        <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-                    </Dropdown.Menu>
-                </Dropdown>
+
+
+
+
+            <div className='main-heading'>
+                <div className="outer-frame d-flex justify-content-between">
+                    <p className='page-name'>{t('manageincome')}</p>
+                    <div className="land-filter">
+                        <Dropdown className='custom-dropdown'>
+                            <Col md={6}>
+                                <Form.Group>
+                                    <Form.Control as="select" value={selectedLandId} onChange={handleLandChange}>
+                                        {landNames.map((land) => (
+                                            <option key={land.id} value={land.id}>
+                                                {land.name}
+                                            </option>
+                                        ))}
+                                    </Form.Control>
+                                </Form.Group>
+                            </Col>
+                        </Dropdown>
+                    </div>
+
+                    <div className="language-filter me-2">
+                        <Dropdown alignRight onSelect={handleLanguageChange}>
+                            <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                                <FaGlobeAmericas style={{ color: 'white' }} />
+                            </Dropdown.Toggle>
+
+                            <Dropdown.Menu>
+                                <Dropdown.Item eventKey="en">English</Dropdown.Item>
+                                <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    </div>
+                </div>
             </div>
 
             <div className='drop-down-container'>
-                <Dropdown className='custom-dropdown'>
-                    <Col md={6}>
-                        <Form.Group>
-                            <Form.Control as="select" value={selectedLandId} onChange={handleLandChange}>
-                                <option value="">All Lands</option>
-                                {landNames.map((land) => (
-                                    <option key={land.id} value={land.id}>
-                                        {land.name}
-                                    </option>
-                                ))}
-                            </Form.Control>
-                        </Form.Group>
-                    </Col>
-
-                </Dropdown>
-                <br />
                 <button className="add-income-button" onClick={redirectToInsertIncome}>
                     {t('addincome')}
                 </button>
             </div>
+
+            <br/>
 
             <div>
                 <input

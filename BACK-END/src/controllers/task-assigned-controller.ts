@@ -95,8 +95,11 @@ exports.getOngoingTasksWithTaskNames = async (req: Request, res: Response, next:
 };
 
 exports.getCompletedTasksWithTaskNames = async (req: Request, res: Response, next: NextFunction) => {
+
+  const landId = Number(req.query.landId);
+
   try {
-    const cr = await taskAssignedService.getCompletedTasksWithTaskNames();
+    const cr = await taskAssignedService.getCompletedTasksWithTaskNames(landId);
     res.send(cr);
   } catch (error) {
     next(error);

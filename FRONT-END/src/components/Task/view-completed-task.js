@@ -4,14 +4,21 @@ import { useHistory } from "react-router-dom";
 import './completed-task.css';
 import Footer from '../footer/footer';
 import { FaGlobeAmericas } from 'react-icons/fa';
+import { Col, Form } from 'react-bootstrap';
 import { Dropdown } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { submitSets } from '../UiComponents/SubmitSets';
+import { submitCollection } from '../../_services/submit.service';
+import { connect } from 'react-redux';
+import { setSelectedLandIdAction } from '../../actions/auth/land_action';
+import { alertService } from '../../_services/alert.service';
 
-function Home() {
+function Home({ setSelectedLandId, selectedLandId }) {
     const [t, i18n] = useTranslation();
 
     const [lands, setLands] = useState([]);
     const [selectedLand, setSelectedLand] = useState('');
+    const [landNames, setLandNames] = useState([]);
 
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -34,20 +41,24 @@ function Home() {
         return formattedDate;
     };
 
+    const handleLandChange = (event) => {
+        const newSelectedLandId = event.target.value;
+        setSelectedLandId(newSelectedLandId);
+    };
 
     useEffect(() => {
-
-        axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
-            setLands(response.data.extra);
-            console.log("Lands : ", response.data.extra);
+        submitSets(submitCollection.manageland, false).then((res) => {
+            setLandNames(res.extra);
         });
+    }, [submitCollection.manageland]);
+    useEffect(() => {
 
-        axios.get('http://localhost:8080/service/master/completed-tasks-with-names').then((response) => {
+        axios.get(`http://localhost:8080/service/master/completed-tasks-with-names?landId=${selectedLandId}`).then((response) => {
             setOngoingTasks(response.data.extra);
             console.log("Ongoing tasks : ", response.data.extra);
 
         });
-    }, []);
+    }, [selectedLandId]);
 
     const handleSearchChange = (event) => {
         setSearchQuery(event.target.value);
@@ -55,23 +66,6 @@ function Home() {
     const filteredTasks = task.filter((task) =>
         task.taskName.toLowerCase().includes(searchQuery.toLowerCase())
     );
-
-    const handleSelectedLand = (eventkey) => {
-        setSelectedLand(eventkey);
-
-        axios.post(`http://localhost:8080/service/master/findLandIdByName?name=${eventkey}`)
-            .then((response) => {
-                const landIdTask = response.data.extra;
-                const taskLand = JSON.stringify(landIdTask);
-                const landData = JSON.parse(taskLand);
-                const landId = landData.landId;
-                console.log('Selected Land Id :', landId);
-                localStorage.setItem('SelectedLandId', landId);
-            })
-            .catch((error) => {
-                console.error("Error fetching data:", error);
-            });
-    }
 
     const handleChange = (event) => {
         setQuery(event.target.value);
@@ -104,17 +98,18 @@ function Home() {
                 </Dropdown>
             </div>
             <div className='drop-down-container'>
-                <Dropdown onSelect={handleSelectedLand} className='custom-dropdown'>
-                    <Dropdown.Toggle className='drop-down' id="dropdown-land">
-                        {selectedLand || t('selectland')}
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu className='drop-down-menu'>
-                        {lands.map((land) => (
-                            <div key={land.id}>
-                                <Dropdown.Item eventKey={land.name}>{land.name}</Dropdown.Item>
-                            </div>
-                        ))}
-                    </Dropdown.Menu>
+                <Dropdown className='custom-dropdown'>
+                    <Col md={6}>
+                        <Form.Group>
+                            <Form.Control as="select" value={selectedLandId} onChange={handleLandChange}>
+                                {landNames.map((land) => (
+                                    <option key={land.id} value={land.id}>
+                                        {land.name}
+                                    </option>
+                                ))}
+                            </Form.Control>
+                        </Form.Group>
+                    </Col>
                 </Dropdown>
                 <br />
             </div>
@@ -136,4 +131,12 @@ function Home() {
     );
 }
 
-export default Home;
+const mapStateToProps = (state) => ({
+    selectedLandId: state.selectedLandId,
+});
+
+const mapDispatchToProps = {
+    setSelectedLandId: setSelectedLandIdAction,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

@@ -9,27 +9,9 @@ ChartJS.register(LineElement, PointElement, Tooltip, Legend, LinearScale, TimeSc
 
 
 const SummaryReport = ({ selectedLand, category }) => {
-    const [landId, setLandId] = useState('');
     const [summaryData, setSummaryData] = useState([]);
 
     console.log("category num in summary page: ", category)
-
-    useEffect(() => {
-        // Update the landId whenever selectedLand changes
-        axios.post(`http://localhost:8080/service/master/findLandIdByName?name=${selectedLand}`)
-            .then((response) => {
-                const landIdTask = response.data.extra;
-                const taskLand = JSON.stringify(landIdTask);
-                const landData = JSON.parse(taskLand);
-                const newLandId = landData.landId;
-                console.log('Selected Land Id:', newLandId);
-                localStorage.setItem('SelectedLandId', newLandId);
-                setLandId(newLandId);
-            })
-            .catch((error) => {
-                console.error("Error fetching data:", error);
-            });
-    }, [selectedLand]);
 
 
     useEffect(() => {
@@ -41,14 +23,14 @@ const SummaryReport = ({ selectedLand, category }) => {
 
                 if (category) {
 
-                    const fetchURL = `${baseURL}?landId=${landId}&cateNum=${category}`
+                    const fetchURL = `${baseURL}?landId=${selectedLand}&cateNum=${category}`
                     const response = await axios.get(fetchURL)
                     setSummaryData(response.data);
                     console.log("Category Exists");
 
                 } else {
 
-                    const response = await axios.get(`http://localhost:8080/service/master/summary?landId=${landId}`);
+                    const response = await axios.get(`http://localhost:8080/service/master/summary?landId=${selectedLand}`);
                     console.log(response.data);
                     setSummaryData(response.data);
                 }
@@ -60,7 +42,7 @@ const SummaryReport = ({ selectedLand, category }) => {
         };
 
         fetchSummaryData();
-    }, [landId, category]);
+    }, [selectedLand, category]);
 
     return (
         <>

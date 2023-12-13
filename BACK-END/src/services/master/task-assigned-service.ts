@@ -9,7 +9,7 @@ export interface TaskAssignedService {
   findById(taskAssignedId: number): Promise<CommonResponse>;
   findByTaskId(taskId: number): Promise<CommonResponse>;
   getOngoingTasksWithTaskNames(landId: number): Promise<CommonResponse>;
-  getCompletedTasksWithTaskNames(): Promise<CommonResponse>;
+  getCompletedTasksWithTaskNames(landId: number): Promise<CommonResponse>;
   updateEndDate(taskAssignedId: number, endDate: Date, newStatus: string): Promise<CommonResponse>;
   updateStatus(taskAssignedId: number, newStatus: string): Promise<CommonResponse>;
 

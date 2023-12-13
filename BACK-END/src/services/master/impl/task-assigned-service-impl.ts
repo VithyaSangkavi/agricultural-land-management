@@ -195,15 +195,6 @@ export class TaskAssignedServiceImpl implements TaskAssignedService {
     let cr = new CommonResponse();
     try {
       const tasks = await this.taskAssignedDao.getOngoingTasksWithTaskNames(landId);
-
-      // let taskList = new Array();
-
-      // for (const taskAssignedModel of tasks) {
-      //   let taskAssignedDao = new TaskAssignedDto();
-      //   taskAssignedDao.filViaRequest(taskAssignedModel);
-      //   taskList.push(taskAssignedDao);
-      // }
-
       cr.setStatus(true);
       cr.setExtra(tasks);
 
@@ -217,36 +208,13 @@ export class TaskAssignedServiceImpl implements TaskAssignedService {
   }
   
 
-  async getCompletedTasksWithTaskNames(landId?: number): Promise<CommonResponse> {
-    const cr = new CommonResponse();
+  async getCompletedTasksWithTaskNames(landId: number): Promise<CommonResponse> {
+    let cr = new CommonResponse();
     try {
-      const taskAssignedRepo = getConnection().getRepository(TaskAssignedEntity);
-
-      const taskDetails = await taskAssignedRepo
-        .createQueryBuilder('taskAssigned')
-        .innerJoin('taskAssigned.task', 'task')
-        .leftJoin('taskAssigned.land', 'land')
-
-        .where('taskAssigned.taskStatus = :taskStatus', { taskStatus: 'completed' })
-        .andWhere('taskAssigned.status = :status', { status: Status.Online });
-
-      if (landId !== null && landId !== undefined) {
-        taskDetails.andWhere('land.id = :landId', { landId });
-      }
-
-      const result = await taskDetails
-        .groupBy('taskAssigned.taskAssignedId')
-        .select([
-          'taskAssigned.taskAssignedId as taskAssignedId',
-          'MAX(task.id) as taskId',
-          'MAX(task.taskName) as taskName',
-          'taskAssigned.startDate as taskStartDate',
-          'taskAssigned.landId as landId'
-        ])
-        .getRawMany();
-
+      const tasks = await this.taskAssignedDao.getCompletedTasksWithTaskNames(landId);
       cr.setStatus(true);
-      cr.setExtra(result);
+      cr.setExtra(tasks);
+
     } catch (error) {
       cr.setStatus(false);
       cr.setExtra(error);
@@ -255,7 +223,6 @@ export class TaskAssignedServiceImpl implements TaskAssignedService {
 
     return cr;
   }
-
   
 
   async updateEndDate(taskAssignedId: number, endDate: Date, newStatus: string): Promise<CommonResponse> {
