@@ -7,13 +7,11 @@ import { submitSets } from '../UiComponents/SubmitSets';
 import { Col, Form } from 'react-bootstrap';
 import { alertService } from '../../_services/alert.service';
 import { useTranslation } from 'react-i18next';
-import { FaGlobeAmericas } from 'react-icons/fa';
-import { Dropdown } from 'react-bootstrap';
+import { FaGlobeAmericas, FaLanguage, FaSearch } from 'react-icons/fa';
+import { Dropdown, DropdownButton } from 'react-bootstrap';
+import { MdArrowBackIos } from "react-icons/md";
 import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
-
-
-
 
 const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
     const [data, setData] = useState([]);
@@ -59,24 +57,27 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
         }
     };
 
-
-
-
+    const goBack = () => {
+        history.goBack();
+    };
 
     return (
         <div className='managelot-app-screen'>
-            <p className='main-heading'>{t('managelots')}</p>
-            <div className="position-absolute top-0 end-0 me-2">
-                <Dropdown alignRight onSelect={handleLanguageChange}>
-                    <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                        <FaGlobeAmericas style={{ color: 'white' }} />
-                    </Dropdown.Toggle>
+            <div className="header-bar">
+                <MdArrowBackIos className="back-button" onClick={goBack}/>
+                <p className="main-heading">{t('managelots')}</p>
+                <div className="position-absolute top-0 end-0 me-2">
+                    <Dropdown alignRight onSelect={handleLanguageChange}>
+                        <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                            <FaGlobeAmericas style={{ color: 'white' }} />
+                        </Dropdown.Toggle>
 
-                    <Dropdown.Menu>
-                        <Dropdown.Item eventKey="en">English</Dropdown.Item>
-                        <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-                    </Dropdown.Menu>
-                </Dropdown>
+                        <Dropdown.Menu>
+                            <Dropdown.Item eventKey="en">English</Dropdown.Item>
+                            <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </div>
             </div>
 
             <div className='drop-down-container'>
@@ -100,14 +101,20 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
                 </button>
             </div>
 
-            <div>
-                <input
-                    className='search-field'
-                    type="text"
-                    placeholder={t('search')}
-                    value={searchQuery}
-                // onChange={handleSearchChange}
-                />
+
+            <div className="search-container">
+                <div className="search-wrapper">
+                    <input
+                        className='search-field'
+                        type="text"
+                        placeholder={t('search')}
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                    <div className="search-icon">
+                        <FaSearch />
+                    </div>
+                </div>
             </div>
 
             <div className='lot-list'>

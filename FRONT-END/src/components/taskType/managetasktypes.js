@@ -6,6 +6,7 @@ import Footer from '../footer/footer';
 import { FaGlobeAmericas } from 'react-icons/fa';
 import { Dropdown } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { MdArrowBackIos } from "react-icons/md";
 import { submitCollection } from '../../_services/submit.service';
 import { Col, Form } from 'react-bootstrap';
 import { submitSets } from '../UiComponents/SubmitSets';
@@ -39,12 +40,12 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
 
   useEffect(() => {
 
-    axios.post('http://localhost:8080/service/master/taskFindAll').then((response) => {
+    axios.post('http://localhost:8081/service/master/taskFindAll').then((response) => {
       setTasks(response.data.extra);
       console.log("Tasks : ", response.data.extra);
     });
 
-    axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
+    axios.get('http://localhost:8081/service/master/landFindAll').then((response) => {
       setLands(response.data.extra);
       console.log("Lands : ", response.data.extra);
     });
@@ -67,6 +68,7 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
         console.log('Crop API Response:', response.data);
 
         console.log('Crop ID From Land :', cropIdLand);
+
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -81,20 +83,27 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
     i18n.changeLanguage(lang);
   };
 
+  const goBack = () => {
+    history.goBack();
+  };
+
   return (
     <div className="task-app-screen">
-      <p className='main-heading'>{t('tasktypemanagement')}</p>
-      <div className="position-absolute top-0 end-0 me-2">
-        <Dropdown alignRight onSelect={handleLanguageChange}>
-          <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-            <FaGlobeAmericas style={{ color: 'white' }} />
-          </Dropdown.Toggle>
+      <div className="header-bar">
+        <MdArrowBackIos className="back-button" onClick={goBack} />
+        <p className="main-heading">{t('tasktypemanagement')}</p>
+        <div className="position-absolute top-0 end-0 me-2">
+          <Dropdown alignRight onSelect={handleLanguageChange}>
+            <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+              <FaGlobeAmericas style={{ color: 'white' }} />
+            </Dropdown.Toggle>
 
-          <Dropdown.Menu>
-            <Dropdown.Item eventKey="en">English</Dropdown.Item>
-            <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
+            <Dropdown.Menu>
+              <Dropdown.Item eventKey="en">English</Dropdown.Item>
+              <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
       </div>
       <div className='drop-down-container'>
         <Dropdown className='custom-dropdown'>
@@ -116,19 +125,27 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
         </button>
       </div>
       <br />
-      <div>
-        <input
-          className='search-field'
-          type="text"
-          placeholder={t('searchtasktypes')}
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
+
+
+      <div className="search-container">
+        <div className="search-wrapper">
+          <input
+            className='search-field'
+            type="text"
+            placeholder={t('searchtasktypes')}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <div className="search-icon">
+            <FaSearch />
+          </div>
+        </div>
       </div>
+
       <div className="task-list">
         {filteredTasks.map((task) => (
           <div key={task.id} className="task-card">
-            <p>{t('tasktype')}: {task.taskName}</p>
+            <p>{task.taskName}</p>
           </div>
         ))}
       </div>

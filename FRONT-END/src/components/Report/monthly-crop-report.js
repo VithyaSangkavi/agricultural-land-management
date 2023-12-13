@@ -4,14 +4,21 @@ import { Chart as ChartJS, LineElement, PointElement, Tooltip, Legend, LinearSca
 import 'chartjs-adapter-date-fns';
 import { Line } from 'react-chartjs-2';
 import './report.css'
+import { useTranslation } from 'react-i18next';
 
 ChartJS.register(LineElement, PointElement, Tooltip, Legend, LinearScale, TimeScale, CategoryScale);
 
-const MonthlyCropReport = ({ dateRange, lotId, landId }) => {
+const MonthlyCropReport = ({ dateRange, lotId, landId, selectedLot }) => {
+    const [t, i18n] = useTranslation();
+
     const [monthlyCropData, setMonthlyCropData] = useState([]);
 
     const fromDate = dateRange && dateRange.fromDate;
     const toDate = dateRange && dateRange.toDate;
+
+    const handleLanguageChange = (lang) => {
+        i18n.changeLanguage(lang);
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -27,18 +34,18 @@ const MonthlyCropReport = ({ dateRange, lotId, landId }) => {
 
                 } else if (fromDate && toDate) {
                     // filter by fromDate and toDate 
-                    response = await axios.get(`http://localhost:8080/service/master/monthly-crop-report?startDate=${fromDate}&endDate=${toDate}`);
+                    response = await axios.get(`http://localhost:8081/service/master/monthly-crop-report?startDate=${fromDate}&endDate=${toDate}`);
                 } else if (lotId) {
                     // filter by lotId
 
                     response = await axios.get(`http://localhost:8081/service/master/monthly-crop-report?lotId=${lotId}`);
-                }else if (landId) {
+                } else if (landId) {
                     // filter by landId
                     response = await axios.get(`http://localhost:8081/service/master/monthly-crop-report?landId=${landId}`);
 
                 } else {
                     // without any filters
-                    response = await axios.get('http://localhost:8080/service/master/monthly-crop-report');
+                    response = await axios.get('http://localhost:8081/service/master/monthly-crop-report');
                 }
                 setMonthlyCropData(response.data);
             } catch (error) {
@@ -50,7 +57,7 @@ const MonthlyCropReport = ({ dateRange, lotId, landId }) => {
     }, [fromDate, toDate, lotId, landId]);
 
     //Lined chart
-    
+
     const chartData = {
         labels: Object.keys(monthlyCropData),
         datasets: [
@@ -103,13 +110,15 @@ const MonthlyCropReport = ({ dateRange, lotId, landId }) => {
     return (
         <>
             <div className='report-app-screen'>
-                <h2>Monthly Crop Report</h2>
+                <p>{t('daterange')} : {fromDate} - {toDate}</p>
+                <p>{t('selectedlot')} : {selectedLot}</p>
+                <h2>{t('monthlycropreport')}</h2>
                 <table className='attendance-table'>
                     <thead>
                         <tr>
-                            <th>Month</th>
-                            <th>Past Year Quantity</th>
-                            <th>Current Year Quantity</th>
+                            <th>{t('month')}</th>
+                            <th>{t('pastyearquantity')}</th>
+                            <th>{t('currentyearquantity')}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -126,11 +135,11 @@ const MonthlyCropReport = ({ dateRange, lotId, landId }) => {
             <br />
             <div className='report-app-screen'>
                 <div className='monthly-crop-chart'>
-                    <h2>Monthly Crop Comparison Chart</h2>
+                    <h2>{t('monthlycropcomparisionreport')}</h2>
                     {Object.keys(monthlyCropData).length > 0 ? (
                         <Line data={chartData} options={chartOptions} />
                     ) : (
-                        <p>Loading...</p>
+                        <p>{t('loading')}...</p>
                     )}
 
                 </div>

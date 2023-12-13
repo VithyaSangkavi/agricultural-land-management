@@ -1,3 +1,19 @@
+.header-bar{
+  display: flex;
+  align-items: center;
+  background-color: #0e4f20;
+  height: 40px;
+}
+
+.back-button {
+  font-size: 24px; 
+  margin-left: 10px; 
+  cursor: pointer;
+  color: white;
+  font: bold;
+  padding: 0;
+}
+
 .worker-list {
   display: flex;
   flex-wrap: wrap;
@@ -91,11 +107,38 @@
 }
 
 .add-worker-button:hover {
-  background-color: #007922; /* Change background color on hover */
+  background-color: #007922;
 }
 
 .add-worker-button:focus {
-  outline: none; /* Remove the focus outline */
+  outline: none; 
 }
 
-/* Optional: You can adjust the styles based on your design preferences */
+.search-container {
+  position: relative;
+}
+
+.search-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.search-field {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  padding-right: 40px; 
+  width: 330px; 
+  border: 1px solid #ccc; 
+  border-radius: 5px; 
+  outline: none; 
+}
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+  right: 10px; 
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #aaa;
+}

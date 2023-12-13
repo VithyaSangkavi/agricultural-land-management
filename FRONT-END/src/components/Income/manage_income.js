@@ -7,12 +7,11 @@ import { FaGlobeAmericas } from 'react-icons/fa';
 import { Dropdown } from 'react-bootstrap';
 import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
+import { MdArrowBackIos } from "react-icons/md";
 import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
-
 import Footer from '../footer/footer';
 import '../Income/manage_income.css';
-
 
 function ManageIncome({ setSelectedLandId, selectedLandId }) {
     const [data, setData] = useState([]);
@@ -42,7 +41,7 @@ function ManageIncome({ setSelectedLandId, selectedLandId }) {
 
     useEffect(() => {
         if (selectedLandId) {
-            axios.get(`http://localhost:8080/service/master/incomeFindByLandId/${selectedLandId}`)
+            axios.get(`http://localhost:8081/service/master/incomeFindByLandId/${selectedLandId}`)
                 .then((res) => {
                     setData(res.data.extra);
                     console.log(res.data.extra);
@@ -68,6 +67,10 @@ function ManageIncome({ setSelectedLandId, selectedLandId }) {
             pathname: '/insertincome',
             state: { landId: selectedLandId }
         });
+    };
+
+    const goBack = () => {
+        history.goBack();
     };
 
     return (
@@ -108,6 +111,7 @@ function ManageIncome({ setSelectedLandId, selectedLandId }) {
                             </Dropdown.Menu>
                         </Dropdown>
                     </div>
+
                 </div>
             </div>
 
@@ -117,16 +121,20 @@ function ManageIncome({ setSelectedLandId, selectedLandId }) {
                 </button>
             </div>
 
-            <br/>
 
-            <div>
-                <input
-                    className='search-field'
-                    type="text"
-                    placeholder={t('search')}
-                    value={searchQuery}
-                // onChange={handleSearchChange}
-                />
+            <div className="search-container">
+                <div className="search-wrapper">
+                    <input
+                        className='search-field'
+                        type="text"
+                        placeholder={t('search')}
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                    <div className="search-icon">
+                        <FaSearch />
+                    </div>
+                </div>
             </div>
 
             <div className='income-list'>

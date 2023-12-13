@@ -127,4 +127,25 @@ export const TRANSLATIONS_SL = {
     employeeattendance: 'සේවක පැමිණීම',
     monthlycrop: 'මාසික බෝගය',
     othercostyield: 'වෙනත් පිරිවැය / අස්වැන්න',
+    selectedlot: 'තෝරාගත් කොටස්',
+
+    //employee-attendance report
+    employeeattendancereport: 'සේවක පැමිණීමේ වාර්තාව',
+    day: 'දවස',
+    noofworkers: 'කම්කරුවන් සංඛ්යාව',
+    employeeattendancechart: 'සේවක පැමිණීමේ සටහන',
+    loading: 'පැටවීම',
+
+    //monthly-crop report
+    monthlycropreport: 'මාසික බෝග වාර්තාව',
+    month: 'මස',
+    pastyearquantity: 'පසුගිය වසරේ ප්රමාණය',
+    currentyearquantity: 'වත්මන් වර්ෂයේ ප්රමාණය',
+    monthlycropcomparisionchart: 'මාසික බෝග සංසන්දන සටහන',
+
+    //other-cost-yield report
+    costyieldreport: 'පිරිවැය / අස්වැන්න වාර්තාව',
+    cost: 'පිරිවැය',
+    yield: 'අස්වැන්න',
+    costvsyieldcomparisionchart: 'පිරිවැය එදිරිව අස්වැන්න සංසන්දනාත්මක වගුව',
 };
