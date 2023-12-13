@@ -203,9 +203,13 @@ function Report({ setSelectedLandId, selectedLandId }) {
                 </div>
             </div>
 
-            <div className="filter-icon" onClick={handleToggleFilter}>
-                <FaPlus />
+            <br />
+
+
+            <div className="drop-down-container">
+                <p className="home-heading">{t('report')}</p>
             </div>
+
 
             {isFilterExpanded && (
                 <div>
@@ -270,12 +274,6 @@ function Report({ setSelectedLandId, selectedLandId }) {
                 </div>
             )}
 
-
-
-            <div className="drop-down-container">
-                <p className="home-heading">{t('report')}</p>
-            </div>
-
             <select className='report-dropdown'
                 value={selectedReport}
                 onChange={handleReportChange}
@@ -310,18 +308,7 @@ function Report({ setSelectedLandId, selectedLandId }) {
             {showEmployeePerfomnce && <EmployeePerfomnce dateRange={dateRange} selectedLand={selectedLandId} />}
             {showCostBreakdown && <CostBreakdownReport selectedLand={selectedLandId} dateRange={dateRange} />}
             {showSummary && <SummaryReport selectedLand={selectedLandId} category={category} />}
-            {selectedReport === 'Summary' ? (
-                <>
-                    <select className='report-dropdown'
-                        // value={selectedReportCate}
-                        onChange={handleCateChange}
-                    >
-                        <option value="">Monthly</option>
-                        <option value="1">Weekly</option>
-                        <option value="2">Daily</option>
-                    </select>
-                </>
-            ) : null}
+  
 
             < br />
             <Footer />

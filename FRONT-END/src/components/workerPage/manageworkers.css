@@ -74,6 +74,27 @@
   box-shadow: none;
 }
 
+/* land custom dropdown */
+.custom-dropdown .form-control {
+  background-color: #0e4f20; 
+  color: #ffffff; 
+  border-color: #0e4f20; 
+}
+
+.custom-dropdown .form-control:focus,
+.custom-dropdown .form-control:active,
+.custom-dropdown .form-control:hover {
+  background-color: #0e4f20;
+  color: #ffffff; 
+  border-color: #0e4f20; 
+}
+
+.custom-dropdown .form-control:focus,
+.custom-dropdown .form-control:active {
+  box-shadow: none; 
+}
+
+
 .worker-app-screen .search-field {
   margin-left: 20px;
 }
@@ -141,4 +162,9 @@
   transform: translateY(-50%);
   pointer-events: none;
   color: #aaa;
+}
+
+.land-dropdown{
+  background-color: #0e4f20;
+  color: white;
 }
