@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useHistory } from "react-router-dom";
 import './home.css';
-import '../../App.css';
+import '../css/common.css';
 import Footer from '../footer/footer';
 import { FaGlobeAmericas } from 'react-icons/fa';
 import { Dropdown } from 'react-bootstrap';
@@ -48,12 +48,12 @@ function Home({ setSelectedLandId, selectedLandId }) {
 
 
     useEffect(() => {
-        axios.post('http://localhost:8081/service/master/taskAssignedFindAll').then((response) => {
+        axios.post('http://localhost:8080/service/master/taskAssignedFindAll').then((response) => {
             setTaskAssigned(response.data);
             console.log("Task Assigned: ", response.data);
         });
 
-        axios.post('http://localhost:8081/service/master/taskFindAll').then((response) => {
+        axios.post('http://localhost:8080/service/master/taskFindAll').then((response) => {
             setTask(response.data.extra);
             console.log("Tasks : ", response.data.extra);
         });
@@ -138,7 +138,6 @@ function Home({ setSelectedLandId, selectedLandId }) {
 
     return (
         <div className="home-app-screen">
-
             <div className='main-heading'>
                 <div className="outer-frame d-flex justify-content-between">
                     <p className='page-name'>{t('home')}</p>

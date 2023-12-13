@@ -32,6 +32,14 @@
   border-radius: 5px;
 }
 
+.manageincome-app-screen .main-heading {
+  background-color: #0a5638;
+  color: rgb(255, 255, 255);
+  margin-bottom: 20px;
+  font: bold;
+  font-size: large;
+}
+
 .manageincome-app-screen .income-card h3 {
   font-size: 18px;
   margin: 0;
@@ -76,22 +84,6 @@
 .manageincome-app-screen .search-field {
   margin-left: 20px;
 }
-
-/* .add-income-button {
-    padding: 8px 16px;
-    background-color: #6558f5;
-    color: #fff;
-    width: 90%;
-    margin-left: 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .add-income-button:hover {
-    background-color: #7273d6;
-  } */
 
 
 .manageincome-app-screen .add-income-button {

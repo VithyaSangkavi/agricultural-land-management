@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 import Footer from '../footer/footer';
 import '../Income/manage_income.css';
+import '../css/common.css';
 
 function ManageIncome({ setSelectedLandId, selectedLandId }) {
     const [data, setData] = useState([]);
@@ -41,7 +42,7 @@ function ManageIncome({ setSelectedLandId, selectedLandId }) {
 
     useEffect(() => {
         if (selectedLandId) {
-            axios.get(`http://localhost:8081/service/master/incomeFindByLandId/${selectedLandId}`)
+            axios.get(`http://localhost:8080/service/master/incomeFindByLandId/${selectedLandId}`)
                 .then((res) => {
                     setData(res.data.extra);
                     console.log(res.data.extra);
@@ -75,14 +76,9 @@ function ManageIncome({ setSelectedLandId, selectedLandId }) {
 
     return (
         <div className='manageincome-app-screen'>
-
-
-
-
-
             <div className='main-heading'>
                 <div className="outer-frame d-flex justify-content-between">
-                    <p className='page-name'>{t('manageincome')}</p>
+                    <MdArrowBackIos className="back-button" onClick={goBack} />
                     <div className="land-filter">
                         <Dropdown className='custom-dropdown'>
                             <Col md={6}>
@@ -99,7 +95,7 @@ function ManageIncome({ setSelectedLandId, selectedLandId }) {
                         </Dropdown>
                     </div>
 
-                    <div className="language-filter me-2">
+                    <div className="language-filter">
                         <Dropdown alignRight onSelect={handleLanguageChange}>
                             <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
                                 <FaGlobeAmericas style={{ color: 'white' }} />
@@ -116,6 +112,9 @@ function ManageIncome({ setSelectedLandId, selectedLandId }) {
             </div>
 
             <div className='drop-down-container'>
+
+                <p className='home-heading'>{t('manageincome')}</p>
+
                 <button className="add-income-button" onClick={redirectToInsertIncome}>
                     {t('addincome')}
                 </button>

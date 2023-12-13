@@ -40,12 +40,12 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
 
   useEffect(() => {
 
-    axios.post('http://localhost:8081/service/master/taskFindAll').then((response) => {
+    axios.post('http://localhost:8080/service/master/taskFindAll').then((response) => {
       setTasks(response.data.extra);
       console.log("Tasks : ", response.data.extra);
     });
 
-    axios.get('http://localhost:8081/service/master/landFindAll').then((response) => {
+    axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
       setLands(response.data.extra);
       console.log("Lands : ", response.data.extra);
     });
@@ -89,38 +89,46 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
 
   return (
     <div className="task-app-screen">
-      <div className="header-bar">
-        <MdArrowBackIos className="back-button" onClick={goBack} />
-        <p className="main-heading">{t('tasktypemanagement')}</p>
-        <div className="position-absolute top-0 end-0 me-2">
-          <Dropdown alignRight onSelect={handleLanguageChange}>
-            <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-              <FaGlobeAmericas style={{ color: 'white' }} />
-            </Dropdown.Toggle>
+      <div className='main-heading'>
+        <div className="outer-frame d-flex justify-content-between">
+          <MdArrowBackIos className="back-button" onClick={goBack} />
+          <div className="land-filter">
+            <Dropdown className='custom-dropdown'>
+              <Col md={6}>
+                <Form.Group>
+                  <Form.Control as="select" value={selectedLandId} onChange={handleLandChange}>
+                    {landNames.map((land) => (
+                      <option key={land.id} value={land.id}>
+                        {land.name}
+                      </option>
+                    ))}
+                  </Form.Control>
+                </Form.Group>
+              </Col>
+            </Dropdown>
+          </div>
 
-            <Dropdown.Menu>
-              <Dropdown.Item eventKey="en">English</Dropdown.Item>
-              <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
+          <div className="language-filter me-2">
+            <Dropdown alignRight onSelect={handleLanguageChange}>
+              <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                <FaGlobeAmericas style={{ color: 'white' }} />
+              </Dropdown.Toggle>
+
+              <Dropdown.Menu>
+                <Dropdown.Item eventKey="en">English</Dropdown.Item>
+                <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </div>
         </div>
       </div>
+
+      <br />
+
       <div className='drop-down-container'>
-        <Dropdown className='custom-dropdown'>
-          <Col md={6}>
-            <Form.Group>
-              <Form.Control as="select" value={selectedLandId} onChange={handleLandChange}>
-              <option value="">All Lands</option>
-                {landNames.map((land) => (
-                  <option key={land.id} value={land.id}>
-                    {land.name}
-                  </option>
-                ))}
-              </Form.Control>
-            </Form.Group>
-          </Col>
-        </Dropdown>
-        <br />
+        <p className="home-heading">{t('tasktypemanagement')}</p>
+
+
         <button className="add-task-type-button" onClick={AddTaskType}>
           {t('addtasktype')}
         </button>
