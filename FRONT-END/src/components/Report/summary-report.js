@@ -19,7 +19,7 @@ const SummaryReport = ({ selectedLand, category }) => {
         const fetchSummaryData = async () => {
             try {
 
-                const baseURL = 'http://localhost:8080/service/master/summary'
+                const baseURL = 'http://localhost:8081/service/master/summary'
 
                 if (category) {
 
