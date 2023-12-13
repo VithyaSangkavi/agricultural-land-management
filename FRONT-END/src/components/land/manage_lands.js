@@ -57,8 +57,7 @@ const ManageLand = () => {
     return (
         <div className='manageland-app-screen'>
             <div className="header-bar">
-                <MdArrowBackIos className="back-button" onClick={goBack}/>
-                <p className="main-heading">{t('managelands')}</p>
+                <MdArrowBackIos className="back-button" onClick={goBack} />
                 <div className="position-absolute top-0 end-0 me-2">
                     <Dropdown alignRight onSelect={handleLanguageChange}>
                         <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
@@ -74,6 +73,9 @@ const ManageLand = () => {
             </div>
 
             <div className="drop-down-container">
+
+                <p className="home-heading">{t('managelands')}</p>
+
                 <button className='add-land-button' onClick={handleAddLotClick}>
                     {t('addnewland')}
                 </button>

@@ -20,6 +20,7 @@ import { submitCollection } from '../../_services/submit.service';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 import { alertService } from '../../_services/alert.service';
 import { Col, Form } from 'react-bootstrap';
+import { MdArrowBackIos } from "react-icons/md";
 
 
 function Report({ setSelectedLandId, selectedLandId }) {
@@ -111,7 +112,7 @@ function Report({ setSelectedLandId, selectedLandId }) {
 
     useEffect(() => {
         //lot find all
-        axios.get('http://localhost:8081/service/master/lotFindAll').then((response) => {
+        axios.get('http://localhost:8080/service/master/lotFindAll').then((response) => {
             setLots(response.data.extra);
             console.log("Lots : ", response.data.extra);
         });
@@ -162,37 +163,66 @@ function Report({ setSelectedLandId, selectedLandId }) {
 
     console.log(dateRange);
 
+    const goBack = () => {
+        history.goBack();
+    };
+
     return (
         <div className="home-app-screen">
-            <p className='main-heading'>{t('report')}</p>
-            <div className="position-absolute top-0 end-0 me-2">
-                <Dropdown alignRight onSelect={handleLanguageChange}>
-                    <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                        <FaGlobeAmericas style={{ color: 'white' }} />
-                    </Dropdown.Toggle>
+            <div className='main-heading'>
+                <div className="outer-frame d-flex justify-content-between">
+                    <MdArrowBackIos className="back-button" onClick={goBack} />
+                    <div className="land-filter">
+                        <Dropdown className='custom-dropdown'>
+                            <Col md={6}>
+                                <Form.Group>
+                                    <Form.Control as="select" value={selectedLandId} onChange={handleLandChange}>
+                                        {landNames.map((land) => (
+                                            <option key={land.id} value={land.id}>
+                                                {land.name}
+                                            </option>
+                                        ))}
+                                    </Form.Control>
+                                </Form.Group>
+                            </Col>
+                        </Dropdown>
+                    </div>
 
-                    <Dropdown.Menu>
-                        <Dropdown.Item eventKey="en">English</Dropdown.Item>
-                        <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-                    </Dropdown.Menu>
-                </Dropdown>
+                    <div className="language-filter me-2">
+                        <Dropdown alignRight onSelect={handleLanguageChange}>
+                            <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                                <FaGlobeAmericas style={{ color: 'white' }} />
+                            </Dropdown.Toggle>
+
+                            <Dropdown.Menu>
+                                <Dropdown.Item eventKey="en">English</Dropdown.Item>
+                                <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    </div>
+                </div>
             </div>
-            <div className="filter-icon" onClick={handleToggleFilter}>
-                <FaPlus />
+
+            <br />
+
+
+            <div className="drop-down-container">
+                <p className="home-heading">{t('report')}</p>
             </div>
+
 
             {isFilterExpanded && (
                 <div>
                     <div>
                         {showCostBreakdown ? (
                             <>
-                                    <label>Month : </label>
-                                    <input
-                                        type="month"
-                                        name="fromDate"
-                                        value={dateRange.fromDate}
-                                        onChange={handleDateRangeChange}
-                                    />
+                                <label>Month : </label>
+                                <input
+                                    type="month"
+                                    name="fromDate"
+                                    value={dateRange.fromDate}
+                                    onChange={handleDateRangeChange}
+                                />
                             </>
                         ) : (
                             <>
@@ -244,23 +274,6 @@ function Report({ setSelectedLandId, selectedLandId }) {
                 </div>
             )}
 
-            <div className='drop-down-container'>
-                <Dropdown className='custom-dropdown'>
-                    <Col md={6}>
-                        <Form.Group>
-                            <Form.Control as="select" value={selectedLandId} onChange={handleLandChange}>
-                                <option value="">All Lands</option>
-                                {landNames.map((land) => (
-                                    <option key={land.id} value={land.id}>
-                                        {land.name}
-                                    </option>
-                                ))}
-                            </Form.Control>
-                        </Form.Group>
-                    </Col>
-                </Dropdown>
-            </div>
-
             <select className='report-dropdown'
                 value={selectedReport}
                 onChange={handleReportChange}
@@ -295,18 +308,7 @@ function Report({ setSelectedLandId, selectedLandId }) {
             {showEmployeePerfomnce && <EmployeePerfomnce dateRange={dateRange} selectedLand={selectedLandId} />}
             {showCostBreakdown && <CostBreakdownReport selectedLand={selectedLandId} dateRange={dateRange} />}
             {showSummary && <SummaryReport selectedLand={selectedLandId} category={category} />}
-            {selectedReport === 'Summary' ? (
-                <>
-                    <select className='report-dropdown'
-                        // value={selectedReportCate}
-                        onChange={handleCateChange}
-                    >
-                        <option value="">Monthly</option>
-                        <option value="1">Weekly</option>
-                        <option value="2">Daily</option>
-                    </select>
-                </>
-            ) : null}
+  
 
             < br />
             <Footer />

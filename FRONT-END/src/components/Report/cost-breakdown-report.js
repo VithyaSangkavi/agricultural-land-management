@@ -61,7 +61,7 @@ const CostBreakdownReport = ({ dateRange: { fromDate }, selectedLand }) => {
 
         const fetchCostBreakdownPieData = async () => {
             try {
-                const response = await axios.get('http://localhost:8081/service/master/cost-breakdown-pie');
+                const response = await axios.get('http://localhost:8080/service/master/cost-breakdown-pie');
                 console.log("Pie : ", response.data);
                 setCostBreakdownPieData(response.data);
             } catch (error) {
