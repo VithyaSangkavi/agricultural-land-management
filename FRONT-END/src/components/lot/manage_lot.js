@@ -64,7 +64,7 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
     return (
         <div className='managelot-app-screen'>
             <div className="header-bar">
-                <MdArrowBackIos className="back-button" onClick={goBack}/>
+                <MdArrowBackIos className="back-button" onClick={goBack} />
                 <p className="main-heading">{t('managelots')}</p>
                 <div className="position-absolute top-0 end-0 me-2">
                     <Dropdown alignRight onSelect={handleLanguageChange}>
@@ -85,6 +85,7 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
                     <Col md={6}>
                         <Form.Group>
                             <Form.Control as="select" value={selectedLandId} onChange={handleLandChange}>
+                                <option value="">All Lands</option>
                                 {landNames.map((land) => (
                                     <option key={land.id} value={land.id}>
                                         {land.name}
@@ -93,7 +94,6 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
                             </Form.Control>
                         </Form.Group>
                     </Col>
-
                 </Dropdown>
                 <br />
                 <button className="add-worker-button" onClick={redirectToInsertLot}>

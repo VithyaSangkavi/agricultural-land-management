@@ -110,8 +110,14 @@ const MonthlyCropReport = ({ dateRange, lotId, landId, selectedLot }) => {
     return (
         <>
             <div className='report-app-screen'>
-                <p>{t('daterange')} : {fromDate} - {toDate}</p>
-                <p>{t('selectedlot')} : {selectedLot}</p>
+                <div className='info-card'>
+                    {fromDate && toDate && (
+                        <p>{t('daterange')} : {fromDate} - {toDate}</p>
+                    )}
+                    {lotId && (
+                        <p>{t('selectedlot')} : {selectedLot}</p>
+                    )}
+                </div>
                 <h2>{t('monthlycropreport')}</h2>
                 <table className='attendance-table'>
                     <thead>
@@ -134,8 +140,8 @@ const MonthlyCropReport = ({ dateRange, lotId, landId, selectedLot }) => {
             </div>
             <br />
             <div className='report-app-screen'>
-                <div className='monthly-crop-chart'>
-                    <h2>{t('monthlycropcomparisionreport')}</h2>
+                <h2>{t('monthlycropcomparisionchart')}</h2>
+                <div className='attendance-chart'>
                     {Object.keys(monthlyCropData).length > 0 ? (
                         <Line data={chartData} options={chartOptions} />
                     ) : (

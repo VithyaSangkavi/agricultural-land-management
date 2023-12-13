@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
+import axios from 'axios';
 import './manage-expense-type.css';
 import Footer from '../footer/footer';
 import { FaGlobeAmericas } from 'react-icons/fa';
@@ -22,6 +23,8 @@ function ManageExpenseTypes({ setSelectedLandId, selectedLandId }) {
 
   const [landNames, setLandNames] = useState([]);
 
+  const [selectedLand, setSelectedLand] = useState('');
+  const [landId, setLandId] = useState('');
 
   const history = useHistory();
 

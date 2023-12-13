@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useHistory } from "react-router-dom";
 import './managetasktypes.css';
 import Footer from '../footer/footer';
-import { FaGlobeAmericas } from 'react-icons/fa';
+import { FaGlobeAmericas, FaSearch } from 'react-icons/fa';
 import { Dropdown } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { MdArrowBackIos } from "react-icons/md";
@@ -61,7 +61,7 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
 
   useEffect(() => {
     //get crop id by using landid
-    axios.get(`http://localhost:8080/service/master/cropFindByLandId/${selectedLandId}`)
+    axios.get(`http://localhost:8081/service/master/cropFindByLandId/${selectedLandId}`)
       .then((response) => {
         const cropIdLand = response.data.cropId.extra;
         localStorage.setItem('CropIdLand', cropIdLand);
@@ -110,6 +110,7 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
           <Col md={6}>
             <Form.Group>
               <Form.Control as="select" value={selectedLandId} onChange={handleLandChange}>
+              <option value="">All Lands</option>
                 {landNames.map((land) => (
                   <option key={land.id} value={land.id}>
                     {land.name}
