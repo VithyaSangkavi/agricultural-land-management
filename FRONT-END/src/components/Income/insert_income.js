@@ -64,8 +64,8 @@ const InsertIncome = ({ setSelectedLandId, selectedLandId }) => {
         <div className='insertincome-app-screen'>
             <div className="header-bar">
                 <MdArrowBackIos className="back-button" onClick={goBack} />
-                <p className="main-heading">{t('addincome')}</p>
                 <div className="position-absolute top-0 end-0 me-0">
+
                     <Dropdown alignRight onSelect={handleLanguageChange}>
                         <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
                             <FaGlobeAmericas style={{ color: 'white' }} />
@@ -79,23 +79,7 @@ const InsertIncome = ({ setSelectedLandId, selectedLandId }) => {
                 </div>
             </div>
 
-            <div className='drop-down-container'>
-                <Dropdown className='custom-dropdown'>
-                    <Col md={6}>
-                        <Form.Group>
-                            <Form.Control as="select" value={selectedLandId} onChange={handleLandChange}>
-                                <option value="">All Lands</option>
-                                {landNames.map((land) => (
-                                    <option key={land.id} value={land.id}>
-                                        {land.name}
-                                    </option>
-                                ))}
-                            </Form.Control>
-                        </Form.Group>
-                    </Col>
-
-                </Dropdown>
-            </div>
+            <p className="home-heading">{t('addincome')}</p>
 
             <div className="content">
 

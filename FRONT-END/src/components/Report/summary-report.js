@@ -19,7 +19,7 @@ const SummaryReport = ({ selectedLand, category }) => {
         const fetchSummaryData = async () => {
             try {
 
-                const baseURL = 'http://localhost:8081/service/master/summary'
+                const baseURL = 'http://localhost:8080/service/master/summary'
 
                 if (category) {
 
@@ -81,16 +81,6 @@ const SummaryReport = ({ selectedLand, category }) => {
                 </table>
             </div>
             <br />
-            {/* <div className='report-app-screen'>
-                <div className='attendance-chart'>
-                    <h2>Employee Summarye Chart</h2>
-                    {summaryData.length > 0 ? (
-                        <Line data={chartData} options={chartOptions} />
-                    ) : (
-                        <p>Loading...</p>
-                    )}
-                </div>
-            </div> */}
             <br />
         </>
     );

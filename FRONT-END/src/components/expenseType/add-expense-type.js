@@ -49,8 +49,9 @@ const AddExpenseType = () => {
       <div className="expense-app-screen">
         <div className="header-bar">
           <MdArrowBackIos className="back-button" onClick={goBack}/>
-          <p className="main-heading">{t('addexpensetype')}</p>
+
           <div className="position-absolute top-0 end-0 me-0">
+
             <Dropdown alignRight onSelect={handleLanguageChange}>
               <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
                 <FaGlobeAmericas style={{ color: 'white' }} />
@@ -63,6 +64,9 @@ const AddExpenseType = () => {
             </Dropdown>
           </div>
         </div>
+
+        <p className="home-heading">{t('addexpensetype')}</p>
+
         <div className="basic-details">
           <input
             type="text"

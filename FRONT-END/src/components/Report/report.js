@@ -20,6 +20,7 @@ import { submitCollection } from '../../_services/submit.service';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 import { alertService } from '../../_services/alert.service';
 import { Col, Form } from 'react-bootstrap';
+import { MdArrowBackIos } from "react-icons/md";
 
 
 function Report({ setSelectedLandId, selectedLandId }) {
@@ -111,7 +112,7 @@ function Report({ setSelectedLandId, selectedLandId }) {
 
     useEffect(() => {
         //lot find all
-        axios.get('http://localhost:8081/service/master/lotFindAll').then((response) => {
+        axios.get('http://localhost:8080/service/master/lotFindAll').then((response) => {
             setLots(response.data.extra);
             console.log("Lots : ", response.data.extra);
         });
@@ -162,21 +163,46 @@ function Report({ setSelectedLandId, selectedLandId }) {
 
     console.log(dateRange);
 
+    const goBack = () => {
+        history.goBack();
+    };
+
     return (
         <div className="home-app-screen">
-            <p className='main-heading'>{t('report')}</p>
-            <div className="position-absolute top-0 end-0 me-0">
-                <Dropdown alignRight onSelect={handleLanguageChange}>
-                    <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                        <FaGlobeAmericas style={{ color: 'white' }} />
-                    </Dropdown.Toggle>
+            <div className='main-heading'>
+                <div className="outer-frame d-flex justify-content-between">
+                    <MdArrowBackIos className="back-button" onClick={goBack} />
+                    <div className="land-filter">
+                        <Dropdown className='custom-dropdown'>
+                            <Col md={6}>
+                                <Form.Group>
+                                    <Form.Control as="select" value={selectedLandId} onChange={handleLandChange}>
+                                        {landNames.map((land) => (
+                                            <option key={land.id} value={land.id}>
+                                                {land.name}
+                                            </option>
+                                        ))}
+                                    </Form.Control>
+                                </Form.Group>
+                            </Col>
+                        </Dropdown>
+                    </div>
 
-                    <Dropdown.Menu>
-                        <Dropdown.Item eventKey="en">English</Dropdown.Item>
-                        <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-                    </Dropdown.Menu>
-                </Dropdown>
+                    <div className="language-filter me-0">
+                        <Dropdown alignRight onSelect={handleLanguageChange}>
+                            <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                                <FaGlobeAmericas style={{ color: 'white' }} />
+                            </Dropdown.Toggle>
+
+                            <Dropdown.Menu>
+                                <Dropdown.Item eventKey="en">English</Dropdown.Item>
+                                <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    </div>
+                </div>
             </div>
+
 
             <div className='drop-down-container'>
                 <Dropdown className='custom-dropdown'>
@@ -300,6 +326,7 @@ function Report({ setSelectedLandId, selectedLandId }) {
             {showEmployeePerfomnce && <EmployeePerfomnce dateRange={dateRange} selectedLand={selectedLandId} />}
             {showCostBreakdown && <CostBreakdownReport selectedLand={selectedLandId} dateRange={dateRange} />}
             {showSummary && <SummaryReport selectedLand={selectedLandId} category={category} />}
+
 
             < br />
             <Footer />

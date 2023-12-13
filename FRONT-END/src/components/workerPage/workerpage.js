@@ -112,7 +112,7 @@ const WorkerPage = () => {
     <div className="worker-app-screen">
       <div className="header-bar">
         <MdArrowBackIos className="back-button" onClick={goBack}/>
-        <p className="main-heading">{t('workermanagement')}</p>
+
         <div className="position-absolute top-0 end-0 me-0">
           <Dropdown alignRight onSelect={handleLanguageChange}>
             <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
@@ -126,6 +126,9 @@ const WorkerPage = () => {
           </Dropdown>
         </div>
       </div>
+
+      <p className="home-heading">{t('workermanagement')}</p>
+
 
       <div className="toggle-container">
         <button className={`toggle-button ${showBasicDetails ? 'active' : ''}`} onClick={toggleView}>
