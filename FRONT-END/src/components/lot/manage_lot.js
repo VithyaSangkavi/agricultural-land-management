@@ -94,6 +94,7 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
                             </Dropdown.Menu>
                         </Dropdown>
                     </div>
+
                 </div>
             </div>
             
@@ -103,6 +104,7 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
             <div className="drop-down-container">
             <p className="home-heading">{t('managelots')}</p>
             
+
                 <button className="add-worker-button" onClick={redirectToInsertLot}>
                     {t('addlot')}
                 </button>

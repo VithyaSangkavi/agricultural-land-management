@@ -106,15 +106,28 @@ const EmployeeAttendanceReport = ({ dateRange, lotId, landId, selectedLot }) => 
                 radius: 3,
             },
         },
+        plugins: {
+            tooltip: {
+                intersect: false,
+            },
+        },
+        parsing: {
+            xAxisKey: 'date',
+        },
+        sampleSize: 5,
     };
 
     return (
         <>
             <div className='report-app-screen'>
-
-                <p>{t('daterange')} : {fromDate} - {toDate}</p>
-                <p>{t('selectedlot')} : {selectedLot}</p>
-
+                <div className='info-card'>
+                    {fromDate && toDate && (
+                        <p>{t('daterange')} : {fromDate} - {toDate}</p>
+                    )}
+                    {lotId && (
+                        <p>{t('selectedlot')} : {selectedLot}</p>
+                    )}
+                </div>
                 <h2>{t('employeeattendancereport')}</h2>
                 <table className='attendance-table'>
                     <thead>
@@ -133,10 +146,9 @@ const EmployeeAttendanceReport = ({ dateRange, lotId, landId, selectedLot }) => 
                     </tbody>
                 </table>
             </div>
-            <br />
             <div className='report-app-screen'>
+                <h2>{t('employeeattendancechart')}</h2>
                 <div className='attendance-chart'>
-                    <h2>{t('employeeattendancechart')}</h2>
                     {attendanceData.length > 0 ? (
                         <Line data={chartData} options={chartOptions} />
                     ) : (

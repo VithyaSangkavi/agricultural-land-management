@@ -4,13 +4,13 @@
   background-color: #0e4f20;
   width: 80%;
   margin-left: 15px;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
 }
 
 .report-dropdown-container {
   display: flex;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
 .filter-icon {
@@ -33,10 +33,11 @@
 }
 
 .filtering-card {
-  padding: 16px;
+  padding: 0px 16px 16px 16px;
+  margin-top: 0px;
 }
 
-.reset-filter{
+.reset-filter {
   background-color: #0e4f20;
   color: white;
   padding: 5px;
@@ -45,7 +46,7 @@
 }
 
 .report-app-screen {
-  max-width: 100%;
+  /* max-width: 100%; */
   margin: 10px;
   background-size: cover;
   border: none;
@@ -63,7 +64,7 @@
 /* Define styles for the attendance table */
 .attendance-table {
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-  width: 100%;
+  width: 95%;
   border-collapse: collapse;
   margin-top: 20px;
 }
@@ -97,4 +98,25 @@
 /* Heading styles */
 .attendance-report h2 {
   margin-bottom: 10px;
+}
+
+.attendance-chart {
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  width: 95%;
+  padding: 10px;
+}
+
+.info-card {
+  margin-top: 0;
+  margin-right: 15px;
+  padding: 5px 5px 0px 5px;
+}
+
+.custom-select{
+  background-color: #f2f2f2;
+  padding: 5px;
+  border: 1px solid #ccc; 
+  border-radius: 5px; 
+  margin-left: 10px;
+  margin-right: 10px;
 }

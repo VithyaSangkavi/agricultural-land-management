@@ -7,7 +7,7 @@ import Footer from '../footer/footer';
 import { FaGlobeAmericas } from 'react-icons/fa';
 import { Dropdown } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { FaPlus } from 'react-icons/fa';
+import { FaPlus, FaFilter } from 'react-icons/fa';
 import EmployeeAttendanceReport from './employee-attendance-report';
 import MonthlyCropReport from './monthly-crop-report';
 import CostYieldReport from './other-cost-yield-report';
@@ -203,89 +203,108 @@ function Report({ setSelectedLandId, selectedLandId }) {
                 </div>
             </div>
 
-            <br />
 
-
-            <div className="drop-down-container">
-                <p className="home-heading">{t('report')}</p>
-            </div>
-
-
-            {isFilterExpanded && (
-                <div>
-                    <div>
-                        {showCostBreakdown ? (
-                            <>
-                                <label>Month : </label>
-                                <input
-                                    type="month"
-                                    name="fromDate"
-                                    value={dateRange.fromDate}
-                                    onChange={handleDateRangeChange}
-                                />
-                            </>
-                        ) : (
-                            <>
-                                <label>{t('daterange')} : </label>
-                                <input
-                                    type="date"
-                                    name="fromDate"
-                                    value={dateRange.fromDate}
-                                    onChange={handleDateRangeChange}
-                                />
-                                <span> - </span>
-                                <input
-                                    type="date"
-                                    name="toDate"
-                                    value={dateRange.toDate}
-                                    onChange={handleDateRangeChange}
-                                />
-                            </>
-                        )}
-                    </div>
-
-                    {selectedReport !== 'Employee Perfomance' && selectedReport !== 'Summary' && (
-
-                        <div>
-                            <label> {t('selectlot')} : </label>
-                            <select value={selectedLot} onChange={handleLotChange}>
-                                <option value="">{t('selectlot')}</option>
-                                {lots.map((lot) => (
-                                    <option key={lot.id} value={lot.name}>
-                                        {lot.name}
+            <div className='drop-down-container'>
+                <Dropdown className='custom-dropdown'>
+                    <Col md={6}>
+                        <Form.Group>
+                            <Form.Control as="select" value={selectedLandId} onChange={handleLandChange}>
+                                <option value="">All Lands</option>
+                                {landNames.map((land) => (
+                                    <option key={land.id} value={land.id}>
+                                        {land.name}
                                     </option>
                                 ))}
-                            </select>
-                        </div>
-                    )}
+                            </Form.Control>
+                        </Form.Group>
+                    </Col>
+                </Dropdown>
+            </div>
 
-                    {selectedReport !== 'Employee Perfomance' && selectedReport !== 'Summary' && selectedReport != 'Employee Attendance' && selectedReport != 'Monthly Crop' && (
-                        <div>
-                            <label>{t('selectworker')} : </label>
-                            <select value={selectedWorker} onChange={handleWorkerChange}>
-                                <option value="">{t('selectworker')}</option>
-                            </select>
-                        </div>
-                    )}
-                    <br />
+            <div className='report-dropdown-container'>
+                <select className='report-dropdown'
+                    value={selectedReport}
+                    onChange={handleReportChange}
+                >
+                    <option value="">{t('reportname')}</option>
+                    <option value="Summary">{t('summary')}</option>
+                    <option value="Employee Perfomance">{t('employeeperformance')}</option>
+                    <option value="Cost Breakdown">{t('costbreakdown')}</option>
+                    <option value="Employee Attendance">{t('employeeattendance')}</option>
+                    <option value="Monthly Crop">{t('monthlycrop')}</option>
+                    <option value="Other Cost / Yield">{t('othercostyield')}</option>
+                </select>
 
-                    <button onClick={handleResetFilters}>{t('resetfilters')}</button>
-
+                <div className="filter-icon" onClick={handleToggleFilter}>
+                    <FaFilter />
                 </div>
-            )}
+            </div>
 
-            <select className='report-dropdown'
-                value={selectedReport}
-                onChange={handleReportChange}
-            >
-                <option value="">{t('reportname')}</option>
-                <option value="Summary">{t('summary')}</option>
-                <option value="Employee Perfomance">{t('employeeperformance')}</option>
-                <option value="Cost Breakdown">{t('costbreakdown')}</option>
-                <option value="Employee Attendance">{t('employeeattendance')}</option>
-                <option value="Monthly Crop">{t('monthlycrop')}</option>
-                <option value="Other Cost / Yield">{t('othercostyield')}</option>
-            </select>
+            <div className='filtering-card'>
+                {isFilterExpanded && (
+                    <div>
+                        <div>
+                            {showCostBreakdown ? (
+                                <>
+                                    <label>Month : </label>
+                                    <input
+                                        type="month"
+                                        name="fromDate"
+                                        value={dateRange.fromDate}
+                                        onChange={handleDateRangeChange}
+                                    />
+                                </>
+                            ) : (
+                                <>
+                                    <label>{t('daterange')} : </label>
+                                    <input
+                                        className='custom-select'
+                                        type="date"
+                                        name="fromDate"
+                                        value={dateRange.fromDate}
+                                        onChange={handleDateRangeChange}
+                                    />
+                                    <span> - </span>
+                                    <input
+                                        className='custom-select'
+                                        type="date"
+                                        name="toDate"
+                                        value={dateRange.toDate}
+                                        onChange={handleDateRangeChange}
+                                    />
+                                </>
+                            )}
+                        </div>
+                        <br />
+                        {selectedReport !== 'Employee Perfomance' && selectedReport !== 'Summary' && (
+
+                            <div>
+                                <label> {t('selectlot')} : </label>
+                                <select className="custom-select" value={selectedLot} onChange={handleLotChange}>
+                                    <option value="">{t('selectlot')}</option>
+                                    {lots.map((lot) => (
+                                        <option key={lot.id} value={lot.name}>
+                                            {lot.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        )}
+                        <br />
+                        {selectedReport !== 'Employee Perfomance' && selectedReport !== 'Summary' && selectedReport != 'Employee Attendance' && selectedReport != 'Monthly Crop' && (
+                            <div>
+                                <label>{t('selectworker')} : </label>
+                                <select className="custom-select" value={selectedWorker} onChange={handleWorkerChange}>
+                                    <option value="">{t('selectworker')}</option>
+                                </select>
+                            </div>
+                        )}
+
+                        <button onClick={handleResetFilters} className='reset-filter'> {t('resetfilters')} </button>
+
+                    </div>
+                )}
+            </div>
 
             {selectedReport === 'Summary' ? (
                 <>
@@ -301,14 +320,13 @@ function Report({ setSelectedLandId, selectedLandId }) {
             ) : null}
 
 
-
-            {showEmployeeAttendanceReport && <EmployeeAttendanceReport dateRange={dateRange} lotId={lotId} landId={selectedLandId} />}
-            {showMonthlyCropReport && <MonthlyCropReport dateRange={dateRange} lotId={lotId} />}
-            {showCostYieldReport && <CostYieldReport dateRange={dateRange} landId={selectedLandId} />}
+            {showEmployeeAttendanceReport && <EmployeeAttendanceReport dateRange={dateRange} lotId={lotId} landId={selectedLandId} selectedLot={selectedLot} />}
+            {showMonthlyCropReport && <MonthlyCropReport dateRange={dateRange} lotId={lotId} landId={selectedLandId} selectedLot={selectedLot} />}
+            {showCostYieldReport && <CostYieldReport dateRange={dateRange} landId={selectedLandId} lotId={lotId} selectedLot={selectedLot} />}
             {showEmployeePerfomnce && <EmployeePerfomnce dateRange={dateRange} selectedLand={selectedLandId} />}
             {showCostBreakdown && <CostBreakdownReport selectedLand={selectedLandId} dateRange={dateRange} />}
             {showSummary && <SummaryReport selectedLand={selectedLandId} category={category} />}
-  
+
 
             < br />
             <Footer />
