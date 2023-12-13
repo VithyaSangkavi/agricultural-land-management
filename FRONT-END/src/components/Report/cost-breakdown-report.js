@@ -10,40 +10,25 @@ ChartJS.register(...registerables);
 const CostBreakdownReport = ({ dateRange: { fromDate }, selectedLand }) => {
     const [costBreakdownLineData, setCostBreakdownLineData] = useState([]);
     const [costBreakdownPieData, setCostBreakdownPieData] = useState([]);
-    const [landId, setLandId] = useState('');
     const [yearMonth, setYearMonth] = useState('');
 
-    useEffect(() => {
-        // Update the landId whenever selectedLand changes
-        axios.post(`http://localhost:8081/service/master/findLandIdByName?name=${selectedLand}`)
-            .then((response) => {
-                const landIdTask = response.data.extra;
-                const taskLand = JSON.stringify(landIdTask);
-                const landData = JSON.parse(taskLand);
-                const newLandId = landData.landId;
-                console.log('Selected Land Id:', newLandId);
-                localStorage.setItem('SelectedLandId', newLandId);
-                setLandId(newLandId);
-            })
-            .catch((error) => {
-                console.error("Error fetching data:", error);
-            });
-    }, [selectedLand]);
 
-    console.log("Cost-b-down land: ", landId)
+    console.log("Cost-b-down land: ", selectedLand)
+
     console.log("Cost-b-down fromDate: ", fromDate)
 
     useEffect(() => {
         const fetchCostBreakdownLineData = async () => {
             try {
 
-                const baseURL = 'http://localhost:8081/service/master/cost-breakdown-line'
-                const fetchURL = landId ? `${baseURL}?landId=${landId}` : baseURL;
+                const baseURL = 'http://localhost:8080/service/master/cost-breakdown-line'
+                const fetchURL = selectedLand ? `${baseURL}?landId=${selectedLand}` : baseURL;
 
-                if (landId) {
+
+                if (selectedLand) {
                     if (fromDate) {
 
-                        const fetchURL = `${baseURL}?fromDate=${fromDate}&landId=${landId}`
+                        const fetchURL = `${baseURL}?fromDate=${fromDate}&landId=${selectedLand}`
                         const response = await axios.get(fetchURL)
                         console.log("Line : ", response.data);
                         setCostBreakdownLineData(response.data);
@@ -51,7 +36,7 @@ const CostBreakdownReport = ({ dateRange: { fromDate }, selectedLand }) => {
 
                     } else {
 
-                        const fetchURL = `${baseURL}?landId=${landId}`
+                        const fetchURL = `${baseURL}?landId=${selectedLand}`
                         const response = await axios.get(fetchURL)
                         console.log("Line : ", response.data);
                         setCostBreakdownLineData(response.data);
@@ -86,7 +71,7 @@ const CostBreakdownReport = ({ dateRange: { fromDate }, selectedLand }) => {
 
         fetchCostBreakdownLineData();
         fetchCostBreakdownPieData();
-    }, [fromDate, landId]);
+    }, [fromDate, selectedLand]);
 
     costBreakdownLineData.forEach((item) => {
         item.totalCost = parseFloat(item.totalCost);
@@ -224,7 +209,7 @@ const CostBreakdownReport = ({ dateRange: { fromDate }, selectedLand }) => {
                             <Line data={chartData} options={chartOptions} />
                         )
                     ) : (
-                        <p>Loading...</p>
+                        <p>No Data</p>
                     )}
                 </div>
             </div>

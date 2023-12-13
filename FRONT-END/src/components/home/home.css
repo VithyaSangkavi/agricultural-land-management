@@ -43,14 +43,7 @@
     text-align: left;
 }
 
-.home-app-screen .main-heading {
-    background-color: #0e4f20;
-    color: white;
-    padding: 10px;
-    margin-bottom: 20px;
-    font: bold;
-    font-size: large;
-}
+
 
 .home-app-screen .add-button {
     padding: 8px 16px;
@@ -66,6 +59,21 @@
 
 .home-app-screen .add-button:hover {
     background-color: #0a8a2e;
+}
+
+.home-app-screen .main-heading {
+    background-color: #0a5638;
+    color: white;
+    padding: 10px;
+    margin-bottom: 20px;
+    font: bold;
+    font-size: large;
+}
+
+.home-app-screen .page-name{
+    font: bold;
+    color: white;
+    font-size: large;
 }
 
 .home-app-screen .home-heading p {
@@ -102,6 +110,8 @@
     font-size: 16px;
     margin: 10px 0 0;
 }
+
+
 
 /* floating-button.css */
 

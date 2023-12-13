@@ -16,5 +16,6 @@ export interface TaskAssignedDao {
   updateEndDate(taskAssignedId: number, endDate: Date, newStatus : string): Promise<TaskAssignedEntity>;
   updateStatus(taskAssignedId: number, newStatus: string): Promise<TaskAssignedEntity>;
   getOngoingTasksWithTaskNames(landId: number): Promise<TaskAssignedEntity[]>;
+  getCompletedTasksWithTaskNames(landId: number): Promise<TaskAssignedEntity[]>;
 
 }

@@ -14,40 +14,23 @@ const EmployeePerfomnceReport = ({ dateRange: { fromDate, toDate }, selectedLand
     // const toDate = dateRange.toDate
 
     const [perfomnceData, setPerfomnceData] = useState([]);
-    const [landId, setLandId] = useState('');
     console.log("emp-per-rep : ", fromDate, toDate);
 
 
     useEffect(() => {
-        // Update the landId whenever selectedLand changes
-        axios.post(`http://localhost:8081/service/master/findLandIdByName?name=${selectedLand}`)
-            .then((response) => {
-                const landIdTask = response.data.extra;
-                const taskLand = JSON.stringify(landIdTask);
-                const landData = JSON.parse(taskLand);
-                const newLandId = landData.landId;
-                console.log('Selected Land Id:', newLandId);
-                localStorage.setItem('SelectedLandId', newLandId);
-                setLandId(newLandId);
-            })
-            .catch((error) => {
-                console.error("Error fetching data:", error);
-            });
-    }, [selectedLand]);
 
-    useEffect(() => {
         const fetchPerfomnceData = async () => {
             try {
                 const baseURL = 'http://localhost:8081/service/master/employee-perfomance';
 
-                if (landId) {
+                if (selectedLand) {
                     if (fromDate && toDate) {
-                        const fetchURL = `${baseURL}?landId=${landId}&fromDate=${fromDate}&toDate=${toDate}`
+                        const fetchURL = `${baseURL}?landId=${selectedLand}&fromDate=${fromDate}&toDate=${toDate}`
                         const response = await axios.get(fetchURL);
                         setPerfomnceData(response.data);
 
                     } else {
-                        const fetchURL = `${baseURL}?landId=${landId}`
+                        const fetchURL = `${baseURL}?landId=${selectedLand}`
                         const response = await axios.get(fetchURL);
                         setPerfomnceData(response.data);
 
@@ -65,7 +48,7 @@ const EmployeePerfomnceReport = ({ dateRange: { fromDate, toDate }, selectedLand
         };
 
         fetchPerfomnceData();
-    }, [fromDate, toDate, landId]);
+    }, [fromDate, toDate, selectedLand]);
 
     const chartData = {
         labels: perfomnceData.map((item) => item.workDate),

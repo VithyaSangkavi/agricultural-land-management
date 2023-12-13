@@ -135,7 +135,26 @@ export class TaskAssignedDaoImpl implements TaskAssignedDao {
       .innerJoin('taskAssigned.task', 'task')
       .innerJoin('taskAssigned.land', 'land')
       .where('land.id = :landId', { landId })
-      .andWhere('taskAssigned.taskStatus = :taskStatus', { taskStatus: "ongoing" })
+      .andWhere('taskAssigned.taskStatus = :taskStatus', { taskStatus: TaskStatus.Ongoing })
+      .andWhere('taskAssigned.status = :status', { status: Status.Online })
+      .groupBy('taskAssigned.taskAssignedId')
+      .select(['taskAssigned.taskAssignedId as taskAssignedId', 'MAX(task.id) as taskId', 'MAX(task.taskName) as taskName', 'taskAssigned.startDate as taskStartDate', 'taskAssigned.landId as landId'])
+      .getRawMany();
+
+      return tasks;
+
+  }
+
+  async getCompletedTasksWithTaskNames(landId: number): Promise<TaskAssignedEntity[]> {
+    let taskAssignedRepo = getConnection().getRepository(TaskAssignedEntity);
+
+    const tasks = await taskAssignedRepo
+
+      .createQueryBuilder('taskAssigned')
+      .innerJoin('taskAssigned.task', 'task')
+      .innerJoin('taskAssigned.land', 'land')
+      .where('land.id = :landId', { landId })
+      .andWhere('taskAssigned.taskStatus = :taskStatus', { taskStatus: TaskStatus.Completed })
       .andWhere('taskAssigned.status = :status', { status: Status.Online })
       .groupBy('taskAssigned.taskAssignedId')
       .select(['taskAssigned.taskAssignedId as taskAssignedId', 'MAX(task.id) as taskId', 'MAX(task.taskName) as taskName', 'taskAssigned.startDate as taskStartDate', 'taskAssigned.landId as landId'])
