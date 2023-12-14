@@ -35,7 +35,7 @@
 .manageincome-app-screen .main-heading {
   background-color: #0a5638;
   color: rgb(255, 255, 255);
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
   font: bold;
   font-size: large;
 }
@@ -108,8 +108,8 @@
 .manageincome-app-screen .main-heading {
   /* background-color: #0e4f20; */
   color: white;
-  padding: 10px;
-  margin-top: 10px;
+  /* padding: 10px;
+  margin-top: 10px; */
   /* margin-bottom: 20px; */
   font: bold;
   font-size: large;

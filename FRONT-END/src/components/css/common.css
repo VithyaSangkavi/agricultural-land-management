@@ -1,8 +1,6 @@
 .main-heading {
-    background-color: #0a5638;
+    background-color: #0e4f20;
     color: white;
-    padding-top: 0px;
-    margin-bottom: 20px;
     font: bold;
     font-size: large;
     margin-top: 0px;
@@ -10,7 +8,7 @@
 
 .home-heading {
     font-size: 20px;
-    text-align: center;
+    text-align: left;
     font: bold;
     color: #0e4f20;
     font-weight: bold;

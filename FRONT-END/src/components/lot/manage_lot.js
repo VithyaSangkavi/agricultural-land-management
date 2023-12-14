@@ -63,7 +63,6 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
 
     return (
         <div className='managelot-app-screen'>
-
             <div className='main-heading'>
                 <div className="outer-frame d-flex justify-content-between">
                     <MdArrowBackIos className="back-button" onClick={goBack} />
@@ -83,7 +82,7 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
                         </Dropdown>
                     </div>
 
-                    <div className="language-filter me-0">
+                    <div className="language-filter me-2">
                         <Dropdown alignRight onSelect={handleLanguageChange}>
                             <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
                                 <FaGlobeAmericas style={{ color: 'white' }} />
@@ -95,6 +94,7 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
                             </Dropdown.Menu>
                         </Dropdown>
                     </div>
+
                 </div>
             </div>
             
