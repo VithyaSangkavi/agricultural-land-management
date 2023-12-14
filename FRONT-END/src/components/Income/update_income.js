@@ -9,26 +9,45 @@ import { Form, Button, Container, Col, Row, Card } from 'react-bootstrap';
 import { submitSets } from '../UiComponents/SubmitSets';
 import { alertService } from '../../_services/alert.service';
 import { useTranslation } from 'react-i18next';
-import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
+import { FaGlobeAmericas, FaLanguage, FaMapMarker } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { MdArrowBackIos } from "react-icons/md";
+import { connect } from 'react-redux';
+import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 
 
-const UpdateIncome = () => {
+const UpdateIncome = ({selectedLandId, setSelectedLandId}) => {
     const { incomeId } = useParams();
     const history = useHistory();
 
     const [price, setValue] = useState('');
     const [data, setData] = useState([]);
     const [trueLandId, setTrueLandId] = useState('');
-    const [selectedLandId, setSelectedLandId] = useState('');
-    const [selectedLanguage, setSelectedLanguage] = useState('english');
+    // const [selectedLandId, setSelectedLandId] = useState('');
+    const [landNames, setLandNames] = useState([]);
+    const [landName, setLandName] = useState([]);
 
     const { t, i18n } = useTranslation();
 
     const handleLanguageChange = (lang) => {
         i18n.changeLanguage(lang);
     };
+
+    const handleLandChange = (event) => {
+        console.log("Land : ", event);
+        setSelectedLandId(event);
+    };
+
+    useEffect(() => {
+        submitSets(submitCollection.manageland, false).then((res) => {
+            setLandNames(res.extra);
+        });
+
+        submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true).then((res) => {
+            setLandName(res.extra.name);
+        });
+
+    }, [submitCollection.manageland, selectedLandId]);
 
 
     useEffect(() => {
@@ -82,24 +101,58 @@ const UpdateIncome = () => {
 
     return (
         <div className='updateincome-app-screen'>
-            <div className="header-bar">
-                <MdArrowBackIos className="back-button" onClick={goBack} />
+            <div className='main-heading'>
 
-                <div className="position-absolute top-0 end-0 me-0">
-                    <Dropdown alignRight onSelect={handleLanguageChange}>
-                        <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                            <FaGlobeAmericas style={{ color: 'white' }} />
-                        </Dropdown.Toggle>
+                <div className="outer-frame d-flex justify-content-between align-items-center">
+                    <div className="filter-container d-flex align-items-center">
+                        <MdArrowBackIos className="back-button" onClick={goBack} />
+                    </div>
 
-                        <Dropdown.Menu>
-                            <Dropdown.Item eventKey="en">English</Dropdown.Item>
-                            <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown>
+                    <div className="filter-container d-flex align-items-center">
+                        <div className="land-filter">
+                            <Dropdown onSelect={handleLandChange}>
+                                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                                    <FaMapMarker style={{ color: 'white' }} />
+                                </Dropdown.Toggle>
+
+                                <Dropdown.Menu>
+                                    {landNames.map((land) => (
+                                        <Dropdown.Item eventKey={land.id} value={land.id}>
+                                            {land.name}
+                                        </Dropdown.Item>
+                                    ))}
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </div>
+
+                        <div className="language-filter">
+                            <Dropdown onSelect={handleLanguageChange}>
+                                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                                    <FaGlobeAmericas style={{ color: 'white' }} />
+                                </Dropdown.Toggle>
+
+                                <Dropdown.Menu>
+                                    <Dropdown.Item eventKey="en">English</Dropdown.Item>
+                                    <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </div>
+                    </div>
                 </div>
+
+
             </div>
 
-            <p className="home-heading">{t('updateincome')}</p>
+            <div className="drop-down-container">
+
+                <div className='landsectioncover'>
+                    <p className="landsection">
+                        <FaMapMarker style={{ marginRight: '5px' }} />
+                        Selected Land: {landName}
+                    </p>
+                </div>
+                <p className="home-heading">{t('updateincome')}</p>
+            </div>
 
             <div className="AddLandCard">
 
@@ -135,4 +188,12 @@ const UpdateIncome = () => {
     );
 };
 
-export default UpdateIncome;
+const mapStateToProps = (state) => ({
+    selectedLandId: state.selectedLandId,
+});
+
+const mapDispatchToProps = {
+    setSelectedLandId: setSelectedLandIdAction,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(UpdateIncome);
