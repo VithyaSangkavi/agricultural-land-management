@@ -70,21 +70,10 @@ function SideNavBar() {
       <AnimatedPage>
         <div className={`side-nav-screen ${isBackClicked ? 'back-animation' : ''}`}>
           <div className="position-absolute top-0 start-0 ms-0">
-            <IoMdArrowRoundBack className="side-back-button" onClick={goBack} />
+            <IoMdArrowRoundBack className="side-back-button" onClick={goBack} style={{marginLeft: "28%"}}/>
           </div>
           <p className='main-heading'>{t('welcome')}</p>
-          <div className="position-absolute top-0 end-0 me-0">
-            <Dropdown alignRight onSelect={handleLanguageChange}>
-              <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                <FaGlobeAmericas style={{ color: 'white' }} />
-              </Dropdown.Toggle>
-
-              <Dropdown.Menu>
-                <Dropdown.Item eventKey="en">English</Dropdown.Item>
-                <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </div>
+         
           <div className="side-nav-menu">
             <button className='menu-click'>
               <div onClick={ManageWorkers}>
