@@ -26,12 +26,12 @@ function HomeNewTasks({ setSelectedLandId, selectedLandId }) {
     const history = useHistory();
 
     useEffect(() => {
-        axios.post('http://localhost:8080/service/master/taskAssignedFindAll').then((response) => {
+        axios.post('http://localhost:8081/service/master/taskAssignedFindAll').then((response) => {
             setTaskAssigned(response.data);
             console.log("Task Assigned: ", response.data);
         });
 
-        axios.post('http://localhost:8080/service/master/taskFindAll').then((response) => {
+        axios.post('http://localhost:8081/service/master/taskFindAll').then((response) => {
             setTask(response.data.extra);
             console.log("Tasks : ", response.data.extra);
         });
@@ -46,7 +46,7 @@ function HomeNewTasks({ setSelectedLandId, selectedLandId }) {
     };
 
     useEffect(() => {
-        axios.get('http://localhost:8080/service/master/landFindAll').then((res) => {
+        axios.get('http://localhost:8081/service/master/landFindAll').then((res) => {
             setLandNames(res.extra);
         });
     }, [submitCollection.manageland]);

@@ -28,7 +28,7 @@ const InsertIncome = ({ setSelectedLandId, selectedLandId }) => {
     };
 
     useEffect(() => {
-        axios.get('http://localhost:8080/service/master/landFindAll').then((res) => {
+        axios.get('http://localhost:8081/service/master/landFindAll').then((res) => {
             setLandNames(res.extra);
         });
     }, [submitCollection.manageland]);

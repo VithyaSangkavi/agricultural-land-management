@@ -1,21 +1,39 @@
 .side-nav-screen {
-  max-width: 100%;
+  max-width: 75%;
   height: 100vh;
-  margin: 0 auto;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  margin-right: auto;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.4);
   /* background-image: url('../../assets/img/background.jpg'); */
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   position: relative;
-  background-color: white;
+  background-color: #f2f2f2;
+  transition: transform 1.5s ease-in-out;
+}
+
+.back-animation {
+  transform: translateX(-100%);
 }
 
 .side-nav-screen .side-nav-menu {
-  background-color: white;
+  background-color: #f2f2f2;
   color: black;
-  border-bottom: 1px solid #0e4f20;
+  /* border-bottom: 1px solid #0e4f20; */
   padding: 10px;
+}
+
+.side-nav-screen .side-nav-menu:hover{
+  background-color: rgb(174, 243, 174);
+  color: black;
+  /* border-bottom: 1px solid #0e4f20; */
+  padding: 10px;
+}
+
+.side-nav-menu.hovered {
+  background-color: rgb(174, 243, 174);
+  color: black;
+  /* Add other styles here */
 }
 
 .side-nav-screen .main-heading {
@@ -56,4 +74,11 @@
 .menu-click{
   border: none;
   background-color: transparent;
+}
+
+.side-back-button{
+  color: white;
+  font-size: 26px;
+  font: bold;
+  margin-top: 10px;
 }
