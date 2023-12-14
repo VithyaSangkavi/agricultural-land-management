@@ -48,7 +48,7 @@ function ManageIncome({ setSelectedLandId, selectedLandId }) {
 
     useEffect(() => {
         if (selectedLandId) {
-            axios.get(`http://localhost:8081/service/master/incomeFindByLandId/${selectedLandId}`)
+            axios.get(`http://localhost:8080/service/master/incomeFindByLandId/${selectedLandId}`)
                 .then((res) => {
                     setData(res.data.extra);
                     console.log(res.data.extra);
