@@ -36,12 +36,13 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
 
   }, []);
 
-  const handleSearchChange = (event) => {
-    setSearchQuery(event.target.value);
-  };
-  const filteredWorkers = workers.filter((worker) =>
-    worker.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredWorkers = filteredWorkersForSelectedLand.filter((worker) => {
+    return worker.name.toLowerCase().includes(searchQuery.toLowerCase())
+  });
+
+  const filteredWorkers1 = workers.filter((worker) => {
+    return worker.name.toLowerCase().includes(searchQuery.toLowerCase())
+  });
 
   const AddWorker = () => {
     history.push('/addWorker')
@@ -124,7 +125,7 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
       <br />
 
       <div className='drop-down-container'>
-        <p className="home-heading" style={{marginTop: '-5%'}}>{t('workermanagement')}</p>
+        <p className="home-heading" style={{ marginTop: '-5%' }}>{t('workermanagement')}</p>
 
         <button className="add-worker-button" onClick={AddWorker}>
           {t('addworker')}
@@ -149,13 +150,13 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
 
       <div className="worker-list">
         {selectedLandId
-          ? filteredWorkersForSelectedLand.map((worker) => (
+          ? filteredWorkers.map((worker) => (
             <div key={worker.id} className="worker-card" onClick={() => handleWorkerCardClick(worker)}>
               <h3>{t('name')}: {worker.name}</h3>
               <p>{t('phone')}: {worker.phone}</p>
             </div>
           ))
-          : filteredWorkers.map((worker) => (
+          : filteredWorkers1.map((worker) => (
             <div key={worker.id} className="worker-card" onClick={() => handleWorkerCardClick(worker)}>
               <h3>{t('name')}: {worker.name}</h3>
               <p>{t('phone')}: {worker.phone}</p>
