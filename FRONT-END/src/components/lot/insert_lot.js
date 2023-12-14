@@ -9,7 +9,7 @@ import { Form, Button, Container, Col, Row, Card } from 'react-bootstrap';
 import { submitSets } from '../UiComponents/SubmitSets';
 import { alertService } from '../../_services/alert.service';
 import { useTranslation } from 'react-i18next';
-import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
+import { FaGlobeAmericas, FaLanguage, FaMapMarker } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { MdArrowBackIos } from "react-icons/md";
 import { connect } from 'react-redux';
@@ -22,7 +22,8 @@ const InsertLot = ({ setSelectedLandId, selectedLandId }) => {
     const [area, setArea] = useState('');
     const [areaUom, setAreaUom] = useState('');
     const [landNames, setLandNames] = useState([]);
-    const [selectedLanguage, setSelectedLanguage] = useState('en');
+    const [landName, setLandName] = useState([]);
+
 
     const { t, i18n } = useTranslation();
 
@@ -30,17 +31,21 @@ const InsertLot = ({ setSelectedLandId, selectedLandId }) => {
         i18n.changeLanguage(lang);
     };
 
+    const handleLandChange = (event) => {
+        console.log("Land : ", event);
+        setSelectedLandId(event);
+    };
+
     useEffect(() => {
-        axios.get('http://localhost:8080/service/master/landFindAll').then((res) => {
+        submitSets(submitCollection.manageland, false).then((res) => {
             setLandNames(res.extra);
         });
-    }, [submitCollection.manageland]);
 
-    const handleLandChange = (event) => {
-        const newSelectedLandId = event.target.value;
-        console.log(newSelectedLandId);
-        setSelectedLandId(newSelectedLandId);
-    };
+        submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true).then((res) => {
+            setLandName(res.extra.name);
+        });
+
+    }, [submitCollection.manageland, selectedLandId]);
 
     const handleSubmit = () => {
 
@@ -71,25 +76,57 @@ const InsertLot = ({ setSelectedLandId, selectedLandId }) => {
 
     return (
         <div className='inserlot-app-screen'>
-            <div className="header-bar">
-                <MdArrowBackIos className="back-button" onClick={goBack}/>
+            <div className='main-heading'>
+                <div className="outer-frame d-flex justify-content-between align-items-center">
+                    <div className="filter-container d-flex align-items-center">
+                        <MdArrowBackIos className="back-button" onClick={goBack} />
+                    </div>
 
-                <div className="position-absolute top-0 end-0 me-0">
+                    <div className="filter-container d-flex align-items-center">
+                        <div className="land-filter">
+                            <Dropdown onSelect={handleLandChange}>
+                                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                                    <FaMapMarker style={{ color: 'white' }} />
+                                </Dropdown.Toggle>
 
-                    <Dropdown alignRight onSelect={handleLanguageChange}>
-                        <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                            <FaGlobeAmericas style={{ color: 'white' }} />
-                        </Dropdown.Toggle>
+                                <Dropdown.Menu>
+                                    {landNames.map((land) => (
+                                        <Dropdown.Item eventKey={land.id} value={land.id}>
+                                            {land.name}
+                                        </Dropdown.Item>
+                                    ))}
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </div>
 
-                        <Dropdown.Menu>
-                            <Dropdown.Item eventKey="en">English</Dropdown.Item>
-                            <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown>
+                        <div className="language-filter">
+                            <Dropdown onSelect={handleLanguageChange}>
+                                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                                    <FaGlobeAmericas style={{ color: 'white' }} />
+                                </Dropdown.Toggle>
+
+                                <Dropdown.Menu>
+                                    <Dropdown.Item eventKey="en">English</Dropdown.Item>
+                                    <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <p className="home-heading">{t('addlots')}</p>
+            <div className="drop-down-container">
+
+                <div className='landsectioncover'>
+                    <p className="landsection">
+                        <FaMapMarker style={{ marginRight: '5px' }} />
+                        Selected Land: {landName}
+                    </p>
+                </div>
+
+                <p className="home-heading">{t('addlots')}</p>
+            </div>
+
 
             <div className="content">
 

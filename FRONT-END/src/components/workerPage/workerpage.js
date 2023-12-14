@@ -8,7 +8,7 @@ import Footer from '../footer/footer';
 import { Form, Button, Container, Col, Row, Card } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import { useHistory, useLocation } from "react-router-dom";
-import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
+import { FaGlobeAmericas, FaLanguage, FaMapMarker } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { MdArrowBackIos } from "react-icons/md";
@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 
 
-const WorkerPage = ({ selectedLandId }) => {
+const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
 
   const { t, i18n } = useTranslation();
 
@@ -39,8 +39,28 @@ const WorkerPage = ({ selectedLandId }) => {
   const [basePayment, setBasePayment] = useState('');
   const [extraPayment, setExtraPayment] = useState('');
   const [attendancePayment, setAttendancePayment] = useState('');
+  const [landNames, setLandNames] = useState([]);
+  const [landName, setLandName] = useState([]);
+
+
 
   const history = useHistory();
+
+  const handleLandChange = (event) => {
+    console.log("Land : ", event);
+    setSelectedLandId(event);
+  };
+
+  useEffect(() => {
+    submitSets(submitCollection.manageland, false).then((res) => {
+      setLandNames(res.extra);
+    });
+
+    submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true).then((res) => {
+      setLandName(res.extra.name);
+    });
+
+  }, [submitCollection.manageland, selectedLandId]);
 
   const toggleView = () => {
     setShowBasicDetails(!showBasicDetails);
@@ -111,24 +131,60 @@ const WorkerPage = ({ selectedLandId }) => {
   return (
 
     <div className="worker-app-screen">
-      <div className="header-bar">
-        <MdArrowBackIos className="back-button" onClick={goBack}/>
+      <div className='main-heading'>
 
-        <div className="position-absolute top-0 end-0 me-0">
-          <Dropdown alignRight onSelect={handleLanguageChange}>
-            <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-              <FaGlobeAmericas style={{ color: 'white' }} />
-            </Dropdown.Toggle>
+        <div className="outer-frame d-flex justify-content-between align-items-center">
+          <div className="filter-container d-flex align-items-center">
+            <MdArrowBackIos className="back-button" onClick={goBack} />
+          </div>
 
-            <Dropdown.Menu>
-              <Dropdown.Item eventKey="en">English</Dropdown.Item>
-              <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
+          <div className="filter-container d-flex align-items-center">
+            <div className="land-filter">
+              <Dropdown onSelect={handleLandChange}>
+                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                  <FaMapMarker style={{ color: 'white' }} />
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                  {landNames.map((land) => (
+                    <Dropdown.Item eventKey={land.id} value={land.id}>
+                      {land.name}
+                    </Dropdown.Item>
+                  ))}
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
+
+            <div className="language-filter">
+              <Dropdown onSelect={handleLanguageChange}>
+                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                  <FaGlobeAmericas style={{ color: 'white' }} />
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                  <Dropdown.Item eventKey="en">English</Dropdown.Item>
+                  <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
+          </div>
         </div>
+
+
       </div>
 
-      <p className="home-heading">{t('workermanagement')}</p>
+      <div className="drop-down-container">
+
+        <div className='landsectioncover'>
+          <p className="landsection">
+            <FaMapMarker style={{ marginRight: '5px' }} />
+            Selected Land: {landName}
+          </p>
+        </div>
+
+        <p className="home-heading">{t('workermanagement')}</p>
+      
+      </div>
 
 
       <div className="toggle-container">
@@ -264,6 +320,9 @@ const WorkerPage = ({ selectedLandId }) => {
           </div>
         )}
       </div>
+
+      <br /><br />
+
       <div className='footer-alignment'>
         <Footer />
       </div>
