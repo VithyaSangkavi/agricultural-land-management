@@ -1,6 +1,8 @@
 .main-heading {
     background-color: #0e4f20;
     color: white;
+    padding-top: 0px;
+    margin-bottom: 0px;
     font: bold;
     font-size: large;
     margin-top: 0px;
@@ -12,4 +14,13 @@
     font: bold;
     color: #0e4f20;
     font-weight: bold;
+}
+
+.add-heading {
+    font-size: 20px;
+    text-align: center;
+    font: bold;
+    color: #0e4f20;
+    font-weight: bold;
+    margin-top: 10%;
 }

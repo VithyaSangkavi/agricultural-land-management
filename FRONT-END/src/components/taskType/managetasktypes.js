@@ -62,6 +62,7 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
   useEffect(() => {
     //get crop id by using landid
     axios.get(`http://localhost:8081/service/master/cropFindByLandId/${selectedLandId}`)
+
       .then((response) => {
         const cropIdLand = response.data.cropId.extra;
         localStorage.setItem('CropIdLand', cropIdLand);

@@ -112,7 +112,7 @@ const CostBreakdownReport = ({ dateRange: { fromDate }, selectedLand }) => {
                     beginAtZero: true,
                     title: {
                         display: true,
-                        text: 'Cost',
+                        text: 'Cost (Rs)',
                     },
                     ticks: {
                         // stepSize: 10,

@@ -59,9 +59,9 @@ function ManageIncome({ setSelectedLandId, selectedLandId }) {
     console.log(data)
 
 
-    const handleSearchChange = (event) => {
-        setSearchQuery(event.target.value);
-    };
+    const filteredData = data.filter((item) => {
+        return item.month.toLowerCase().includes(searchQuery.toLowerCase());
+    });
 
     const redirectToInsertIncome = () => {
         history.push({
@@ -137,7 +137,7 @@ function ManageIncome({ setSelectedLandId, selectedLandId }) {
             </div>
 
             <div className='income-list'>
-                {data.map((income) => (
+                {filteredData.map((income) => (
                     <div key={income.id} className="income-card">
                         <Link to={`/updateIncome/${income.id}`} className='custom-link'>
 
