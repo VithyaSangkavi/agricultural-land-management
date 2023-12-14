@@ -42,7 +42,7 @@ function ManageIncome({ setSelectedLandId, selectedLandId }) {
 
     useEffect(() => {
         if (selectedLandId) {
-            axios.get(`http://localhost:8080/service/master/incomeFindByLandId/${selectedLandId}`)
+            axios.get(`http://localhost:8081/service/master/incomeFindByLandId/${selectedLandId}`)
                 .then((res) => {
                     setData(res.data.extra);
                     console.log(res.data.extra);
@@ -95,7 +95,8 @@ function ManageIncome({ setSelectedLandId, selectedLandId }) {
                         </Dropdown>
                     </div>
 
-                    <div className="language-filter">
+                    <div className="language-filter me-0">
+
                         <Dropdown alignRight onSelect={handleLanguageChange}>
                             <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
                                 <FaGlobeAmericas style={{ color: 'white' }} />

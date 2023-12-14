@@ -55,7 +55,7 @@ function Home({ setSelectedLandId, selectedLandId }) {
     }, [submitCollection.manageland]);
     useEffect(() => {
 
-        axios.get(`http://localhost:8080/service/master/completed-tasks-with-names?landId=${selectedLandId}`).then((response) => {
+        axios.get(`http://localhost:8081/service/master/completed-tasks-with-names?landId=${selectedLandId}`).then((response) => {
 
             setOngoingTasks(response.data.extra);
             console.log("Ongoing tasks : ", response.data.extra);
@@ -112,7 +112,7 @@ function Home({ setSelectedLandId, selectedLandId }) {
                         </Dropdown>
                     </div>
 
-                    <div className="language-filter me-2">
+                    <div className="language-filter me-0">
                         <Dropdown alignRight onSelect={handleLanguageChange}>
                             <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
                                 <FaGlobeAmericas style={{ color: 'white' }} />

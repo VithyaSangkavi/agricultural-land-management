@@ -64,7 +64,7 @@ function Login(props) {
     return (
         <div className="parent-container">
             <p className='main-heading'>Agri-Management</p>
-            <div className="position-absolute top-0 end-0 me-2">
+            <div className="position-absolute top-0 end-0 me-0">
                 <Dropdown alignRight onSelect={handleLanguageChange}>
                     <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
                         <FaGlobeAmericas style={{ color: 'white' }} />
