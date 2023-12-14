@@ -61,6 +61,10 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
         history.goBack();
     };
 
+    const filteredData = data.filter((item) => {
+        return item.name.toLowerCase().includes(searchQuery.toLowerCase());
+    });
+
     return (
         <div className='managelot-app-screen'>
             <div className='main-heading'>
@@ -128,9 +132,9 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
             </div>
 
             <div className='lot-list'>
-                {data.map((lot) => (
+                {filteredData.map((lot) => (
                     <div key={lot.id} className="lot-card">
-                        <h3>{t('name')}: {lot.name}</h3>
+                        <h3>{lot.name}</h3>
                         <p>{t('area')}: {lot.area} {lot.areaUOM}</p>
                     </div>
                 ))}
