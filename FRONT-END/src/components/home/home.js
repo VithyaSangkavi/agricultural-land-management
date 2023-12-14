@@ -7,7 +7,7 @@ import Footer from '../footer/footer';
 import { FaGlobeAmericas } from 'react-icons/fa';
 import { Dropdown } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { FaPlus } from 'react-icons/fa';
+import { FaPlus, FaMapMarker } from 'react-icons/fa';
 import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 import { submitCollection } from '../../_services/submit.service';
@@ -22,13 +22,10 @@ function Home({ setSelectedLandId, selectedLandId }) {
 
     const [query, setQuery] = useState('');
     const [task, setTask] = useState([]);
-    const [taskNames, setTaskNames] = useState([]);
     const [taskAssigned, setTaskAssigned] = useState([]);
     const [OngoingTasks, setOngoingTasks] = useState([]);
-    const [ongoingTaskDate, setOngoingTaskDate] = useState('');
     const [landNames, setLandNames] = useState([]);
-
-
+    const [landName, setLandName] = useState([]);
 
 
     const history = useHistory();
@@ -74,11 +71,21 @@ function Home({ setSelectedLandId, selectedLandId }) {
         task.taskName.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const handleCardClick = (taskId) => {
-        localStorage.setItem('selectedTaskId', taskId);
-        console.log("Selected Task ID: ", taskId);
-        history.push(`/addTask`);
+    const handleLandChange = (event) => {
+        console.log("Land : ", event);
+        setSelectedLandId(event);
     };
+
+    useEffect(() => {
+        submitSets(submitCollection.manageland, false).then((res) => {
+            setLandNames(res.extra);
+        });
+
+        submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true).then((res) => {
+            setLandName(res.extra.name);
+        });
+
+    }, [submitCollection.manageland, selectedLandId]);
 
     // const handleLandChange = (event) => {
     //     const newSelectedLandId = event.target.value;
@@ -108,18 +115,6 @@ function Home({ setSelectedLandId, selectedLandId }) {
     //         });
     // }
 
-    useEffect(() => {
-        submitSets(submitCollection.manageland, false).then((res) => {
-            setLandNames(res.extra);
-        });
-    }, [submitCollection.manageland]);
-
-    const handleLandChange = (event) => {
-        const newSelectedLandId = event.target.value;
-        console.log(newSelectedLandId);
-        setSelectedLandId(newSelectedLandId);
-    };
-
 
     const handleChange = (event) => {
         setQuery(event.target.value);
@@ -139,42 +134,57 @@ function Home({ setSelectedLandId, selectedLandId }) {
     return (
         <div className="home-app-screen">
             <div className='main-heading'>
-                <div className="outer-frame d-flex justify-content-between">
-                    {/* <p className='page-name'>{t('home')}</p> */}
-                    <div className="land-filter">
-                        <Dropdown className='custom-dropdown'>
-                            <Col md={6}>
-                                <Form.Group>
-                                    <Form.Control as="select" value={selectedLandId} onChange={handleLandChange}>
-                                        {landNames.map((land) => (
-                                            <option key={land.id} value={land.id}>
-                                                {land.name}
-                                            </option>
-                                        ))}
-                                    </Form.Control>
-                                </Form.Group>
-                            </Col>
-                        </Dropdown>
+
+                <div className="outer-frame d-flex justify-content-between align-items-center">
+                    <div className="filter-container d-flex align-items-center">
+                        {/* <MdArrowBackIos className="back-button" onClick={goBack} /> */}
                     </div>
 
-                    <div className="language-filter me-2">
-                        <Dropdown alignRight onSelect={handleLanguageChange}>
-                            <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                                <FaGlobeAmericas style={{ color: 'white' }} />
-                            </Dropdown.Toggle>
+                    <div className="filter-container d-flex align-items-center">
+                        <div className="land-filter">
+                            <Dropdown onSelect={handleLandChange}>
+                                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                                    <FaMapMarker style={{ color: 'white' }} />
+                                </Dropdown.Toggle>
 
-                            <Dropdown.Menu>
-                                <Dropdown.Item eventKey="en">English</Dropdown.Item>
-                                <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-                            </Dropdown.Menu>
-                        </Dropdown>
+                                <Dropdown.Menu>
+                                    {landNames.map((land) => (
+                                        <Dropdown.Item eventKey={land.id} value={land.id}>
+                                            {land.name}
+                                        </Dropdown.Item>
+                                    ))}
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </div>
+
+                        <div className="language-filter">
+                            <Dropdown onSelect={handleLanguageChange}>
+                                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                                    <FaGlobeAmericas style={{ color: 'white' }} />
+                                </Dropdown.Toggle>
+
+                                <Dropdown.Menu>
+                                    <Dropdown.Item eventKey="en">English</Dropdown.Item>
+                                    <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </div>
                     </div>
                 </div>
+
             </div>
+            <div className="drop-down-container">
 
+                <div className='landsectioncover'>
+                    <p className="landsection">
+                        <FaMapMarker style={{ marginRight: '5px' }} />
+                        Selected Land: {landName}
+                    </p>
+                </div>
 
-            <div className='add-heading'>
-                <p>{t('ongoingtasks')}</p>
+                <div className='add-heading'>
+                    <p>{t('ongoingtasks')}</p>
+                </div>
             </div>
 
             <div className="task-list">

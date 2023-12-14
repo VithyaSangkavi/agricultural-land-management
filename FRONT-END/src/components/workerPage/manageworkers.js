@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import './manageworkers.css';
 import '../css/common.css';
 import Footer from '../footer/footer';
-import { FaGlobeAmericas, FaLanguage, FaSearch } from 'react-icons/fa';
+import { FaGlobeAmericas, FaLanguage, FaSearch, FaMapMarker } from 'react-icons/fa';
 import { MdArrowBackIos } from "react-icons/md";
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { Col, Form } from 'react-bootstrap';
@@ -24,6 +24,7 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
   const [filteredWorkersForSelectedLand, setFilteredWorkersForSelectedLand] = useState([]);
 
   const [landNames, setLandNames] = useState([]);
+  const [landName, setLandName] = useState([]);
 
   const history = useHistory();
 
@@ -52,12 +53,16 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
     submitSets(submitCollection.manageland, false).then((res) => {
       setLandNames(res.extra);
     });
-  }, [submitCollection.manageland]);
+
+    submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true).then((res) => {
+      setLandName(res.extra.name);
+    });
+
+  }, [submitCollection.manageland, selectedLandId]);
 
   const handleLandChange = (event) => {
-    const newSelectedLandId = event.target.value;
-    console.log(newSelectedLandId);
-    setSelectedLandId(newSelectedLandId);
+    console.log("Land : ", event);
+    setSelectedLandId(event);
   };
 
 
@@ -65,7 +70,7 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
     axios.get(`http://localhost:8080/service/master/findByLandId?landId=${selectedLandId}`)
       .then((response) => {
         console.log("Workers for selected land:", response.data.extra);
-        
+
         if (Array.isArray(response.data.extra)) {
           setFilteredWorkersForSelectedLand(response.data.extra);
         } else {
@@ -76,7 +81,7 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
         console.error("Error fetching workers for the selected land:", error);
       });
   }, [selectedLandId]);
-  
+
 
 
   const handleWorkerCardClick = (worker) => {
@@ -94,45 +99,58 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
   return (
     <div className="worker-app-screen">
       <div className='main-heading'>
-        <div className="outer-frame d-flex justify-content-between">
-          <MdArrowBackIos className="back-button" onClick={goBack} />
-          <div className="land-filter">
-            <Dropdown className='custom-dropdown'>
-              <Col md={6}>
-                <Form.Group>
-                  <Form.Control as="select" value={selectedLandId} onChange={handleLandChange}>
-                  <option value="">All Lands</option>
-                    {landNames.map((land) => (
-                      <option key={land.id} value={land.id}>
-                        {land.name}
-                      </option>
-                    ))}
-                  </Form.Control>
-                </Form.Group>
-              </Col>
-            </Dropdown>
+
+        <div className="outer-frame d-flex justify-content-between align-items-center">
+          <div className="filter-container d-flex align-items-center">
+            <MdArrowBackIos className="back-button" onClick={goBack} />
           </div>
 
-          <div className="language-filter">
-            <Dropdown alignRight onSelect={handleLanguageChange}>
-              <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                <FaGlobeAmericas style={{ color: 'white' }} />
-              </Dropdown.Toggle>
+          <div className="filter-container d-flex align-items-center">
+            <div className="land-filter">
+              <Dropdown onSelect={handleLandChange}>
+                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                  <FaMapMarker style={{ color: 'white' }} />
+                </Dropdown.Toggle>
 
-              <Dropdown.Menu>
-                <Dropdown.Item eventKey="en">English</Dropdown.Item>
-                <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
+                <Dropdown.Menu>
+                  {landNames.map((land) => (
+                    <Dropdown.Item eventKey={land.id} value={land.id}>
+                      {land.name}
+                    </Dropdown.Item>
+                  ))}
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
+
+            <div className="language-filter">
+              <Dropdown onSelect={handleLanguageChange}>
+                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                  <FaGlobeAmericas style={{ color: 'white' }} />
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                  <Dropdown.Item eventKey="en">English</Dropdown.Item>
+                  <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
           </div>
-
         </div>
+
       </div>
 
       <br />
 
       <div className='drop-down-container'>
-        <p className="home-heading" style={{ marginTop: '-5%' }}>{t('workermanagement')}</p>
+
+        <div className='landsectioncover'>
+          <p className="landsection">
+            <FaMapMarker style={{ marginRight: '5px' }} />
+            Selected Land: {landName}
+          </p>
+        </div>
+
+        <p className="home-heading">{t('workermanagement')}</p>
 
         <button className="add-worker-button" onClick={AddWorker}>
           {t('addworker')}
@@ -157,7 +175,7 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
 
       <div className="worker-list">
 
-      {selectedLandId && selectedLandId !== ""
+        {selectedLandId && selectedLandId !== ""
           ? filteredWorkersForSelectedLand.map((worker) => (
 
             <div key={worker.id} className="worker-card" onClick={() => handleWorkerCardClick(worker)}>
