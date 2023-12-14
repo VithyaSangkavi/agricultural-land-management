@@ -41,8 +41,16 @@
   background-color: #0e4f20;
   color: white;
   padding: 5px;
-  width: 50%;
+  width: 35%;
   margin-top: 10px;
+  font-size: small;
+}
+
+.reset-filter-button {
+  background-color: #0e4f20;
+  color: white;
+  font-size: small;
+  border: none;
 }
 
 .report-app-screen {
@@ -119,4 +127,18 @@
   border-radius: 5px; 
   margin-left: 10px;
   margin-right: 10px;
+  margin-top: 10px;
+}
+
+.date-range-picker {
+  display: flex;
+  align-items: center;
+}
+
+.separator {
+  margin: 0 5px;
+}
+
+.custom-label{
+  font-size: small;
 }

@@ -97,6 +97,11 @@ const EmployeePerfomnceReport = ({ dateRange: { fromDate, toDate }, selectedLand
     return (
         <>
             <div className='report-app-screen'>
+                <div className='info-card'>
+                    {fromDate && toDate && (
+                        <p>Date Range : {fromDate} - {toDate}</p>
+                    )}
+                </div>
                 <h2>Employee Perfomnce Report</h2>
                 <table className='attendance-table'>
                     <thead>
