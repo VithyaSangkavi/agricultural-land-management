@@ -29,7 +29,7 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
 
   useEffect(() => {
 
-    axios.post('http://localhost:8080/service/master/workerFindAll').then((response) => {
+    axios.post('http://localhost:8081/service/master/workerFindAll').then((response) => {
       setWorkers(response.data.extra);
       console.log("Workers : ", response.data.extra);
     });
@@ -86,6 +86,7 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
 
   return (
     <div className="worker-app-screen">
+
       <div className='main-heading'>
         <div className="outer-frame d-flex justify-content-between">
           <MdArrowBackIos className="back-button" onClick={goBack} />
@@ -117,7 +118,6 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
               </Dropdown.Menu>
             </Dropdown>
           </div>
-
         </div>
       </div>
 
