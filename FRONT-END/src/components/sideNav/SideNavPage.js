@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import button from 'react-bootstrap/button';
 import Navbar from 'react-bootstrap/Navbar';
 import './SideNavPage.css'
@@ -7,6 +8,11 @@ import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import AnimatedPage from '../../AnimatedPage';
+import { IoMdArrowRoundBack } from "react-icons/io";
+import { GrUserWorker, GrTasks } from "react-icons/gr";
+import { MdOutlineBallot, MdTask } from "react-icons/md";
+import { FaLandmark, FaCashRegister } from "react-icons/fa6";
+import { HiOutlineCash } from "react-icons/hi";
 
 function SideNavBar() {
 
@@ -50,83 +56,98 @@ function SideNavBar() {
     i18n.changeLanguage(lang);
   };
 
+  const [isBackClicked, setIsBackClicked] = useState(false);
+
+  const goBack = () => {
+    setIsBackClicked(true);
+    setTimeout(() => {
+      history.goBack();
+    }, 500);
+  };
+
   return (
-      <div className='side-nav-screen'>
-        <p className='main-heading'>{t('welcome')}</p>
-        <div className="position-absolute top-0 end-0 me-0">
-          <Dropdown alignRight onSelect={handleLanguageChange}>
-            <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-              <FaGlobeAmericas style={{ color: 'white' }} />
-            </Dropdown.Toggle>
+    <>
+      <AnimatedPage>
+        <div className={`side-nav-screen ${isBackClicked ? 'back-animation' : ''}`}>
+          <div className="position-absolute top-0 start-0 ms-0">
+            <IoMdArrowRoundBack className="side-back-button" onClick={goBack} />
+          </div>
+          <p className='main-heading'>{t('welcome')}</p>
+          <div className="position-absolute top-0 end-0 me-0">
+            <Dropdown alignRight onSelect={handleLanguageChange}>
+              <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                <FaGlobeAmericas style={{ color: 'white' }} />
+              </Dropdown.Toggle>
 
-            <Dropdown.Menu>
-              <Dropdown.Item eventKey="en">English</Dropdown.Item>
-              <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        </div>
-        <AnimatedPage>
-        <div className="side-nav-menu">
-          <button className='menu-click'>
-            <div onClick={ManageWorkers}>
-              {t('workermanagement')}
-            </div>
-          </button>
-        </div>
+              <Dropdown.Menu>
+                <Dropdown.Item eventKey="en">English</Dropdown.Item>
+                <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </div>
+          <div className="side-nav-menu">
+            <button className='menu-click'>
+              <div onClick={ManageWorkers}>
+                <GrUserWorker />  {t('workermanagement')}
+              </div>
+            </button>
+          </div>
 
-        <div className="side-nav-menu">
-          <button className='menu-click'>
-            <div onClick={ManageLand}>
-              {t('managelands')}
-            </div>
-          </button>
-        </div>
+          <div className="side-nav-menu">
+            <button className='menu-click'>
+              <div onClick={ManageLand}>
+                <FaLandmark />  {t('managelands')}
+              </div>
+            </button>
+          </div>
 
-        <div className="side-nav-menu">
-          <button className='menu-click'>
-            <div onClick={ManageLot}>
-              {t('managelots')}
-            </div>
-          </button>
-        </div>
+          <div className="side-nav-menu">
+            <button className='menu-click'>
+              <div onClick={ManageLot}>
+                <MdOutlineBallot />  {t('managelots')}
+              </div>
+            </button>
+          </div>
 
-        <div className="side-nav-menu">
-          <button className='menu-click'>
-            <div onClick={ManageTaskType}>
-              {t('managetasktype')}
-            </div>
-          </button>
-        </div>
+          <div className="side-nav-menu">
+            <button className='menu-click'>
+              <div onClick={ManageTaskType}>
+                <GrTasks />  {t('managetasktype')}
+              </div>
+            </button>
+          </div>
 
-        <div className="side-nav-menu">
-          <button className='menu-click'>
-            <div onClick={ManageIncome}>
-              {t('manageincome')}
-            </div>
-          </button>
-        </div>
+          <div className="side-nav-menu">
+            <button className='menu-click'>
+              <div onClick={ManageIncome}>
+                <HiOutlineCash />  {t('manageincome')}
+              </div>
+            </button>
+          </div>
 
-        <div className="side-nav-menu">
-          <button className='menu-click'>
-            <div onClick={ManageExpenseType}>
-              {t('manageexpensetype')}
-            </div>
-          </button>
-        </div>
+          <div className="side-nav-menu">
+            <button className='menu-click'>
+              <div onClick={ManageExpenseType}>
+                <FaCashRegister />  {t('manageexpensetype')}
+              </div>
+            </button>
+          </div>
 
-        <div className="side-nav-menu">
-          <button className='menu-click'>
-            <div onClick={CompletedTasks}>
-              {t('completedtasks')}
-            </div>
-          </button>
-        </div>
-        
-        </AnimatedPage>
-        <div className='footer-alignment'>
-          <Footer />
-        </div>
-      </div >
+          <div className="side-nav-menu">
+            <button className='menu-click'>
+              <div onClick={CompletedTasks}>
+                <MdTask />  {t('completedtasks')}
+              </div>
+            </button>
+          </div>
+
+        </div >
+      </AnimatedPage >
+
+      <div className='footer-alignment'>
+        <Footer />
+      </div>
+    </>
   );
 }
 
