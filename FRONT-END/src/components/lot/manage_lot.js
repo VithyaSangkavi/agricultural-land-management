@@ -37,11 +37,11 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
     }, [submitCollection.manageland]);
 
     useEffect(() => {
-        if (selectedLandId) {
+        if (selectedLandId && selectedLandId !== "") {
             submitSets(submitCollection.managelot, "/" + selectedLandId, true).then(res => {
-                if (res && res.status) {
-                    setData(res.extra);
-                }
+              if (res && res.status) {
+                setData(res.extra);
+              }
             });
         }
     }, [selectedLandId, submitCollection.managelot]);
@@ -67,7 +67,6 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
 
     return (
         <div className='managelot-app-screen'>
-
             <div className='main-heading'>
                 <div className="outer-frame d-flex justify-content-between">
                     <MdArrowBackIos className="back-button" onClick={goBack} />
@@ -76,6 +75,7 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
                             <Col md={6}>
                                 <Form.Group>
                                     <Form.Control as="select" value={selectedLandId} onChange={handleLandChange}>
+                                        <option value="">All Lands</option>
                                         {landNames.map((land) => (
                                             <option key={land.id} value={land.id}>
                                                 {land.name}
@@ -87,7 +87,7 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
                         </Dropdown>
                     </div>
 
-                    <div className="language-filter me-0">
+                    <div className="language-filter me-2">
                         <Dropdown alignRight onSelect={handleLanguageChange}>
                             <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
                                 <FaGlobeAmericas style={{ color: 'white' }} />
@@ -99,15 +99,16 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
                             </Dropdown.Menu>
                         </Dropdown>
                     </div>
+
                 </div>
             </div>
-            
+
             <br />
 
 
             <div className="drop-down-container">
-            <p className="home-heading">{t('managelots')}</p>
-            
+                <p className="home-heading">{t('managelots')}</p>
+
 
                 <button className="add-worker-button" onClick={redirectToInsertLot}>
                     {t('addlot')}

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import '../Income/insert_income.css';
+import axios from 'axios';
 import Footer from '../footer/footer';
 import { submitCollection } from '../../_services/submit.service';
 import { Form, Button, Col } from 'react-bootstrap';
@@ -27,7 +28,7 @@ const InsertIncome = ({ setSelectedLandId, selectedLandId }) => {
     };
 
     useEffect(() => {
-        submitSets(submitCollection.manageland, false).then((res) => {
+        axios.get('http://localhost:8081/service/master/landFindAll').then((res) => {
             setLandNames(res.extra);
         });
     }, [submitCollection.manageland]);

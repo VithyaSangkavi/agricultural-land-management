@@ -46,13 +46,14 @@ function Home({ setSelectedLandId, selectedLandId }) {
 
     console.log("selected land : ", selectedLandId)
 
+
     useEffect(() => {
-        axios.post('http://localhost:8081/service/master/taskAssignedFindAll').then((response) => {
+        axios.post('http://localhost:8080/service/master/taskAssignedFindAll').then((response) => {
             setTaskAssigned(response.data);
             console.log("Task Assigned: ", response.data);
         });
 
-        axios.post('http://localhost:8081/service/master/taskFindAll').then((response) => {
+        axios.post('http://localhost:8080/service/master/taskFindAll').then((response) => {
             setTask(response.data.extra);
             console.log("Tasks : ", response.data.extra);
         });
@@ -139,7 +140,7 @@ function Home({ setSelectedLandId, selectedLandId }) {
         <div className="home-app-screen">
             <div className='main-heading'>
                 <div className="outer-frame d-flex justify-content-between">
-                    <p className='page-name'>{t('home')}</p>
+                    {/* <p className='page-name'>{t('home')}</p> */}
                     <div className="land-filter">
                         <Dropdown className='custom-dropdown'>
                             <Col md={6}>
@@ -156,7 +157,7 @@ function Home({ setSelectedLandId, selectedLandId }) {
                         </Dropdown>
                     </div>
 
-                    <div className="language-filter me-0">
+                    <div className="language-filter me-2">
                         <Dropdown alignRight onSelect={handleLanguageChange}>
                             <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
                                 <FaGlobeAmericas style={{ color: 'white' }} />

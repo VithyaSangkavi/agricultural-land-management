@@ -61,7 +61,7 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
 
   useEffect(() => {
     //get crop id by using landid
-    axios.get(`http://localhost:8080/service/master/cropFindByLandId/${selectedLandId}`)
+    axios.get(`http://localhost:8081/service/master/cropFindByLandId/${selectedLandId}`)
 
       .then((response) => {
         const cropIdLand = response.data.cropId.extra;
@@ -90,7 +90,6 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
 
   return (
     <div className="task-app-screen">
-
       <div className='main-heading'>
         <div className="outer-frame d-flex justify-content-between">
           <MdArrowBackIos className="back-button" onClick={goBack} />
@@ -110,7 +109,7 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
             </Dropdown>
           </div>
 
-          <div className="language-filter me-0">
+          <div className="language-filter me-2">
             <Dropdown alignRight onSelect={handleLanguageChange}>
               <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
                 <FaGlobeAmericas style={{ color: 'white' }} />

@@ -8,13 +8,14 @@ import { logoutAction } from '../../actions/auth/login_action';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import '../navBar/navbar.css';
+import axios from 'axios';
 
 function Navbar(props) {
     const { selectedLandId, onLandChange, onLanguageChange } = props;
     const [landNames, setLandNames] = useState([]);
 
     useEffect(() => {
-        submitSets(submitCollection.manageland, false).then((res) => {
+        axios.get('http://localhost:8081/service/master/landFindAll').then((res) => {
             setLandNames(res.extra);
         });
     }, []);
