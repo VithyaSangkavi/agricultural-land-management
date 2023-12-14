@@ -3,7 +3,8 @@ import axios from 'axios';
 import Footer from '../footer/footer';
 import { useHistory } from "react-router-dom";
 import DatePicker from 'react-datepicker';
-import './manage-task.css'
+import './manage-task.css';
+import '../css/common.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faCheck, faReopen } from '@fortawesome/free-solid-svg-icons';
 import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
@@ -429,8 +430,9 @@ const ManageOngoingTask = () => {
         <div className="manage-task-app-screen">
             <div className="header-bar">
                 <MdArrowBackIos className="back-button" onClick={goBack}/>
-                <p className="main-heading">{t('ongoingtasks')}</p>
-                <div className="position-absolute top-0 end-0 me-0">
+                <p className="add-heading">{t('ongoindtasks')}</p>
+                <div className="position-absolute top-0 end-0 me-2">
+
                     <Dropdown alignRight onSelect={handleLanguageChange}>
                         <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
                             <FaGlobeAmericas style={{ color: 'white' }} />

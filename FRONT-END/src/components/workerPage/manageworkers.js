@@ -61,7 +61,7 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
 
 
   useEffect(() => {
-    axios.get(`http://localhost:8081/service/master/findByLandId?landId=${selectedLandId}`)
+    axios.get(`http://localhost:8080/service/master/findByLandId?landId=${selectedLandId}`)
       .then((response) => {
         console.log("Workers for selected land:", response.data.extra);
         setFilteredWorkersForSelectedLand(response.data.extra);

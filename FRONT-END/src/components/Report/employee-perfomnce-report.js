@@ -85,7 +85,7 @@ const EmployeePerfomnceReport = ({ dateRange: { fromDate, toDate }, selectedLand
                 beginAtZero: true,
                 title: {
                     display: true,
-                    text: 'Quantity',
+                    text: 'Quantity (Kg)',
                 },
                 ticks: {
                     stepSize: 1,
