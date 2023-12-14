@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useHistory } from "react-router-dom";
 import './managetasktypes.css';
 import Footer from '../footer/footer';
-import { FaGlobeAmericas, FaSearch } from 'react-icons/fa';
+import { FaGlobeAmericas, FaSearch, FaMapMarker } from 'react-icons/fa';
 import { Dropdown } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { MdArrowBackIos } from "react-icons/md";
@@ -18,26 +18,30 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
   const { t, i18n } = useTranslation();
 
   const [lands, setLands] = useState([]);
-  const [selectedLand, setSelectedLand] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [tasks, setTasks] = useState([]);
   const [landNames, setLandNames] = useState([]);
+  const [landName, setLandName] = useState([]);
+
 
 
   const history = useHistory();
+
+  const handleLandChange = (event) => {
+    console.log("Land : ", event);
+    setSelectedLandId(event);
+  };
 
   useEffect(() => {
     submitSets(submitCollection.manageland, false).then((res) => {
       setLandNames(res.extra);
     });
-  }, [submitCollection.manageland]);
 
-  const handleLandChange = (event) => {
-    const newSelectedLandId = event.target.value;
-    console.log(newSelectedLandId);
-    setSelectedLandId(newSelectedLandId);
-  };
+    submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true).then((res) => {
+      setLandName(res.extra.name);
+    });
 
+  }, [submitCollection.manageland, selectedLandId]);
   useEffect(() => {
 
     axios.post('http://localhost:8081/service/master/taskFindAll').then((response) => {
@@ -91,44 +95,59 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
   return (
     <div className="task-app-screen">
       <div className='main-heading'>
-        <div className="outer-frame d-flex justify-content-between">
-          <MdArrowBackIos className="back-button" onClick={goBack} />
-          <div className="land-filter">
-            <Dropdown className='custom-dropdown'>
-              <Col md={6}>
-                <Form.Group>
-                  <Form.Control as="select" value={selectedLandId} onChange={handleLandChange}>
-                    {landNames.map((land) => (
-                      <option key={land.id} value={land.id}>
-                        {land.name}
-                      </option>
-                    ))}
-                  </Form.Control>
-                </Form.Group>
-              </Col>
-            </Dropdown>
+
+        <div className="outer-frame d-flex justify-content-between align-items-center">
+          <div className="filter-container d-flex align-items-center">
+            <MdArrowBackIos className="back-button" onClick={goBack} />
           </div>
 
-          <div className="language-filter me-2">
-            <Dropdown alignRight onSelect={handleLanguageChange}>
-              <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                <FaGlobeAmericas style={{ color: 'white' }} />
-              </Dropdown.Toggle>
+          <div className="filter-container d-flex align-items-center">
+            <div className="land-filter">
+              <Dropdown onSelect={handleLandChange}>
+                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                  <FaMapMarker style={{ color: 'white' }} />
+                </Dropdown.Toggle>
 
-              <Dropdown.Menu>
-                <Dropdown.Item eventKey="en">English</Dropdown.Item>
-                <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
+                <Dropdown.Menu>
+                  {landNames.map((land) => (
+                    <Dropdown.Item eventKey={land.id} value={land.id}>
+                      {land.name}
+                    </Dropdown.Item>
+                  ))}
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
+
+            <div className="language-filter">
+              <Dropdown onSelect={handleLanguageChange}>
+                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                  <FaGlobeAmericas style={{ color: 'white' }} />
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                  <Dropdown.Item eventKey="en">English</Dropdown.Item>
+                  <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
           </div>
         </div>
+
+
       </div>
 
       <br />
 
       <div className='drop-down-container'>
-        <p className="home-heading">{t('tasktypemanagement')}</p>
 
+        <div className='landsectioncover'>
+          <p className="landsection">
+            <FaMapMarker style={{ marginRight: '5px' }} />
+            Selected Land: {landName}
+          </p>
+        </div>
+
+        <p className="home-heading">{t('tasktypemanagement')}</p>
 
         <button className="add-task-type-button" onClick={AddTaskType}>
           {t('addtasktype')}
