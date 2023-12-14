@@ -30,7 +30,7 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
 
   useEffect(() => {
 
-    axios.post('http://localhost:8080/service/master/workerFindAll').then((response) => {
+    axios.post('http://localhost:8081/service/master/workerFindAll').then((response) => {
       setWorkers(response.data.extra);
       console.log("Workers : ", response.data.extra);
     });
@@ -67,7 +67,7 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
 
 
   useEffect(() => {
-    axios.get(`http://localhost:8080/service/master/findByLandId?landId=${selectedLandId}`)
+    axios.get(`http://localhost:8081/service/master/findByLandId?landId=${selectedLandId}`)
       .then((response) => {
         console.log("Workers for selected land:", response.data.extra);
 
