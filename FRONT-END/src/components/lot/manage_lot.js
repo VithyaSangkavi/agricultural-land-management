@@ -7,7 +7,7 @@ import { submitSets } from '../UiComponents/SubmitSets';
 import { Col, Form } from 'react-bootstrap';
 import { alertService } from '../../_services/alert.service';
 import { useTranslation } from 'react-i18next';
-import { FaGlobeAmericas, FaLanguage, FaSearch } from 'react-icons/fa';
+import { FaGlobeAmericas, FaLanguage, FaSearch, FaMapMarker } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { MdArrowBackIos } from "react-icons/md";
 import { connect } from 'react-redux';
@@ -17,6 +17,7 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
     const [data, setData] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [landNames, setLandNames] = useState([]);
+    const [landName, setLandName] = useState([]);
     const history = useHistory();
     const { t, i18n } = useTranslation();
 
@@ -25,23 +26,27 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
     };
 
     const handleLandChange = (event) => {
-        const newSelectedLandId = event.target.value;
-        console.log(newSelectedLandId);
-        setSelectedLandId(newSelectedLandId);
+        console.log("Land : ", event);
+        setSelectedLandId(event);
     };
 
     useEffect(() => {
         submitSets(submitCollection.manageland, false).then((res) => {
             setLandNames(res.extra);
         });
-    }, [submitCollection.manageland]);
+
+        submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true).then((res) => {
+            setLandName(res.extra.name);
+        });
+
+    }, [submitCollection.manageland, selectedLandId]);
 
     useEffect(() => {
         if (selectedLandId && selectedLandId !== "") {
             submitSets(submitCollection.managelot, "/" + selectedLandId, true).then(res => {
-              if (res && res.status) {
-                setData(res.extra);
-              }
+                if (res && res.status) {
+                    setData(res.extra);
+                }
             });
         }
     }, [selectedLandId, submitCollection.managelot]);
@@ -68,54 +73,64 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
     return (
         <div className='managelot-app-screen'>
             <div className='main-heading'>
-                <div className="outer-frame d-flex justify-content-between">
-                    <MdArrowBackIos className="back-button" onClick={goBack} />
-                    <div className="land-filter">
-                        <Dropdown className='custom-dropdown'>
-                            <Col md={6}>
-                                <Form.Group>
-                                    <Form.Control as="select" value={selectedLandId} onChange={handleLandChange}>
-                                        <option value="">All Lands</option>
-                                        {landNames.map((land) => (
-                                            <option key={land.id} value={land.id}>
-                                                {land.name}
-                                            </option>
-                                        ))}
-                                    </Form.Control>
-                                </Form.Group>
-                            </Col>
-                        </Dropdown>
+
+                <div className="outer-frame d-flex justify-content-between align-items-center">
+                    <div className="filter-container d-flex align-items-center">
+                        <MdArrowBackIos className="back-button" onClick={goBack} />
                     </div>
 
-                    <div className="language-filter me-2">
-                        <Dropdown alignRight onSelect={handleLanguageChange}>
-                            <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                                <FaGlobeAmericas style={{ color: 'white' }} />
-                            </Dropdown.Toggle>
+                    <div className="filter-container d-flex align-items-center">
+                        <div className="land-filter">
+                            <Dropdown onSelect={handleLandChange}>
+                                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                                    <FaMapMarker style={{ color: 'white' }} />
+                                </Dropdown.Toggle>
 
-                            <Dropdown.Menu>
-                                <Dropdown.Item eventKey="en">English</Dropdown.Item>
-                                <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-                            </Dropdown.Menu>
-                        </Dropdown>
+                                <Dropdown.Menu>
+                                    {landNames.map((land) => (
+                                        <Dropdown.Item eventKey={land.id} value={land.id}>
+                                            {land.name}
+                                        </Dropdown.Item>
+                                    ))}
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </div>
+
+                        <div className="language-filter">
+                            <Dropdown onSelect={handleLanguageChange}>
+                                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                                    <FaGlobeAmericas style={{ color: 'white' }} />
+                                </Dropdown.Toggle>
+
+                                <Dropdown.Menu>
+                                    <Dropdown.Item eventKey="en">English</Dropdown.Item>
+                                    <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </div>
                     </div>
-
                 </div>
+
+
             </div>
 
             <br />
 
-
             <div className="drop-down-container">
-                <p className="home-heading">{t('managelots')}</p>
 
+                <div className='landsectioncover'>
+                    <p className="landsection">
+                        <FaMapMarker style={{ marginRight: '5px' }} />
+                        Selected Land: {landName}
+                    </p>
+                </div>
+
+                <p className="home-heading">{t('managelots')}</p>
 
                 <button className="add-worker-button" onClick={redirectToInsertLot}>
                     {t('addlot')}
                 </button>
             </div>
-
-
 
             <div className="search-container">
                 <div className="search-wrapper">
@@ -150,8 +165,8 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
             <div className='footer-alignment'>
                 <Footer />
             </div>
-
         </div>
+
     );
 };
 

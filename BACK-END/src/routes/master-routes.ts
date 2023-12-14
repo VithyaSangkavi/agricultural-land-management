@@ -45,6 +45,7 @@ router.get("/incomeFindByLandId/:landId", incomeController.findByLandId);
 //
 router.post("/landSave", landController.save);
 router.get("/landFindAll", landController.findAll);
+router.get("/landFind", landController.findById);
 router.post('/findLandIdByName', landController.findLandIdByName);
 
 //

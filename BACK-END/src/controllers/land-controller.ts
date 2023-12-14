@@ -45,3 +45,19 @@ export const findLandIdByName = async (req: Request, res: Response, next: NextFu
     next(error);
   }
 };
+
+export const findById = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const landId = req.query.landId as number;
+
+    if (!landId) {
+      return res.status(400).json({ error: 'Land id is required as a query parameter' });
+    }
+
+    const response = await landService.findById(landId);
+
+    res.json(response); 
+  } catch (error) {
+    next(error);
+  }
+};

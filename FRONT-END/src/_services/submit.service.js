@@ -13,6 +13,8 @@ const submitCollection = {
     managelot: { ptype: "GET", url: basePath+"/service/master/lotFindByLandId", queryparam: true, data:true, auth: true },
     getincomebyid: { ptype: "GET", url: basePath+"/service/master/incomeFindById", queryparam: true, data:true, auth: true },
     updateprice: { ptype: "PUT", url: basePath+"/service/master/updatePrice", queryparam: true, data:true, auth: true },
+    getlandbyid: { ptype: "GET", url: basePath+"/service/master/landFind", queryparam: true, data:true, auth: true },
+
 
     login: { ptype: "POST", url: basePath+"/service/master/login", queryparam: false, data:true },
 
