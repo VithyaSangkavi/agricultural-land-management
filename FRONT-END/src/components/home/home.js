@@ -140,7 +140,7 @@ function Home({ setSelectedLandId, selectedLandId }) {
         <div className="home-app-screen">
             <div className='main-heading'>
                 <div className="outer-frame d-flex justify-content-between">
-                    <p className='page-name'>{t('home')}</p>
+                    {/* <p className='page-name'>{t('home')}</p> */}
                     <div className="land-filter">
                         <Dropdown className='custom-dropdown'>
                             <Col md={6}>

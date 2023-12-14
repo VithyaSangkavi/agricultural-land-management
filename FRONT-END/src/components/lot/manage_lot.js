@@ -37,11 +37,11 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
     }, [submitCollection.manageland]);
 
     useEffect(() => {
-        if (selectedLandId) {
+        if (selectedLandId && selectedLandId !== "") {
             submitSets(submitCollection.managelot, "/" + selectedLandId, true).then(res => {
-                if (res && res.status) {
-                    setData(res.extra);
-                }
+              if (res && res.status) {
+                setData(res.extra);
+              }
             });
         }
     }, [selectedLandId, submitCollection.managelot]);
@@ -71,6 +71,7 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
                             <Col md={6}>
                                 <Form.Group>
                                     <Form.Control as="select" value={selectedLandId} onChange={handleLandChange}>
+                                        <option value="">All Lands</option>
                                         {landNames.map((land) => (
                                             <option key={land.id} value={land.id}>
                                                 {land.name}
@@ -97,13 +98,13 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
 
                 </div>
             </div>
-            
+
             <br />
 
 
             <div className="drop-down-container">
-            <p className="home-heading">{t('managelots')}</p>
-            
+                <p className="home-heading">{t('managelots')}</p>
+
 
                 <button className="add-worker-button" onClick={redirectToInsertLot}>
                     {t('addlot')}

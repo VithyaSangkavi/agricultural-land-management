@@ -64,12 +64,18 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
     axios.get(`http://localhost:8081/service/master/findByLandId?landId=${selectedLandId}`)
       .then((response) => {
         console.log("Workers for selected land:", response.data.extra);
-        setFilteredWorkersForSelectedLand(response.data.extra);
+        
+        if (Array.isArray(response.data.extra)) {
+          setFilteredWorkersForSelectedLand(response.data.extra);
+        } else {
+          setFilteredWorkersForSelectedLand([]);
+        }
       })
       .catch((error) => {
         console.error("Error fetching workers for the selected land:", error);
       });
   }, [selectedLandId]);
+  
 
 
   const handleWorkerCardClick = (worker) => {
@@ -94,6 +100,7 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
               <Col md={6}>
                 <Form.Group>
                   <Form.Control as="select" value={selectedLandId} onChange={handleLandChange}>
+                  <option value="">All Lands</option>
                     {landNames.map((land) => (
                       <option key={land.id} value={land.id}>
                         {land.name}
@@ -148,7 +155,7 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
       </div>
 
       <div className="worker-list">
-        {selectedLandId
+      {selectedLandId && selectedLandId !== ""
           ? filteredWorkersForSelectedLand.map((worker) => (
             <div key={worker.id} className="worker-card" onClick={() => handleWorkerCardClick(worker)}>
               <h3>{t('name')}: {worker.name}</h3>
