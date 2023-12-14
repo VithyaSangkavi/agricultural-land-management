@@ -12,8 +12,11 @@ import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { MdArrowBackIos } from "react-icons/md";
+import { connect } from 'react-redux';
+import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 
-const WorkerPage = () => {
+
+const WorkerPage = ({ selectedLandId }) => {
 
   const { t, i18n } = useTranslation();
 
@@ -29,11 +32,7 @@ const WorkerPage = () => {
   const [phone, setPhone] = useState(basicDetails.phone || '');
   const [address, setAddress] = useState(basicDetails.address || '');
   const [workerStatus, setWorkerStatus] = useState(basicDetails.workerStatus || '');
-  const storedLandData = localStorage.getItem('selectedLandIdWorker');
 
-  const landData = JSON.parse(storedLandData);
-  const landId = landData.landId;
-  console.log('Land ID:', landId);
 
   const [workerId, setWorkerId] = useState(basicDetails.id || -1);
   const [paymentType, setPaymentType] = useState('');
@@ -52,6 +51,8 @@ const WorkerPage = () => {
     console.log('Basic Details:', basicDetails);
   }, [basicDetails]);
 
+  console.log(selectedLandId)
+
   //Add Worker
   const handleAddWorker = () => {
     const addWorker = {
@@ -63,7 +64,7 @@ const WorkerPage = () => {
       phone,
       address,
       workerStatus,
-      landId
+      landId: selectedLandId
     };
 
     submitSets(submitCollection.saveworker, addWorker, false)
@@ -271,4 +272,12 @@ const WorkerPage = () => {
   );
 };
 
-export default WorkerPage;
+const mapStateToProps = (state) => ({
+  selectedLandId: state.selectedLandId,
+});
+
+const mapDispatchToProps = {
+  setSelectedLandId: setSelectedLandIdAction,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(WorkerPage);
