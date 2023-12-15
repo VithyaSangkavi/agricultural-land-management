@@ -14,6 +14,8 @@ import { submitSets } from '../UiComponents/SubmitSets';
 import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 import SearchComponent from '../search/search';
+import { alertService } from '../../_services/alert.service';
+
 
 function ManageWorkers({ setSelectedLandId, selectedLandId }) {
 
@@ -69,6 +71,11 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
   useEffect(() => {
     axios.get(`http://localhost:8080/service/master/findByLandId?landId=${selectedLandId}`)
       .then((response) => {
+
+        if (response.data.extra.length === 0) {
+          alertService.info('No Data Found !');
+        }
+
         console.log("Workers for selected land:", response.data.extra);
 
         if (Array.isArray(response.data.extra)) {
@@ -141,7 +148,7 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
 
       <br />
 
-      <div className='drop-down-container' style={{marginTop: "-25px"}}>
+      <div className='drop-down-container' style={{ marginTop: "-25px" }}>
 
         <div className='landsectioncover'>
           <p className="landsection">

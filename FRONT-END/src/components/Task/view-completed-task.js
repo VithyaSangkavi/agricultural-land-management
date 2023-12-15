@@ -62,6 +62,10 @@ function Home({ setSelectedLandId, selectedLandId }) {
 
         axios.get(`http://localhost:8080/service/master/completed-tasks-with-names?landId=${selectedLandId}`).then((response) => {
 
+            if (response.data.extra.length === 0) {
+                alertService.info('No Data Found !');
+            }
+
             setOngoingTasks(response.data.extra);
             console.log("Ongoing tasks : ", response.data.extra);
 
@@ -141,7 +145,7 @@ function Home({ setSelectedLandId, selectedLandId }) {
 
             <br />
 
-            <div className="drop-down-container" style={{marginTop: "-25px"}}>
+            <div className="drop-down-container" style={{ marginTop: "-25px" }}>
                 <div className='landsectioncover'>
                     <p className="landsection">
                         <FaMapMarker style={{ marginRight: '5px' }} />

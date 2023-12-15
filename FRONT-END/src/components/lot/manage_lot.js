@@ -44,9 +44,15 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
     useEffect(() => {
         if (selectedLandId && selectedLandId !== "") {
             submitSets(submitCollection.managelot, "/" + selectedLandId, true).then(res => {
+
+
+                if (res.extra.length === 0) {
+                    alertService.info('No Data Found !');
+                }
                 if (res && res.status) {
                     setData(res.extra);
                 }
+
             });
         }
     }, [selectedLandId, submitCollection.managelot]);
@@ -116,7 +122,7 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
 
             <br />
 
-            <div className="drop-down-container" style={{marginTop: "-25px"}}>
+            <div className="drop-down-container" style={{ marginTop: "-25px" }}>
 
                 <div className='landsectioncover'>
                     <p className="landsection">
