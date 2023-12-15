@@ -49,6 +49,7 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
     }, [submitCollection.manageland, selectedLandId]);
 
     useEffect(() => {
+
         if (selectedLandId === '' || !selectedLandId) {
             // Fetch all lots without filtering based on selectedLandId
             submitSets(submitCollection.findalllot).then(res => {
@@ -140,7 +141,7 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
 
             <br />
 
-            <div className="drop-down-container">
+            <div className="drop-down-container" style={{ marginTop: "-25px" }}>
 
                 <div className='landsectioncover'>
                     <p className="landsection">

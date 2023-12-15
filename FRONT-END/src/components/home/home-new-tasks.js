@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import './home.css';
 import Footer from '../footer/footer';
 import { Col, Form } from 'react-bootstrap';
-import { FaGlobeAmericas } from 'react-icons/fa';
+import { FaGlobeAmericas, FaMapMarker } from 'react-icons/fa';
 import { Dropdown } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { MdArrowBackIos } from "react-icons/md";
@@ -22,6 +22,7 @@ function HomeNewTasks({ setSelectedLandId, selectedLandId }) {
     const [task, setTask] = useState([]);
     const [taskAssigned, setTaskAssigned] = useState([]);
     const [landNames, setLandNames] = useState([]);
+    const [landName, setLandName] = useState([]);
 
     const history = useHistory();
 
@@ -39,16 +40,23 @@ function HomeNewTasks({ setSelectedLandId, selectedLandId }) {
 
     }, []);
 
+    console.log("Task : ", task);
+
     const handleLandChange = (event) => {
-        const newSelectedLandId = event.target.value;
-        console.log(newSelectedLandId);
-        setSelectedLandId(newSelectedLandId);
+        console.log("Land : ", event);
+        setSelectedLandId(event);
     };
 
     useEffect(() => {
         submitSets(submitCollection.manageland, false).then((res) => {
             setLandNames(res.extra);
         });
+
+        submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true).then((res) => {
+            setLandName(res.extra.name);
+        });
+
+
     }, [submitCollection.manageland, selectedLandId]);
 
     const handleSearchChange = (event) => {
@@ -87,46 +95,64 @@ function HomeNewTasks({ setSelectedLandId, selectedLandId }) {
 
     return (
         <div className="home-app-screen">
-            <div className="header-bar">
-                <MdArrowBackIos className="back-button" onClick={goBack} />
-                <p className="main-heading">{t('newtask')}</p>
-                <div className="position-absolute top-0 end-0 me-0">
-                    <Dropdown alignRight onSelect={handleLanguageChange}>
-                        <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                            <FaGlobeAmericas style={{ color: 'white' }} />
-                        </Dropdown.Toggle>
+            <div className='main-heading'>
 
-                        <Dropdown.Menu>
-                            <Dropdown.Item eventKey="en">English</Dropdown.Item>
-                            <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown>
+                <div className="outer-frame d-flex justify-content-between align-items-center">
+                    <div className="filter-container d-flex align-items-center">
+                        <MdArrowBackIos className="back-button" onClick={goBack} />
+                    </div>
+
+                    <div className="filter-container d-flex align-items-center">
+                        <div className="land-filter">
+                            <Dropdown onSelect={handleLandChange}>
+                                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                                    <FaMapMarker style={{ color: 'white' }} />
+                                </Dropdown.Toggle>
+
+                                <Dropdown.Menu>
+                                    {landNames.map((land) => (
+                                        <Dropdown.Item eventKey={land.id} value={land.id}>
+                                            {land.name}
+                                        </Dropdown.Item>
+                                    ))}
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </div>
+
+                        <div className="language-filter">
+                            <Dropdown onSelect={handleLanguageChange}>
+                                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                                    <FaGlobeAmericas style={{ color: 'white' }} />
+                                </Dropdown.Toggle>
+
+                                <Dropdown.Menu>
+                                    <Dropdown.Item eventKey="en">English</Dropdown.Item>
+                                    <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+            <div className="drop-down-container" style={{ marginBottom: "-10px" }}>
+
+                <div className='landsectioncover'>
+                    <p className="landsection">
+                        <FaMapMarker style={{ marginRight: '5px' }} />
+                        Selected Land: {landName}
+                    </p>
+                </div>
+                <div className='home-heading'>
+                    <p>{t('newtask')}</p>
                 </div>
             </div>
 
-            <div className='drop-down-container'>
-                <Dropdown className='custom-dropdown'>
-                    <Col md={6}>
-                        <Form.Group>
-                            <Form.Control as="select" value={selectedLandId} onChange={handleLandChange}>
-                                {landNames.map((land) => (
-                                    <option key={land.id} value={land.id}>
-                                        {land.name}
-                                    </option>
-                                ))}
-                            </Form.Control>
-                        </Form.Group>
-                    </Col>
-
-                </Dropdown>
-                <br />
-            </div>
-
-            <div className='home-heading'>
-                <p>{t('newtask')}</p>
-            </div>
             <div className="task-list">
-                {filteredTasks.map((task) => (
+                {task.map((task) => (
                     <div key={task.id} className="task-card" onClick={() => handleCardClick(task.id)}>
                         <p>{task.taskName}</p>
                     </div>

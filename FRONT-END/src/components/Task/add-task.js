@@ -122,24 +122,37 @@ const AddTask = () => {
 
   return (
     <div className="task-app-screen">
-      <div className="header-bar">
-        <MdArrowBackIos className="back-button" onClick={goBack} />
-        <p className="main-heading">{t('addtask')}</p>
-        <div className="position-absolute top-0 end-0 me-0">
-          <Dropdown alignRight onSelect={handleLanguageChange}>
-            <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-              <FaGlobeAmericas style={{ color: 'white' }} />
-            </Dropdown.Toggle>
+      <div className='main-heading'>
 
-            <Dropdown.Menu>
-              <Dropdown.Item eventKey="en">English</Dropdown.Item>
-              <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
+        <div className="outer-frame d-flex justify-content-between align-items-center">
+          <div className="filter-container d-flex align-items-center">
+            <MdArrowBackIos className="back-button" onClick={goBack} />
+          </div>
+
+          <div className="filter-container d-flex align-items-center">
+            <div className="land-filter">
+
+            </div>
+
+            <div className="language-filter">
+              <Dropdown onSelect={handleLanguageChange}>
+                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                  <FaGlobeAmericas style={{ color: 'white' }} />
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                  <Dropdown.Item eventKey="en">English</Dropdown.Item>
+                  <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
+          </div>
         </div>
+
+
       </div>
 
-      <div>
+      <div style={{ marginTop: "10%" }}>
         <select value={initialSelectedValue} onChange={(e) => setTaskName(e.target.value)} className="inputs">
           {taskNames.map((taskName) => (
             <option key={taskName} value={taskName}>
@@ -164,9 +177,8 @@ const AddTask = () => {
         {t('addtask')}
       </button>
       <br />
-      <div className='footer-alignment'>
+
         <Footer />
-      </div>
     </div>
   );
 };

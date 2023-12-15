@@ -227,6 +227,8 @@ const CostBreakdownReport = ({ dateRange: { fromDate }, selectedLand }) => {
                     )}
                 </div>
             </div>
+
+            <br/>
         </>
     );
 };

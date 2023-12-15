@@ -14,6 +14,8 @@ import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
 import { Col, Form } from 'react-bootstrap';
 import '../css/common.css';
+import { alertService } from '../../_services/alert.service';
+
 
 function Home({ setSelectedLandId, selectedLandId }) {
     const [t, i18n] = useTranslation();
@@ -57,7 +59,11 @@ function Home({ setSelectedLandId, selectedLandId }) {
 
         axios.get(`http://localhost:8081/service/master/ongoing-tasks-with-names?landId=${selectedLandId}`).then((response) => {
             setOngoingTasks(response.data.extra);
-            console.log("Ongoing tasks : ", response.data.extra);
+            console.log("Ongoing tasks : ", response.data);
+
+            if (response.data.extra.length === 0) {
+                alertService.info('No Data Found !');
+            }            
 
 
         });
