@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import '../home/home.css';
 import './report.css'
 import Footer from '../footer/footer';
-import { FaGlobeAmericas } from 'react-icons/fa';
+import { FaGlobeAmericas, FaMapMarker } from 'react-icons/fa';
 import { Dropdown } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { FaFilter, FaUndo } from 'react-icons/fa';
@@ -37,6 +37,7 @@ function Report({ setSelectedLandId, selectedLandId }) {
     const [isFilterExpanded, setFilterExpanded] = useState(false);
     const [lotId, setLotId] = useState('');
     const [landNames, setLandNames] = useState([]);
+    const [landName, setLandName] = useState([]);
 
 
     const [showEmployeeAttendanceReport, setShowEmployeeAttendanceReport] = useState(false);
@@ -98,16 +99,21 @@ function Report({ setSelectedLandId, selectedLandId }) {
     };
 
     const handleLandChange = (event) => {
-        const newSelectedLandId = event.target.value;
-        setSelectedLandId(newSelectedLandId);
+        console.log("Land : ", event);
+        setSelectedLandId(event);
     };
 
     useEffect(() => {
         submitSets(submitCollection.manageland, false).then((res) => {
             setLandNames(res.extra);
-
         });
-    }, [submitCollection.manageland]);
+
+        submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true).then((res) => {
+            setLandName(res.extra.name);
+        });
+
+    }, [submitCollection.manageland, selectedLandId]);
+
 
 
     useEffect(() => {
@@ -170,40 +176,56 @@ function Report({ setSelectedLandId, selectedLandId }) {
     return (
         <div className="home-app-screen">
             <div className='main-heading'>
-                <div className="outer-frame d-flex justify-content-between">
-                    <MdArrowBackIos className="back-button" onClick={goBack} />
-                    <div className="land-filter">
-                        <Dropdown className='custom-dropdown'>
-                            <Col md={6}>
-                                <Form.Group>
-                                    <Form.Control as="select" value={selectedLandId} onChange={handleLandChange}>
-                                        {landNames.map((land) => (
-                                            <option key={land.id} value={land.id}>
-                                                {land.name}
-                                            </option>
-                                        ))}
-                                    </Form.Control>
-                                </Form.Group>
-                            </Col>
-                        </Dropdown>
+
+                <div className="outer-frame d-flex justify-content-between align-items-center">
+                    <div className="filter-container d-flex align-items-center">
+                        <MdArrowBackIos className="back-button" onClick={goBack} />
                     </div>
 
-                    <div className="language-filter me-2">
-                        <Dropdown alignRight onSelect={handleLanguageChange}>
-                            <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                                <FaGlobeAmericas style={{ color: 'white' }} />
-                            </Dropdown.Toggle>
+                    <div className="filter-container d-flex align-items-center">
+                        <div className="land-filter">
+                            <Dropdown onSelect={handleLandChange}>
+                                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                                    <FaMapMarker style={{ color: 'white' }} />
+                                </Dropdown.Toggle>
 
-                            <Dropdown.Menu>
-                                <Dropdown.Item eventKey="en">English</Dropdown.Item>
-                                <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-                            </Dropdown.Menu>
-                        </Dropdown>
+                                <Dropdown.Menu>
+                                    {landNames.map((land) => (
+                                        <Dropdown.Item eventKey={land.id} value={land.id}>
+                                            {land.name}
+                                        </Dropdown.Item>
+                                    ))}
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </div>
+
+                        <div className="language-filter">
+                            <Dropdown onSelect={handleLanguageChange}>
+                                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                                    <FaGlobeAmericas style={{ color: 'white' }} />
+                                </Dropdown.Toggle>
+
+                                <Dropdown.Menu>
+                                    <Dropdown.Item eventKey="en">English</Dropdown.Item>
+                                    <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </div>
                     </div>
                 </div>
+
+
             </div>
 
-            <div className="drop-down-container">
+
+            <div className="drop-down-container" style={{ marginTop: "0px" }}>
+
+                <div className='landsectioncover'>
+                    <p className="landsection">
+                        <FaMapMarker style={{ marginRight: '5px' }} />
+                        Selected Land: {landName}
+                    </p>
+                </div>
                 <p className="home-heading">{t('report')}</p>
             </div>
 
@@ -261,7 +283,7 @@ function Report({ setSelectedLandId, selectedLandId }) {
                                 </>
                             )}
                         </div>
-                        {selectedReport !== 'Employee Perfomance' && selectedReport !== 'Summary' && (
+                        {selectedReport !== 'Employee Perfomance' && selectedReport !== 'Summary' && selectedReport != 'Cost Breakdown' && (
 
                             <div>
                                 <label className='custom-label'> {t('selectlot')} : </label>
@@ -275,7 +297,7 @@ function Report({ setSelectedLandId, selectedLandId }) {
                                 </select>
                             </div>
                         )}
-                        {selectedReport !== 'Employee Perfomance' && selectedReport !== 'Summary' && selectedReport != 'Employee Attendance' && selectedReport != 'Monthly Crop' && selectedReport != 'Other Cost / Yield' && (
+                        {selectedReport !== 'Employee Perfomance' && selectedReport !== 'Summary' && selectedReport != 'Employee Attendance' && selectedReport != 'Monthly Crop' && selectedReport != 'Other Cost / Yield' && selectedReport != 'Cost Breakdown' &&(
                             <div>
                                 <label className='custom-label'>{t('selectworker')} : </label>
                                 <select className='custom-select' value={selectedWorker} onChange={handleWorkerChange}>
