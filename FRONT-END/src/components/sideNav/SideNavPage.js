@@ -13,6 +13,7 @@ import { GrUserWorker, GrTasks } from "react-icons/gr";
 import { MdOutlineBallot, MdTask } from "react-icons/md";
 import { FaLandmark, FaCashRegister } from "react-icons/fa6";
 import { HiOutlineCash } from "react-icons/hi";
+import { ImCross } from "react-icons/im";
 
 function SideNavBar() {
 
@@ -69,12 +70,12 @@ function SideNavBar() {
     <>
       <AnimatedPage>
         <div className={`side-nav-screen ${isBackClicked ? 'back-animation' : ''}`}>
-          <div className="position-absolute top-0 start-0 ms-0">
+          {/* <div className="position-absolute top-0 start-0 ms-0">
             <IoMdArrowRoundBack className="side-back-button" onClick={goBack} />
-          </div>
-          <p className='main-heading'>{t('welcome')}</p>
+          </div> */}
+          <p className='main-heading-welcome'>{t('welcome')}</p>
           <div className="position-absolute top-0 end-0 me-0">
-            <Dropdown alignRight onSelect={handleLanguageChange}>
+            {/* <Dropdown alignRight onSelect={handleLanguageChange}>
               <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
                 <FaGlobeAmericas style={{ color: 'white' }} />
               </Dropdown.Toggle>
@@ -83,8 +84,10 @@ function SideNavBar() {
                 <Dropdown.Item eventKey="en">English</Dropdown.Item>
                 <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
               </Dropdown.Menu>
-            </Dropdown>
+            </Dropdown> */}
+            <ImCross className="side-back-button" onClick={goBack}/>
           </div>
+          
           <div className="side-nav-menu">
             <button className='menu-click'>
               <div onClick={ManageWorkers}>

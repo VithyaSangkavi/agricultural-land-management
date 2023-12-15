@@ -311,21 +311,6 @@ function Report({ setSelectedLandId, selectedLandId }) {
             {showEmployeePerfomnce && <EmployeePerfomnce dateRange={dateRange} selectedLand={selectedLandId} />}
             {showCostBreakdown && <CostBreakdownReport selectedLand={selectedLandId} dateRange={dateRange} />}
             {showSummary && <SummaryReport selectedLand={selectedLandId} category={category} />}
-            {
-                selectedReport === 'Summary' ? (
-                    <>
-                        <select className='report-dropdown'
-                            // value={selectedReportCate}
-                            onChange={handleCateChange}
-                        >
-                            <option value="">Monthly</option>
-                            <option value="1">Weekly</option>
-                            <option value="2">Daily</option>
-                        </select>
-                    </>
-                ) : null
-            }
-
             < br />
             <Footer />
         </div >

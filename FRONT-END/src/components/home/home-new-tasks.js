@@ -46,10 +46,10 @@ function HomeNewTasks({ setSelectedLandId, selectedLandId }) {
     };
 
     useEffect(() => {
-        axios.get('http://localhost:8081/service/master/landFindAll').then((res) => {
+        submitSets(submitCollection.manageland, false).then((res) => {
             setLandNames(res.extra);
         });
-    }, [submitCollection.manageland]);
+    }, [submitCollection.manageland, selectedLandId]);
 
     const handleSearchChange = (event) => {
         setSearchQuery(event.target.value);

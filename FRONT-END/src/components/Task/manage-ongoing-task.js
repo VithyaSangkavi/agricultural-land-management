@@ -430,7 +430,7 @@ const ManageOngoingTask = () => {
         <div className="manage-task-app-screen">
             <div className="header-bar">
                 <MdArrowBackIos className="back-button" onClick={goBack}/>
-                <p className="add-heading">{t('ongoindtasks')}</p>
+                <p className="home-heading">{t('ongoindtasks')}</p>
                 <div className="position-absolute top-0 end-0 me-2">
 
                     <Dropdown alignRight onSelect={handleLanguageChange}>

@@ -81,7 +81,6 @@ const SummaryReport = ({ selectedLand, category }) => {
                 </table>
             </div>
             <br />
-            <br />
         </>
     );
 };
