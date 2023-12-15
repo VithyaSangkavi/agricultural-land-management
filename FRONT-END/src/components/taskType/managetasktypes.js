@@ -34,22 +34,35 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
 
   useEffect(() => {
     submitSets(submitCollection.manageland, false).then((res) => {
-      setLandNames(res.extra);
+      setLandNames(res.extra || []);
     });
-
-    submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true).then((res) => {
-      setLandName(res.extra.name);
-    });
-
+  
+    if (selectedLandId && selectedLandId !== "") {
+      submitSets(submitCollection.getlandbyid, `?landId=${selectedLandId}`, true)
+        .then((res) => {
+          if (res && res.extra) {
+            setLandName(res.extra.name || "All Lands");
+          } else {
+            setLandName("All Lands");
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching land by id:", error);
+          setLandName("All Lands");
+        });
+    } else {
+      setLandName("All Lands");
+    }
   }, [submitCollection.manageland, selectedLandId]);
+  
   useEffect(() => {
 
-    axios.post('http://localhost:8080/service/master/taskFindAll').then((response) => {
+    axios.post('http://localhost:8081/service/master/taskFindAll').then((response) => {
       setTasks(response.data.extra);
       console.log("Tasks : ", response.data.extra);
     });
 
-    axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
+    axios.get('http://localhost:8081/service/master/landFindAll').then((response) => {
       setLands(response.data.extra);
       console.log("Lands : ", response.data.extra);
     });
@@ -65,7 +78,7 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
 
   useEffect(() => {
     //get crop id by using landid
-    axios.get(`http://localhost:8080/service/master/cropFindByLandId/${selectedLandId}`)
+    axios.get(`http://localhost:8081/service/master/cropFindByLandId/${selectedLandId}`)
 
       .then((response) => {
         const cropIdLand = response.data.cropId.extra;
@@ -109,6 +122,7 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
+                <Dropdown.Item eventKey="">All Lands</Dropdown.Item>
                   {landNames.map((land) => (
                     <Dropdown.Item eventKey={land.id} value={land.id}>
                       {land.name}

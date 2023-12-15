@@ -32,7 +32,7 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
 
   useEffect(() => {
 
-    axios.post('http://localhost:8080/service/master/workerFindAll').then((response) => {
+    axios.post('http://localhost:8081/service/master/workerFindAll').then((response) => {
       setWorkers(response.data.extra);
       console.log("Workers : ", response.data.extra);
     });
@@ -55,11 +55,18 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
     submitSets(submitCollection.manageland, false).then((res) => {
       setLandNames(res.extra);
     });
-
-    submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true).then((res) => {
-      setLandName(res.extra.name);
-    });
-
+  
+    if (selectedLandId) {
+      submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true)
+        .then((res) => {
+          setLandName(res.extra ? res.extra.name : "All Lands");
+        })
+        .catch((error) => {
+          console.error("Error fetching land by id:", error);
+        });
+    } else {
+      setLandName("All Lands");
+    }
   }, [submitCollection.manageland, selectedLandId]);
 
   const handleLandChange = (event) => {
@@ -67,9 +74,8 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
     setSelectedLandId(event);
   };
 
-
   useEffect(() => {
-    axios.get(`http://localhost:8080/service/master/findByLandId?landId=${selectedLandId}`)
+    axios.get(`http://localhost:8081/service/master/findByLandId?landId=${selectedLandId}`)
       .then((response) => {
 
         if (response.data.extra.length === 0) {
@@ -120,6 +126,7 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
+                  <Dropdown.Item eventKey="">All Lands</Dropdown.Item>
                   {landNames.map((land) => (
                     <Dropdown.Item eventKey={land.id} value={land.id}>
                       {land.name}
