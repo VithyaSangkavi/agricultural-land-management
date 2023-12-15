@@ -156,8 +156,6 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
           {t('addworker')}
         </button>
       </div>
-
-      <br />
       <div className="search-container">
         <div className="search-wrapper">
           <input
