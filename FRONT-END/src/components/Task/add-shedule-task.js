@@ -83,7 +83,7 @@ const ManageTask = () => {
     }, []);
 
     const fetchTaskName = () => {
-        axios.get(`http://localhost8080/service/master/findTaskNameById/?taskId=${taskId}`)
+        axios.get(`http://localhost8081/service/master/findTaskNameById/?taskId=${taskId}`)
             .then((response) => {
                 setTaskName(response.data.extra.taskName);
             })

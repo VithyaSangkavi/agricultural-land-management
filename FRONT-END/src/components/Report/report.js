@@ -108,10 +108,17 @@ function Report({ setSelectedLandId, selectedLandId }) {
             setLandNames(res.extra);
         });
 
-        submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true).then((res) => {
-            setLandName(res.extra.name);
-        });
-
+        if (selectedLandId) {
+            submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true)
+                .then((res) => {
+                    setLandName(res.extra ? res.extra.name : "All Lands");
+                })
+                .catch((error) => {
+                    console.error("Error fetching land by id:", error);
+                });
+        } else {
+            setLandName("All Lands");
+        }
     }, [submitCollection.manageland, selectedLandId]);
 
 
@@ -190,6 +197,7 @@ function Report({ setSelectedLandId, selectedLandId }) {
                                 </Dropdown.Toggle>
 
                                 <Dropdown.Menu>
+                                    <Dropdown.Item eventKey="">All Lands</Dropdown.Item>
                                     {landNames.map((land) => (
                                         <Dropdown.Item eventKey={land.id} value={land.id}>
                                             {land.name}
@@ -297,7 +305,7 @@ function Report({ setSelectedLandId, selectedLandId }) {
                                 </select>
                             </div>
                         )}
-                        {selectedReport !== 'Employee Perfomance' && selectedReport !== 'Summary' && selectedReport != 'Employee Attendance' && selectedReport != 'Monthly Crop' && selectedReport != 'Other Cost / Yield' && selectedReport != 'Cost Breakdown' &&(
+                        {selectedReport !== 'Employee Perfomance' && selectedReport !== 'Summary' && selectedReport != 'Employee Attendance' && selectedReport != 'Monthly Crop' && selectedReport != 'Other Cost / Yield' && selectedReport != 'Cost Breakdown' && (
                             <div>
                                 <label className='custom-label'>{t('selectworker')} : </label>
                                 <select className='custom-select' value={selectedWorker} onChange={handleWorkerChange}>
