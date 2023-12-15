@@ -145,7 +145,9 @@ const MonthlyCropReport = ({ dateRange, lotId, landId, selectedLot }) => {
                     {Object.keys(monthlyCropData).length > 0 ? (
                         <Line data={chartData} options={chartOptions} />
                     ) : (
-                        <p>{t('loading')}...</p>
+                        <p className='reportnotfound'>
+                            Data Not Found !
+                        </p>
                     )}
 
                 </div>

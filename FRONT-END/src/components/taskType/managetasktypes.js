@@ -152,7 +152,7 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
 
       <br />
 
-      <div className='drop-down-container' style={{marginTop: "-25px"}}>
+      <div className='drop-down-container' style={{ marginTop: "-25px" }}>
 
         <div className='landsectioncover'>
           <p className="landsection">
@@ -169,18 +169,19 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
       </div>
       <br />
 
-
-      <div className="search-container">
-        <div className="search-wrapper">
-          <input
-            className='search-field'
-            type="text"
-            placeholder={t('searchtasktypes')}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <div className="search-icon">
-            <FaSearch />
+      <div className="search">
+        <div className="search-container">
+          <div className="search-wrapper">
+            <input
+              className='search-field'
+              type="text"
+              placeholder={t('searchtasktypes')}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <div className="search-icon">
+              <FaSearch />
+            </div>
           </div>
         </div>
       </div>
@@ -192,7 +193,7 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
           </div>
         ))}
       </div>
-      <br />
+      <br /><br /><br />
       <div className='footer-alignment'>
         <Footer />
       </div>

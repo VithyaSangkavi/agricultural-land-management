@@ -131,7 +131,7 @@ const AddTaskType = ({ setSelectedLandId, selectedLandId }) => {
           {t('add')}
         </button>
       </div>
-      <br /> <br /> <br />
+
       <div className='footer-alignment'>
         <Footer />
       </div>
