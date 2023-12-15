@@ -60,7 +60,7 @@ function Home({ setSelectedLandId, selectedLandId }) {
 
     useEffect(() => {
 
-        axios.get(`http://localhost:8081/service/master/completed-tasks-with-names?landId=${selectedLandId}`).then((response) => {
+        axios.get(`http://localhost:8080/service/master/completed-tasks-with-names?landId=${selectedLandId}`).then((response) => {
 
             setOngoingTasks(response.data.extra);
             console.log("Ongoing tasks : ", response.data.extra);

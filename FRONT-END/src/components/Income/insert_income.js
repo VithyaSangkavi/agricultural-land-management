@@ -7,12 +7,12 @@ import { Form, Button, Col } from 'react-bootstrap';
 import { submitSets } from '../UiComponents/SubmitSets';
 import { alertService } from '../../_services/alert.service';
 import { useTranslation } from 'react-i18next';
-import { FaGlobeAmericas } from 'react-icons/fa';
+import { FaGlobeAmericas, FaMapMarker } from 'react-icons/fa';
 import { Dropdown } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 import { MdArrowBackIos } from "react-icons/md";
-import { useHistory} from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 const InsertIncome = ({ setSelectedLandId, selectedLandId }) => {
 
@@ -20,6 +20,7 @@ const InsertIncome = ({ setSelectedLandId, selectedLandId }) => {
     const [month, setMonth] = useState('');
     const [price, setValue] = useState('');
     const [landNames, setLandNames] = useState([]);
+    const [landName, setLandName] = useState([]);
 
     const { t, i18n } = useTranslation();
 
@@ -27,16 +28,21 @@ const InsertIncome = ({ setSelectedLandId, selectedLandId }) => {
         i18n.changeLanguage(lang);
     };
 
+    const handleLandChange = (event) => {
+        console.log("Land : ", event);
+        setSelectedLandId(event);
+    };
+
     useEffect(() => {
-        axios.get('http://localhost:8081/service/master/landFindAll').then((res) => {
+        submitSets(submitCollection.manageland, false).then((res) => {
             setLandNames(res.extra);
         });
-    }, [submitCollection.manageland]);
 
-    const handleLandChange = (event) => {
-        const newSelectedLandId = event.target.value;
-        setSelectedLandId(newSelectedLandId);
-    };
+        submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true).then((res) => {
+            setLandName(res.extra.name);
+        });
+
+    }, [submitCollection.manageland, selectedLandId]);
 
     const handleSubmit = () => {
         const dataToSend = {
@@ -63,24 +69,60 @@ const InsertIncome = ({ setSelectedLandId, selectedLandId }) => {
 
     return (
         <div className='insertincome-app-screen'>
-            <div className="header-bar">
-                <MdArrowBackIos className="back-button" onClick={goBack} />
-                <div className="position-absolute top-0 end-0 me-0">
+            <div className='main-heading'>
 
-                    <Dropdown alignRight onSelect={handleLanguageChange}>
-                        <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                            <FaGlobeAmericas style={{ color: 'white' }} />
-                        </Dropdown.Toggle>
+                <div className="outer-frame d-flex justify-content-between align-items-center">
+                    <div className="filter-container d-flex align-items-center">
+                        <MdArrowBackIos className="back-button" onClick={goBack} />
+                    </div>
 
-                        <Dropdown.Menu>
-                            <Dropdown.Item eventKey="en">English</Dropdown.Item>
-                            <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown>
+                    <div className="filter-container d-flex align-items-center">
+                        <div className="land-filter">
+                            <Dropdown onSelect={handleLandChange}>
+                                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                                    <FaMapMarker style={{ color: 'white' }} />
+                                </Dropdown.Toggle>
+
+                                <Dropdown.Menu>
+                                    {landNames.map((land) => (
+                                        <Dropdown.Item eventKey={land.id} value={land.id}>
+                                            {land.name}
+                                        </Dropdown.Item>
+                                    ))}
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </div>
+
+                        <div className="language-filter">
+                            <Dropdown onSelect={handleLanguageChange}>
+                                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                                    <FaGlobeAmericas style={{ color: 'white' }} />
+                                </Dropdown.Toggle>
+
+                                <Dropdown.Menu>
+                                    <Dropdown.Item eventKey="en">English</Dropdown.Item>
+                                    <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </div>
+                    </div>
                 </div>
+
+
             </div>
 
-            <p className="home-heading">{t('addincome')}</p>
+            <div className="drop-down-container">
+
+                <div className='landsectioncover' style={{marginTop: "12px"}}>
+                    <p className="landsection">
+                        <FaMapMarker style={{ marginRight: '5px' }} />
+                        Selected Land: {landName}
+                    </p>
+                </div>
+
+                <p className="home-heading">{t('addincome')}</p>
+
+            </div>
 
             <div className="content">
 

@@ -45,17 +45,17 @@ function Home({ setSelectedLandId, selectedLandId }) {
 
 
     useEffect(() => {
-        axios.post('http://localhost:8081/service/master/taskAssignedFindAll').then((response) => {
+        axios.post('http://localhost:8080/service/master/taskAssignedFindAll').then((response) => {
             setTaskAssigned(response.data);
             console.log("Task Assigned: ", response.data);
         });
 
-        axios.post('http://localhost:8081/service/master/taskFindAll').then((response) => {
+        axios.post('http://localhost:8080/service/master/taskFindAll').then((response) => {
             setTask(response.data.extra);
             console.log("Tasks : ", response.data.extra);
         });
 
-        axios.get(`http://localhost:8081/service/master/ongoing-tasks-with-names?landId=${selectedLandId}`).then((response) => {
+        axios.get(`http://localhost:8080/service/master/ongoing-tasks-with-names?landId=${selectedLandId}`).then((response) => {
             setOngoingTasks(response.data.extra);
             console.log("Ongoing tasks : ", response.data.extra);
 
@@ -92,7 +92,7 @@ function Home({ setSelectedLandId, selectedLandId }) {
     //     console.log(newSelectedLandId);
     //     setSelectedLandId(newSelectedLandId);
 
-    //     axios.post(`http://localhost:8081/service/master/findLandIdByName?name=${selectedLandId}`)
+    //     axios.post(`http://localhost:8080/service/master/findLandIdByName?name=${selectedLandId}`)
     //         .then((response) => {
     //             const landIdTask = response.data.extra;
     //             const taskLand = JSON.stringify(landIdTask);
@@ -104,7 +104,7 @@ function Home({ setSelectedLandId, selectedLandId }) {
 
     //             console.log("selected land : ", selectedLandId)
     //             console.log("landId : ", landId)
-    //             axios.get(`http://localhost:8081/service/master/ongoing-tasks-with-names?landId=${selectedLandId}`).then((response) => {
+    //             axios.get(`http://localhost:8080/service/master/ongoing-tasks-with-names?landId=${selectedLandId}`).then((response) => {
     //                 setOngoingTasks(response.data.extra);
     //                 console.log("Ongoing tasks : ", response.data.extra);
 
