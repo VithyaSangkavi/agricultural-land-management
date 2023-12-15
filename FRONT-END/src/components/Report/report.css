@@ -1,6 +1,18 @@
-
-.home-app-screen{
+.home-app-screen {
   overflow-x: hidden;
+}
+
+.reportnotfound {
+  background-color: rgba(255, 123, 0, 0.5);
+  padding: 7px;
+  border-radius: 5px;
+  font-style: oblique;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  margin-bottom: 16px;
+  margin-top: 16px;
+  font-weight: bolder;
+  color: red;
+  text-align: center;
 }
 
 .report-dropdown {
@@ -127,11 +139,11 @@
   padding: 5px 5px 0px 5px;
 }
 
-.custom-select{
+.custom-select {
   background-color: #f2f2f2;
   padding: 5px;
-  border: 1px solid #ccc; 
-  border-radius: 5px; 
+  border: 1px solid #ccc;
+  border-radius: 5px;
   margin-left: 10px;
   margin-right: 10px;
   margin-top: 10px;
@@ -146,6 +158,6 @@
   margin: 0 5px;
 }
 
-.custom-label{
+.custom-label {
   font-size: small;
 }

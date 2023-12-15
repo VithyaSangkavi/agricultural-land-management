@@ -139,7 +139,9 @@ const CostYieldReport = ({ dateRange, landId, lotId, selectedLot }) => {
                     {Object.keys(costYieldData).length > 0 ? (
                         <Bar data={chartData} options={chartOptions} />
                     ) : (
-                        <p>{t('loading')}...</p>
+                        <p className='reportnotfound'>
+                            Data Not Found !
+                        </p>
                     )}
                 </div>
             </div>

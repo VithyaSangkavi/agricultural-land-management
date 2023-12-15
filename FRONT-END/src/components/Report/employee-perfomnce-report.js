@@ -129,7 +129,9 @@ const EmployeePerfomnceReport = ({ dateRange: { fromDate, toDate }, selectedLand
                     {perfomnceData.length > 0 ? (
                         <Line data={chartData} options={chartOptions} />
                     ) : (
-                        <p>Loading...</p>
+                        <p className='reportnotfound'>
+                            Data Not Found !
+                        </p>
                     )}
                 </div>
             </div>

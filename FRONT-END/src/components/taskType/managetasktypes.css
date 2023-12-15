@@ -37,62 +37,64 @@
     margin: 10px 0 0;
   }
 
-  .drop-down{
-    padding: 10px;
-    background-color: #0e4f20;
-    width: 100%;
-  }
+.drop-down {
+  padding: 10px;
+  background-color: #0e4f20;
+  width: 100%;
+}
 
-  .drop-down:hover{
-    padding: 10px;
-    background-color: #05932d;
-    width: 100%;
-  }
+.drop-down:hover {
+  padding: 10px;
+  background-color: #05932d;
+  width: 100%;
+}
 
-  .drop-down-menu{
-    padding: 10px;
-    background-color: white;
-    width: 100%;
-  }
+.drop-down-menu {
+  padding: 10px;
+  background-color: white;
+  width: 100%;
+}
 
-  .drop-down-menu:hover{
-    padding: 10px;
-    background-color: #05932d;
-    width: 100%;
-  }
+.drop-down-menu:hover {
+  padding: 10px;
+  background-color: #05932d;
+  width: 100%;
+}
 
-  .drop-down-container{
-    padding: 10px;
-    margin-left: 10px;
-    margin-right: 10px;
-  }
+.drop-down-container {
+  padding: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
 
-  .task-app-screen .search-field{
-    margin-left: 20px;
-  }
+.task-app-screen .search-field {
+  margin-left: 20px;
+}
 
 .task-app-screen .custom-dropdown .dropdown-toggle:active,
 .task-app-screen .custom-dropdown .dropdown-toggle:focus {
-  background-color: #0e4f20; 
+  background-color: #0e4f20;
   box-shadow: none;
 }
 
 .add-task-type-button {
-  background-color: #0e4f20; 
-  color: #fff; 
+  background-color: #0e4f20;
+  color: #fff;
   padding: 10px 20px;
-  border: none; 
+  border: none;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s;
   width: 100%
-  /* Optional: Add more styles for hover and focus states */
+    /* Optional: Add more styles for hover and focus states */
 }
 
 .add-task-type-button:hover {
-  background-color: #05932d; /* Change background color on hover */
+  background-color: #05932d;
+  /* Change background color on hover */
 }
 
 .add-task-type-button:focus {
-  outline: none; /* Remove the focus outline */
+  outline: none;
+  /* Remove the focus outline */
 }
