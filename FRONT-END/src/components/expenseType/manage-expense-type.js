@@ -140,7 +140,6 @@ function ManageExpenseTypes({ setSelectedLandId, selectedLandId }) {
         </button>
       </div>
 
-      <br />
       <div>
         <input
           className='search-field'
