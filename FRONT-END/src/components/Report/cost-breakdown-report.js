@@ -209,7 +209,9 @@ const CostBreakdownReport = ({ dateRange: { fromDate }, selectedLand }) => {
                             <Line data={chartData} options={chartOptions} />
                         )
                     ) : (
-                        <p>No Data</p>
+                        <p className='reportnotfound'>
+                            Data Not Found !
+                        </p>
                     )}
                 </div>
             </div>
@@ -223,7 +225,9 @@ const CostBreakdownReport = ({ dateRange: { fromDate }, selectedLand }) => {
                     {costBreakdownPieData.length > 0 ? (
                         <Pie data={pieChartData} />
                     ) : (
-                        <p>Loading...</p>
+                        <p className='reportnotfound'>
+                            Data Not Found !
+                        </p>
                     )}
                 </div>
             </div>

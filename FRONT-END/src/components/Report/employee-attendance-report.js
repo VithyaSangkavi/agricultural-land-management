@@ -152,7 +152,9 @@ const EmployeeAttendanceReport = ({ dateRange, lotId, landId, selectedLot }) => 
                     {attendanceData.length > 0 ? (
                         <Line data={chartData} options={chartOptions} />
                     ) : (
-                        <p>{t('loading')}...</p>
+                        <p className='reportnotfound'>
+                            Data Not Found !
+                        </p>
                     )}
                 </div>
             </div>

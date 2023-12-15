@@ -494,7 +494,7 @@ export class ReportDaoImpl implements ReportDao {
       const taskExpenseForMonth = monthlyExpenses4.find(taskExpense => taskExpense.monthYear === `${month} ${year}`);
 
       const CIR = ((taskExpenseForMonth ? parseFloat(taskExpenseForMonth.totalExpense) : 0) /
-        (incomeForMonth ? parseFloat(incomeForMonth.totalIncome) : 0)).toFixed(3);
+        (incomeForMonth ? parseFloat(incomeForMonth.totalIncome) : 0)).toFixed(2);
 
       return {
         month,

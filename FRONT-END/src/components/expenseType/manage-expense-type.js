@@ -150,7 +150,7 @@ function ManageExpenseTypes({ setSelectedLandId, selectedLandId }) {
             <p>{expense.expenseType}</p>
           </div>
         ))}
-        <br />
+        <br /><br /><br />
       </div>
       <Footer />
     </div>
