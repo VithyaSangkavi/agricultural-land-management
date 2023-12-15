@@ -8,6 +8,7 @@ import { Dropdown } from 'react-bootstrap';
 import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
 import { MdArrowBackIos } from "react-icons/md";
+import { alertService } from '../../_services/alert.service';
 import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 import Footer from '../footer/footer';
@@ -50,6 +51,10 @@ function ManageIncome({ setSelectedLandId, selectedLandId }) {
         if (selectedLandId) {
             axios.get(`http://localhost:8080/service/master/incomeFindByLandId/${selectedLandId}`)
                 .then((res) => {
+
+                    if (res.data.extra.length === 0) {
+                        alertService.info('No Data Found !');
+                    }
                     setData(res.data.extra);
                     console.log(res.data.extra);
                 })
@@ -124,9 +129,9 @@ function ManageIncome({ setSelectedLandId, selectedLandId }) {
 
             </div>
 
-            <div className='drop-down-container'>
+            <div className='drop-down-container' style={{ marginTop: "-11px" }}>
 
-                <div className='landsectioncover' style={{marginTop:"12px"}}>
+                <div className='landsectioncover' style={{ marginTop: "12px" }}>
                     <p className="landsection">
                         <FaMapMarker style={{ marginRight: '5px' }} />
                         Selected Land: {landName}

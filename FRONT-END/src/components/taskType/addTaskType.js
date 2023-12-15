@@ -107,7 +107,7 @@ const AddTaskType = ({ setSelectedLandId, selectedLandId }) => {
 
 
       </div>
-      <div className="drop-down-container">
+      <div className="drop-down-container" style={{marginTop: "-11px"}}>
 
         <div className='landsectioncover'>
           <p className="landsection" style={{marginTop: "12px"}}>

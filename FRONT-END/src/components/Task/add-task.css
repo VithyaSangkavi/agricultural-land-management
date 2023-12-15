@@ -9,7 +9,8 @@
   background-repeat: no-repeat;
   background-position: center;
   position: relative;
-  background-color: white;
+  background-color: rgb(255, 255, 255);
+  overflow-x: hidden;
 }
 
 .task-app-screen .inputs {
@@ -22,6 +23,7 @@
   background-color: #f2f2f2;
   color: black;
   border: none;
+  box-shadow: 0px;
 }
 
 .task-app-screen .inputs::placeholder {

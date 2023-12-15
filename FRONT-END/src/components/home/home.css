@@ -129,8 +129,7 @@
     padding: 5px;
     border-radius: 5px;
     font-size: 14px;
-    z-index: 1; /* Ensure the tooltip appears above other elements */
-    /* Adjust the positioning of the tooltip as needed */
+    z-index: 1;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);

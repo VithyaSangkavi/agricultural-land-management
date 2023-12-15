@@ -143,7 +143,7 @@ const UpdateIncome = ({selectedLandId, setSelectedLandId}) => {
 
             </div>
 
-            <div className="drop-down-container">
+            <div className="drop-down-container" style={{marginTop: "-11px"}}>
 
                 <div className='landsectioncover'>
                     <p className="landsection">
