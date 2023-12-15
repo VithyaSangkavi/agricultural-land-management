@@ -52,20 +52,39 @@ function Home({ setSelectedLandId, selectedLandId }) {
             setLandNames(res.extra);
         });
 
-        submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true).then((res) => {
-            setLandName(res.extra.name);
-        });
-
+        if (selectedLandId) {
+            submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true)
+                .then((res) => {
+                    setLandName(res.extra ? res.extra.name : "All Lands");
+                })
+                .catch((error) => {
+                    console.error("Error fetching land by id:", error);
+                });
+        } else {
+            setLandName("All Lands");
+        }
     }, [submitCollection.manageland, selectedLandId]);
 
     useEffect(() => {
+        let apiUrl = 'http://localhost:8081/service/master/completed-tasks-with-names';
 
-        axios.get(`http://localhost:8081/service/master/completed-tasks-with-names?landId=${selectedLandId}`).then((response) => {
+        if (selectedLandId) {
+            apiUrl += `?landId=${selectedLandId}`;
+        }
 
-            setOngoingTasks(response.data.extra);
-            console.log("Ongoing tasks : ", response.data.extra);
-
-        });
+        axios.get(apiUrl)
+            .then((response) => {
+                if (Array.isArray(response.data.extra)) {
+                    setOngoingTasks(response.data.extra);
+                    console.log("Ongoing tasks: ", response.data.extra);
+                } else {
+                    setOngoingTasks([]);
+                }
+            })
+            .catch((error) => {
+                console.error('Error fetching tasks:', error);
+                setOngoingTasks([]);
+            });
     }, [selectedLandId]);
 
     const handleSearchChange = (event) => {
@@ -113,6 +132,7 @@ function Home({ setSelectedLandId, selectedLandId }) {
                                 </Dropdown.Toggle>
 
                                 <Dropdown.Menu>
+                                    <Dropdown.Item eventKey="">All Lands</Dropdown.Item>
                                     {landNames.map((land) => (
                                         <Dropdown.Item eventKey={land.id} value={land.id}>
                                             {land.name}

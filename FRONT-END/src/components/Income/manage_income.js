@@ -37,18 +37,31 @@ function ManageIncome({ setSelectedLandId, selectedLandId }) {
 
     useEffect(() => {
         submitSets(submitCollection.manageland, false).then((res) => {
-            setLandNames(res.extra);
+          setLandNames(res.extra);
         });
-
-        submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true).then((res) => {
-            setLandName(res.extra.name);
-        });
-
-    }, [submitCollection.manageland, selectedLandId]);
+      
+        if (selectedLandId) {
+          submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true)
+            .then((res) => {
+              setLandName(res.extra ? res.extra.name : "All Lands");
+            })
+            .catch((error) => {
+              console.error("Error fetching land by id:", error);
+            });
+        } else {
+          setLandName("All Lands");
+        }
+      }, [submitCollection.manageland, selectedLandId]);
+    
 
     useEffect(() => {
-        if (selectedLandId) {
-            axios.get(`http://localhost:8081/service/master/incomeFindByLandId/${selectedLandId}`)
+        if (selectedLandId || selectedLandId === '') {
+            let apiUrl = 'http://localhost:8081/service/master/incomeFindByLandId/';
+            if (selectedLandId !== '') {
+                apiUrl += selectedLandId;
+            }
+
+            axios.get(apiUrl)
                 .then((res) => {
                     setData(res.data.extra);
                     console.log(res.data.extra);
@@ -97,6 +110,7 @@ function ManageIncome({ setSelectedLandId, selectedLandId }) {
                                 </Dropdown.Toggle>
 
                                 <Dropdown.Menu>
+                                    <Dropdown.Item eventKey="">All Lands</Dropdown.Item>
                                     {landNames.map((land) => (
                                         <Dropdown.Item eventKey={land.id} value={land.id}>
                                             {land.name}
@@ -126,7 +140,7 @@ function ManageIncome({ setSelectedLandId, selectedLandId }) {
 
             <div className='drop-down-container'>
 
-                <div className='landsectioncover' style={{marginTop:"12px"}}>
+                <div className='landsectioncover' style={{ marginTop: "12px" }}>
                     <p className="landsection">
                         <FaMapMarker style={{ marginRight: '5px' }} />
                         Selected Land: {landName}
