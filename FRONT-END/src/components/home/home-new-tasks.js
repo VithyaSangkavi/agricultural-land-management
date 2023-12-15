@@ -56,6 +56,7 @@ function HomeNewTasks({ setSelectedLandId, selectedLandId }) {
             setLandName(res.extra.name);
         });
 
+
     }, [submitCollection.manageland, selectedLandId]);
 
     const handleSearchChange = (event) => {

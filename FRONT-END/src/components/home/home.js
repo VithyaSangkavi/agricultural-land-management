@@ -188,7 +188,7 @@ function Home({ setSelectedLandId, selectedLandId }) {
                     </p>
                 </div>
 
-                <div className='add-heading'>
+                <div className='home-heading'>
                     <p>{t('ongoingtasks')}</p>
                 </div>
 
