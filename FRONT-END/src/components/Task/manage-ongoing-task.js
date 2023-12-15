@@ -428,22 +428,34 @@ const ManageOngoingTask = () => {
 
     return (
         <div className="manage-task-app-screen">
-            <div className="header-bar">
-                <MdArrowBackIos className="back-button" onClick={goBack}/>
-                <p className="add-heading">{t('ongoindtasks')}</p>
-                <div className="position-absolute top-0 end-0 me-2">
+            <div className='main-heading'>
 
-                    <Dropdown alignRight onSelect={handleLanguageChange}>
-                        <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                            <FaGlobeAmericas style={{ color: 'white' }} />
-                        </Dropdown.Toggle>
+                <div className="outer-frame d-flex justify-content-between align-items-center">
+                    <div className="filter-container d-flex align-items-center">
+                        <MdArrowBackIos className="back-button" onClick={goBack} />
+                    </div>
 
-                        <Dropdown.Menu>
-                            <Dropdown.Item eventKey="en">English</Dropdown.Item>
-                            <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown>
+                    <div className="filter-container d-flex align-items-center">
+                        <div className="land-filter">
+
+                        </div>
+
+                        <div className="language-filter">
+                            <Dropdown onSelect={handleLanguageChange}>
+                                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                                    <FaGlobeAmericas style={{ color: 'white' }} />
+                                </Dropdown.Toggle>
+
+                                <Dropdown.Menu>
+                                    <Dropdown.Item eventKey="en">English</Dropdown.Item>
+                                    <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </div>
+                    </div>
                 </div>
+
+
             </div>
 
             <div className='task-heading'>

@@ -124,7 +124,7 @@ function ManageIncome({ setSelectedLandId, selectedLandId }) {
 
             </div>
 
-            <div className='drop-down-container'>
+            <div className='drop-down-container' style={{marginTop: "-11px"}}>
 
                 <div className='landsectioncover' style={{marginTop:"12px"}}>
                     <p className="landsection">

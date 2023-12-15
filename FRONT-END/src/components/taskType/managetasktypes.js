@@ -138,7 +138,7 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
 
       <br />
 
-      <div className='drop-down-container'>
+      <div className='drop-down-container' style={{marginTop: "-25px"}}>
 
         <div className='landsectioncover'>
           <p className="landsection">
