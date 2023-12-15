@@ -10,6 +10,7 @@ const submitCollection = {
     manageland: { ptype: "GET", url: basePath+"/service/master/landFindAll", queryparam: false, data:true, auth: true },
     savelot: { ptype: "POST", url: basePath+"/service/master/lotSave", queryparam: false, data:true, auth: true },
     saveincome: { ptype: "POST", url: basePath+"/service/master/incomeSave", queryparam: false, data:true, auth: true },
+    findalllot: { ptype: "GET", url: basePath+"/service/master/lotFindAll", queryparam: false, data:true, auth: true },
     managelot: { ptype: "GET", url: basePath+"/service/master/lotFindByLandId", queryparam: true, data:true, auth: true },
     getincomebyid: { ptype: "GET", url: basePath+"/service/master/incomeFindById", queryparam: true, data:true, auth: true },
     updateprice: { ptype: "PUT", url: basePath+"/service/master/updatePrice", queryparam: true, data:true, auth: true },

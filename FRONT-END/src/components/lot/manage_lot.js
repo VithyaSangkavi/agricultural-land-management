@@ -35,21 +35,44 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
             setLandNames(res.extra);
         });
 
-        submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true).then((res) => {
-            setLandName(res.extra.name);
-        });
-
+        if (selectedLandId) {
+            submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true)
+                .then((res) => {
+                    setLandName(res.extra ? res.extra.name : "All Lands");
+                })
+                .catch((error) => {
+                    console.error("Error fetching land by id:", error);
+                });
+        } else {
+            setLandName("All Lands");
+        }
     }, [submitCollection.manageland, selectedLandId]);
 
     useEffect(() => {
-        if (selectedLandId && selectedLandId !== "") {
-            submitSets(submitCollection.managelot, "/" + selectedLandId, true).then(res => {
+        if (selectedLandId === '' || !selectedLandId) {
+            // Fetch all lots without filtering based on selectedLandId
+            submitSets(submitCollection.findalllot).then(res => {
                 if (res && res.status) {
                     setData(res.extra);
                 }
+            }).catch(error => {
+                console.error("Error fetching all lots:", error);
+                setData([]);
+            });
+        } else {
+            // Fetch lots for the selected land
+            submitSets(submitCollection.managelot, `/${selectedLandId}`, true).then(res => {
+                if (res && res.status) {
+                    setData(res.extra);
+                }
+            }).catch(error => {
+                console.error("Error fetching lots for the selected land:", error);
+                setData([]);
             });
         }
-    }, [selectedLandId, submitCollection.managelot]);
+    }, [selectedLandId, submitCollection.managelot, submitCollection.findalllot]);
+
+
 
     const redirectToInsertLot = () => {
         if (!selectedLandId) {
@@ -87,6 +110,7 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
                                 </Dropdown.Toggle>
 
                                 <Dropdown.Menu>
+                                    <Dropdown.Item eventKey="">All Lands</Dropdown.Item>
                                     {landNames.map((land) => (
                                         <Dropdown.Item eventKey={land.id} value={land.id}>
                                             {land.name}
