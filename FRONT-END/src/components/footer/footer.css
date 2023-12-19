@@ -15,3 +15,11 @@
   padding: 0 10px;
   color: white;
 }
+
+.active-icon {
+  color: #8df0a9; 
+}
+
+.inactive-icon {
+  color: white; 
+}
