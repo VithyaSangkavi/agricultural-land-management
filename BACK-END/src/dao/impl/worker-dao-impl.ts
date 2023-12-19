@@ -5,6 +5,7 @@ import { WorkerEntity } from "../../entity/master/worker-entity";
 import { WorkerDao } from "../worker-dao";
 import { WorkerStatus } from "../../enum/workerStatus";
 import { LandEntity } from "../../entity/master/land-entity";
+import { IWorker } from "../../types/woker-types";
 
 /**
  * worker data access layer
@@ -42,17 +43,48 @@ export class WorkerDaoImpl implements WorkerDao {
       return null;
     }
   }
+
   async findAll(workerDto: WorkerDto): Promise<WorkerEntity[]> {
     let workerRepo = getConnection().getRepository(WorkerEntity);
-    let searchObject: any = this.prepareSearchObject(workerDto);
-    let workerModel = await workerRepo.find({
-      where: searchObject,
-      skip: workerDto.getStartIndex(),
-      take: workerDto.getMaxResult(),
-      order:{id:"DESC"}
-    });
-    return workerModel;
+
+    console.log(workerDto);
+    
+   
+    const query = workerRepo.createQueryBuilder("worker")
+      .innerJoin("worker.land", "land")
+      // .where("land.id = :landId", { landId: workerDto.getLandId() })
+      .where("worker.status = :worker_status", {worker_status: Status.Online })
+      .orderBy("worker.name", "ASC");
+
+    const landWorkers = await query.getMany();
+
+    return landWorkers;
   }
+
+  // async findAll(workerDto: WorkerDto): Promise<WorkerEntity[]> {
+  //   let workerRepo = getConnection().getRepository(WorkerEntity);
+   
+  //   const query = workerRepo.createQueryBuilder("worker")
+  //     .innerJoin("worker.land", "land")
+  //     .where("land.id = :landId", { landId: workerDto.getLandId() })
+  //     .andWhere("worker.status = :worker_status", {worker_status: Status.Online })
+  //     .orderBy("worker.name", "ASC")
+  //     .select(["woker.id as workerID", "worker.name as wokerName"]);
+
+  //   // const landWorkers = await query.getMany();
+  //   const landWorkers = await query.getRawMany();
+
+  //   const result = landWorkers.map((i) => {
+  //     const woker: IWorker = {
+  //       id: i.workerID,
+  //       name: i.wokerName
+  //     } 
+  //     return woker;
+  //   });
+
+  //   return result;
+  // }
+  
   async findCount(workerDto: WorkerDto): Promise<number> {
     let workerRepo = getConnection().getRepository(WorkerEntity);
     let searchObject: any = this.prepareSearchObject(workerDto);

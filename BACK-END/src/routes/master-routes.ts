@@ -96,7 +96,8 @@ router.put("/updateSchedulStatus/:taskAssignedId", taskAssignedController.update
 router.post("/task-expense-save", taskExpenseController.save);
 // router.post("/taskUpdate", taskTypeController.update);
 // router.post("/taskDelete", taskTypeController.delete);
-//router.post("/taskexpenseFindAll", taskExpenseController.findAll);
+router.post("/taskexpenseFindAll", taskExpenseController.findAll);
+router.get('/findByTaskAssignedId', taskExpenseController.findByTaskAssignedId);
 // router.get("/taskFindById", taskTypeController.findById);
 
 // work-assigned routes
