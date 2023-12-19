@@ -149,7 +149,7 @@ export class TaskExpenseServiceImpl implements TaskExpenseService {
       let taskExpenseDtoList = new Array();
       for (const taskExpenseModel of taskExpenses) {
         let taskExpenseDto = new TaskExpenseDto();
-        taskExpenseDto.filViaDbObject(taskExpenseModel);
+        taskExpenseDto.filViaRequest(taskExpenseModel);
         taskExpenseDtoList.push(taskExpenseDto);
       }
       if (taskExpenseDto.getStartIndex() == 0) {
@@ -181,6 +181,28 @@ export class TaskExpenseServiceImpl implements TaskExpenseService {
 
       cr.setStatus(true);
       cr.setExtra(taskExpenseDto);
+    } catch (error) {
+      cr.setStatus(false);
+      cr.setExtra(error);
+      ErrorHandlerSup.handleError(error);
+    }
+    return cr;
+  }
+
+  async taskExpensefindBytaskAssignedId(taskAssignedId: number): Promise<CommonResponse> {
+    let cr = new CommonResponse();
+    try {
+      const taskexpense = await this.taskExpenseDao.findByTaskAssignedId(taskAssignedId);
+
+      let taskExpenseList = new Array();
+      for (const workerModel of taskexpense) {
+        let taskExpense = new TaskExpenseDto();
+        taskExpense.filViaRequest(workerModel);
+        taskExpenseList.push(taskExpense);
+      }
+
+      cr.setStatus(true);
+      cr.setExtra(taskExpenseList);
     } catch (error) {
       cr.setStatus(false);
       cr.setExtra(error);

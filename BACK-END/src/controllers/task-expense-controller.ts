@@ -68,4 +68,15 @@ exports.update = async (req: Request, res: Response, next: NextFunction) => {
       next(error);
     }
   };
+
+  exports.findByTaskAssignedId = async(req: Request, res: Response) => {
+    try {
+      const taskAssignedId = Number(req.query.taskAssignedId); 
+      console.log('Received task assigned id:', taskAssignedId);
+      const result = await taskExpenseService.taskExpensefindBytaskAssignedId(taskAssignedId);
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ error: 'An error occurred' });
+    }
+  }
   
