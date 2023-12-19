@@ -247,3 +247,11 @@
   height: 45%;
   overflow: scroll;
 }
+
+.end-task-icon {
+  position: absolute;
+  top: 80px; 
+  right: 20px; 
+  cursor: pointer;
+  z-index: 9999; 
+}
