@@ -8,9 +8,11 @@ import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { MdArrowBackIos } from "react-icons/md";
+import { connect } from 'react-redux';
+import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 
 
-const AddTask = () => {
+const AddTask = ({ selectedLandId }) => {
 
   const [t, i18n] = useTranslation();
 
@@ -21,23 +23,26 @@ const AddTask = () => {
   const [initialSelectedValue, setInitialSelectedValue] = useState('');
   const [selectedDate, setSelectedDate] = useState();
   const [endDate, setEndDate] = useState(null);
-  const landId = localStorage.getItem('SelectedLandId')
   const selectedTaskId = localStorage.getItem('selectedTaskId');
   const taskId = selectedTaskId;
   const startDate = selectedDate;
   const taskAssignedDate = selectedDate;
   const [taskAssignedId, setTaskAssignedId] = useState('');
   const [selectedDates, setSelectedDates] = useState([]);
+  
 
   const handleDateChange = (dates) => {
     setSelectedDates(dates);
   };
 
+  console.log("selected land 1: ", selectedLandId)
+
+
   useEffect(() => {
-    console.log('get land id: ', landId);
+    console.log('get land id: ', selectedLandId);
     console.log('get task id: ', selectedTaskId);
 
-    axios.get(`http://localhost:8081/service/master/findTaskNameById/?taskId=${selectedTaskId}`)
+    axios.get(`http://localhost:8080/service/master/findTaskNameById/?taskId=${selectedTaskId}`)
       .then((response) => {
         console.log(response.data.extra.taskName)
         setInitialSelectedValue(response.data.extra.taskName);
@@ -47,7 +52,7 @@ const AddTask = () => {
       });
 
     //display all task names
-    axios.post('http://localhost:8081/service/master/taskFindAll')
+    axios.post('http://localhost:8080/service/master/taskFindAll')
       .then((response) => {
         const tasks = response.data.extra;
         const taskNamesArray = Array.isArray(tasks) ? tasks.map((task) => task.taskName) : [];
@@ -56,18 +61,18 @@ const AddTask = () => {
       .catch((error) => {
         console.error('Error fetching task names:', error);
       });
-  }, []);
+  }, [selectedLandId]);
 
   //add task type
   const handleAddTaskAssigned = () => {
     const addTaskAssigned = {
       startDate,
       endDate,
-      landId,
+      landId: selectedLandId,
       taskId
     };
 
-    axios.post('http://localhost:8081/service/master/task-assigned-save', addTaskAssigned)
+    axios.post('http://localhost:8080/service/master/task-assigned-save', addTaskAssigned)
       .then((response) => {
         console.log('Task assigned added successfully:', response.data);
         console.log('Task id to be stored: ', taskId)
@@ -88,7 +93,7 @@ const AddTask = () => {
   };
 
   // const fetchTaskAssignedId = () => {
-  //   axios.get(`http://localhost:8081/service/master/task-assigned?taskId=${taskId}`)
+  //   axios.get(`http://localhost:8080/service/master/task-assigned?taskId=${taskId}`)
   //     .then((response) => {
   //       const taskAssignedId = response.data.extra.id;
   //       setTaskAssignedId(taskAssignedId);
@@ -98,7 +103,7 @@ const AddTask = () => {
   //         taskAssignedId
   //       };
 
-  //       axios.post('http://localhost:8081/service/master/task-card-save', saveTaskCard)
+  //       axios.post('http://localhost:8080/service/master/task-card-save', saveTaskCard)
   //         .then((response) => {
   //           console.log('Task card added', response.data);
   //           localStorage.setItem('taskassignedid', taskAssignedId);
@@ -183,4 +188,12 @@ const AddTask = () => {
   );
 };
 
-export default AddTask;
+const mapStateToProps = (state) => ({
+  selectedLandId: state.selectedLandId,
+});
+
+const mapDispatchToProps = {
+  setSelectedLandId: setSelectedLandIdAction,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddTask);
