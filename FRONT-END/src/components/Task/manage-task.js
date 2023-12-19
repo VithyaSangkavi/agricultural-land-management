@@ -14,14 +14,15 @@ import DatePanel from "react-multi-date-picker/plugins/date_panel"
 import moment from 'moment'
 import "react-multi-date-picker/styles/layouts/prime.css"
 import { MdArrowBackIos } from "react-icons/md";
+import { connect } from 'react-redux';
+import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 
-const ManageTask = () => {
+const ManageTask = ({ selectedLandId }) => {
     const [t, i18n] = useTranslation();
 
     const history = useHistory();
 
     const taskId = localStorage.getItem('TaskIDFromTaskAssigned')
-    const landId = localStorage.getItem('SelectedLandId')
     const startDate = localStorage.getItem('StartDate');
 
     const [taskName, setTaskName] = useState('');
@@ -135,7 +136,7 @@ const ManageTask = () => {
     };
 
     const fetchLotId = () => {
-        axios.get(`http://localhost:8080/service/master/findLotByLandId?landId=${landId}`)
+        axios.get(`http://localhost:8080/service/master/findLotByLandId?landId=${selectedLandId}`)
 
             .then((response) => {
                 const thislot = response.data.extra.id;
@@ -201,6 +202,7 @@ const ManageTask = () => {
                 setSelectedWorkersList([...selectedWorkersList, selectedWorker]);
                 setSelectedWorker('');
                 console.log('selected worker: ', selectedWorker);
+                setSelectedWorker(selectedWorker);
 
                 if (!taskCardId) {
                     const saveTaskCard = {
@@ -610,4 +612,12 @@ const ManageTask = () => {
     );
 };
 
-export default ManageTask;
+const mapStateToProps = (state) => ({
+    selectedLandId: state.selectedLandId,
+});
+
+const mapDispatchToProps = {
+    setSelectedLandId: setSelectedLandIdAction,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ManageTask);
