@@ -13,7 +13,7 @@ import { Trash } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { alertService } from '../../_services/alert.service';
-import { MdArrowBackIos } from "react-icons/md";
+import { MdArrowBackIos, MdViewAgenda, MdClose } from "react-icons/md";
 import { Redirect } from 'react-router-dom';
 
 const ManageOngoingTask = () => {
@@ -45,7 +45,7 @@ const ManageOngoingTask = () => {
     const [taskDetails, setTaskDetails] = useState([]);
     const [taskStatus, setTaskStatus] = useState('');
     const [newTaskCardId, setNewTaskCardId] = useState('');
-
+    const [taskExpenses, setTaskExpenses] = useState([]);
 
     //const [workerId, setWorkerId] = useState('');
     const [taskAssignedId, setTaskAssignedId] = useState('');
@@ -56,10 +56,29 @@ const ManageOngoingTask = () => {
     const [isCompleted, setIsCompleted] = useState(false);
     const [completedTasks, setCompletedTasks] = useState([]);
     const [workerId, setWorkerId] = useState('');
+    const [showExpenses, setShowExpenses] = useState(false);
+    const [totalAmount, setTotalAmount] = useState(0); 
 
     const sortedTaskDetails = taskDetails && taskDetails.length > 1
         ? taskDetails.sort((a, b) => new Date(b.date) - new Date(a.date))
         : taskDetails;
+
+    useEffect(() => {
+        if (showExpenses) {
+            getTaskExpenses(); 
+        }
+    }, [showExpenses]);
+
+    useEffect(() => {
+        const calculateTotalAmount = () => {
+            const total = taskExpenses.reduce((acc, expense) => acc + expense.value, 0);
+            setTotalAmount(total);
+
+            console.log('Total amount: ', total);
+        };
+
+        calculateTotalAmount();
+    }, [taskExpenses]);
 
     const handleCompleteTask = (taskCardId) => {
         const newStatus = 'completed';
@@ -342,7 +361,7 @@ const ManageOngoingTask = () => {
                 axios.post('http://localhost:8081/service/master/task-expense-save', addTaskExpense)
                     .then((response) => {
                         console.log('Task expense added successfully:', response.data);
-                        history.push('/home');
+                        window.reload();
                     })
                     .catch((error) => {
                         // console.error('Error adding task expense:', error);
@@ -431,6 +450,18 @@ const ManageOngoingTask = () => {
     };
 
     console.log("taskDetails : ", taskDetails)
+
+    const getTaskExpenses = (e) => {
+        console.log('task ass id: ', taskAssignedid);
+        axios.get(`http://localhost:8081/service/master/findByTaskAssignedId?taskAssignedId=${taskAssignedid}`)
+            .then((response) => {
+                console.log('task expenses ------------ ', response.data.extra)
+                setTaskExpenses(response.data.extra);
+            })
+            .catch((error) => {
+                console.error('Error fetching task expenses:', error);
+            });
+    }
 
     return (
         <div className="manage-task-app-screen">
@@ -641,7 +672,6 @@ const ManageOngoingTask = () => {
                             </div>
                         )}
 
-
                         {/* Finance Toggled View */}
                         {selectedView === 'finance' && (
                             <>
@@ -667,7 +697,30 @@ const ManageOngoingTask = () => {
                                     />
                                     <button className="add-button" onClick={handleAddTaskExpense}>{t('addtaskexpense')}</button>
                                 </div>
+                                <br />
                                 <div>
+                                    {showExpenses ? (
+                                        <button onClick={() => setShowExpenses(false)} className='view-task-expenses'>
+                                            <MdClose /> Close Task Expenses
+                                        </button>
+                                    ) : (
+                                        <button onClick={() => setShowExpenses(true)} className='view-task-expenses'>
+                                            <MdViewAgenda /> View Task Expenses
+                                        </button>
+                                    )}
+
+                                    {/* Display task expenses when showExpenses is true */}
+                                    {showExpenses && (
+                                        <div>
+                                            {taskExpenses.map((taskExpense) => (
+                                                <div key={taskExpense.id} className="task-expense-card">
+                                                    <h3>Expense Type : {taskExpense.expenseType}</h3>
+                                                    <p>Amount : {taskExpense.value}</p>
+                                                </div>
+                                            ))}
+                                            <p className='total-display-card'>Total Task Expenses: Rs.{totalAmount}.00</p>
+                                        </div>
+                                    )}
 
                                 </div>
                             </>
