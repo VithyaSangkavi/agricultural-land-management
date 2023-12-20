@@ -69,14 +69,17 @@ exports.update = async (req: Request, res: Response, next: NextFunction) => {
     }
   };
 
-  exports.findByTaskAssignedId = async(req: Request, res: Response) => {
+  exports.findByTaskAssignedId = async (req: Request, res: Response) => {
     try {
-      const taskAssignedId = Number(req.query.taskAssignedId); 
-      console.log('Received task assigned id:', taskAssignedId);
-      const result = await taskExpenseService.taskExpensefindBytaskAssignedId(taskAssignedId);
-      res.json(result);
-    } catch (error) {
-      res.status(500).json({ error: 'An error occurred' });
-    }
-  }
+      let taskExpenseDto = new TaskExpenseDto();
+      
+      const taskAssignedId = req.query.taskAssignedId;
+      taskExpenseDto.setTaskAssignedId(taskAssignedId);
+
+      let cr = await taskExpenseService.taskExpensefindBytaskAssignedId(taskExpenseDto);
   
+      res.send(cr);
+    } catch (error) {
+      (error);
+    }
+  };

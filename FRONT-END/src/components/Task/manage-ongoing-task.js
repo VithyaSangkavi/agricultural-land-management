@@ -13,7 +13,7 @@ import { Trash } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { alertService } from '../../_services/alert.service';
-import { MdArrowBackIos } from "react-icons/md";
+import { MdArrowBackIos, MdViewAgenda, MdClose } from "react-icons/md";
 import { Redirect } from 'react-router-dom';
 
 const ManageOngoingTask = () => {
@@ -45,7 +45,7 @@ const ManageOngoingTask = () => {
     const [taskDetails, setTaskDetails] = useState([]);
     const [taskStatus, setTaskStatus] = useState('');
     const [newTaskCardId, setNewTaskCardId] = useState('');
-
+    const [taskExpenses, setTaskExpenses] = useState([]);
 
     //const [workerId, setWorkerId] = useState('');
     const [taskAssignedId, setTaskAssignedId] = useState('');
@@ -56,10 +56,29 @@ const ManageOngoingTask = () => {
     const [isCompleted, setIsCompleted] = useState(false);
     const [completedTasks, setCompletedTasks] = useState([]);
     const [workerId, setWorkerId] = useState('');
+    const [showExpenses, setShowExpenses] = useState(false);
+    const [totalAmount, setTotalAmount] = useState(0); 
 
     const sortedTaskDetails = taskDetails && taskDetails.length > 1
         ? taskDetails.sort((a, b) => new Date(b.date) - new Date(a.date))
         : taskDetails;
+
+    useEffect(() => {
+        if (showExpenses) {
+            getTaskExpenses(); 
+        }
+    }, [showExpenses]);
+
+    useEffect(() => {
+        const calculateTotalAmount = () => {
+            const total = taskExpenses.reduce((acc, expense) => acc + expense.value, 0);
+            setTotalAmount(total);
+
+            console.log('Total amount: ', total);
+        };
+
+        calculateTotalAmount();
+    }, [taskExpenses]);
 
     const handleCompleteTask = (taskCardId) => {
         const newStatus = 'completed';
@@ -72,7 +91,7 @@ const ManageOngoingTask = () => {
     };
 
     const updateTaskCardStatus = (taskCardId, newStatus) => {
-        axios.put(`http://localhost:8080/service/master/updateStatus/${taskCardId}`, {
+        axios.put(`http://localhost:8081/service/master/updateStatus/${taskCardId}`, {
             newStatus,
         })
             .then((response) => {
@@ -126,7 +145,7 @@ const ManageOngoingTask = () => {
 
     useEffect(() => {
 
-        axios.get(`http://localhost:8080/service/master/work-assigned-details/${taskAssignedid}`)
+        axios.get(`http://localhost:8081/service/master/work-assigned-details/${taskAssignedid}`)
             .then((response) => {
 
                 setTaskDetails(response.data.extra.cardDetails);
@@ -160,7 +179,7 @@ const ManageOngoingTask = () => {
 
 
     const fetchTaskName = () => {
-        axios.get(`http://localhost:8080/service/master/findTaskNameById/?taskId=${taskId}`)
+        axios.get(`http://localhost:8081/service/master/findTaskNameById/?taskId=${taskId}`)
             .then((response) => {
 
                 setTaskName(response.data.extra.taskName);
@@ -186,7 +205,7 @@ const ManageOngoingTask = () => {
     };
 
     const fetchExpenseTypes = () => {
-        axios.get('http://localhost:8080/service/master/expenseFindAll')
+        axios.get('http://localhost:8081/service/master/expenseFindAll')
             .then((response) => {
                 const expenseTypeArrays = response.data.extra.map((expense) => expense.expenseType);
                 setExpenseTypes(expenseTypeArrays);
@@ -198,7 +217,7 @@ const ManageOngoingTask = () => {
 
     const fetchTaskAssignedId = () => {
         //get task-assigned id
-        axios.get(`http://localhost:8080/service/master/task-assigned?taskId=${taskId}`)
+        axios.get(`http://localhost:8081/service/master/task-assigned?taskId=${taskId}`)
             .then((response) => {
                 console.log('Task assigned id: ', response.data.extra.id)
                 setTaskAssignedId(response.data.extra.id);
@@ -209,7 +228,7 @@ const ManageOngoingTask = () => {
     }
 
     const fetchLotId = () => {
-        axios.get(`http://localhost:8080/service/master/findLotByLandId?landId=${landId}`)
+        axios.get(`http://localhost:8081/service/master/findLotByLandId?landId=${landId}`)
             .then((response) => {
                 const thislot = response.data.extra.id;
                 console.log('Lot id: ', response.data.extra.id)
@@ -247,7 +266,7 @@ const ManageOngoingTask = () => {
                 setSelectedWorker('');
 
 
-                axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${name}`)
+                axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${name}`)
                     .then((response) => {
                         const workerId = response.data.extra.workerId
                         console.log('Worker ID :', workerId);
@@ -261,7 +280,7 @@ const ManageOngoingTask = () => {
                                 taskAssignedId: taskAssignedid
                             };
 
-                            axios.post('http://localhost:8080/service/master/task-card-save', newTaskCard)
+                            axios.post('http://localhost:8081/service/master/task-card-save', newTaskCard)
                                 .then((savedTaskCardResponse) => {
                                     console.log('New Task card added', savedTaskCardResponse.data.extra);
                                     const newtaskCardId = savedTaskCardResponse.data.extra.id
@@ -277,7 +296,7 @@ const ManageOngoingTask = () => {
                                         taskCardId: newtaskCardId
                                     }
 
-                                    axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
+                                    axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
                                         .then((response) => {
                                             console.log('Work assigned added successfully:', response.data);
                                             alertService.success('Worker added successfully');
@@ -302,7 +321,7 @@ const ManageOngoingTask = () => {
                                 taskCardId: taskCardId
                             }
 
-                            axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
+                            axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
                                 .then((response) => {
                                     console.log('Work assigned added successfully:', response.data);
                                     alertService.success('Worker added successfully');
@@ -326,7 +345,7 @@ const ManageOngoingTask = () => {
 
         //get expense id according to the expense type
         axios
-            .get(`http://localhost:8080/service/master/find-by-type?expenseType=${selectedExpenseType}`)
+            .get(`http://localhost:8081/service/master/find-by-type?expenseType=${selectedExpenseType}`)
             .then((response) => {
                 const expenseId = response.data.expenseId;
                 setExpenseId(expenseId);
@@ -339,10 +358,10 @@ const ManageOngoingTask = () => {
                 };
 
                 //save task expense 
-                axios.post('http://localhost:8080/service/master/task-expense-save', addTaskExpense)
+                axios.post('http://localhost:8081/service/master/task-expense-save', addTaskExpense)
                     .then((response) => {
                         console.log('Task expense added successfully:', response.data);
-                        history.push('/home');
+                        window.reload();
                     })
                     .catch((error) => {
                         // console.error('Error adding task expense:', error);
@@ -365,7 +384,7 @@ const ManageOngoingTask = () => {
         const selectedWorker = localStorage.getItem('selectedWorker');
         console.log('selected worker: ', selectedWorker);
 
-        axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${selectedWorker}`)
+        axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${selectedWorker}`)
             .then((response) => {
                 const workerId = response.data.extra.workerId
                 // setWorkerId(storeWorkerId);
@@ -380,7 +399,7 @@ const ManageOngoingTask = () => {
                     lotId
                 }
 
-                axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
+                axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
                     .then((response) => {
                         console.log('Work assigned added successfully:', response.data);
 
@@ -403,7 +422,7 @@ const ManageOngoingTask = () => {
             newStatus: 'completed',
         }
 
-        axios.put(`http://localhost:8080/service/master/updateEndDate/${taskAssignedid}`, details)
+        axios.put(`http://localhost:8081/service/master/updateEndDate/${taskAssignedid}`, details)
             .then((response) => {
                 window.location.reload();
             })
@@ -416,7 +435,7 @@ const ManageOngoingTask = () => {
 
     const handleRemoveWorker = (taskCardId, workAssignedId) => {
 
-        axios.delete(`http://localhost:8080/service/master/work-assigned-delete/${workAssignedId}`)
+        axios.delete(`http://localhost:8081/service/master/work-assigned-delete/${workAssignedId}`)
             .then(response => {
                 console.log('Worker removed successfully:', response.data);
                 window.location.reload();
@@ -431,6 +450,18 @@ const ManageOngoingTask = () => {
     };
 
     console.log("taskDetails : ", taskDetails)
+
+    const getTaskExpenses = (e) => {
+        console.log('task ass id: ', taskAssignedid);
+        axios.get(`http://localhost:8081/service/master/findByTaskAssignedId?taskAssignedId=${taskAssignedid}`)
+            .then((response) => {
+                console.log('task expenses ------------ ', response.data.extra)
+                setTaskExpenses(response.data.extra);
+            })
+            .catch((error) => {
+                console.error('Error fetching task expenses:', error);
+            });
+    }
 
     return (
         <div className="manage-task-app-screen">
@@ -641,7 +672,6 @@ const ManageOngoingTask = () => {
                             </div>
                         )}
 
-
                         {/* Finance Toggled View */}
                         {selectedView === 'finance' && (
                             <>
@@ -667,7 +697,30 @@ const ManageOngoingTask = () => {
                                     />
                                     <button className="add-button" onClick={handleAddTaskExpense}>{t('addtaskexpense')}</button>
                                 </div>
+                                <br />
                                 <div>
+                                    {showExpenses ? (
+                                        <button onClick={() => setShowExpenses(false)} className='view-task-expenses'>
+                                            <MdClose /> Close Task Expenses
+                                        </button>
+                                    ) : (
+                                        <button onClick={() => setShowExpenses(true)} className='view-task-expenses'>
+                                            <MdViewAgenda /> View Task Expenses
+                                        </button>
+                                    )}
+
+                                    {/* Display task expenses when showExpenses is true */}
+                                    {showExpenses && (
+                                        <div>
+                                            {taskExpenses.map((taskExpense) => (
+                                                <div key={taskExpense.id} className="task-expense-card">
+                                                    <h3>Expense Type : {taskExpense.expenseType}</h3>
+                                                    <p>Amount : {taskExpense.value}</p>
+                                                </div>
+                                            ))}
+                                            <p className='total-display-card'>Total Task Expenses: Rs.{totalAmount}.00</p>
+                                        </div>
+                                    )}
 
                                 </div>
                             </>
