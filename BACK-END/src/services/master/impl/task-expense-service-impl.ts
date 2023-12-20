@@ -189,25 +189,27 @@ export class TaskExpenseServiceImpl implements TaskExpenseService {
     return cr;
   }
 
-  async taskExpensefindBytaskAssignedId(taskAssignedId: number): Promise<CommonResponse> {
+  async taskExpensefindBytaskAssignedId(taskExpenseDto: TaskExpenseDto): Promise<CommonResponse> {
     let cr = new CommonResponse();
     try {
-      const taskexpense = await this.taskExpenseDao.findByTaskAssignedId(taskAssignedId);
-
-      let taskExpenseList = new Array();
-      for (const workerModel of taskexpense) {
+      const taskexpense = await this.taskExpenseDao.findByTaskAssignedId(taskExpenseDto);
+  
+      let taskExpenseList: TaskExpenseDto[] = [];
+      for (const taskExpenseModel of taskexpense) {
         let taskExpense = new TaskExpenseDto();
-        taskExpense.filViaRequest(workerModel);
+        taskExpense.filViaDbObjectForTaskExpense(taskExpenseModel);
         taskExpenseList.push(taskExpense);
       }
-
+  
       cr.setStatus(true);
       cr.setExtra(taskExpenseList);
     } catch (error) {
       cr.setStatus(false);
-      cr.setExtra(error);
+      cr.setExtra(error.message);
       ErrorHandlerSup.handleError(error);
+      console.error(error);
     }
     return cr;
   }
+  
 }
