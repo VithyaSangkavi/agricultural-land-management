@@ -34,13 +34,14 @@
 
 .filter-icon {
   display: inline-block;
-  vertical-align: middle;
+  align-items: middle;
   margin-left: 10px;
   margin-right: 10px;
   cursor: pointer;
-  color: #0e4f20;
-  /* background-color: #0e4f20; */
-  padding: 5px;
+  color: white;
+  background-color: #0e4f20;
+  padding: 10px;
+  border-radius: 5px;
 }
 
 .filter-icon svg {
@@ -160,4 +161,9 @@
 
 .custom-label {
   font-size: small;
+}
+
+.report-sub-heading{
+  font-size: medium;
+  font: bold;
 }

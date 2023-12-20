@@ -112,7 +112,7 @@ const CostYieldReport = ({ dateRange, landId, lotId, selectedLot }) => {
                         <p>{t('selectedlot')} : {selectedLot}</p>
                     )}
                 </div>
-                <h2>{t('costyieldreport')}</h2>
+                <h2 className='report-sub-heading'>{t('costyieldreport')}</h2>
                 <table className='attendance-table'>
                     <thead>
                         <tr>
@@ -134,7 +134,7 @@ const CostYieldReport = ({ dateRange, landId, lotId, selectedLot }) => {
             </div>
             <br />
             <div className='report-app-screen'>
-                <h2>{t('costvsyieldcomparisionchart')}</h2>
+                <h2 className='report-sub-heading'>{t('costvsyieldcomparisionchart')}</h2>
                 <div className='attendance-chart'>
                     {Object.keys(costYieldData).length > 0 ? (
                         <Bar data={chartData} options={chartOptions} />
