@@ -701,11 +701,11 @@ const ManageOngoingTask = () => {
                                 <div>
                                     {showExpenses ? (
                                         <button onClick={() => setShowExpenses(false)} className='view-task-expenses'>
-                                            <MdClose /> Close Task Expenses
+                                            <MdClose /> {t('closetaskexpenses')}
                                         </button>
                                     ) : (
                                         <button onClick={() => setShowExpenses(true)} className='view-task-expenses'>
-                                            <MdViewAgenda /> View Task Expenses
+                                            <MdViewAgenda /> {t('viewtaskexpenses')}
                                         </button>
                                     )}
 
@@ -714,11 +714,11 @@ const ManageOngoingTask = () => {
                                         <div>
                                             {taskExpenses.map((taskExpense) => (
                                                 <div key={taskExpense.id} className="task-expense-card">
-                                                    <h3>Expense Type : {taskExpense.expenseType}</h3>
-                                                    <p>Amount : {taskExpense.value}</p>
+                                                    <h3>{t('expensetype')} : {taskExpense.expenseType}</h3>
+                                                    <p>{t('amount')} : {taskExpense.value}</p>
                                                 </div>
                                             ))}
-                                            <p className='total-display-card'>Total Task Expenses: Rs.{totalAmount}.00</p>
+                                            <p className='total-display-card'>{t('totaltaskexpenses')}: {t('rs')}{totalAmount}.00</p>
                                         </div>
                                     )}
 

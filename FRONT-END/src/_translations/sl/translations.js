@@ -103,6 +103,10 @@ export const TRANSLATIONS_SL = {
     amount: 'ප්රමාණය',
     addtaskexpense: 'කාර්ය වියදම් එකතු කරන්න',
     numberofkg: 'කිලෝග්‍රෑම් ගණන',
+    viewtaskexpenses: 'කාර්ය වියදම් බලන්න',
+    closetaskexpenses: 'කාර්ය වියදම් වසන්න',
+    totaltaskexpenses: 'සම්පූර්ණ කාර්ය වියදම්',
+    rs : 'රු.',
 
     //add task
     startdate: 'ආරම්භක දිනය',
