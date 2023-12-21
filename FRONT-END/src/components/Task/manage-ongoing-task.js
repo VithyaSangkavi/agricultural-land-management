@@ -15,8 +15,10 @@ import { useParams } from 'react-router-dom';
 import { alertService } from '../../_services/alert.service';
 import { MdArrowBackIos, MdViewAgenda, MdClose } from "react-icons/md";
 import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 
-const ManageOngoingTask = () => {
+const ManageOngoingTask = ({selectedLandId}) => {
     const [t, i18n] = useTranslation();
     const { taskAssignedid } = useParams();
 
@@ -57,7 +59,7 @@ const ManageOngoingTask = () => {
     const [completedTasks, setCompletedTasks] = useState([]);
     const [workerId, setWorkerId] = useState('');
     const [showExpenses, setShowExpenses] = useState(false);
-    const [totalAmount, setTotalAmount] = useState(0); 
+    const [totalAmount, setTotalAmount] = useState(0);
 
 
     const sortedTaskDetails = taskDetails && taskDetails.length > 1
@@ -66,7 +68,7 @@ const ManageOngoingTask = () => {
 
     useEffect(() => {
         if (showExpenses) {
-            getTaskExpenses(); 
+            getTaskExpenses();
         }
     }, [showExpenses]);
 
@@ -142,9 +144,10 @@ const ManageOngoingTask = () => {
         fetchWorkerNames();
         fetchExpenseTypes();
         fetchLotId();
-    }, []);
+        AddedWorkerList();
+    }, [selectedLandId]);
 
-    useEffect(() => {
+    const AddedWorkerList = () => {
 
         axios.get(`http://localhost:8080/service/master/work-assigned-details/${taskAssignedid}`)
             .then((response) => {
@@ -176,7 +179,7 @@ const ManageOngoingTask = () => {
             .catch((error) => {
                 console.error('Error fetching task details:', error);
             });
-    }, []);
+    };
 
 
     const fetchTaskName = () => {
@@ -192,16 +195,19 @@ const ManageOngoingTask = () => {
     };
 
     //fetch worker names according to landId
+
+    console.log("land id :", selectedLandId)
+
     const fetchWorkerNames = () => {
 
-        axios.get(`http://localhost:8080/service/master/findByLandId?landId=${landId}`)
+        axios.get(`http://localhost:8080/service/master/findByLandId?landId=${selectedLandId}`)
 
             .then((response) => {
-                const workerNamesArray = response.data.extra.map((worker) => worker.name);
-                setWorkerNames(workerNamesArray);
+                console.log("worker names : ", response.data.extra);
+                setWorkerNames(response.data.extra);
             })
             .catch((error) => {
-                //console.error('Error fetching worker names:', error);
+                console.error('Error fetching worker names:', error);
             });
     };
 
@@ -229,7 +235,7 @@ const ManageOngoingTask = () => {
     }
 
     const fetchLotId = () => {
-        axios.get(`http://localhost:8080/service/master/findLotByLandId?landId=${landId}`)
+        axios.get(`http://localhost:8080/service/master/findLotByLandId?landId=${selectedLandId}`)
             .then((response) => {
                 const thislot = response.data.extra.id;
                 console.log('Lot id: ', response.data.extra.id)
@@ -326,6 +332,7 @@ const ManageOngoingTask = () => {
                                 .then((response) => {
                                     console.log('Work assigned added successfully:', response.data);
                                     alertService.success('Worker added successfully');
+                                    AddedWorkerList();
                                     // window.location.reload();
                                 })
                                 .catch((error) => {
@@ -439,6 +446,9 @@ const ManageOngoingTask = () => {
         axios.delete(`http://localhost:8080/service/master/work-assigned-delete/${workAssignedId}`)
             .then(response => {
                 console.log('Worker removed successfully:', response.data);
+                AddedWorkerList();
+                // window.location.reload();
+
             })
             .catch(error => {
                 console.error('Error removing worker:', error);
@@ -555,7 +565,7 @@ const ManageOngoingTask = () => {
 
                                     {taskDetails.map((taskDetail) => (
                                         <div key={taskDetail.taskCardId} className='card'>
-                                            <p>{t('date')} - <h6>{getFormattedDate(taskDetail.date)}</h6></p>
+                                            <p>{t('date')} - <h6>{taskDetail.workDate ? getFormattedDate(taskDetail.workDate) : getFormattedDate(taskDetail.date)}</h6></p>
                                             <h6> Current Staus - {taskDetail.cardStatus}</h6>
                                             <p>---------------------------------------------</p>
 
@@ -579,7 +589,7 @@ const ManageOngoingTask = () => {
 
                                                                 {taskDetail.cardStatus !== 'completed' && (
                                                                     <div className="remove-button-container">
-                                                                        <Trash onClick={() => handleRemoveWorker(taskDetail.taskCardId, workerDetail.workAssigned)} />
+                                                                        <Trash onClick={() => handleRemoveWorker(workerDetail.workAssigned)} />
                                                                     </div>
                                                                 )}
 
@@ -607,8 +617,8 @@ const ManageOngoingTask = () => {
                                                         >
                                                             <option value="">{t('selectaworker')}</option>
                                                             {workerNames.map((workerName) => (
-                                                                <option key={workerName} value={workerName}>
-                                                                    {workerName}
+                                                                <option key={workerName.name} value={workerName.name}>
+                                                                    {workerName.name}
                                                                 </option>
                                                             ))}
                                                         </select>
@@ -640,7 +650,7 @@ const ManageOngoingTask = () => {
                                                 <div></div>
                                             )}
 
-                                            {selectedWorkersList[taskDetail.taskCardId]?.length > 0 && (
+                                            {/* {selectedWorkersList[taskDetail.taskCardId]?.length > 0 && (
                                                 <div>
                                                     {selectedWorkersList[taskDetail.taskCardId].map((worker, index) => (
                                                         <div key={index} className="worker-container">
@@ -664,7 +674,7 @@ const ManageOngoingTask = () => {
                                                         </div>
                                                     ))}
                                                 </div>
-                                            )}
+                                            )} */}
                                         </div>
 
                                     ))}
@@ -742,4 +752,12 @@ const ManageOngoingTask = () => {
     );
 };
 
-export default ManageOngoingTask;
+const mapStateToProps = (state) => ({
+    selectedLandId: state.selectedLandId,
+});
+
+const mapDispatchToProps = {
+    setSelectedLandId: setSelectedLandIdAction,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ManageOngoingTask);

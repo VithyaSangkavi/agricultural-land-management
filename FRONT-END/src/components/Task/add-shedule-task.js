@@ -14,6 +14,7 @@ import { useLocation } from 'react-router-dom';
 import { MdArrowBackIos } from "react-icons/md";
 import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
+import { Trash } from 'react-bootstrap-icons';
 
 
 const ManageTask = ({ selectedLandId }) => {
@@ -439,14 +440,13 @@ const ManageTask = ({ selectedLandId }) => {
                                         if (addedData.date === currentDate[dateIndex]) {
                                             return (
                                                 <div key={index}>
-                                                    <p>{addedData.worker} : {addedData.quantity}kg : {addedData.id}</p>
-                                                    <span
-                                                        style={{ cursor: 'pointer', marginLeft: '10px' }}
-                                                        onClick={() => deleteWorkAssigned(addedData.id)}
-                                                    >
-                                                        <button>delete</button>
-                                                    </span>
-
+                                                    <p>{addedData.worker} : {addedData.quantity}kg
+                                                        <span
+                                                            onClick={() => deleteWorkAssigned(addedData.id)}
+                                                        >
+                                                            <Trash>delete</Trash>
+                                                        </span>
+                                                    </p>
                                                 </div>
                                             );
                                         }
@@ -454,7 +454,14 @@ const ManageTask = ({ selectedLandId }) => {
                                         if (addedData.date === currentDate[dateIndex]) {
                                             return (
                                                 <div key={index}>
-                                                    <p>{addedData.worker}</p>
+                                                    <p>{addedData.worker}
+                                                        <span
+                                                            style={{ cursor: 'pointer', marginLeft: '10px' }}
+                                                            onClick={() => deleteWorkAssigned(addedData.id)}
+                                                        >
+                                                            <button>delete</button>
+                                                        </span>
+                                                    </p>
 
                                                 </div>
                                             );
