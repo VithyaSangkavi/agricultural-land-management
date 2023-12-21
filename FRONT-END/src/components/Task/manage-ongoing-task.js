@@ -59,6 +59,7 @@ const ManageOngoingTask = () => {
     const [showExpenses, setShowExpenses] = useState(false);
     const [totalAmount, setTotalAmount] = useState(0); 
 
+
     const sortedTaskDetails = taskDetails && taskDetails.length > 1
         ? taskDetails.sort((a, b) => new Date(b.date) - new Date(a.date))
         : taskDetails;

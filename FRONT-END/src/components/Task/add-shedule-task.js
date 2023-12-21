@@ -12,9 +12,11 @@ import { useTranslation } from 'react-i18next';
 import MultiDatePicker from "react-multi-date-picker";
 import { useLocation } from 'react-router-dom';
 import { MdArrowBackIos } from "react-icons/md";
+import { connect } from 'react-redux';
+import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 
 
-const ManageTask = () => {
+const ManageTask = ({ selectedLandId }) => {
 
     const location = useLocation();
     const { selectedDates } = location.state || {};
@@ -28,30 +30,25 @@ const ManageTask = () => {
     const history = useHistory();
 
     const taskId = localStorage.getItem('TaskIDFromTaskAssigned')
-    const landId = localStorage.getItem('SelectedLandId')
     const startDate = localStorage.getItem('StartDate');
-
     const [taskName, setTaskName] = useState('');
     const [selectedView, setSelectedView] = useState('tasks');
     const [workerNames, setWorkerNames] = useState([]);
-
-    // const [selectedWorker, setSelectedWorker] = useState('');
     const [selectedWorker, setSelectedWorker] = useState(Array(selectedDates.length).fill(''));
     const [selectedWorkersLists, setSelectedWorkersLists] = useState(Array(selectedDates.length).fill([]));
-
     const [expenseTypes, setExpenseTypes] = useState([]);
     const [selectedExpenseType, setSelectedExpenseType] = useState('');
     const [value, setValue] = useState('');
     const [expenseId, setExpenseId] = useState('');
     const [selectedWorkersList, setSelectedWorkersList] = useState([]);
     const [kgValues, setKgValues] = useState('');
-    //const [workerId, setWorkerId] = useState('');
-    // const [taskAssignedId, setTaskAssignedId] = useState('');
     const [lotId, setLotId] = useState('');
     const [quantity, setQuantity] = useState('');
     const [taskCardId, setTaskCardId] = useState('');
     const thisid = localStorage.getItem('taskassignedid')
     const [workers, setWorkers] = useState([]);
+    const [quantityInputs, setQuantityInputs] = useState(Array(selectedDates.length).fill(''));
+    const [addedWorkersData, setAddedWorkersData] = useState([]);
 
 
     console.log("Selected Dates : ", selectedDates)
@@ -66,7 +63,7 @@ const ManageTask = () => {
         });
 
         setFormattedDates(formattedDatesArray);
-        setCurrentDate(formattedDatesArray); // Initialize currentDate with formattedDatesArray
+        setCurrentDate(formattedDatesArray);
     }, [selectedDates]);
 
 
@@ -83,14 +80,17 @@ const ManageTask = () => {
     }, []);
 
     const fetchTaskName = () => {
-        axios.get(`http://localhost8081/service/master/findTaskNameById/?taskId=${taskId}`)
+        axios.get(`http://localhost:8080/service/master/findTaskNameById/?taskId=${taskId}`)
+
             .then((response) => {
                 setTaskName(response.data.extra.taskName);
+
             })
             .catch((error) => {
                 //console.error('Error fetching task name:', error);
             });
     };
+
 
     const fetchWorkerNames = () => {
         axios.post('http://localhost:8081/service/master/workerFindAll')
@@ -114,11 +114,13 @@ const ManageTask = () => {
             });
     };
 
+    const fetchLotId = () => {
+        axios.get(`http://localhost:8080/service/master/findLotByLandId?landId=${selectedLandId}`)
+
         //get task-assigned id
         //axios.get(`http://localhost:8081/service/master/task-assigned?taskId=${taskId}`)
 
-    const fetchLotId = () => {
-        axios.get(`http://localhost:8081/service/master/findLotByLandId?landId=${landId}`)
+
 
             .then((response) => {
                 const thislot = response.data.extra.id;
@@ -161,6 +163,7 @@ const ManageTask = () => {
                 //console.error('Error fetching expense id:', error);
             });
     }
+
 
     const handleKgChange = (e, index) => {
         const updatedKgValues = [...kgValues];
@@ -225,65 +228,56 @@ const ManageTask = () => {
                 console.error('Error adding task card:', error);
             });
     }
+    
 
-    const removeWorker = (index) => {
-        const workerName = selectedWorkersList[index];
-
-        deleteItem(workerName);
-
-        const updatedWorkersList = [...selectedWorkersList];
-        updatedWorkersList.splice(index, 1);
-        setSelectedWorkersList(updatedWorkersList);
-    }
-
-    const deleteItem = (workerName) => {
-        axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${workerName}`)
-            .then((response) => {
-                const thisid = response.data.extra.workerId
-                console.log("Delete")
-                console.log('workerid:', response.data.extra.workerId);
-                console.log('Task card id: ', taskCardId)
-
-                axios.delete(`http://localhost:8081/service/master/work-assigned-delete/${thisid}/${taskCardId}`)
-                    .then((response) => {
-                        console.log('worker assigned removed successfully:', response.data);
-
-                    })
-                    .catch((error) => {
-                        console.error('Error getting worker id:', error);
-                    });
-            })
-            .catch((error) => {
-                console.error('Error getting worker id:', error);
-            });
+    const goBack = () => {
+        history.goBack();
     };
 
-    ////////// NEW //////////////////
+
+    const handleKgChange = (e, index) => {
+        const updatedKgValues = [...kgValues];
+        updatedKgValues[index] = e.target.value;
+        setKgValues(updatedKgValues);
+        setQuantity(updatedKgValues);
+    };
+
 
     const handleAddSelectedWorker = (dateIndex) => {
-        if (taskName === 'Pluck') {
-            console.log('Pluck task');
-            if (selectedWorker[dateIndex]) {
-                setSelectedWorkersList([...selectedWorkersList, selectedWorker[dateIndex]]);
-                const selectedWorkerName = selectedWorker[dateIndex];
-                saveTaskCardAndWorker(dateIndex, selectedWorkerName);
+        if (taskName === 'Pluck' && selectedWorker[dateIndex]) {
+            const selectedWorkerName = selectedWorker[dateIndex];
+            const quantity = quantityInputs[dateIndex] !== '' ? quantityInputs[dateIndex] : null;
+
+            if (quantity !== null) {
+                saveTaskCardAndWorker(dateIndex, selectedWorkerName, quantity);
+                // Reset the input after using it
+                const newQuantityInputs = [...quantityInputs];
+                newQuantityInputs[dateIndex] = '';
+                setQuantityInputs(newQuantityInputs);
             }
         } else {
-            if (selectedWorker[dateIndex]) {
-                setSelectedWorkersList([...selectedWorkersList, selectedWorker[dateIndex]]);
-                const selectedWorkerName = selectedWorker[dateIndex];
-                saveTaskCardAndWorker(dateIndex, selectedWorkerName);
-            }
+            saveTaskCardAndWorker(dateIndex, selectedWorker[dateIndex]);
         }
 
         const newSelectedWorkersList = [...selectedWorkersLists[dateIndex], selectedWorker[dateIndex]];
         const updatedSelectedWorkersLists = [...selectedWorkersLists];
         updatedSelectedWorkersLists[dateIndex] = newSelectedWorkersList;
         setSelectedWorkersLists(updatedSelectedWorkersLists);
-    }
 
-    const saveTaskCardAndWorker = (dateIndex, selectedWorkerName) => {
-        // Check if the task card is already saved
+        const newAddedWorkerData = {
+            date: currentDate[dateIndex],
+            worker: selectedWorker[dateIndex],
+            quantity: quantityInputs[dateIndex],
+        };
+
+        setAddedWorkersData([...addedWorkersData, newAddedWorkerData]);
+    };
+
+
+
+    const saveTaskCardAndWorker = (dateIndex, selectedWorker, quantity) => {
+        localStorage.setItem('selectedWorker', selectedWorker);
+
         if (!taskCardId[dateIndex]) {
             const saveTaskCard = {
                 taskAssignedDate,
@@ -296,31 +290,31 @@ const ManageTask = () => {
                     console.log('Task card added', response.data);
                     const newTaskCardId = response.data.extra.id;
 
-                    // Update the taskCardId state for the specific dateIndex
                     const updatedTaskCardIds = [...taskCardId];
                     updatedTaskCardIds[dateIndex] = newTaskCardId;
                     setTaskCardId(updatedTaskCardIds);
 
-                    // Save worker to the task card
-                    addWorkerToTaskCard(newTaskCardId, selectedWorkerName);
+                    addWorkerToTaskCard(newTaskCardId, selectedWorker, quantity);
                 })
                 .catch((error) => {
                     console.error('Error adding task card:', error);
                 });
         } else {
-            // Save worker to the existing task card
-            addWorkerToTaskCard(taskCardId[dateIndex], selectedWorkerName);
+            addWorkerToTaskCard(taskCardId[dateIndex], selectedWorker, quantity);
         }
-    }
+    };
 
-    const addWorkerToTaskCard = (taskCardId, selectedWorkerName) => {
-        axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${selectedWorkerName}`)
+
+
+    const addWorkerToTaskCard = (taskCardId, selectedWorker, quantity) => {
+        axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${selectedWorker}`)
+
             .then((response) => {
                 const workerId = response.data.extra.workerId;
                 console.log('Worker ID:', workerId);
-                console.log('TaskID:', taskId)
 
                 const addWorkAssigned = {
+                    quantity,
                     startDate,
                     workerId,
                     taskId: taskId,
@@ -340,18 +334,13 @@ const ManageTask = () => {
             .catch((error) => {
                 console.error('Error getting worker id:', error);
             });
-    }
-
-    /////////// END /////////////////
-
-    const goBack = () => {
-        history.goBack();
     };
+
 
     return (
         <div className="manage-task-app-screen">
             <div className="header-bar">
-                <MdArrowBackIos className="back-button" onClick={goBack}/>
+                <MdArrowBackIos className="back-button" onClick={goBack} />
                 <p className="main-heading">Scheduled Task</p>
                 <div className="position-absolute top-0 end-0 me-0">
                     <Dropdown alignRight onSelect={handleLanguageChange}>
@@ -396,22 +385,6 @@ const ManageTask = () => {
                             <div className='card'>
                                 <p>{t('date')}: {formattedDates[dateIndex]}</p><br />
 
-                                {/* <div className="dropdown-and-button-container">
-                                    <select
-                                        value={selectedWorker}
-                                        onChange={(e) => setSelectedWorker(e.target.value)}
-                                        className='dropdown-input'
-                                    >
-                                        <option value="">{t('selectaworker')}</option>
-                                        {workerNames.map((workerName, index) => (
-                                            <option key={index} value={workerName}>
-                                                {workerName}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    <button className='add-small' onClick={handleAddSelectedWorker}>{t('add')}</button>
-                                </div> */}
-
                                 <div className="dropdown-and-button-container">
                                     <select
                                         value={selectedWorker[dateIndex]}
@@ -429,39 +402,48 @@ const ManageTask = () => {
                                             </option>
                                         ))}
                                     </select>
+
+                                    {taskName === 'Pluck' && (
+                                        <input
+                                            type="text"
+                                            value={quantityInputs[dateIndex]}
+                                            onChange={(e) => {
+                                                const newQuantityInputs = [...quantityInputs];
+                                                newQuantityInputs[dateIndex] = e.target.value;
+                                                setQuantityInputs(newQuantityInputs);
+                                            }}
+                                            placeholder={`Enter quantity for ${selectedWorker[dateIndex]}`}
+                                            className='quantity-input'
+                                        />
+                                    )}
                                     <button className='add-small' onClick={() => handleAddSelectedWorker(dateIndex)}>{t('add')}</button>
+
                                 </div>
 
-                                {selectedWorkersList.length > 0 && (
-                                    <div>
-                                        {selectedWorkersLists[dateIndex].map((worker, index) => (
-                                            <div key={index} className="worker-container">
-                                                <div className='line'>
-                                                    <p>{worker}</p>
-                                                    <button onClick={() => removeWorker(index)} className="delete-button">
-                                                        <FontAwesomeIcon icon={faTrashAlt} />
-                                                    </button>
+                                {addedWorkersData.map((addedData, index) => {
+                                    if (taskName === 'Pluck') {
+                                        if (addedData.date === currentDate[dateIndex]) {
+                                            return (
+                                                <div key={index}>
+                                                    <p>{addedData.worker} : {addedData.quantity}kg</p>
+
                                                 </div>
-                                                {taskName === 'Pluck' && (
-                                                    <div className="kg-input-container">
-                                                        <div className="kg-input">
-                                                            <input
-                                                                type="text"
-                                                                placeholder={t('numberofkg')}
-                                                                value={kgValues[index] || ''}
-                                                                onChange={(e) => handleKgChange(e, index)}
-                                                                className="dropdown-input"
-                                                            />
-                                                            <span className="add-kg-icon">
-                                                                <FontAwesomeIcon icon={faPlus} onClick={addQuantity} />
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
+                                            );
+                                        }
+                                    } else {
+                                        if (addedData.date === currentDate[dateIndex]) {
+                                            return (
+                                                <div key={index}>
+                                                    <p>{addedData.worker}</p>
+
+                                                </div>
+                                            );
+                                        }
+                                    }
+                                    return null;
+                                })}
+
+
                             </div>
                         )}
                     </div>
@@ -504,4 +486,12 @@ const ManageTask = () => {
     );
 };
 
-export default ManageTask;
+const mapStateToProps = (state) => ({
+    selectedLandId: state.selectedLandId,
+});
+
+const mapDispatchToProps = {
+    setSelectedLandId: setSelectedLandIdAction,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ManageTask);
