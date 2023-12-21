@@ -18,6 +18,7 @@ import { TaskCardEntity } from "../../entity/master/task-card-entity";
  * contain crud method
  */
 export class WorkAssignedDaoImpl implements WorkAssignedDao {
+
   async save(workAssignedDto: WorkAssignedDto, workerModel: WorkerEntity, taskTypeModel: TaskTypeEntity, lotModel: LotEntity, taskAssignedModel: TaskAssignedEntity, taskCardModel: TaskCardEntity): Promise<WorkAssignedEntity> {
     let workAssignedRepo = getConnection().getRepository(WorkAssignedEntity);
     let workAssignedModel = new WorkAssignedEntity();
@@ -31,6 +32,7 @@ export class WorkAssignedDaoImpl implements WorkAssignedDao {
     let savedWorkAssigned = await workAssignedRepo.save(workAssignedModel);
     return savedWorkAssigned;
   }
+  
   async update(workAssignedDto: WorkAssignedDto): Promise<WorkAssignedEntity> {
     let workAssignedRepo = getConnection().getRepository(WorkAssignedEntity);
     let workAssignedModel = await workAssignedRepo.findOne(workAssignedDto.getAttendanceid());
