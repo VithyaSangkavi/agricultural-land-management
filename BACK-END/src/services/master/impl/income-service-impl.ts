@@ -104,7 +104,7 @@ export class IncomeServiceImpl implements IncomeService {
       let incomeDtoList = new Array();
       for (const incomeModel of incomes) {
         let incomeDto = new IncomeDto();
-        incomeDto.filViaDbObject(incomeModel);
+        incomeDto.filViaRequest(incomeModel);
         incomeDtoList.push(incomeDto);
       }
       cr.setStatus(true);

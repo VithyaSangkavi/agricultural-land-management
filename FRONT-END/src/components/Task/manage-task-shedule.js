@@ -9,7 +9,7 @@ import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
-import { MdArrowBackIos } from "react-icons/md";
+import { MdArrowBackIos, MdViewAgenda, MdClose } from "react-icons/md";
 
 const ManageTask = () => {
 
@@ -43,6 +43,9 @@ const ManageTask = () => {
     const [taskCardId, setTaskCardId] = useState('');
     const thisid = localStorage.getItem('taskassignedid')
     const [workers, setWorkers] = useState([]);
+    const [taskExpenses, setTaskExpenses] = useState([]);
+    const [showExpenses, setShowExpenses] = useState(false);
+    const [totalAmount, setTotalAmount] = useState(0); 
 
     const taskAssignedDate = startDate;
 
@@ -57,8 +60,37 @@ const ManageTask = () => {
         console.log('check task assigned id: ', thisid);
     }, []);
 
+    useEffect(() => {
+        if (showExpenses) {
+            getTaskExpenses(); 
+        }
+    }, [showExpenses]);
+
+    useEffect(() => {
+        const calculateTotalAmount = () => {
+            const total = taskExpenses.reduce((acc, expense) => acc + expense.value, 0);
+            setTotalAmount(total);
+
+            console.log('Total amount: ', total);
+        };
+
+        calculateTotalAmount();
+    }, [taskExpenses]);
+
+    const getTaskExpenses = (e) => {
+        console.log('task ass id: ', taskAssignedId);
+        axios.get(`http://localhost:8081/service/master/findByTaskAssignedId?taskAssignedId=${taskAssignedId}`)
+            .then((response) => {
+                console.log('task expenses ------------ ', response.data.extra)
+                setTaskExpenses(response.data.extra);
+            })
+            .catch((error) => {
+                console.error('Error fetching task expenses:', error);
+            });
+    }
+
     const fetchTaskName = () => {
-        axios.get(`http://localhost:8080/service/master/findTaskNameById/?taskId=${taskId}`)
+        axios.get(`http://localhost:8081/service/master/findTaskNameById/?taskId=${taskId}`)
             .then((response) => {
                 setTaskName(response.data.extra.taskName);
             })
@@ -67,8 +99,11 @@ const ManageTask = () => {
             });
     };
 
+    //fetch worker names according to the landId
     const fetchWorkerNames = () => {
-        axios.post('http://localhost:8080/service/master/workerFindAll')
+
+        axios.get(`http://localhost:8081/service/master/findByLandId?landId=${landId}`)
+
             .then((response) => {
                 const workerNamesArray = response.data.extra.map((worker) => worker.name);
                 setWorkerNames(workerNamesArray);
@@ -79,7 +114,7 @@ const ManageTask = () => {
     };
 
     const fetchExpenseTypes = () => {
-        axios.get('http://localhost:8080/service/master/expenseFindAll')
+        axios.get('http://localhost:8081/service/master/expenseFindAll')
             .then((response) => {
                 const expenseTypeArrays = response.data.extra.map((expense) => expense.expenseType);
                 setExpenseTypes(expenseTypeArrays);
@@ -92,7 +127,7 @@ const ManageTask = () => {
     const fetchTaskAssignedId = () => {
 
         //get task-assigned id
-        axios.get(`http://localhost:8080/service/master/task-assigned?taskId=${taskId}`)
+        axios.get(`http://localhost:8081/service/master/task-assigned?taskId=${taskId}`)
 
             .then((response) => {
                 const taskAssignedId = response.data.extra.id;
@@ -106,7 +141,7 @@ const ManageTask = () => {
     };
 
     const fetchLotId = () => {
-        axios.get(`http://localhost:8080/service/master/findLotByLandId?landId=${landId}`)
+        axios.get(`http://localhost:8081/service/master/findLotByLandId?landId=${landId}`)
 
             .then((response) => {
                 const thislot = response.data.extra.id;
@@ -140,12 +175,12 @@ const ManageTask = () => {
                         taskAssignedId,
                     };
 
-                    axios.post('http://localhost:8080/service/master/task-card-save', saveTaskCard)
+                    axios.post('http://localhost:8081/service/master/task-card-save', saveTaskCard)
                         .then((response) => {
                             console.log('Task card added', response.data);
                             localStorage.setItem('taskassignedid', taskAssignedId);
 
-                            axios.get(`http://localhost:8080/service/master/taskCardFindById?taskAssignedId=${taskAssignedId}`)
+                            axios.get(`http://localhost:8081/service/master/taskCardFindById?taskAssignedId=${taskAssignedId}`)
                                 .then((response) => {
                                     const taskCardId = response.data.extra.id;
 
@@ -169,7 +204,7 @@ const ManageTask = () => {
     }
 
     const addWorkerToTaskCard = (taskCardId) => {
-        axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${selectedWorker}`)
+        axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${selectedWorker}`)
             .then((response) => {
                 const workerId = response.data.extra.workerId;
                 console.log('Worker ID :', workerId);
@@ -183,7 +218,7 @@ const ManageTask = () => {
                     taskCardId,
                 };
 
-                axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
+                axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
                     .then((response) => {
                         console.log('Work assigned added successfully:', response.data);
                     })
@@ -201,7 +236,7 @@ const ManageTask = () => {
 
         //get expense id according to the expense type
         axios
-            .get(`http://localhost:8080/service/master/find-by-type?expenseType=${selectedExpenseType}`)
+            .get(`http://localhost:8081/service/master/find-by-type?expenseType=${selectedExpenseType}`)
             .then((response) => {
                 const expenseId = response.data.expenseId;
                 setExpenseId(expenseId);
@@ -213,7 +248,7 @@ const ManageTask = () => {
                 };
 
                 //save task expense 
-                axios.post('http://localhost:8080/service/master/task-expense-save', addTaskExpense)
+                axios.post('http://localhost:8081/service/master/task-expense-save', addTaskExpense)
                     .then((response) => {
                         console.log('Task expense added successfully:', response.data);
                         history.push('/home');
@@ -245,12 +280,12 @@ const ManageTask = () => {
                 taskAssignedId,
             };
 
-            axios.post('http://localhost:8080/service/master/task-card-save', saveTaskCard)
+            axios.post('http://localhost:8081/service/master/task-card-save', saveTaskCard)
                 .then((response) => {
                     console.log('Task card added', response.data);
                     localStorage.setItem('taskassignedid', taskAssignedId);
 
-                    axios.get(`http://localhost:8080/service/master/taskCardFindById?taskAssignedId=${taskAssignedId}`)
+                    axios.get(`http://localhost:8081/service/master/taskCardFindById?taskAssignedId=${taskAssignedId}`)
                         .then((response) => {
                             const taskCardId = response.data.extra.id;
 
@@ -282,7 +317,7 @@ const ManageTask = () => {
             taskAssignedId
         }
 
-        axios.post('http://localhost:8080/service/master/task-card-save', saveTaskCard)
+        axios.post('http://localhost:8081/service/master/task-card-save', saveTaskCard)
             .then((response) => {
                 console.log('task card added', response.data)
             })
@@ -302,14 +337,14 @@ const ManageTask = () => {
     }
 
     const deleteItem = (workerName) => {
-        axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${workerName}`)
+        axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${workerName}`)
             .then((response) => {
                 const thisid = response.data.extra.workerId
                 console.log("Delete")
                 console.log('workerid:', response.data.extra.workerId);
                 console.log('Task card id: ', taskCardId)
 
-                axios.delete(`http://localhost:8080/service/master/work-assigned-delete/${thisid}/${taskCardId}`)
+                axios.delete(`http://localhost:8081/service/master/work-assigned-delete/${thisid}/${taskCardId}`)
                     .then((response) => {
                         console.log('worker assigned removed successfully:', response.data);
 
@@ -330,7 +365,7 @@ const ManageTask = () => {
     return (
         <div className="manage-task-app-screen">
             <div className="header-bar">
-                <MdArrowBackIos className="back-button" onClick={goBack}/>
+                <MdArrowBackIos className="back-button" onClick={goBack} />
                 <p className="main-heading">Scheduled Task</p>
                 <div className="position-absolute top-0 end-0 me-0">
                     <Dropdown alignRight onSelect={handleLanguageChange}>
@@ -423,28 +458,56 @@ const ManageTask = () => {
 
             {/* Finance Toggled View */}
             {selectedView === 'finance' && (
-                <div>
-                    <select
-                        value={selectedExpenseType}
-                        onChange={(e) => setSelectedExpenseType(e.target.value)}
-                        className='dropdown-input'
-                    >
-                        <option value="">{t('expense')}</option>
-                        {expenseTypes.map((expenseType) => (
-                            <option key={expenseType} value={expenseType}>
-                                {expenseType}
-                            </option>
-                        ))}
-                    </select><br />
-                    <input
-                        type="text"
-                        placeholder={t('amount')}
-                        value={value}
-                        onChange={(e) => setValue(e.target.value)}
-                        className="dropdown-input"
-                    />
-                    <button className="add-button" onClick={handleAddTaskExpense}>{t('addtaskexpense')}</button>
-                </div>
+                <>
+                    <div>
+                        <select
+                            value={selectedExpenseType}
+                            onChange={(e) => setSelectedExpenseType(e.target.value)}
+                            className='dropdown-input'
+                        >
+                            <option value="">{t('expense')}</option>
+                            {expenseTypes.map((expenseType) => (
+                                <option key={expenseType} value={expenseType}>
+                                    {expenseType}
+                                </option>
+                            ))}
+                        </select><br />
+                        <input
+                            type="text"
+                            placeholder={t('amount')}
+                            value={value}
+                            onChange={(e) => setValue(e.target.value)}
+                            className="dropdown-input"
+                        />
+                        <button className="add-button" onClick={handleAddTaskExpense}>{t('addtaskexpense')}</button>
+                    </div>
+                    <br />
+                    <div>
+                        {showExpenses ? (
+                            <button onClick={() => setShowExpenses(false)} className='view-task-expenses'>
+                                <MdClose /> Close Task Expenses
+                            </button>
+                        ) : (
+                            <button onClick={() => setShowExpenses(true)} className='view-task-expenses'>
+                                <MdViewAgenda /> View Task Expenses
+                            </button>
+                        )}
+
+                        {/* Display task expenses when showExpenses is true */}
+                        {showExpenses && (
+                            <div>
+                                {taskExpenses.map((taskExpense) => (
+                                    <div key={taskExpense.id} className="task-expense-card">
+                                        <h3>Expense Type : {taskExpense.expenseType}</h3>
+                                        <p>Amount : {taskExpense.value}</p>
+                                    </div>
+                                ))}
+                                <p className='total-display-card'>Total Task Expenses: Rs.{totalAmount}.00</p>
+                            </div>
+                        )}
+
+                    </div>
+                </>
             )}
             <br />
             <div className='footer-alignment'>
