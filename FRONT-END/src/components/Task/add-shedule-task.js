@@ -80,7 +80,7 @@ const ManageTask = ({ selectedLandId }) => {
     }, []);
 
     const fetchTaskName = () => {
-        axios.get(`http://localhost:8080/service/master/findTaskNameById/?taskId=${taskId}`)
+        axios.get(`http://localhost:8081/service/master/findTaskNameById/?taskId=${taskId}`)
 
             .then((response) => {
                 setTaskName(response.data.extra.taskName);
@@ -115,7 +115,7 @@ const ManageTask = ({ selectedLandId }) => {
     };
 
     const fetchLotId = () => {
-        axios.get(`http://localhost:8080/service/master/findLotByLandId?landId=${selectedLandId}`)
+        axios.get(`http://localhost:8081/service/master/findLotByLandId?landId=${selectedLandId}`)
 
         //get task-assigned id
         //axios.get(`http://localhost:8081/service/master/task-assigned?taskId=${taskId}`)
@@ -163,14 +163,6 @@ const ManageTask = ({ selectedLandId }) => {
                 //console.error('Error fetching expense id:', error);
             });
     }
-
-
-    const handleKgChange = (e, index) => {
-        const updatedKgValues = [...kgValues];
-        updatedKgValues[index] = e.target.value;
-        setKgValues(updatedKgValues);
-        setQuantity(updatedKgValues);
-    };
 
     const addQuantity = () => {
 
@@ -307,7 +299,7 @@ const ManageTask = ({ selectedLandId }) => {
 
 
     const addWorkerToTaskCard = (taskCardId, selectedWorker, quantity) => {
-        axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${selectedWorker}`)
+        axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${selectedWorker}`)
 
             .then((response) => {
                 const workerId = response.data.extra.workerId;
