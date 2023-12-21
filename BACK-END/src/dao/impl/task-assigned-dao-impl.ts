@@ -27,6 +27,7 @@ export class TaskAssignedDaoImpl implements TaskAssignedDao {
     let savedTask = await taskAssignedRepo.save(taskAssignedModel);
     return savedTask;
   }
+
   async update(taskAssignedDto: TaskAssignedDto): Promise<TaskAssignedEntity> {
     let taskAssignedRepo = getConnection().getRepository(TaskAssignedEntity);
     let taskAssignedModel = await taskAssignedRepo.findOne(taskAssignedDto.getTaskAssignedId());
@@ -38,6 +39,7 @@ export class TaskAssignedDaoImpl implements TaskAssignedDao {
       return null;
     }
   }
+
   async delete(taskAssignedDto: TaskAssignedDto): Promise<TaskAssignedEntity> {
     let taskAssignedRepo = getConnection().getRepository(TaskAssignedEntity);
     let taskAssignedModel = await taskAssignedRepo.findOne(taskAssignedDto.getTaskAssignedId());
@@ -49,6 +51,7 @@ export class TaskAssignedDaoImpl implements TaskAssignedDao {
       return null;
     }
   }
+  
   async findAll(taskAssignedDto: TaskAssignedDto): Promise<TaskAssignedEntity[]> {
     let taskAssignedRepo = getConnection().getRepository(TaskAssignedEntity);
     let searchObject: any = this.prepareSearchObject(taskAssignedDto);
@@ -60,12 +63,14 @@ export class TaskAssignedDaoImpl implements TaskAssignedDao {
     });
     return taskAssignedModel;
   }
+
   async findCount(taskAssignedDto: TaskAssignedDto): Promise<number> {
     let taskAssignedRepo = getConnection().getRepository(TaskAssignedEntity);
     let searchObject: any = this.prepareSearchObject(taskAssignedDto);
     let taskAssignedModel = await taskAssignedRepo.count({ where: searchObject });
     return taskAssignedModel;
   }
+  
   async findById(taskId: number): Promise<TaskAssignedEntity> {
     let taskAssignedRepo = getConnection().getRepository(TaskAssignedEntity);
     let taskAssignedModel = await taskAssignedRepo.findOne(taskId);

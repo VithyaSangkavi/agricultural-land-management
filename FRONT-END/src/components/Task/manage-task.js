@@ -16,12 +16,12 @@ import "react-multi-date-picker/styles/layouts/prime.css"
 import { MdArrowBackIos } from "react-icons/md";
 import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
+import { useLocation } from 'react-router-dom';
+
 
 const ManageTask = ({ selectedLandId }) => {
     const [t, i18n] = useTranslation();
-
     const history = useHistory();
-
     const taskId = localStorage.getItem('TaskIDFromTaskAssigned')
     const startDate = localStorage.getItem('StartDate');
 
@@ -36,20 +36,16 @@ const ManageTask = ({ selectedLandId }) => {
     const [selectedWorkersList, setSelectedWorkersList] = useState([]);
     const [kgValues, setKgValues] = useState([]);
     //const [workerId, setWorkerId] = useState('');
-    const [taskAssignedId, setTaskAssignedId] = useState('');
     const [lotId, setLotId] = useState('');
     const [quantity, setQuantity] = useState('');
     const [taskCardId, setTaskCardId] = useState('');
-    const thisid = localStorage.getItem('taskassignedid')
     const [workers, setWorkers] = useState([]);
     const [selectedDates, setSelectedDates] = useState([]);
     const [formattedDates, setFormattedDates] = useState([]);
 
-    // const handleDateChange = (value) => {
-    //     setSelectedDates(value);
-    //     console.log(value);
-    //     console.log("date : ", value.day);
-    // };
+    const location = useLocation();
+    const taskAssignedId = location.state?.taskAssignedId || null;
+
     console.log("task id : ", taskAssignedId)
 
     const handleShedule = (value) => {
@@ -82,9 +78,7 @@ const ManageTask = ({ selectedLandId }) => {
         fetchTaskName();
         fetchWorkerNames();
         fetchExpenseTypes();
-        fetchTaskAssignedId();
         fetchLotId();
-        console.log('check task assigned id: ', thisid);
     }, []);
 
     const fetchTaskName = () => {
@@ -116,22 +110,6 @@ const ManageTask = ({ selectedLandId }) => {
             })
             .catch((error) => {
                 // console.error('Error fetching expenses:', error);
-            });
-    };
-
-    const fetchTaskAssignedId = () => {
-
-        //get task-assigned id
-        axios.get(`http://localhost:8080/service/master/task-assigned?taskId=${taskId}`)
-
-            .then((response) => {
-                const taskAssignedId = response.data.extra.id;
-
-                console.log('Task assigned id: ', taskAssignedId);
-                setTaskAssignedId(taskAssignedId);
-            })
-            .catch((error) => {
-                console.error('Error fetching task assigned id:', error);
             });
     };
 
@@ -239,7 +217,7 @@ const ManageTask = ({ selectedLandId }) => {
     }
 
     const addWorkerToPluckTaskCard = (taskCardId) => {
-        const selectedWorker = localStorage.getItem('selectedWorker');
+        // const selectedWorker = localStorage.getItem('selectedWorker');
         console.log('add -> selected worker pluck task: ', selectedWorker);
         console.log('Quantity: ', quantity);
 
@@ -274,7 +252,7 @@ const ManageTask = ({ selectedLandId }) => {
 
     const addWorkerToTaskCard = (taskCardId) => {
 
-        const selectedWorker = localStorage.getItem('selectedWorker');
+        // const selectedWorker = localStorage.getItem('selectedWorker');
         console.log('add -> selected worker: ', selectedWorker);
 
         axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${selectedWorker}`)
@@ -346,7 +324,7 @@ const ManageTask = ({ selectedLandId }) => {
 
     const addQuantity = () => {
 
-        const selectedWorker = localStorage.getItem('selectedWorker');
+        // const selectedWorker = localStorage.getItem('selectedWorker');
         console.log('selected worker: ', selectedWorker);
 
         if (!taskCardId) {

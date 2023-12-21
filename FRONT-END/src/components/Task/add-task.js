@@ -27,7 +27,6 @@ const AddTask = ({ selectedLandId }) => {
   const taskId = selectedTaskId;
   const startDate = selectedDate;
   const taskAssignedDate = selectedDate;
-  const [taskAssignedId, setTaskAssignedId] = useState('');
   const [selectedDates, setSelectedDates] = useState([]);
   
 
@@ -74,14 +73,18 @@ const AddTask = ({ selectedLandId }) => {
 
     axios.post('http://localhost:8080/service/master/task-assigned-save', addTaskAssigned)
       .then((response) => {
-        console.log('Task assigned added successfully:', response.data);
+        console.log('Task assigned added successfully:', response.data.extra.id);
         console.log('Task id to be stored: ', taskId)
         const assignedId = response.data.extra;
         console.log('Sample test task aasigned id: ', assignedId)
         localStorage.setItem('TaskIDFromTaskAssigned', taskId);
         localStorage.setItem('StartDate', startDate);
-        // fetchTaskAssignedId();
-        history.push('/manageTask')
+
+        history.push({
+          pathname: '/manageTask',
+          state: { taskAssignedId: response.data.extra.id }
+        });
+        
       })
       .catch((error) => {
         console.error('Error adding task assigned:', error);
@@ -92,30 +95,6 @@ const AddTask = ({ selectedLandId }) => {
     i18n.changeLanguage(lang);
   };
 
-  // const fetchTaskAssignedId = () => {
-  //   axios.get(`http://localhost:8080/service/master/task-assigned?taskId=${taskId}`)
-  //     .then((response) => {
-  //       const taskAssignedId = response.data.extra.id;
-  //       setTaskAssignedId(taskAssignedId);
-
-  //       const saveTaskCard = {
-  //         taskAssignedDate,
-  //         taskAssignedId
-  //       };
-
-  //       axios.post('http://localhost:8080/service/master/task-card-save', saveTaskCard)
-  //         .then((response) => {
-  //           console.log('Task card added', response.data);
-  //           localStorage.setItem('taskassignedid', taskAssignedId);
-  //         })
-  //         .catch((error) => {
-  //           console.error('Error adding task card:', error);
-  //         });
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error fetching task name:', error);
-  //     });
-  // };
 
   const handleSheduleTask = () => {
     history.push('/addsheduledtask');
