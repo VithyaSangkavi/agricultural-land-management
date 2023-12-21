@@ -434,12 +434,11 @@ const ManageOngoingTask = () => {
 
     const formattedEndDate = getFormattedDate(commanTaskDetails.endDate);
 
-    const handleRemoveWorker = (taskCardId, workAssignedId) => {
+    const handleRemoveWorker = (workAssignedId) => {
 
         axios.delete(`http://localhost:8080/service/master/work-assigned-delete/${workAssignedId}`)
             .then(response => {
                 console.log('Worker removed successfully:', response.data);
-                window.location.reload();
             })
             .catch(error => {
                 console.error('Error removing worker:', error);
