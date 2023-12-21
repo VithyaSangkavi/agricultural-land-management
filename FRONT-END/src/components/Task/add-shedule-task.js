@@ -14,6 +14,7 @@ import { useLocation } from 'react-router-dom';
 import { MdArrowBackIos } from "react-icons/md";
 import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
+import { Trash } from 'react-bootstrap-icons';
 
 
 const ManageTask = ({ selectedLandId }) => {
@@ -49,6 +50,8 @@ const ManageTask = ({ selectedLandId }) => {
     const [workers, setWorkers] = useState([]);
     const [quantityInputs, setQuantityInputs] = useState(Array(selectedDates.length).fill(''));
     const [addedWorkersData, setAddedWorkersData] = useState([]);
+    const [addedWorkersList, setWorkerList] = useState([]);
+    const [addedWorkerDetails, setAddedWorkerDetails] = useState([]);
 
 
     console.log("Selected Dates : ", selectedDates)
@@ -93,7 +96,7 @@ const ManageTask = ({ selectedLandId }) => {
 
 
     const fetchWorkerNames = () => {
-        axios.post('http://localhost:8081/service/master/workerFindAll')
+        axios.post('http://localhost:8080/service/master/workerFindAll')
             .then((response) => {
                 const workerNamesArray = response.data.extra.map((worker) => worker.name);
                 setWorkerNames(workerNamesArray);
@@ -104,7 +107,7 @@ const ManageTask = ({ selectedLandId }) => {
     };
 
     const fetchExpenseTypes = () => {
-        axios.get('http://localhost:8081/service/master/expenseFindAll')
+        axios.get('http://localhost:8080/service/master/expenseFindAll')
             .then((response) => {
                 const expenseTypeArrays = response.data.extra.map((expense) => expense.expenseType);
                 setExpenseTypes(expenseTypeArrays);
@@ -117,8 +120,8 @@ const ManageTask = ({ selectedLandId }) => {
     const fetchLotId = () => {
         axios.get(`http://localhost:8081/service/master/findLotByLandId?landId=${selectedLandId}`)
 
-        //get task-assigned id
-        //axios.get(`http://localhost:8081/service/master/task-assigned?taskId=${taskId}`)
+            //get task-assigned id
+            //axios.get(`http://localhost:8080/service/master/task-assigned?taskId=${taskId}`)
 
 
 
@@ -138,7 +141,7 @@ const ManageTask = ({ selectedLandId }) => {
 
         //get expense id according to the expense type
         axios
-            .get(`http://localhost:8081/service/master/find-by-type?expenseType=${selectedExpenseType}`)
+            .get(`http://localhost:8080/service/master/find-by-type?expenseType=${selectedExpenseType}`)
             .then((response) => {
                 const expenseId = response.data.expenseId;
                 setExpenseId(expenseId);
@@ -150,7 +153,7 @@ const ManageTask = ({ selectedLandId }) => {
                 };
 
                 //save task expense 
-                axios.post('http://localhost:8081/service/master/task-expense-save', addTaskExpense)
+                axios.post('http://localhost:8080/service/master/task-expense-save', addTaskExpense)
                     .then((response) => {
                         console.log('Task expense added successfully:', response.data);
                         history.push('/home');
@@ -164,6 +167,8 @@ const ManageTask = ({ selectedLandId }) => {
             });
     }
 
+
+
     const addQuantity = () => {
 
         const selectedWorker = localStorage.getItem('selectedWorker');
@@ -175,12 +180,12 @@ const ManageTask = ({ selectedLandId }) => {
                 taskAssignedId,
             };
 
-            axios.post('http://localhost:8081/service/master/task-card-save', saveTaskCard)
+            axios.post('http://localhost:8080/service/master/task-card-save', saveTaskCard)
                 .then((response) => {
                     console.log('Task card added', response.data);
                     localStorage.setItem('taskassignedid', taskAssignedId);
 
-                    axios.get(`http://localhost:8081/service/master/taskCardFindById?taskAssignedId=${taskAssignedId}`)
+                    axios.get(`http://localhost:8080/service/master/taskCardFindById?taskAssignedId=${taskAssignedId}`)
                         .then((response) => {
                             const taskCardId = response.data.extra.id;
 
@@ -212,7 +217,7 @@ const ManageTask = ({ selectedLandId }) => {
             taskAssignedId
         }
 
-        axios.post('http://localhost:8081/service/master/task-card-save', saveTaskCard)
+        axios.post('http://localhost:8080/service/master/task-card-save', saveTaskCard)
             .then((response) => {
                 console.log('task card added', response.data)
             })
@@ -220,7 +225,7 @@ const ManageTask = ({ selectedLandId }) => {
                 console.error('Error adding task card:', error);
             });
     }
-    
+
 
     const goBack = () => {
         history.goBack();
@@ -233,7 +238,6 @@ const ManageTask = ({ selectedLandId }) => {
         setKgValues(updatedKgValues);
         setQuantity(updatedKgValues);
     };
-
 
     const handleAddSelectedWorker = (dateIndex) => {
         if (taskName === 'Pluck' && selectedWorker[dateIndex]) {
@@ -266,7 +270,6 @@ const ManageTask = ({ selectedLandId }) => {
     };
 
 
-
     const saveTaskCardAndWorker = (dateIndex, selectedWorker, quantity) => {
         localStorage.setItem('selectedWorker', selectedWorker);
 
@@ -277,7 +280,7 @@ const ManageTask = ({ selectedLandId }) => {
                 workDate: currentDate[dateIndex]
             };
 
-            axios.post('http://localhost:8081/service/master/task-card-save', saveTaskCard)
+            axios.post('http://localhost:8080/service/master/task-card-save', saveTaskCard)
                 .then((response) => {
                     console.log('Task card added', response.data);
                     const newTaskCardId = response.data.extra.id;
@@ -286,20 +289,18 @@ const ManageTask = ({ selectedLandId }) => {
                     updatedTaskCardIds[dateIndex] = newTaskCardId;
                     setTaskCardId(updatedTaskCardIds);
 
-                    addWorkerToTaskCard(newTaskCardId, selectedWorker, quantity);
+                    addWorkerToTaskCard(newTaskCardId, selectedWorker, quantity, dateIndex);
                 })
                 .catch((error) => {
                     console.error('Error adding task card:', error);
                 });
         } else {
-            addWorkerToTaskCard(taskCardId[dateIndex], selectedWorker, quantity);
+            addWorkerToTaskCard(taskCardId[dateIndex], selectedWorker, quantity, dateIndex);
         }
     };
 
-
-
-    const addWorkerToTaskCard = (taskCardId, selectedWorker, quantity) => {
-        axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${selectedWorker}`)
+    const addWorkerToTaskCard = (taskCardId, selectedWorker, quantity, dateIndex) => {
+        axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${selectedWorker}`)
 
             .then((response) => {
                 const workerId = response.data.extra.workerId;
@@ -315,9 +316,18 @@ const ManageTask = ({ selectedLandId }) => {
                     taskCardId: taskCardId,
                 };
 
-                axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
+                axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
                     .then((response) => {
-                        console.log('Work assigned added successfully:', response.data);
+                        console.log('Work assigned added successfully:', response.data.extra);
+                        setAddedWorkerDetails(response.data.extra)
+
+                        const newWorkerList = {
+                            date: currentDate[dateIndex],
+                            id: response.data.extra.id,
+                            worker: response.data.extra.name,
+                            quantity: response.data.extra.quantity,
+                        };
+                        setWorkerList([...addedWorkersList, newWorkerList]);
                     })
                     .catch((error) => {
                         console.error('Error adding work assigned:', error);
@@ -325,6 +335,19 @@ const ManageTask = ({ selectedLandId }) => {
             })
             .catch((error) => {
                 console.error('Error getting worker id:', error);
+            });
+    };
+
+    const deleteWorkAssigned = (workAssignedId) => {
+        axios.delete(`http://localhost:8080/service/master/work-assigned-delete/${workAssignedId}`)
+            .then(response => {
+                console.log('Worker removed successfully:', response.data);
+
+                // Update state to remove the deleted item
+                setWorkerList(prevList => prevList.filter(item => item.id !== workAssignedId));
+            })
+            .catch(error => {
+                console.error('Error removing worker:', error);
             });
     };
 
@@ -412,13 +435,18 @@ const ManageTask = ({ selectedLandId }) => {
 
                                 </div>
 
-                                {addedWorkersData.map((addedData, index) => {
+                                {addedWorkersList.map((addedData, index) => {
                                     if (taskName === 'Pluck') {
                                         if (addedData.date === currentDate[dateIndex]) {
                                             return (
                                                 <div key={index}>
-                                                    <p>{addedData.worker} : {addedData.quantity}kg</p>
-
+                                                    <p>{addedData.worker} : {addedData.quantity}kg
+                                                        <span
+                                                            onClick={() => deleteWorkAssigned(addedData.id)}
+                                                        >
+                                                            <Trash>delete</Trash>
+                                                        </span>
+                                                    </p>
                                                 </div>
                                             );
                                         }
@@ -426,7 +454,14 @@ const ManageTask = ({ selectedLandId }) => {
                                         if (addedData.date === currentDate[dateIndex]) {
                                             return (
                                                 <div key={index}>
-                                                    <p>{addedData.worker}</p>
+                                                    <p>{addedData.worker}
+                                                        <span
+                                                            style={{ cursor: 'pointer', marginLeft: '10px' }}
+                                                            onClick={() => deleteWorkAssigned(addedData.id)}
+                                                        >
+                                                            <button>delete</button>
+                                                        </span>
+                                                    </p>
 
                                                 </div>
                                             );
