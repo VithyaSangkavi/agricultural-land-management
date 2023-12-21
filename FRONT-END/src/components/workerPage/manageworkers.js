@@ -95,8 +95,21 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
       });
   }, [selectedLandId]);
 
-  const handleWorkerCardClick = (worker) => {
-    history.push('/addWorker', { basicDetails: worker, isEditing: true  });
+  const handleWorkerCardClick = async (worker) => {
+    try {
+      const workerId = worker.id;
+
+      console.log('worker id: ', workerId);
+
+      const paymentDetailsResponse = await axios.get(`http://localhost:8081/service/master/findByWorkerId?workerId=${workerId}`);
+      console.log('payment detals: ', paymentDetailsResponse.data);
+
+      const paymentDetails = paymentDetailsResponse.data.extra;
+
+      history.push('/addWorker', { basicDetails: worker, paymentDetails, isEditing: true });
+    } catch (error) {
+      console.error('Error fetching worker/payment details:', error);
+    }
   };
 
   const handleLanguageChange = (lang) => {

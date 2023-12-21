@@ -20,30 +20,40 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
 
   const { t, i18n } = useTranslation();
 
+
   const location = useLocation();
-  const basicDetails = location.state ? location.state.basicDetails : {};
+  const { basicDetails} = location.state ? location.state : {};
+ const { paymentDetails} = location.state ? location.state : {};
+
+ 
+ console.log('LS: ', location.state);
+ console.log('BD: ', basicDetails);
+ console.log('PD: ', paymentDetails);
   const [showBasicDetails, setShowBasicDetails] = useState(true);
 
-  const [name, setName] = useState(basicDetails.name || '');
-  const [dob, setDob] = useState(basicDetails.dob || '');
-  const [nic, setNic] = useState(basicDetails.nic || '');
-  const [gender, setGender] = useState(basicDetails.gender || '');
-  const [joinedDate, setJoinedDate] = useState(basicDetails.joinedDate || null);
-  const [phone, setPhone] = useState(basicDetails.phone || '');
-  const [address, setAddress] = useState(basicDetails.address || '');
-  const [workerStatus, setWorkerStatus] = useState(basicDetails.workerStatus || '');
+  const [name, setName] = useState(location.state.basicDetails.name || '');
+  const [dob, setDob] = useState(location.state.basicDetails.dob || '');
+  const [nic, setNic] = useState(location.state.basicDetails.nic || '');
+  const [gender, setGender] = useState(location.state.basicDetails.gender || '');
+  const [joinedDate, setJoinedDate] = useState(location.state.basicDetails.joinedDate || null);
+  const [phone, setPhone] = useState(location.state.basicDetails.phone || '');
+  const [address, setAddress] = useState(location.state.basicDetails.address || '');
+  const [workerStatus, setWorkerStatus] = useState(location.state.basicDetails.workerStatus || '');
+
+  const [paymentType, setPaymentType] = useState(location.state.paymentDetails.paymentType || '');
+  const [basePayment, setBasePayment] = useState(location.state.paymentDetails.basePayment || '');
+  const [extraPayment, setExtraPayment] = useState(location.state.paymentDetails.extraPayment || '');
+  const [attendancePayment, setAttendancePayment] = useState(location.state.paymentDetails.attendancePayment || '');
 
 
-  const [workerId, setWorkerId] = useState(basicDetails.id || -1);
-  const [paymentType, setPaymentType] = useState('');
-  const [basePayment, setBasePayment] = useState('');
-  const [extraPayment, setExtraPayment] = useState('');
-  const [attendancePayment, setAttendancePayment] = useState('');
+  const [workerId, setWorkerId] = useState(location.state.basicDetails.id || -1);
+  
   const [landNames, setLandNames] = useState([]);
   const [landName, setLandName] = useState([]);
 
   const isEditing = location.state ? location.state.isEditing : false;
 
+  console.log('base payment: ', location.state.paymentDetails.basePayment);
   const history = useHistory();
 
   const handleLandChange = (event) => {
@@ -69,7 +79,8 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
   useEffect(() => {
     // Log the basicDetails when the component mounts
     console.log('Basic Details:', basicDetails);
-  }, [basicDetails]);
+    console.log('Payment Details:', paymentDetails);
+  }, [basicDetails, paymentDetails]);
 
   console.log(selectedLandId)
 
