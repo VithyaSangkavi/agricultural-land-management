@@ -2,7 +2,6 @@ import { getConnection, Like } from "typeorm";
 import { TaskExpenseDto } from "../../dto/master/task-expense-dto";
 import { Status } from "../../enum/Status";
 import { TaskExpenseEntity } from "../../entity/master/task-expense-entity";
-import { WorkerStatus } from "../../enum/workerStatus";
 import { TaskExpenseDao } from "../task-expense-dao";
 import { TaskTypeEntity } from "../../entity/master/task-type-entity";
 import { ExpensesEntity } from "../../entity/master/expense-entity";
@@ -53,7 +52,7 @@ export class TaskExpenseDaoImpl implements TaskExpenseDao {
       where: searchObject,
       skip: taskExpenseDto.getStartIndex(),
       take: taskExpenseDto.getMaxResult(),
-      order:{id:"DESC"}
+      order: { id: "DESC" }
     });
     return taskExpenseModel;
   }
@@ -79,7 +78,21 @@ export class TaskExpenseDaoImpl implements TaskExpenseDao {
     const taskExpenseRepo = getConnection().getRepository(TaskExpenseEntity);
     const taskExpenses = await taskExpenseRepo.find({ where: { expense: expenseId } });
     return taskExpenses;
-}
+  }
+
+  async findByTaskAssignedId(taskExpenseDto: TaskExpenseDto): Promise<TaskExpenseEntity[]> {
+    const taskExpenseRepo = getConnection().getRepository(TaskExpenseEntity);
+  
+    const query = taskExpenseRepo.createQueryBuilder("task-expense")
+      .innerJoin('task-expense.expense', 'expense')
+      .where('task-expense.taskAssigned = :taskAssignedId', { taskAssignedId: taskExpenseDto.getTaskAssignedId() })
+      .select(['task-expense.id AS id', 'task-expense.value AS value', 'expense.id AS expenseId', 'expense.expenseType AS expenseType'])
+  
+    const taskExpenses = await query.getRawMany();
+  
+    return taskExpenses;
+  }
+  
 
   async prepareTaskExpenseModel(taskExpenseModel: TaskExpenseEntity, taskExpenseDto: TaskExpenseDto) {
     taskExpenseModel.value = taskExpenseDto.getValue();
@@ -93,19 +106,21 @@ export class TaskExpenseDaoImpl implements TaskExpenseDao {
     if (taskExpenseDto.getValue()) {
       searchObject.value = Like("%" + taskExpenseDto.getValue() + "%");
     }
-    searchObject.workerStatus = WorkerStatus.Active;
     if (taskExpenseDto.getcreatedDate()) {
-        searchObject.createdDate = Like("%" + taskExpenseDto.getcreatedDate() + "%");
+      searchObject.createdDate = Like("%" + taskExpenseDto.getcreatedDate() + "%");
     }
     if (taskExpenseDto.getUpdatedDate()) {
-        searchObject.updatedDate = Like("%" + taskExpenseDto.getUpdatedDate() + "%");
+      searchObject.updatedDate = Like("%" + taskExpenseDto.getUpdatedDate() + "%");
     }
     searchObject.status = Status.Online;
     if (taskExpenseDto.getTaskId()) {
-        searchObject.taskId = Like("%" + taskExpenseDto.getTaskId() + "%");
+      searchObject.taskType = Like("%" + taskExpenseDto.getTaskId() + "%");
     }
     if (taskExpenseDto.getExpenseId()) {
-        searchObject.expenseId = Like("%" + taskExpenseDto.getExpenseId() + "%");
+      searchObject.expenseId = Like("%" + taskExpenseDto.getExpenseId() + "%");
+    }
+    if (taskExpenseDto.getTaskAssignedId()) {
+      searchObject.taskAssignedId = Like("%" + taskExpenseDto.getTaskAssignedId() + "%");
     }
     return searchObject;
   }

@@ -11,6 +11,7 @@ export class TaskExpenseDto extends PaginationDto {
   private taskId: number;
   private expenseId: number;
   private taskAssignedId: number;
+  private expenseType: string;
 
 
   filViaRequest(body) {
@@ -28,20 +29,24 @@ export class TaskExpenseDto extends PaginationDto {
 
 
     if (body.startIndex && body.maxResult) {
-      this.setStartIndex(body.startIndex);
-      this.setMaxResult(body.maxResult);
+      // this.setStartIndex(body.startIndex);
+      // this.setMaxResult(body.maxResult);
     }
   }
 
   filViaDbObject(TaskExpenseModel: TaskExpenseEntity) {
     this.id = TaskExpenseModel.id;
     this.value = TaskExpenseModel.value;
-    this.createdDate = TaskExpenseModel.createdDate;
-    this.updatedDate = TaskExpenseModel.updatedDate;
-    this.status = TaskExpenseModel.status;
     this.taskId = TaskExpenseModel.taskType.id;  
     this.expenseId = TaskExpenseModel.expense.id;
     this.taskAssignedId = TaskExpenseModel.taskAssigned.id;
+  }
+
+  filViaDbObjectForTaskExpense(TaskExpenseModel: any) {
+    this.id = TaskExpenseModel.id;
+    this.value = TaskExpenseModel.value;
+    this.expenseId = TaskExpenseModel.expenseId;
+    this.expenseType = TaskExpenseModel.expenseType;
   }
 
   public getTaskExpenseId(): number {
@@ -106,5 +111,13 @@ export class TaskExpenseDto extends PaginationDto {
 
   public setTaskAssignedId(taskAssignedId: number): void {
     this.taskAssignedId = taskAssignedId;
+  }
+
+  public getExpenseType(): string {
+    return this.expenseType;
+  }
+
+  public setExpenseType(expenseType: string): void {
+    this.expenseType = expenseType;
   }
 }

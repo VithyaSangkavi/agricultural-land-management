@@ -13,7 +13,7 @@ import { Trash } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { alertService } from '../../_services/alert.service';
-import { MdArrowBackIos } from "react-icons/md";
+import { MdArrowBackIos, MdViewAgenda, MdClose } from "react-icons/md";
 import { Redirect } from 'react-router-dom';
 
 const ManageOngoingTask = () => {
@@ -45,7 +45,7 @@ const ManageOngoingTask = () => {
     const [taskDetails, setTaskDetails] = useState([]);
     const [taskStatus, setTaskStatus] = useState('');
     const [newTaskCardId, setNewTaskCardId] = useState('');
-
+    const [taskExpenses, setTaskExpenses] = useState([]);
 
     //const [workerId, setWorkerId] = useState('');
     const [taskAssignedId, setTaskAssignedId] = useState('');
@@ -56,11 +56,30 @@ const ManageOngoingTask = () => {
     const [isCompleted, setIsCompleted] = useState(false);
     const [completedTasks, setCompletedTasks] = useState([]);
     const [workerId, setWorkerId] = useState('');
+    const [showExpenses, setShowExpenses] = useState(false);
+    const [totalAmount, setTotalAmount] = useState(0); 
 
 
     const sortedTaskDetails = taskDetails && taskDetails.length > 1
         ? taskDetails.sort((a, b) => new Date(b.date) - new Date(a.date))
         : taskDetails;
+
+    useEffect(() => {
+        if (showExpenses) {
+            getTaskExpenses(); 
+        }
+    }, [showExpenses]);
+
+    useEffect(() => {
+        const calculateTotalAmount = () => {
+            const total = taskExpenses.reduce((acc, expense) => acc + expense.value, 0);
+            setTotalAmount(total);
+
+            console.log('Total amount: ', total);
+        };
+
+        calculateTotalAmount();
+    }, [taskExpenses]);
 
     const handleCompleteTask = (taskCardId) => {
         const newStatus = 'completed';
@@ -172,8 +191,11 @@ const ManageOngoingTask = () => {
             });
     };
 
+    //fetch worker names according to landId
     const fetchWorkerNames = () => {
-        axios.post('http://localhost:8080/service/master/workerFindAll')
+
+        axios.get(`http://localhost:8080/service/master/findByLandId?landId=${landId}`)
+
             .then((response) => {
                 const workerNamesArray = response.data.extra.map((worker) => worker.name);
                 setWorkerNames(workerNamesArray);
@@ -285,8 +307,6 @@ const ManageOngoingTask = () => {
                                             console.error('Error adding work assigned:', error);
                                         });
 
-
-
                                 })
                                 .catch((error) => {
                                     console.error('Error adding new task card:', error);
@@ -342,7 +362,7 @@ const ManageOngoingTask = () => {
                 axios.post('http://localhost:8080/service/master/task-expense-save', addTaskExpense)
                     .then((response) => {
                         console.log('Task expense added successfully:', response.data);
-                        history.push('/home');
+                        window.reload();
                     })
                     .catch((error) => {
                         // console.error('Error adding task expense:', error);
@@ -432,6 +452,18 @@ const ManageOngoingTask = () => {
 
     console.log("taskDetails : ", taskDetails)
 
+    const getTaskExpenses = (e) => {
+        console.log('task ass id: ', taskAssignedid);
+        axios.get(`http://localhost:8080/service/master/findByTaskAssignedId?taskAssignedId=${taskAssignedid}`)
+            .then((response) => {
+                console.log('task expenses ------------ ', response.data.extra)
+                setTaskExpenses(response.data.extra);
+            })
+            .catch((error) => {
+                console.error('Error fetching task expenses:', error);
+            });
+    }
+
     return (
         <div className="manage-task-app-screen">
             <div className='main-heading'>
@@ -509,150 +541,190 @@ const ManageOngoingTask = () => {
                 ) : (
                     <>
                         {selectedView === 'tasks' && (
-                            <div className='card-container'>
-                                {taskDetails.map((taskDetail) => (
-                                    <div key={taskDetail.taskCardId} className='card'>
-                                        <p>{t('date')} - <h6>{getFormattedDate(taskDetail.date)}</h6></p>
-                                        <h6> Current Staus - {taskDetail.cardStatus}</h6>
-                                        <p>---------------------------------------------</p>
+                            <div>
+                                <div className='card-container'>
 
-                                        {taskDetail.workerDetails
-                                            .map((workerDetail) => (
-                                                <div key={workerDetail.id} className="worker-details">
-                                                    <div className="worker-name-container">
-                                                        {ongoingTaskName === 'Pluck' ? (
-                                                            <p>
-                                                                {workerDetail.workerName} - {workerDetail.quantity}
-                                                                {workerDetail.units}
-                                                            </p>
-                                                        ) : (
-                                                            <p>{workerDetail.workerName}</p>
-                                                        )}
-                                                    </div>
-
-
-                                                    {taskStatus === 'ongoing' ? (
-                                                        <>
-
-                                                            {taskDetail.cardStatus !== 'completed' && (
-                                                                <div className="remove-button-container">
-                                                                    <Trash onClick={() => handleRemoveWorker(taskDetail.taskCardId, workerDetail.workAssigned)} />
-                                                                </div>
-                                                            )}
-
-                                                        </>
-
-                                                    ) : (
-                                                        <div></div>
-                                                    )}
-
-                                                </div>
-                                            ))}
-
-                                        <br />
-
+                                    <div className="container">
                                         {taskStatus === 'ongoing' ? (
-                                            <>
-
-                                                <div className="dropdown-and-button-container">
-                                                    <select
-                                                        value={selectedWorker[taskDetail.taskCardId] || ''}
-                                                        onChange={(e) =>
-                                                            handleSelectedWorkerChange(taskDetail.taskCardId, e.target.value)
-                                                        }
-                                                        className="dropdown-input-select-worker"
-                                                    >
-                                                        <option value="">{t('selectaworker')}</option>
-                                                        {workerNames.map((workerName) => (
-                                                            <option key={workerName} value={workerName}>
-                                                                {workerName}
-                                                            </option>
-                                                        ))}
-                                                    </select>
-
-                                                    {taskStatus === 'ongoing' ? (
-                                                        <>
-                                                            <button className='add-small' onClick={() => handleAddSelectedWorker(taskDetail.taskCardId)}>
-                                                                {t('add')}
-                                                            </button>
-
-                                                            {taskDetail.cardStatus === 'completed' ? (
-                                                                <button className="reopen-button" onClick={() => handleReopenTask(taskDetail.taskCardId)}>
-                                                                    Reopen
-                                                                </button>
-                                                            ) : (
-                                                                <button className="complete-button" onClick={() => handleCompleteTask(taskDetail.taskCardId)}>
-                                                                    Complete
-                                                                </button>
-                                                            )}
-
-                                                        </>
-
-                                                    ) : (
-                                                        <div></div>
-                                                    )}
-                                                </div>
-                                            </>
+                                            <div className="end-task-icon" onClick={EndTask}>
+                                                <FontAwesomeIcon icon={faCheck} size="2x" />
+                                            </div>
                                         ) : (
                                             <div></div>
                                         )}
-
-                                        {selectedWorkersList[taskDetail.taskCardId]?.length > 0 && (
-                                            <div>
-                                                {selectedWorkersList[taskDetail.taskCardId].map((worker, index) => (
-                                                    <div key={index} className="worker-container">
-                                                        <p>{worker}</p>
-                                                        {taskName === 'Pluck' && (
-                                                            <div className="kg-input-container">
-                                                                <div className="kg-input">
-                                                                    <input
-                                                                        type="text"
-                                                                        placeholder={t('numberofkg')}
-                                                                        value={kgValues[index] || ''}
-                                                                        onChange={(e) => handleKgChange(e, index)}
-                                                                        className="dropdown-input"
-                                                                    />
-                                                                    <span className="add-kg-icon">
-                                                                        <FontAwesomeIcon icon={faPlus} onClick={addQuantity} />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        )}
                                     </div>
 
-                                ))}
+                                    {taskDetails.map((taskDetail) => (
+                                        <div key={taskDetail.taskCardId} className='card'>
+                                            <p>{t('date')} - <h6>{getFormattedDate(taskDetail.date)}</h6></p>
+                                            <h6> Current Staus - {taskDetail.cardStatus}</h6>
+                                            <p>---------------------------------------------</p>
+
+                                            {taskDetail.workerDetails
+                                                .map((workerDetail) => (
+                                                    <div key={workerDetail.id} className="worker-details">
+                                                        <div className="worker-name-container">
+                                                            {ongoingTaskName === 'Pluck' ? (
+                                                                <p>
+                                                                    {workerDetail.workerName} - {workerDetail.quantity}
+                                                                    {workerDetail.units}
+                                                                </p>
+                                                            ) : (
+                                                                <p>{workerDetail.workerName}</p>
+                                                            )}
+                                                        </div>
+
+
+                                                        {taskStatus === 'ongoing' ? (
+                                                            <>
+
+                                                                {taskDetail.cardStatus !== 'completed' && (
+                                                                    <div className="remove-button-container">
+                                                                        <Trash onClick={() => handleRemoveWorker(taskDetail.taskCardId, workerDetail.workAssigned)} />
+                                                                    </div>
+                                                                )}
+
+                                                            </>
+
+                                                        ) : (
+                                                            <div></div>
+                                                        )}
+
+                                                    </div>
+                                                ))}
+
+                                            <br />
+
+                                            {taskStatus === 'ongoing' ? (
+                                                <>
+
+                                                    <div className="dropdown-and-button-container">
+                                                        <select
+                                                            value={selectedWorker[taskDetail.taskCardId] || ''}
+                                                            onChange={(e) =>
+                                                                handleSelectedWorkerChange(taskDetail.taskCardId, e.target.value)
+                                                            }
+                                                            className="dropdown-input-select-worker"
+                                                        >
+                                                            <option value="">{t('selectaworker')}</option>
+                                                            {workerNames.map((workerName) => (
+                                                                <option key={workerName} value={workerName}>
+                                                                    {workerName}
+                                                                </option>
+                                                            ))}
+                                                        </select>
+
+                                                        {taskStatus === 'ongoing' ? (
+                                                            <>
+                                                                <button className='add-small' onClick={() => handleAddSelectedWorker(taskDetail.taskCardId)}>
+                                                                    {t('add')}
+                                                                </button>
+
+                                                                {taskDetail.cardStatus === 'completed' ? (
+                                                                    <button className="reopen-button" onClick={() => handleReopenTask(taskDetail.taskCardId)}>
+                                                                        Reopen
+                                                                    </button>
+                                                                ) : (
+                                                                    <button className="complete-button" onClick={() => handleCompleteTask(taskDetail.taskCardId)}>
+                                                                        Complete
+                                                                    </button>
+                                                                )}
+
+                                                            </>
+
+                                                        ) : (
+                                                            <div></div>
+                                                        )}
+                                                    </div>
+                                                </>
+                                            ) : (
+                                                <div></div>
+                                            )}
+
+                                            {selectedWorkersList[taskDetail.taskCardId]?.length > 0 && (
+                                                <div>
+                                                    {selectedWorkersList[taskDetail.taskCardId].map((worker, index) => (
+                                                        <div key={index} className="worker-container">
+                                                            <p>{worker}</p>
+                                                            {taskName === 'Pluck' && (
+                                                                <div className="kg-input-container">
+                                                                    <div className="kg-input">
+                                                                        <input
+                                                                            type="text"
+                                                                            placeholder={t('numberofkg')}
+                                                                            value={kgValues[index] || ''}
+                                                                            onChange={(e) => handleKgChange(e, index)}
+                                                                            className="dropdown-input"
+                                                                        />
+                                                                        <span className="add-kg-icon">
+                                                                            <FontAwesomeIcon icon={faPlus} onClick={addQuantity} />
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+
+                                    ))}
+                                </div>
                             </div>
                         )}
 
-
                         {/* Finance Toggled View */}
                         {selectedView === 'finance' && (
-                            <div>
-                                <select
-                                    value={selectedExpenseType}
-                                    onChange={(e) => setSelectedExpenseType(e.target.value)}
-                                    className='dropdown-input'
-                                >
-                                    <option value="">{t('expense')}</option>
-                                    {expenseTypes.map((expenseType) => (
-                                        <option key={expenseType} value={expenseType}>
-                                            {expenseType}
-                                        </option>
-                                    ))}
-                                </select><br />
-                                <input
-                                    type="text"
-                                    placeholder={t('amount')}
-                                    value={value}
-                                    onChange={(e) => setValue(e.target.value)}
-                                    className="dropdown-input"
-                                />
-                                <button className="add-button" onClick={handleAddTaskExpense}>{t('addtaskexpense')}</button>
-                            </div>
+                            <>
+                                <div>
+                                    <select
+                                        value={selectedExpenseType}
+                                        onChange={(e) => setSelectedExpenseType(e.target.value)}
+                                        className='dropdown-input'
+                                    >
+                                        <option value="">{t('expense')}</option>
+                                        {expenseTypes.map((expenseType) => (
+                                            <option key={expenseType} value={expenseType}>
+                                                {expenseType}
+                                            </option>
+                                        ))}
+                                    </select><br />
+                                    <input
+                                        type="text"
+                                        placeholder={t('amount')}
+                                        value={value}
+                                        onChange={(e) => setValue(e.target.value)}
+                                        className="dropdown-input"
+                                    />
+                                    <button className="add-button" onClick={handleAddTaskExpense}>{t('addtaskexpense')}</button>
+                                </div>
+                                <br />
+                                <div>
+                                    {showExpenses ? (
+                                        <button onClick={() => setShowExpenses(false)} className='view-task-expenses'>
+                                            <MdClose /> {t('closetaskexpenses')}
+                                        </button>
+                                    ) : (
+                                        <button onClick={() => setShowExpenses(true)} className='view-task-expenses'>
+                                            <MdViewAgenda /> {t('viewtaskexpenses')}
+                                        </button>
+                                    )}
+
+                                    {/* Display task expenses when showExpenses is true */}
+                                    {showExpenses && (
+                                        <div>
+                                            {taskExpenses.map((taskExpense) => (
+                                                <div key={taskExpense.id} className="task-expense-card">
+                                                    <h3>{t('expensetype')} : {taskExpense.expenseType}</h3>
+                                                    <p>{t('amount')} : {taskExpense.value}</p>
+                                                </div>
+                                            ))}
+                                            <p className='total-display-card'>{t('totaltaskexpenses')}: {t('rs')}{totalAmount}.00</p>
+                                        </div>
+                                    )}
+
+                                </div>
+                            </>
                         )}
                     </>
 
@@ -660,14 +732,6 @@ const ManageOngoingTask = () => {
             </>
 
             <br />
-
-            <div className="container">
-                {taskStatus === 'ongoing' ? (
-                    <button className="end-task" onClick={EndTask}>End-Task</button>
-                ) : (
-                    <div></div>
-                )}
-            </div>
 
             <br /><br /><br />
 

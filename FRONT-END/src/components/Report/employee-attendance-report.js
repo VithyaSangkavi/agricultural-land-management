@@ -128,7 +128,7 @@ const EmployeeAttendanceReport = ({ dateRange, lotId, landId, selectedLot }) => 
                         <p>{t('selectedlot')} : {selectedLot}</p>
                     )}
                 </div>
-                <h2>{t('employeeattendancereport')}</h2>
+                <h2 className='report-sub-heading'>{t('employeeattendancereport')}</h2>
                 <table className='attendance-table'>
                     <thead>
                         <tr>
@@ -147,7 +147,7 @@ const EmployeeAttendanceReport = ({ dateRange, lotId, landId, selectedLot }) => 
                 </table>
             </div>
             <div className='report-app-screen'>
-                <h2>{t('employeeattendancechart')}</h2>
+                <h2 className='report-sub-heading'>{t('employeeattendancechart')}</h2>
                 <div className='attendance-chart'>
                     {attendanceData.length > 0 ? (
                         <Line data={chartData} options={chartOptions} />

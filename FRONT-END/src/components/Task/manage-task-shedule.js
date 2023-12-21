@@ -9,7 +9,7 @@ import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
-import { MdArrowBackIos } from "react-icons/md";
+import { MdArrowBackIos, MdViewAgenda, MdClose } from "react-icons/md";
 
 const ManageTask = () => {
 
@@ -43,6 +43,9 @@ const ManageTask = () => {
     const [taskCardId, setTaskCardId] = useState('');
     const thisid = localStorage.getItem('taskassignedid')
     const [workers, setWorkers] = useState([]);
+    const [taskExpenses, setTaskExpenses] = useState([]);
+    const [showExpenses, setShowExpenses] = useState(false);
+    const [totalAmount, setTotalAmount] = useState(0); 
 
     const taskAssignedDate = startDate;
 
@@ -57,6 +60,35 @@ const ManageTask = () => {
         console.log('check task assigned id: ', thisid);
     }, []);
 
+    useEffect(() => {
+        if (showExpenses) {
+            getTaskExpenses(); 
+        }
+    }, [showExpenses]);
+
+    useEffect(() => {
+        const calculateTotalAmount = () => {
+            const total = taskExpenses.reduce((acc, expense) => acc + expense.value, 0);
+            setTotalAmount(total);
+
+            console.log('Total amount: ', total);
+        };
+
+        calculateTotalAmount();
+    }, [taskExpenses]);
+
+    const getTaskExpenses = (e) => {
+        console.log('task ass id: ', taskAssignedId);
+        axios.get(`http://localhost:8080/service/master/findByTaskAssignedId?taskAssignedId=${taskAssignedId}`)
+            .then((response) => {
+                console.log('task expenses ------------ ', response.data.extra)
+                setTaskExpenses(response.data.extra);
+            })
+            .catch((error) => {
+                console.error('Error fetching task expenses:', error);
+            });
+    }
+
     const fetchTaskName = () => {
         axios.get(`http://localhost:8080/service/master/findTaskNameById/?taskId=${taskId}`)
             .then((response) => {
@@ -67,8 +99,11 @@ const ManageTask = () => {
             });
     };
 
+    //fetch worker names according to the landId
     const fetchWorkerNames = () => {
-        axios.post('http://localhost:8080/service/master/workerFindAll')
+
+        axios.get(`http://localhost:8080/service/master/findByLandId?landId=${landId}`)
+
             .then((response) => {
                 const workerNamesArray = response.data.extra.map((worker) => worker.name);
                 setWorkerNames(workerNamesArray);
@@ -330,7 +365,7 @@ const ManageTask = () => {
     return (
         <div className="manage-task-app-screen">
             <div className="header-bar">
-                <MdArrowBackIos className="back-button" onClick={goBack}/>
+                <MdArrowBackIos className="back-button" onClick={goBack} />
                 <p className="main-heading">Scheduled Task</p>
                 <div className="position-absolute top-0 end-0 me-0">
                     <Dropdown alignRight onSelect={handleLanguageChange}>
@@ -423,28 +458,56 @@ const ManageTask = () => {
 
             {/* Finance Toggled View */}
             {selectedView === 'finance' && (
-                <div>
-                    <select
-                        value={selectedExpenseType}
-                        onChange={(e) => setSelectedExpenseType(e.target.value)}
-                        className='dropdown-input'
-                    >
-                        <option value="">{t('expense')}</option>
-                        {expenseTypes.map((expenseType) => (
-                            <option key={expenseType} value={expenseType}>
-                                {expenseType}
-                            </option>
-                        ))}
-                    </select><br />
-                    <input
-                        type="text"
-                        placeholder={t('amount')}
-                        value={value}
-                        onChange={(e) => setValue(e.target.value)}
-                        className="dropdown-input"
-                    />
-                    <button className="add-button" onClick={handleAddTaskExpense}>{t('addtaskexpense')}</button>
-                </div>
+                <>
+                    <div>
+                        <select
+                            value={selectedExpenseType}
+                            onChange={(e) => setSelectedExpenseType(e.target.value)}
+                            className='dropdown-input'
+                        >
+                            <option value="">{t('expense')}</option>
+                            {expenseTypes.map((expenseType) => (
+                                <option key={expenseType} value={expenseType}>
+                                    {expenseType}
+                                </option>
+                            ))}
+                        </select><br />
+                        <input
+                            type="text"
+                            placeholder={t('amount')}
+                            value={value}
+                            onChange={(e) => setValue(e.target.value)}
+                            className="dropdown-input"
+                        />
+                        <button className="add-button" onClick={handleAddTaskExpense}>{t('addtaskexpense')}</button>
+                    </div>
+                    <br />
+                    <div>
+                        {showExpenses ? (
+                            <button onClick={() => setShowExpenses(false)} className='view-task-expenses'>
+                                <MdClose /> {t('closetaskexpenses')}
+                            </button>
+                        ) : (
+                            <button onClick={() => setShowExpenses(true)} className='view-task-expenses'>
+                                <MdViewAgenda /> {t('viewtaskexpenses')}
+                            </button>
+                        )}
+
+                        {/* Display task expenses when showExpenses is true */}
+                        {showExpenses && (
+                            <div>
+                                {taskExpenses.map((taskExpense) => (
+                                    <div key={taskExpense.id} className="task-expense-card">
+                                        <h3>{t('expensetype')} : {taskExpense.expenseType}</h3>
+                                        <p>{t('amount')} : {taskExpense.value}</p>
+                                    </div>
+                                ))}
+                                <p className='total-display-card'>{t('totaltaskexpenses')}: {t('rs')}{totalAmount}.00</p>
+                            </div>
+                        )}
+
+                    </div>
+                </>
             )}
             <br />
             <div className='footer-alignment'>

@@ -118,7 +118,7 @@ const MonthlyCropReport = ({ dateRange, lotId, landId, selectedLot }) => {
                         <p>{t('selectedlot')} : {selectedLot}</p>
                     )}
                 </div>
-                <h2>{t('monthlycropreport')}</h2>
+                <h2 className='report-sub-heading'>{t('monthlycropreport')}</h2>
                 <table className='attendance-table'>
                     <thead>
                         <tr>
@@ -140,7 +140,7 @@ const MonthlyCropReport = ({ dateRange, lotId, landId, selectedLot }) => {
             </div>
             <br />
             <div className='report-app-screen'>
-                <h2>{t('monthlycropcomparisionchart')}</h2>
+                <h2 className='report-sub-heading'>{t('monthlycropcomparisionchart')}</h2>
                 <div className='attendance-chart'>
                     {Object.keys(monthlyCropData).length > 0 ? (
                         <Line data={chartData} options={chartOptions} />

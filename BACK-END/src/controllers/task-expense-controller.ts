@@ -68,4 +68,18 @@ exports.update = async (req: Request, res: Response, next: NextFunction) => {
       next(error);
     }
   };
+
+  exports.findByTaskAssignedId = async (req: Request, res: Response) => {
+    try {
+      let taskExpenseDto = new TaskExpenseDto();
+      
+      const taskAssignedId = req.query.taskAssignedId;
+      taskExpenseDto.setTaskAssignedId(taskAssignedId);
+
+      let cr = await taskExpenseService.taskExpensefindBytaskAssignedId(taskExpenseDto);
   
+      res.send(cr);
+    } catch (error) {
+      (error);
+    }
+  };

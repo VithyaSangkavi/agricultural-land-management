@@ -101,6 +101,10 @@ export const TRANSLATIONS_EN = {
     amount: 'Amount',
     addtaskexpense: 'Add Task Expense',
     numberofkg: 'Number of Kg',
+    viewtaskexpenses: 'View Task Expenses',
+    closetaskexpenses: 'Close Task Expenses',
+    totaltaskexpenses: 'Total Task Expenses',
+    rs : 'Rs.',
 
     //add task
     startdate: 'Start Date',
@@ -146,5 +150,4 @@ export const TRANSLATIONS_EN = {
     cost: 'Cost',
     yield: 'Yield',
     costvsyieldcomparisionchart: 'Cost vs Yield Comparison Chart',
-
 };
