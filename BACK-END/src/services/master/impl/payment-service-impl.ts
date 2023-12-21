@@ -39,9 +39,9 @@ export class PaymentServiceImpl implements PaymentService {
 
       //check worker id
       let workerModel: WorkerEntity = null;
-      if(paymentDto.getWorkerId() > 0){
+      if (paymentDto.getWorkerId() > 0) {
         workerModel = await this.workerDao.findById(paymentDto.getWorkerId());
-      } else{ 
+      } else {
         return CommonResSupport.getValidationException("Worker with the specified ID does not exist!");
       }
 
@@ -157,6 +157,25 @@ export class PaymentServiceImpl implements PaymentService {
 
       cr.setStatus(true);
       cr.setExtra(paymentDto);
+    } catch (error) {
+      cr.setStatus(false);
+      cr.setExtra(error);
+      ErrorHandlerSup.handleError(error);
+    }
+    return cr;
+  }
+
+  async findByWorkerId(workerId: number): Promise<CommonResponse> {
+    let cr = new CommonResponse();
+    try {
+      const payment = await this.paymentDao.findByWorkerId(workerId);
+
+      let paymentDto = new PaymentDto();;
+
+      paymentDto.filViaRequest(payment);
+
+      cr.setStatus(true);
+      cr.setExtra(payment);
     } catch (error) {
       cr.setStatus(false);
       cr.setExtra(error);
