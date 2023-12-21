@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Axios from 'axios';
+import axios from 'axios';
 import './workerpage.css';
 import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
@@ -42,7 +42,7 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
   const [landNames, setLandNames] = useState([]);
   const [landName, setLandName] = useState([]);
 
-
+  const isEditing = location.state ? location.state.isEditing : false;
 
   const history = useHistory();
 
@@ -96,6 +96,34 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
           alertService.error("Adding worker failed")
         }
       })
+  };
+
+  const handleUpdateWorker = () => {
+    const updatedWorker = {
+      name,
+      dob,
+      nic,
+      gender,
+      joinedDate,
+      phone,
+      address,
+      workerStatus,
+      landId: selectedLandId
+    };
+
+    axios
+      .post(`http://localhost:8081/service/master/workerUpdate?workerId=${workerId}`, updatedWorker) // Replace with your localhost API endpoint
+      .then((response) => {
+        if (response.status === 200) {
+          alertService.success("Worker updated successfully")
+          history.push('/manageWorkers')
+        } else {
+          alertService.error("Updating worker failed")
+        }
+      })
+      .catch((error) => {
+        console.error('Error updating worker:', error);
+      });
   };
 
 
@@ -183,7 +211,7 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
         </div>
 
         <p className="home-heading">{t('workermanagement')}</p>
-      
+
       </div>
 
 
@@ -275,9 +303,15 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
               <option value="Inactive">{t('fired')}</option>
               <option value="Inactive">{t('temporarystopped')}</option>
             </select>
-            <button className="add-button" onClick={handleAddWorker}>
-              {t('addworker')}
-            </button>
+            {isEditing ? (
+              <button className="add-button" onClick={handleUpdateWorker}>
+                {t('updateworker')}
+              </button>
+            ) : (
+              <button className="add-button" onClick={handleAddWorker}>
+                {t('addworker')}
+              </button>
+            )}
             <br />
           </div>
         ) : (

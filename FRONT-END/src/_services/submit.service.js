@@ -19,6 +19,7 @@ const submitCollection = {
 
     login: { ptype: "POST", url: basePath+"/service/master/login", queryparam: false, data:true },
 
+    updateworker: { ptype: "POST", url: basePath+"/service/master/workerUpdate", queryparam: true, data:true, auth: true },
     saveworker: { ptype: "POST", url: basePath+"/service/master/workerSave", queryparam: false, data:true, auth: true },
     savepayment: { ptype: "POST", url: basePath+"/service/master/paymentSave", queryparam: false, data:true, auth: true },
     manageworker: { ptype: "POST", url: basePath+"/service/master/workerFindAll", queryparam: false, data:true, auth: true },

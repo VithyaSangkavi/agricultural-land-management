@@ -51,6 +51,7 @@ export const TRANSLATIONS_SL = {
     fired: 'ඉවත් කර ඇත',
     temporarystopped: 'තාවකාලිකව නතර කර ඇත',
     addworker: 'සේවකයා එකතු කරන්න',
+    updateworker: 'සේවකයා යාවත්කාලීන කරන්න',
 
     //save payment
     monthlydailypay: 'මාසික / දෛනික ගෙවීම',
