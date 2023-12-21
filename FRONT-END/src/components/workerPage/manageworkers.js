@@ -95,10 +95,8 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
       });
   }, [selectedLandId]);
 
-
-
   const handleWorkerCardClick = (worker) => {
-    history.push('/addWorker', { basicDetails: worker });
+    history.push('/addWorker', { basicDetails: worker, isEditing: true  });
   };
 
   const handleLanguageChange = (lang) => {

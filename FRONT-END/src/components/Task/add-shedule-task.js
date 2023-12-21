@@ -83,7 +83,7 @@ const ManageTask = ({ selectedLandId }) => {
     }, []);
 
     const fetchTaskName = () => {
-        axios.get(`http://localhost:8080/service/master/findTaskNameById/?taskId=${taskId}`)
+        axios.get(`http://localhost:8081/service/master/findTaskNameById/?taskId=${taskId}`)
 
             .then((response) => {
                 setTaskName(response.data.extra.taskName);
@@ -118,7 +118,7 @@ const ManageTask = ({ selectedLandId }) => {
     };
 
     const fetchLotId = () => {
-        axios.get(`http://localhost:8080/service/master/findLotByLandId?landId=${selectedLandId}`)
+        axios.get(`http://localhost:8081/service/master/findLotByLandId?landId=${selectedLandId}`)
 
             //get task-assigned id
             //axios.get(`http://localhost:8080/service/master/task-assigned?taskId=${taskId}`)

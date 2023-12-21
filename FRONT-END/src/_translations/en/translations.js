@@ -50,6 +50,7 @@ export const TRANSLATIONS_EN = {
     fired: 'Fired',
     temporarystopped: 'Temporary Stopped',
     addworker: 'Add Worker',
+    updateworker: 'Update Worker',
 
     //save payment
     monthlydailypay : 'Monthly / Daily Pay',

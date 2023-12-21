@@ -11,4 +11,5 @@ export interface PaymentDao {
   findById(paymentId: number): Promise<PaymentEntity>;
   findByName(paymentType: paymentType): Promise<PaymentEntity>;
   findCount(paymentDto: PaymentDto): Promise<number> ;
+  findByWorkerId(workerId: number): Promise<PaymentEntity> 
 }

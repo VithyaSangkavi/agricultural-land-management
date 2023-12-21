@@ -19,7 +19,6 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: 16px;
-  margin-top: 16px;
 }
 
 .worker-app-screen .toggle-button {
@@ -27,7 +26,7 @@
   padding: 8px;
   text-align: center;
   background-color: #f2f2f2;
-  border:1px solid #0e4f20;
+  border: none;
   cursor: pointer;
   transition: background-color 0.3s;
 }

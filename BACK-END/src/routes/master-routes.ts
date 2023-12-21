@@ -74,10 +74,11 @@ router.get('/findTaskNameById', taskTypeController.findTaskNameById);
 
 // payment routes
 router.post("/paymentSave", paymentController.save);
+router.get('/findByWorkerId', paymentController.findByWorkerId);
 // router.post("/taskUpdate", taskTypeController.update);
 // router.post("/taskDelete", taskTypeController.delete);
 // router.post("/taskFindAll", taskTypeController.findAll);
-// router.get("/taskFindById", taskTypeController.findById);
+router.get("/paymentFindById", paymentController.findById);
 
 // task-assigned routes
 router.post("/task-assigned-save", taskAssignedController.save);
