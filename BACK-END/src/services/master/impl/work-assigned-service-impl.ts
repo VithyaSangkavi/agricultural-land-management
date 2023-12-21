@@ -87,6 +87,9 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
 
       // save new workAssigned
       let newworkAssigned = await this.workAssignedDao.save(workAssignedDto, workerModel, taskTypeModel, lotModel, taskAssignedModel, taskCardModel);
+      
+      cr.setExtra(newworkAssigned);
+
       cr.setStatus(true);
     } catch (error) {
       cr.setStatus(false);
