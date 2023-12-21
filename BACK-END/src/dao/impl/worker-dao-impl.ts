@@ -21,6 +21,7 @@ export class WorkerDaoImpl implements WorkerDao {
     let savedWorker = await workerRepo.save(workerModel);
     return savedWorker;
   }
+  
   async update(workerDto: WorkerDto): Promise<WorkerEntity> {
     let workerRepo = getConnection().getRepository(WorkerEntity);
     let workerModel = await workerRepo.findOne(workerDto.getWorkerId());
@@ -32,6 +33,7 @@ export class WorkerDaoImpl implements WorkerDao {
       return null;
     }
   }
+
   async delete(workerDto: WorkerDto): Promise<WorkerEntity> {
     let workerRepo = getConnection().getRepository(WorkerEntity);
     let workerModel = await workerRepo.findOne(workerDto.getWorkerId());
