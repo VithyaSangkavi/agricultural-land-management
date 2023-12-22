@@ -63,17 +63,6 @@ export class PaymentServiceImpl implements PaymentService {
   async update(paymentDto: PaymentDto): Promise<CommonResponse> {
     let cr = new CommonResponse();
     try {
-      // validation
-      if (paymentDto.getPaymentType()) {
-        // check name already have
-        let typePaymentMode = await this.paymentDao.findByName(paymentDto.getPaymentType());
-        if (typePaymentMode && typePaymentMode.id != paymentDto.getPaymentId()) {
-          return CommonResSupport.getValidationException("payment Name Already In Use !");
-        }
-      } else {
-        return CommonResSupport.getValidationException("payment Name Cannot Be null !");
-      }
-
       // update payment
       let updatePayment = await this.paymentDao.update(paymentDto);
       if (updatePayment) {

@@ -22,38 +22,40 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
 
 
   const location = useLocation();
-  const { basicDetails} = location.state ? location.state : {};
- const { paymentDetails} = location.state ? location.state : {};
+  const basicDetails = location.state ? location.state.basicDetails : {};
+  const paymentDetails = location.state ? location.state.paymentDetails : {};
 
- 
- console.log('LS: ', location.state);
- console.log('BD: ', basicDetails);
- console.log('PD: ', paymentDetails);
+  //const basicDetails = location.state ? location.state : {};
+
+  console.log('LS: ', location.state);
+  console.log('BD: ', basicDetails);
+  console.log('PD: ', paymentDetails);
   const [showBasicDetails, setShowBasicDetails] = useState(true);
 
-  const [name, setName] = useState(location.state.basicDetails.name || '');
-  const [dob, setDob] = useState(location.state.basicDetails.dob || '');
-  const [nic, setNic] = useState(location.state.basicDetails.nic || '');
-  const [gender, setGender] = useState(location.state.basicDetails.gender || '');
-  const [joinedDate, setJoinedDate] = useState(location.state.basicDetails.joinedDate || null);
-  const [phone, setPhone] = useState(location.state.basicDetails.phone || '');
-  const [address, setAddress] = useState(location.state.basicDetails.address || '');
-  const [workerStatus, setWorkerStatus] = useState(location.state.basicDetails.workerStatus || '');
+  const [name, setName] = useState(basicDetails.name || '');
+  const [dob, setDob] = useState(basicDetails.dob || '');
+  const [nic, setNic] = useState(basicDetails.nic || '');
+  const [gender, setGender] = useState(basicDetails.gender || '');
+  const [joinedDate, setJoinedDate] = useState(basicDetails.joinedDate || null);
+  const [phone, setPhone] = useState(basicDetails.phone || '');
+  const [address, setAddress] = useState(basicDetails.address || '');
+  const [workerStatus, setWorkerStatus] = useState(basicDetails.workerStatus || '');
 
-  const [paymentType, setPaymentType] = useState(location.state.paymentDetails.paymentType || '');
-  const [basePayment, setBasePayment] = useState(location.state.paymentDetails.basePayment || '');
-  const [extraPayment, setExtraPayment] = useState(location.state.paymentDetails.extraPayment || '');
-  const [attendancePayment, setAttendancePayment] = useState(location.state.paymentDetails.attendancePayment || '');
+  const [paymentType, setPaymentType] = useState(paymentDetails.paymentType || '');
+  const [basePayment, setBasePayment] = useState(paymentDetails.basePayment || '');
+  const [extraPayment, setExtraPayment] = useState(paymentDetails.extraPayment || '');
+  const [attendancePayment, setAttendancePayment] = useState(paymentDetails.attendancePayment || '');
 
 
-  const [workerId, setWorkerId] = useState(location.state.basicDetails.id || -1);
-  
+  const [workerId, setWorkerId] = useState(basicDetails.id || -1);
+  const [paymentId, setPaymentId] = useState(paymentDetails.id || -1);
+
   const [landNames, setLandNames] = useState([]);
   const [landName, setLandName] = useState([]);
 
   const isEditing = location.state ? location.state.isEditing : false;
 
-  console.log('base payment: ', location.state.paymentDetails.basePayment);
+  console.log('base payment: ', paymentDetails.basePayment);
   const history = useHistory();
 
   const handleLandChange = (event) => {
@@ -109,6 +111,7 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
       })
   };
 
+  //update worker
   const handleUpdateWorker = () => {
     const updatedWorker = {
       name,
@@ -135,6 +138,7 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
       .catch((error) => {
         console.error('Error updating worker:', error);
       });
+
   };
 
 
@@ -157,6 +161,31 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
           alertService.error("Adding payment failed")
         }
       })
+  };
+
+  //update payment
+  const handleUpdatePayment = () => {
+    const updatedPayment = {
+      paymentType,
+      basePayment,
+      extraPayment,
+      attendancePayment
+    };
+
+    axios
+      .post(`http://localhost:8081/service/master/paymentUpdate?paymentId=${paymentId}`, updatedPayment)
+      .then((response) => {
+        if (response.status === 200) {
+          alertService.success("Payment updated successfully")
+          history.push('/manageWorkers')
+        } else {
+          alertService.error("Updating payment failed")
+        }
+      })
+      .catch((error) => {
+        console.error('Error updating payment:', error);
+      });
+
   };
 
   const handleLanguageChange = (lang) => {
@@ -357,10 +386,15 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
               placeholder={t('attendancepayment')}
               className="input-field"
             />
-
-            <button className="add-button" onClick={handleAddPayment}>
-              {t('addworkerpayment')}
-            </button>
+            {isEditing ? (
+              <button className="add-button" onClick={handleUpdatePayment}>
+                {t('updateworkerpayment')}
+              </button>
+            ) : (
+              <button className="add-button" onClick={handleAddPayment}>
+                {t('addworkerpayment')}
+              </button>
+            )}
             <br />
           </div>
         )}

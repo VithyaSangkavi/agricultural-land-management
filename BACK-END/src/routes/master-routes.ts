@@ -75,7 +75,7 @@ router.get('/findTaskNameById', taskTypeController.findTaskNameById);
 // payment routes
 router.post("/paymentSave", paymentController.save);
 router.get('/findByWorkerId', paymentController.findByWorkerId);
-// router.post("/taskUpdate", taskTypeController.update);
+router.post("/paymentUpdate", paymentController.update);
 // router.post("/taskDelete", taskTypeController.delete);
 // router.post("/taskFindAll", taskTypeController.findAll);
 router.get("/paymentFindById", paymentController.findById);

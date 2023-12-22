@@ -61,6 +61,7 @@ export const TRANSLATIONS_SL = {
     extrapayment: 'අමතර Kg ගෙවීම',
     attendancepayment: 'පැමිණීමේ ගෙවීම',
     addworkerpayment: 'සේවක ගෙවීම් එකතු කරන්න',
+    updateworkerpayment: 'සේවක ගෙවීම් යාවත්කාලීන කරන්න',
 
     //manage workers
     workermanagement: 'සේවක කළමනාකරණය',
