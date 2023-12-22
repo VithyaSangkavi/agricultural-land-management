@@ -23,11 +23,13 @@ router.post("/login", userController.login);
 //crop routes
 router.post("/cropSave", cropController.save);
 router.get('/cropFindByLandId/:landId', cropController.findCropIdByLandId);
+router.get('/cropNameFindByLandId/:landId', cropController.findCropNameByLandId);
 /* router.post("/cropUpdate", cropController.update);
 router.post("/cropDelete", cropController.delete);
 router.post("/cropFindAll", cropController.findAll);
 router.get("/cropFindById", cropController.findById); */
-//
+
+//expense routes
 router.post("/expenseSave", expenseController.save);
 //router.post("/expenseUpdate", expenseController.update);
 //router.post("/expenseDelete", expenseController.delete);
@@ -35,20 +37,20 @@ router.get("/expenseFindAll", expenseController.findAll);
 //router.get("/expenseFindById", expenseController.findById);
 router.get('/find-by-type', expenseController.findIdByType);
 
-//
+//income routes
 router.post("/incomeSave", incomeController.save);
 router.put("/updatePrice/:incomeId", incomeController.updatePrice);
 router.get("/incomeFindAll", incomeController.findAll);
 router.get("/incomeFindById/:incomeId", incomeController.findById);
 router.get("/incomeFindByLandId/:landId", incomeController.findByLandId);
 
-//
+//land routes
 router.post("/landSave", landController.save);
 router.get("/landFindAll", landController.findAll);
 router.get("/landFind", landController.findById);
 router.post('/findLandIdByName', landController.findLandIdByName);
 
-//
+//lot routes
 router.post("/lotSave", lotController.save);
 router.get("/lotFindAll", lotController.findAll);
 router.get("/lotFindByLandId/:landId", lotController.findByLandId);
