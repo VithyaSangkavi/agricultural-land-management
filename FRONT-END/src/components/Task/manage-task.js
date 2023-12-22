@@ -239,7 +239,7 @@ const ManageTask = ({ selectedLandId }) => {
                     quantity,
                     taskId,
                     taskAssignedId,
-                    lotId: 1,
+                    lotId,
                     taskCardId,
                 };
 
@@ -272,7 +272,7 @@ const ManageTask = ({ selectedLandId }) => {
                     workerId,
                     taskId,
                     taskAssignedId,
-                    lotId: 1,
+                    lotId,
                     taskCardId,
                 };
 

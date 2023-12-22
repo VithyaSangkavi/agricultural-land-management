@@ -256,7 +256,7 @@ const ManageOngoingTask = ({selectedLandId}) => {
     const handleAddSelectedWorker = (taskCardId) => {
         const selectedWorkerValue = selectedWorker[taskCardId];
 
-        if (taskName === 'Pluck') {
+        if (ongoingTaskName === 'Pluck') {
             console.log('Pluck task')
             if (selectedWorkerValue) {
                 console.log('selected worker: ', selectedWorkerValue);
