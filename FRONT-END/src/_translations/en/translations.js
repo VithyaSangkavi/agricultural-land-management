@@ -60,6 +60,7 @@ export const TRANSLATIONS_EN = {
     extraPayment : 'Extra Kg Pay',
     attendancepayment: 'Attendance Payment',
     addworkerpayment: 'Add Worker Payment',
+    updateworkerpayment: 'Update Worker Payment',
 
     //manage workers
     workermanagement: 'Worker Management',

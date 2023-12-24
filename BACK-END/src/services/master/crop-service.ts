@@ -7,4 +7,5 @@ export interface CropService {
     delete(cropDto: CropDto): Promise<CommonResponse>;
     find(cropDto: CropDto): Promise<CommonResponse>;
     findById(crop_id: number): Promise<CommonResponse>;
+    findCropNameByLandId(landId: number): Promise<CommonResponse>
 }

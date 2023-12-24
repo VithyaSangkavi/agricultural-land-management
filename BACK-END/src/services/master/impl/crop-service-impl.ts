@@ -193,4 +193,32 @@ export class CropServiceImpl implements CropService {
     return cr;
   }
 
+    /**
+ * Find Crop name by Land ID
+ * @param landId - The Land ID to search for
+ * @returns CommonResponse with Crop name or an error message
+ */
+    async findCropNameByLandId(landId: number): Promise<CommonResponse> {
+      let cr = new CommonResponse();
+      try {
+        if (landId <= 0) {
+          return CommonResSupport.getValidationException("Invalid Land ID");
+        }
+  
+        const cropName = await this.cropDao.findCropNameByLandId(landId);
+  
+        if (cropName !== null) {
+          cr.setStatus(true);
+          cr.setExtra(cropName);
+        } else {
+          return CommonResSupport.getValidationException("Crop not found for the given Land ID");
+        }
+      } catch (error) {
+        cr.setStatus(false);
+        cr.setExtra(error);
+        ErrorHandlerSup.handleError(error);
+      }
+      return cr;
+    }
+
 }

@@ -11,4 +11,5 @@ export interface CropDao {
     findByName(cropName: String): Promise<CropEntity>;
     findCount(departmentDto: CropDto): Promise<number>;
     findCropIdByLandId(landId: number): Promise<number>;
+    findCropNameByLandId(landId: number): Promise<string | null>
 }
