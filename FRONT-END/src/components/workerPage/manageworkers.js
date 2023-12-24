@@ -32,7 +32,7 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
 
   useEffect(() => {
 
-    axios.post('http://localhost:8081/service/master/workerFindAll').then((response) => {
+    axios.post('http://localhost:8080/service/master/workerFindAll').then((response) => {
       setWorkers(response.data.extra);
       console.log("Workers : ", response.data.extra);
     });
@@ -75,7 +75,7 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
   };
 
   useEffect(() => {
-    axios.get(`http://localhost:8081/service/master/findByLandId?landId=${selectedLandId}`)
+    axios.get(`http://localhost:8080/service/master/findByLandId?landId=${selectedLandId}`)
       .then((response) => {
 
         if (response.data.extra.length === 0) {
@@ -101,7 +101,7 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
 
       console.log('worker id: ', workerId);
 
-      const paymentDetailsResponse = await axios.get(`http://localhost:8081/service/master/findByWorkerId?workerId=${workerId}`);
+      const paymentDetailsResponse = await axios.get(`http://localhost:8080/service/master/findByWorkerId?workerId=${workerId}`);
       console.log('payment detals: ', paymentDetailsResponse.data);
 
       const paymentDetails = paymentDetailsResponse.data.extra;

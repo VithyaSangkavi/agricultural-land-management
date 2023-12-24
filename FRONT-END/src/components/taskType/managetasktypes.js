@@ -57,12 +57,12 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
   
   useEffect(() => {
 
-    axios.post('http://localhost:8081/service/master/taskFindAll').then((response) => {
+    axios.post('http://localhost:8080/service/master/taskFindAll').then((response) => {
       setTasks(response.data.extra);
       console.log("Tasks : ", response.data.extra);
     });
 
-    axios.get('http://localhost:8081/service/master/landFindAll').then((response) => {
+    axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
       setLands(response.data.extra);
       console.log("Lands : ", response.data.extra);
     });
@@ -78,7 +78,7 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
 
   useEffect(() => {
     //get crop id by using landid
-    axios.get(`http://localhost:8081/service/master/cropFindByLandId/${selectedLandId}`)
+    axios.get(`http://localhost:8080/service/master/cropFindByLandId/${selectedLandId}`)
 
       .then((response) => {
         const cropIdLand = response.data.cropId.extra;
