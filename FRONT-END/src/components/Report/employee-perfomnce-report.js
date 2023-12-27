@@ -99,7 +99,10 @@ const EmployeePerfomnceReport = ({ dateRange: { fromDate, toDate }, selectedLand
             <div className='report-app-screen'>
                 <div className='info-card'>
                     {fromDate && toDate && (
-                        <p>Date Range : {fromDate} - {toDate}</p>
+                        <p>
+                            Date Range :
+                            {fromDate === '1970-01-01' && toDate === '2100-12-31' ? ' all' : `${fromDate} - ${toDate}`}
+                        </p>
                     )}
                 </div>
                 <h2>Employee Perfomnce Report</h2>

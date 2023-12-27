@@ -167,3 +167,11 @@
   font-size: medium;
   font: bold;
 }
+
+.date-range-picker .rdrDayNumber{
+  color: black !important;
+}
+
+.date-range-picker .rdrSelected span{
+  color: black !important;
+}
