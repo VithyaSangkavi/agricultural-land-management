@@ -28,6 +28,10 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
   const [landNames, setLandNames] = useState([]);
   const [landName, setLandName] = useState([]);
 
+  const [isReqPagination] = useState(true);
+  const [maxResult, setMaxResult] = useState(5);
+  const [startIndex, setStartIndex] = useState(0);
+
   const history = useHistory();
 
   useEffect(() => {
@@ -55,7 +59,7 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
     submitSets(submitCollection.manageland, false).then((res) => {
       setLandNames(res.extra);
     });
-  
+
     if (selectedLandId) {
       submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true)
         .then((res) => {
@@ -75,7 +79,13 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
   };
 
   useEffect(() => {
-    axios.get(`http://localhost:8081/service/master/findByLandId?landId=${selectedLandId}`)
+    const getWorker = {
+      landId: parseInt(selectedLandId),
+      isReqPagination,
+      maxResult,
+      startIndex
+    }
+    axios.post(`http://localhost:8081/service/master/findWorkByLandId`, getWorker)
       .then((response) => {
 
         if (response.data.extra.length === 0) {

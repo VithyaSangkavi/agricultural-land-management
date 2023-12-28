@@ -62,7 +62,7 @@ router.post("/workerUpdate", workerController.update);
 router.post("/workerDelete", workerController.delete);
 router.post("/workerFindAll", workerController.findAll);
 router.get("/workerFindById", workerController.findById);
-router.get('/findByLandId', workerController.findByLandId);
+router.post('/findWorkByLandId', workerController.findWorkByLandId);
 router.post('/findWorkerIdByName', workerController.findWorkerIdByName);
 
 
