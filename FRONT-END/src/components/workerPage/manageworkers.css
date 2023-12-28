@@ -183,3 +183,11 @@
   background-color: #0e4f20;
   color: white;
 }
+
+.load-more-button{
+  margin-left: 35%;
+  margin-right: auto;
+  border: none;
+  padding: 5px;
+  border-radius: 5px;
+}
