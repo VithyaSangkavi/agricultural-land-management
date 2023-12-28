@@ -92,6 +92,19 @@ export class TaskExpenseDaoImpl implements TaskExpenseDao {
   
     return taskExpenses;
   }
+
+  async getByTaskAssignedId(taskExpenseDto: TaskExpenseDto): Promise<TaskExpenseEntity[]> {
+    const taskExpenseRepo = getConnection().getRepository(TaskExpenseEntity);
+  
+    const query = taskExpenseRepo.createQueryBuilder("task-expense")
+      .innerJoin('task-expense.expense', 'expense')
+      .where('task-expense.taskAssigned = :taskAssignedId', { taskAssignedId: taskExpenseDto.getTaskAssignedId() })
+      .select(['task-expense.id AS id', 'task-expense.value AS value', 'expense.id AS expenseId', 'expense.expenseType AS expenseType'])
+  
+    const taskExpenses = await query.getRawMany();
+  
+    return taskExpenses;
+  }
   
 
   async prepareTaskExpenseModel(taskExpenseModel: TaskExpenseEntity, taskExpenseDto: TaskExpenseDto) {
