@@ -7,7 +7,7 @@ import Footer from '../footer/footer';
 import { FaGlobeAmericas, FaMapMarker } from 'react-icons/fa';
 import { Dropdown } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { FaFilter, FaUndo } from 'react-icons/fa';
+import { FaFilter, FaUndo, FaCalendarAlt } from 'react-icons/fa';
 import EmployeeAttendanceReport from './employee-attendance-report';
 import MonthlyCropReport from './monthly-crop-report';
 import CostYieldReport from './other-cost-yield-report';
@@ -22,8 +22,8 @@ import { alertService } from '../../_services/alert.service';
 import { Col, Form } from 'react-bootstrap';
 import { MdArrowBackIos } from "react-icons/md";
 import { DateRange } from 'react-date-range';
-import 'react-date-range/dist/styles.css'; // main style file
-import 'react-date-range/dist/theme/default.css'; // theme css file
+import 'react-date-range/dist/styles.css';
+import 'react-date-range/dist/theme/default.css';
 
 function Report({ setSelectedLandId, selectedLandId }) {
     const [t, i18n] = useTranslation();
@@ -50,6 +50,7 @@ function Report({ setSelectedLandId, selectedLandId }) {
     const [showCostBreakdown, setCostBreakdown] = useState(false);
     const [showSummary, setSummary] = useState(false);
     const [category, setSelectedCategory] = useState('');
+
     const extraValue = 'All Lands';
 
     const [dateRange, setDateRange] = useState([
@@ -111,6 +112,7 @@ function Report({ setSelectedLandId, selectedLandId }) {
         } else {
             setSummary(false);
         }
+
     };
 
     const handleLandChange = (event) => {
@@ -287,7 +289,7 @@ function Report({ setSelectedLandId, selectedLandId }) {
                 value={selectedReport}
                 onChange={handleReportChange}
             >
-                <option value="">{t('reportname')}</option>
+                <option value="Empty">{t('reportname')}</option>
                 <option value="Summary">{t('summary')}</option>
                 <option value="Employee Perfomance">{t('employeeperformance')}</option>
                 <option value="Cost Breakdown">{t('costbreakdown')}</option>
@@ -316,9 +318,12 @@ function Report({ setSelectedLandId, selectedLandId }) {
                                 </>
                             ) : (
                                 <>
-                                    <label className='custom-label' onClick={handleLabelClick}>
+                                    <label className='custom-label'>
                                         {t('daterange')} :
                                     </label>
+                                    <FaCalendarAlt className='calendar-icon' onClick={handleLabelClick} />
+
+
                                     <div className='date-range-picker'>
                                         {showPicker && (
                                             <DateRange
@@ -356,7 +361,7 @@ function Report({ setSelectedLandId, selectedLandId }) {
                                 </select>
                             </div>
                         )}
-                        
+
                         {selectedReport === 'Summary' ? (
                             <div>
                                 <select className='custom-select'
@@ -370,7 +375,6 @@ function Report({ setSelectedLandId, selectedLandId }) {
                             </div>
                         ) : null}
                         <div className='reset-filter'>
-                            <FaUndo />
                             <button className='reset-filter-button' onClick={handleResetFilters}>{t('resetfilters')}</button>
                         </div>
                     </div>
@@ -384,7 +388,7 @@ function Report({ setSelectedLandId, selectedLandId }) {
             {showEmployeePerfomnce && <EmployeePerfomnce dateRange={formatDate(dateRange)} selectedLand={selectedLandId} />}
             {showCostBreakdown && <CostBreakdownReport selectedLand={selectedLandId} dateRange={formatDate(dateRange)} />}
             {showSummary && <SummaryReport selectedLand={selectedLandId} category={category} />}
-            < br />
+            < br /> <br/> <br/>
             <Footer />
         </div >
     );

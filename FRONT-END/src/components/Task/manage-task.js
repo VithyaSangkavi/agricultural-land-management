@@ -529,16 +529,15 @@ const ManageTask = ({ selectedLandId }) => {
                         <button className='add-small' onClick={handleAddSelectedWorker}>{t('add')}</button>
                     </div>
                     {selectedWorkersList.length > 0 && (
-                        <div>
+                        <div className='worker-container'>
                             {selectedWorkersList.map((worker, index) => (
-                                <div key={index} className="worker-container">
+                                <div key={index} className='line'>
                                     <div className='line'>
                                         <p>{worker}</p>
 
-                                        <button onClick={() => removeWorker(index)} className="delete-button">
+                                        <button onClick={() => removeWorker(index)}>
                                             <FontAwesomeIcon icon={faTrashAlt} />
                                         </button>
-
                                     </div>
                                     {taskName === 'Pluck' && (
                                         <div className="kg-input-container">

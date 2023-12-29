@@ -15,7 +15,7 @@ import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 import SearchComponent from '../search/search';
 import { alertService } from '../../_services/alert.service';
-
+import { IoIosArrowDown } from "react-icons/io";
 
 function ManageWorkers({ setSelectedLandId, selectedLandId }) {
 
@@ -29,7 +29,7 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
   const [landName, setLandName] = useState([]);
 
   const [isReqPagination] = useState(true);
-  const [maxResult, setMaxResult] = useState(5);
+  const [maxResult, setMaxResult] = useState(4);
   const [startIndex, setStartIndex] = useState(0);
 
   const history = useHistory();
@@ -39,6 +39,11 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
     axios.post('http://localhost:8081/service/master/workerFindAll').then((response) => {
       setWorkers(response.data.extra);
       console.log("Workers : ", response.data.extra);
+
+      if (response.data.extra.length === 0) {
+        alertService.info('No Data Found !');
+      }
+  
     });
 
   }, []);
@@ -85,6 +90,7 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
       maxResult,
       startIndex
     }
+    
     axios.post(`http://localhost:8081/service/master/findWorkByLandId`, getWorker)
       .then((response) => {
 
@@ -103,7 +109,7 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
       .catch((error) => {
         console.error("Error fetching workers for the selected land:", error);
       });
-  }, [selectedLandId]);
+  }, [selectedLandId, startIndex]);
 
   const handleWorkerCardClick = async (worker) => {
     try {
@@ -129,6 +135,12 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
   const goBack = () => {
     history.goBack();
   };
+
+  const handleLoadMore = () => {
+    setStartIndex(startIndex + maxResult);
+  };
+
+  const hasMoreWorkers = filteredWorkersForSelectedLand.length < workers.length;
 
   return (
     <div className="worker-app-screen">
@@ -205,7 +217,6 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
           </div>
         </div>
       </div>
-
       <div className="worker-list">
 
         {selectedLandId && selectedLandId !== ""
@@ -225,6 +236,16 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
         }
       </div>
 
+      <br />
+
+      {filteredWorkersForSelectedLand.length >= 4 && (
+        <div>
+          <button  className="load-more-button" onClick={handleLoadMore}>Load More <IoIosArrowDown /></button>
+        </div>
+      )}
+
+      <br />
+      <br />
       <br />
       <div className='footer-alignment'>
         <Footer />

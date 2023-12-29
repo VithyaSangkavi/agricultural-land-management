@@ -62,7 +62,7 @@ const ManageLand = () => {
 
                     <div className="filter-container d-flex align-items-center">
                         <div className="land-filter">
-                        
+
                         </div>
 
                         <div className="language-filter">
@@ -110,10 +110,8 @@ const ManageLand = () => {
             <div className='land-list'>
                 {filteredData.map((item) => (
                     <div key={item.id} className="land-card">
-                        <Card.Body>
-                            <h3>{item.name}</h3>
-                            <p>{t('city')}: {item.city}</p>
-                        </Card.Body>
+                        <h3>{item.name}</h3>
+                        <p>{t('city')}: {item.city}</p>
                     </div>
                 ))}
             </div>

@@ -54,23 +54,26 @@
 
 .filtering-card {
   padding: 0px 16px 16px 16px;
-  margin-top: 0px;
+  margin: 0px 10px 0px 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
 }
 
-.reset-filter {
+/* .reset-filter {
   background-color: #0e4f20;
   color: white;
   padding: 5px;
   width: 35%;
   margin-top: 10px;
   font-size: small;
-}
+} */
 
 .reset-filter-button {
   background-color: #0e4f20;
   color: white;
   font-size: small;
   border: none;
+  padding: 5px 10px 5px 10px;
+  margin-top: 10px;
 }
 
 .report-app-screen {
@@ -174,4 +177,9 @@
 
 .date-range-picker .rdrSelected span{
   color: black !important;
+}
+
+.calendar-icon{
+  color: #888282;
+  margin-left: 5px;
 }

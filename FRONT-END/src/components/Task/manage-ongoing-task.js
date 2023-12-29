@@ -307,7 +307,7 @@ const ManageOngoingTask = ({selectedLandId}) => {
                                         .then((response) => {
                                             console.log('Work assigned added successfully:', response.data);
                                             alertService.success('Worker added successfully');
-                                            // window.location.reload();
+                                            window.location.reload();
                                         })
                                         .catch((error) => {
                                             console.error('Error adding work assigned:', error);
@@ -333,7 +333,7 @@ const ManageOngoingTask = ({selectedLandId}) => {
                                     console.log('Work assigned added successfully:', response.data);
                                     alertService.success('Worker added successfully');
                                     AddedWorkerList();
-                                    // window.location.reload();
+                                    window.location.reload();
                                 })
                                 .catch((error) => {
                                     console.error('Error adding work assigned:', error);
@@ -500,10 +500,7 @@ const ManageOngoingTask = ({selectedLandId}) => {
                             </Dropdown>
                         </div>
                     </div>
-
                 </div>
-
-
             </div>
 
             <div className='task-heading'>
