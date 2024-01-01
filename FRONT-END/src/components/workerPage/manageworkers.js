@@ -15,7 +15,7 @@ import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 import SearchComponent from '../search/search';
 import { alertService } from '../../_services/alert.service';
-import { IoIosArrowDown } from "react-icons/io";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 
 function ManageWorkers({ setSelectedLandId, selectedLandId }) {
 
@@ -36,14 +36,12 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
 
   useEffect(() => {
 
-    axios.post('http://localhost:8081/service/master/workerFindAll').then((response) => {
-      setWorkers(response.data.extra);
-      console.log("Workers : ", response.data.extra);
+    submitSets(submitCollection.manageworker, false).then((res) => {
+      setWorkers(res.extra);
 
-      if (response.data.extra.length === 0) {
+      if (res.extra.length === 0) {
         alertService.info('No Data Found !');
       }
-  
     });
 
   }, []);
@@ -90,42 +88,36 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
       maxResult,
       startIndex
     }
-    
-    axios.post(`http://localhost:8081/service/master/findWorkByLandId`, getWorker)
-      .then((response) => {
 
-        if (response.data.extra.length === 0) {
-          alertService.info('No Data Found !');
+    submitSets(submitCollection.findworkerbyland, getWorker, false)
+      .then(res => {
+        if (res.extra.length === 0) {
+          alertService.info('No Data Found !')
         }
 
-        console.log("Workers for selected land:", response.data.extra);
-
-        if (Array.isArray(response.data.extra)) {
-          setFilteredWorkersForSelectedLand(response.data.extra);
+        if (Array.isArray(res.extra)) {
+          setFilteredWorkersForSelectedLand(res.extra);
         } else {
           setFilteredWorkersForSelectedLand([]);
         }
       })
-      .catch((error) => {
-        console.error("Error fetching workers for the selected land:", error);
-      });
+
   }, [selectedLandId, startIndex]);
 
   const handleWorkerCardClick = async (worker) => {
-    try {
-      const workerId = worker.id;
+    const workerId = worker.id;
 
-      console.log('worker id: ', workerId);
+    console.log('worker id: ', workerId);
 
-      const paymentDetailsResponse = await axios.get(`http://localhost:8081/service/master/findByWorkerId?workerId=${workerId}`);
-      console.log('payment detals: ', paymentDetailsResponse.data);
+    submitSets(submitCollection.findpaymentbyworkerid, "?workerId=" + workerId, true)
+      .then((res) => {
+        const paymentDetails = res.extra;
 
-      const paymentDetails = paymentDetailsResponse.data.extra;
-
-      history.push('/addWorker', { basicDetails: worker, paymentDetails, isEditing: true });
-    } catch (error) {
-      console.error('Error fetching worker/payment details:', error);
-    }
+        history.push('/addWorker', { basicDetails: worker, paymentDetails, isEditing: true });
+      })
+      .catch((error) => {
+        console.error('Error fetching worker/payment details:', error);
+      });
   };
 
   const handleLanguageChange = (lang) => {
@@ -140,7 +132,11 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
     setStartIndex(startIndex + maxResult);
   };
 
-  const hasMoreWorkers = filteredWorkersForSelectedLand.length < workers.length;
+  const handleBack = () => {
+    if (startIndex > 0) {
+      setStartIndex(startIndex - maxResult);
+    }
+  };
 
   return (
     <div className="worker-app-screen">
@@ -238,11 +234,33 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
 
       <br />
 
-      {filteredWorkersForSelectedLand.length >= 4 && (
-        <div>
-          <button  className="load-more-button" onClick={handleLoadMore}>Load More <IoIosArrowDown /></button>
-        </div>
-      )}
+      <div>
+        {filteredWorkersForSelectedLand.length >= 4 ? (
+          <button className="load-more-button" onClick={handleLoadMore}>
+            Load More <IoIosArrowDown />
+          </button>
+        ) : (
+          filteredWorkersForSelectedLand.length > 0 && filteredWorkersForSelectedLand.length < 4 && startIndex > 0 && (
+            <button className="load-more-button" onClick={handleBack}>
+              See Previous <IoIosArrowUp />
+            </button>
+          )
+        )}
+      </div>
+
+      <div>
+        {filteredWorkersForSelectedLand.length >= 4 ? (
+          <button className='load-more-button' onClick={handleLoadMore}>
+            Load More
+          </button>
+        ) : (
+          filteredWorkersForSelectedLand > 0 && filteredWorkersForSelectedLand.length < 4 && startIndex > 0 && (
+            <button className='load-more-button' onClick={handleBack}>
+              See Previous
+            </button>
+          )
+        )}
+      </div>
 
       <br />
       <br />

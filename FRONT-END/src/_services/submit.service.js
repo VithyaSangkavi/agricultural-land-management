@@ -27,6 +27,8 @@ const submitCollection = {
     saveexpense: { ptype: "POST", url: basePath+"/service/master/expenseSave", queryparam: false, data:true, auth: true },
     manageexpense: { ptype: "GET", url: basePath+"/service/master/expenseFindAll", queryparam: false, data:true, auth: true },
     savetasktype: { ptype: "POST", url: basePath+"/service/master/taskSave", queryparam: false, data:true, auth: true },
+    findworkerbyland: { ptype: "POST", url: basePath+"/service/master/findWorkByLandId", queryparam: false, data:true, auth: true },
+    findpaymentbyworkerid: { ptype: "GET", url: basePath+"/service/master/findByWorkerId", queryparam: true, data:true, auth: true },
 }
 
 const autoClose = true;
