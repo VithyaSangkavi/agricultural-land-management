@@ -71,11 +71,15 @@ export class TaskAssignedDaoImpl implements TaskAssignedDao {
     return taskAssignedModel;
   }
   
-  async findById(taskId: number): Promise<TaskAssignedEntity> {
+  async findById(taskAssignedId: number): Promise<TaskAssignedEntity> {
     let taskAssignedRepo = getConnection().getRepository(TaskAssignedEntity);
-    let taskAssignedModel = await taskAssignedRepo.findOne(taskId);
+    let taskAssignedModel = await taskAssignedRepo.findOne(taskAssignedId);
+    if (!taskAssignedModel) {
+      throw new Error("TaskAssignedEntity not found"); 
+    }
     return taskAssignedModel;
   }
+  
 
   async findByName(status: Status): Promise<TaskAssignedEntity> {
     let taskAssignedRepo = getConnection().getRepository(TaskAssignedEntity);

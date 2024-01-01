@@ -299,14 +299,11 @@
 
 .view-task-expenses{
   padding: 8px 16px;
-  background-color: #0e4f20;
-  color: #fff;
+  color: #949191;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s;
-  width: 90%;
-  margin-left: 15px;
+  margin-left: 80%;
 }
 
 .total-display-card{
