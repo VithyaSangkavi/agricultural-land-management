@@ -93,8 +93,8 @@ export const TRANSLATIONS_EN = {
 
     //manage task
     managetask: 'Manage Task',
-    task: 'task',
-    from: 'from',
+    task: 'Task',
+    from: 'From',
     tasks: 'Tasks',
     dateongoing: 'Date - Ongoing',
     selectaworker: 'Select a worker',

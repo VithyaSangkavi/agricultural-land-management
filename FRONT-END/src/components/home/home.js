@@ -101,34 +101,6 @@ function Home({ setSelectedLandId, selectedLandId }) {
         }
     }, [submitCollection.manageland, selectedLandId]);
 
-    // const handleLandChange = (event) => {
-    //     const newSelectedLandId = event.target.value;
-    //     console.log(newSelectedLandId);
-    //     setSelectedLandId(newSelectedLandId);
-
-    //     axios.post(`http://localhost:8080/service/master/findLandIdByName?name=${selectedLandId}`)
-    //         .then((response) => {
-    //             const landIdTask = response.data.extra;
-    //             const taskLand = JSON.stringify(landIdTask);
-    //             const landData = JSON.parse(taskLand);
-    //             const landId = landData.landId;
-    //             setLandId(landId)
-    //             console.log('Selected Land Id :', landId);
-    //             localStorage.setItem('SelectedLandId', landId);
-
-    //             console.log("selected land : ", selectedLandId)
-    //             console.log("landId : ", landId)
-    //             axios.get(`http://localhost:8080/service/master/ongoing-tasks-with-names?landId=${selectedLandId}`).then((response) => {
-    //                 setOngoingTasks(response.data.extra);
-    //                 console.log("Ongoing tasks : ", response.data.extra);
-
-    //             });
-    //         })
-    //         .catch((error) => {
-    //             console.error("Error fetching data:", error);
-    //         });
-    // }
-
 
     const handleChange = (event) => {
         setQuery(event.target.value);

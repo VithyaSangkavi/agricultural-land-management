@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import Footer from '../footer/footer';
 import { useHistory } from "react-router-dom";
 import DatePicker from 'react-datepicker';
 import './manage-task.css'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
@@ -17,6 +16,8 @@ import { MdArrowBackIos, MdViewAgenda, MdClose } from "react-icons/md";
 import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 import { useLocation } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 
 
 const ManageTask = ({ selectedLandId }) => {
@@ -44,12 +45,19 @@ const ManageTask = ({ selectedLandId }) => {
     const [formattedDates, setFormattedDates] = useState([]);
     const [taskExpenses, setTaskExpenses] = useState([]);
     const [showExpenses, setShowExpenses] = useState(false);
-    const [totalAmount, setTotalAmount] = useState(0); 
+    const [totalAmount, setTotalAmount] = useState(0);
+    const datePickerRef = useRef(null);
 
     const location = useLocation();
     const taskAssignedId = location.state?.taskAssignedId || null;
 
     console.log("task id : ", taskAssignedId)
+
+    const handleIconClick = () => {
+        if (datePickerRef.current) {
+            datePickerRef.current.openCalendar();
+        }
+    };
 
     const handleShedule = (value) => {
 
@@ -473,10 +481,14 @@ const ManageTask = ({ selectedLandId }) => {
             </div>
 
             <div className='task-heading'>
-                <p> {taskName} {t('task')} - </p>
-                <p> {t('from')} - {startDate} </p>
+                <p> {taskName} {t('task')}  </p>
+                <p> {t('from')} - {getFormattedDate(startDate)} </p>
             </div>
+
+            <br />
             <div>
+
+                {/* <button className="add-button" onClick={handleIconClick}>Open Calendar</button> */}
                 <div>
                     <MultiDatePicker
                         className="rmdp-prime"
@@ -486,11 +498,14 @@ const ManageTask = ({ selectedLandId }) => {
                         plugins={[
                             <DatePanel />
                         ]}
+                        ref={datePickerRef}
                     />
                 </div>
-                <div>
-                    <button onClick={handleShedule}>Shedule</button>
-                </div>
+
+                <br />
+                <button className="add-button" onClick={handleShedule}>
+                    Shedule
+                </button>
             </div>
             <br />
             <div className="toggle-container">
@@ -565,56 +580,56 @@ const ManageTask = ({ selectedLandId }) => {
 
             {/* Finance Toggled View */}
             {selectedView === 'finance' && (
-                  <>
-                  <div>
-                      <select
-                          value={selectedExpenseType}
-                          onChange={(e) => setSelectedExpenseType(e.target.value)}
-                          className='dropdown-input'
-                      >
-                          <option value="">{t('expense')}</option>
-                          {expenseTypes.map((expenseType) => (
-                              <option key={expenseType} value={expenseType}>
-                                  {expenseType}
-                              </option>
-                          ))}
-                      </select><br />
-                      <input
-                          type="text"
-                          placeholder={t('amount')}
-                          value={value}
-                          onChange={(e) => setValue(e.target.value)}
-                          className="dropdown-input"
-                      />
-                      <button className="add-button" onClick={handleAddTaskExpense}>{t('addtaskexpense')}</button>
-                  </div>
-                  <br />
-                  <div>
-                      {showExpenses ? (
-                          <button onClick={() => setShowExpenses(false)} className='view-task-expenses'>
-                              <MdClose /> {t('closetaskexpenses')}
-                          </button>
-                      ) : (
-                          <button onClick={() => setShowExpenses(true)} className='view-task-expenses'>
-                              <MdViewAgenda /> {t('viewtaskexpenses')}
-                          </button>
-                      )}
+                <>
+                    <div>
+                        <select
+                            value={selectedExpenseType}
+                            onChange={(e) => setSelectedExpenseType(e.target.value)}
+                            className='dropdown-input'
+                        >
+                            <option value="">{t('expense')}</option>
+                            {expenseTypes.map((expenseType) => (
+                                <option key={expenseType} value={expenseType}>
+                                    {expenseType}
+                                </option>
+                            ))}
+                        </select><br />
+                        <input
+                            type="text"
+                            placeholder={t('amount')}
+                            value={value}
+                            onChange={(e) => setValue(e.target.value)}
+                            className="dropdown-input"
+                        />
+                        <button className="add-button" onClick={handleAddTaskExpense}>{t('addtaskexpense')}</button>
+                    </div>
+                    <br />
+                    <div>
+                        {showExpenses ? (
+                            <button onClick={() => setShowExpenses(false)} className='view-task-expenses'>
+                                <MdClose /> {t('closetaskexpenses')}
+                            </button>
+                        ) : (
+                            <button onClick={() => setShowExpenses(true)} className='view-task-expenses'>
+                                <MdViewAgenda /> {t('viewtaskexpenses')}
+                            </button>
+                        )}
 
-                      {/* Display task expenses when showExpenses is true */}
-                      {showExpenses && (
-                          <div>
-                              {taskExpenses.map((taskExpense) => (
-                                  <div key={taskExpense.id} className="task-expense-card">
-                                      <h3>{t('expensetype')} : {taskExpense.expenseType}</h3>
-                                      <p>{t('amount')} : {taskExpense.value}</p>
-                                  </div>
-                              ))}
-                              <p className='total-display-card'>{t('totaltaskexpenses')}: {t('rs')}{totalAmount}.00</p>
-                          </div>
-                      )}
+                        {/* Display task expenses when showExpenses is true */}
+                        {showExpenses && (
+                            <div>
+                                {taskExpenses.map((taskExpense) => (
+                                    <div key={taskExpense.id} className="task-expense-card">
+                                        <h3>{t('expensetype')} : {taskExpense.expenseType}</h3>
+                                        <p>{t('amount')} : {taskExpense.value}</p>
+                                    </div>
+                                ))}
+                                <p className='total-display-card'>{t('totaltaskexpenses')}: {t('rs')}{totalAmount}.00</p>
+                            </div>
+                        )}
 
-                  </div>
-              </>
+                    </div>
+                </>
             )}
             <br />
             <div className='footer-alignment'>

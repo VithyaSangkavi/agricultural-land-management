@@ -320,7 +320,7 @@ function Report({ setSelectedLandId, selectedLandId }) {
                                     // value={selectedReportCate}
                                     onChange={handleCateChange}
                                 >
-                                    <option value="">Monthly</option>
+                                    <option value="0">Monthly</option>
                                     <option value="1">Weekly</option>
                                     <option value="2">Daily</option>
                                 </select>

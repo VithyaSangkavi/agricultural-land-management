@@ -351,6 +351,37 @@ const ManageTask = ({ selectedLandId }) => {
             });
     };
 
+    const getFormattedDate = (dateString) => {
+        const date = new Date(dateString);
+        const day = date.getDate();
+        const options = {
+            year: 'numeric',
+            month: 'long',
+            weekday: 'long',
+        };
+        const formattedDate = date.toLocaleDateString('en-US', options);
+        const daySuffix = getDaySuffix(day);
+
+        return `${day}${daySuffix} ${formattedDate}`;
+    };
+
+    const getDaySuffix = (day) => {
+        if (day >= 11 && day <= 13) {
+            return 'th';
+        }
+        const lastDigit = day % 10;
+        switch (lastDigit) {
+            case 1:
+                return 'st';
+            case 2:
+                return 'nd';
+            case 3:
+                return 'rd';
+            default:
+                return 'th';
+        }
+    };
+
 
     return (
         <div className="manage-task-app-screen">
@@ -372,8 +403,8 @@ const ManageTask = ({ selectedLandId }) => {
             </div>
 
             <div className='task-heading'>
-                <p> {taskName} {t('task')} - </p>
-                <p> {t('from')} - {startDate} </p>
+                <p> {taskName} {t('task')}  </p>
+                <p> {t('from')} - {getFormattedDate(startDate)} </p>
             </div>
             <br />
             <div className="toggle-container">
@@ -409,6 +440,7 @@ const ManageTask = ({ selectedLandId }) => {
                                             setSelectedWorker(newSelectedWorkers);
                                         }}
                                         className='dropdown-input'
+                                        style={{ height: '40px' }}
                                     >
                                         <option value="">{t('selectaworker')}</option>
                                         {workerNames.map((workerName, index) => (
@@ -427,26 +459,33 @@ const ManageTask = ({ selectedLandId }) => {
                                                 newQuantityInputs[dateIndex] = e.target.value;
                                                 setQuantityInputs(newQuantityInputs);
                                             }}
-                                            placeholder={`Enter quantity for ${selectedWorker[dateIndex]}`}
+                                            placeholder={`Qty.`}
                                             className='quantity-input'
+                                            style={{ width: '100px', height: '40px' }}
                                         />
                                     )}
-                                    <button className='add-small' onClick={() => handleAddSelectedWorker(dateIndex)}>{t('add')}</button>
+                                    <button
+                                        className='add-small'
+                                        style={{ height: '40px' }}
+                                        onClick={() => handleAddSelectedWorker(dateIndex)}>{t('add')}
+                                    </button>
 
                                 </div>
+
 
                                 {addedWorkersList.map((addedData, index) => {
                                     if (taskName === 'Pluck') {
                                         if (addedData.date === currentDate[dateIndex]) {
                                             return (
                                                 <div key={index}>
-                                                    <p>{addedData.worker} : {addedData.quantity}kg
-                                                        <span
-                                                            onClick={() => deleteWorkAssigned(addedData.id)}
-                                                        >
-                                                            <Trash>delete</Trash>
-                                                        </span>
+                                                    
+                                                    <p style={{ position: 'relative' }}>
+                                                        <span>{addedData.worker} - {addedData.quantity}kg</span>
+                                                        <div className="remove-button-container" style={{ position: 'absolute', top: 0, right: 0 }}>
+                                                            <Trash onClick={() => deleteWorkAssigned(addedData.id)} />
+                                                        </div>
                                                     </p>
+
                                                 </div>
                                             );
                                         }

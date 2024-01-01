@@ -136,5 +136,6 @@ router.get('/cost-breakdown-line', reportController.getCostBreakdownLineReport);
 router.get('/cost-breakdown-pie', reportController.getgetCostBreakdownPieReport);
 //daily weekly monthly summary report
 router.get('/summary', reportController.getSummaryReport);
+router.get('/summary-weekly', reportController.getWeeklySummaryReport);
 
 module.exports = router;

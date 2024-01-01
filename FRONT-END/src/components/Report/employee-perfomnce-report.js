@@ -122,19 +122,22 @@ const EmployeePerfomnceReport = ({ dateRange: { fromDate, toDate }, selectedLand
                     </tbody>
                 </table>
             </div>
-            <br />
+            
             <div className='report-app-screen'>
                 <div className='attendance-chart'>
-                    <h2>Employee Perfomnce Chart</h2>
                     {perfomnceData.length > 0 ? (
-                        <Line data={chartData} options={chartOptions} />
+                        <>
+                            <h2>Employee Perfomnce Chart</h2> <br />
+
+                            <Line data={chartData} options={chartOptions} />
+                        </>
                     ) : (
                         <p className='reportnotfound'>
                             Data Not Found !
                         </p>
                     )}
                 </div>
-            </div>
+            </div >
             <br />
         </>
     );

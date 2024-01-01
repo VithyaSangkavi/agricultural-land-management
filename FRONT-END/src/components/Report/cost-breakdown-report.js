@@ -17,7 +17,7 @@ const CostBreakdownReport = ({ dateRange: { fromDate }, selectedLand }) => {
 
     console.log("Cost-b-down fromDate: ", fromDate)
 
-    useEffect(() => {
+    useEffect((fromDate) => {
         const fetchCostBreakdownLineData = async () => {
             try {
 
@@ -57,7 +57,6 @@ const CostBreakdownReport = ({ dateRange: { fromDate }, selectedLand }) => {
                 console.error('Error fetching Cost Breakdown:', error);
             }
         };
-
 
         const fetchCostBreakdownPieData = async () => {
             try {
@@ -194,7 +193,7 @@ const CostBreakdownReport = ({ dateRange: { fromDate }, selectedLand }) => {
         <>
             <div className='report-app-screen'>
                 {fromDate ? (
-                    <h2>Cost Breakdown {yearMonth[0].yearMonth}</h2>
+                    <h2>Cost Breakdown {fromDate}</h2>
                 ) : (
                     <h2>Cost Breakdown Line Chart</h2>
                 )}
