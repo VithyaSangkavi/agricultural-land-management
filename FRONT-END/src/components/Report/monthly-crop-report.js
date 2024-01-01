@@ -112,7 +112,9 @@ const MonthlyCropReport = ({ dateRange, lotId, landId, selectedLot }) => {
             <div className='report-app-screen'>
                 <div className='info-card'>
                     {fromDate && toDate && (
-                        <p>{t('daterange')} : {fromDate} - {toDate}</p>
+                        <p>{t('daterange')} :
+                            {fromDate === '1970-01-01' && toDate === '2100-12-31' ? ' all' : `${fromDate} - ${toDate}`}
+                        </p>
                     )}
                     {lotId && (
                         <p>{t('selectedlot')} : {selectedLot}</p>

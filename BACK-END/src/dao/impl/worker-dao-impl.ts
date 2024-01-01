@@ -105,15 +105,33 @@ export class WorkerDaoImpl implements WorkerDao {
     return workerModel;
   }
 
-  async findByLandId(landId: number): Promise<WorkerEntity[]> {
+  async findWorkerByLandId(workerDto: WorkerDto): Promise<WorkerEntity[]> {
     let workerRepo = getConnection().getRepository(WorkerEntity);
-    const workers = await workerRepo.find({
-      where: {
-        land: { id: landId }, 
-        workerStatus: WorkerStatus.Active,
-        status: Status.Online,
-      },
-    });
+
+    let workers = null;
+    console.log('workerDto: ', workerDto);
+    if(workerDto.isIsReqPagination()) {
+      workers = await workerRepo.find({
+        where: {
+          land: { id: workerDto.getLandId() }, 
+          workerStatus: WorkerStatus.Active,
+          status: Status.Online,
+        },
+        take: workerDto.getMaxResult(),
+        skip: workerDto.getStartIndex(),
+  
+      });
+    } else {
+      workers = await workerRepo.find({
+        where: {
+          land: { id: workerDto.getLandId() }, 
+          workerStatus: WorkerStatus.Active,
+          status: Status.Online,
+        }
+      });
+    }
+
+    
     return workers;
   }  
 
@@ -132,6 +150,18 @@ export class WorkerDaoImpl implements WorkerDao {
     }
   }
 
+  async findByLandId(landId: number): Promise<WorkerEntity[]> {
+    let workerRepo = getConnection().getRepository(WorkerEntity);
+    const workers = await workerRepo.find({
+      where: {
+        land: { id: landId }, 
+        workerStatus: WorkerStatus.Active,
+        status: Status.Online,
+      },
+    });
+    return workers;
+  }  
+  
   async prepareWorkerModel(workerModel: WorkerEntity, workerDto: WorkerDto) {
     workerModel.name = workerDto.getName();
     workerModel.dob = workerDto.getDob();
@@ -145,6 +175,7 @@ export class WorkerDaoImpl implements WorkerDao {
     workerModel.updatedDate = new Date();
     workerModel.status = Status.Online;
   }
+
   prepareSearchObject(workerDto: WorkerDto): any {
     let searchObject: any = {};
     if (workerDto.getName()) {

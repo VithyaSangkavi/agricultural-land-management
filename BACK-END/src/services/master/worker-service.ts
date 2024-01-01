@@ -8,4 +8,5 @@ export interface WorkerService {
   find(workerDto: WorkerDto): Promise<CommonResponse>;
   findById(workerId: number): Promise<CommonResponse>;
   findByLandId(landId: number): Promise<CommonResponse>;
+  getWorkerByLandId(workerDto: WorkerDto): Promise<CommonResponse>;
 }

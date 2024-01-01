@@ -62,9 +62,9 @@ router.post("/workerUpdate", workerController.update);
 router.post("/workerDelete", workerController.delete);
 router.post("/workerFindAll", workerController.findAll);
 router.get("/workerFindById", workerController.findById);
-router.get('/findByLandId', workerController.findByLandId);
+router.post('/findWorkByLandId', workerController.findWorkByLandId);
 router.post('/findWorkerIdByName', workerController.findWorkerIdByName);
-
+router.get('/findByLandId', workerController.findByLandId);
 
 // task-type routes
 router.post("/taskSave", taskTypeController.save);
@@ -88,7 +88,7 @@ router.post("/task-assigned-save", taskAssignedController.save);
 // router.post("/taskDelete", taskTypeController.delete);
 router.post("/taskAssignedFindAll", taskAssignedController.findAll);
 router.get('/task-assigned', taskAssignedController.findByTaskId);
-router.get("/taskFindById", taskTypeController.findById);
+router.get("/taskAssignedFindById", taskAssignedController.findById);
 router.get("/ongoing-tasks-with-names", taskAssignedController.getOngoingTasksWithTaskNames);
 router.get("/completed-tasks-with-names", taskAssignedController.getCompletedTasksWithTaskNames);
 router.put("/updateEndDate/:taskAssignedId", taskAssignedController.updateEndDate);

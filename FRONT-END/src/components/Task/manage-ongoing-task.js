@@ -139,6 +139,7 @@ const ManageOngoingTask = ({selectedLandId}) => {
     console.log("ongoing task : ", taskAssignedid)
 
     useEffect(() => {
+        console.log('USE EFFECT TASK ID: ', taskId);
         fetchTaskAssignedId();
         fetchTaskName();
         fetchWorkerNames();
@@ -164,17 +165,26 @@ const ManageOngoingTask = ({selectedLandId}) => {
                 const isCardExist = response.data.extra.cardDetails.some(
                     (card) => getFormattedDate(card.date) === today
                 );
+                
+                axios.get(`http://localhost:8081/service/master/taskAssignedFindById?taskAssignedId=${taskAssignedid}`)
+                .then((taskResponse) => {
+                    const schedule = taskResponse.data.extra.schedule;
+                    console.log('SCHEDULE ::::::: ', schedule)
+                    if (schedule !== 'scheduled' && !isCardExist) {
+                        // If the task is not scheduled and the card for today doesn't exist, generate a new card
+                        const newEmptyCard = {
+                            newTaskCardId,
+                            date: new Date(),
+                            cardStatus: 'ongoing',
+                            workerDetails: [],
+                        };
 
-                if (!isCardExist) {
-                    const newEmptyCard = {
-                        newTaskCardId,
-                        date: new Date(),
-                        cardStatus: 'ongoing',
-                        workerDetails: [],
-                    };
-
-                    setTaskDetails((prevTaskDetails) => [...prevTaskDetails, newEmptyCard]);
-                }
+                        setTaskDetails((prevTaskDetails) => [...prevTaskDetails, newEmptyCard]);
+                    }
+                })
+                .catch((taskError) => {
+                    console.error('Error fetching task schedule:', taskError);
+                });
             })
             .catch((error) => {
                 console.error('Error fetching task details:', error);
@@ -307,7 +317,7 @@ const ManageOngoingTask = ({selectedLandId}) => {
                                         .then((response) => {
                                             console.log('Work assigned added successfully:', response.data);
                                             alertService.success('Worker added successfully');
-                                            // window.location.reload();
+                                            window.location.reload();
                                         })
                                         .catch((error) => {
                                             console.error('Error adding work assigned:', error);
@@ -333,7 +343,7 @@ const ManageOngoingTask = ({selectedLandId}) => {
                                     console.log('Work assigned added successfully:', response.data);
                                     alertService.success('Worker added successfully');
                                     AddedWorkerList();
-                                    // window.location.reload();
+                                    window.location.reload();
                                 })
                                 .catch((error) => {
                                     console.error('Error adding work assigned:', error);
@@ -500,10 +510,7 @@ const ManageOngoingTask = ({selectedLandId}) => {
                             </Dropdown>
                         </div>
                     </div>
-
                 </div>
-
-
             </div>
 
             <div className='task-heading'>
@@ -711,11 +718,11 @@ const ManageOngoingTask = ({selectedLandId}) => {
                                 <div>
                                     {showExpenses ? (
                                         <button onClick={() => setShowExpenses(false)} className='view-task-expenses'>
-                                            <MdClose /> {t('closetaskexpenses')}
+                                            <MdClose /> 
                                         </button>
                                     ) : (
                                         <button onClick={() => setShowExpenses(true)} className='view-task-expenses'>
-                                            <MdViewAgenda /> {t('viewtaskexpenses')}
+                                            <MdViewAgenda /> 
                                         </button>
                                     )}
 

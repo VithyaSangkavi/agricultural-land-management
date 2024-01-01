@@ -161,21 +161,21 @@ export class TaskAssignedServiceImpl implements TaskAssignedService {
   async findById(taskAssignedId: number): Promise<CommonResponse> {
     let cr = new CommonResponse();
     try {
-      // find taskAssigned
       let taskAssigned = await this.taskAssignedDao.findById(taskAssignedId);
-
+  
       let taskAssignedDto = new TaskAssignedDto();
-      taskAssignedDto.filViaDbObject(taskAssigned);
-
+      taskAssignedDto.filViaRequest(taskAssigned);
+  
       cr.setStatus(true);
       cr.setExtra(taskAssignedDto);
     } catch (error) {
+      console.error(error); 
       cr.setStatus(false);
-      cr.setExtra(error);
-      ErrorHandlerSup.handleError(error);
+      cr.setExtra(error.message); 
     }
     return cr;
   }
+  
 
   async findByTaskId(taskId: number): Promise<CommonResponse> {
     const cr = new CommonResponse();

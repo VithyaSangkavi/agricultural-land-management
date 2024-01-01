@@ -28,7 +28,7 @@ function Home({ setSelectedLandId, selectedLandId }) {
     const [OngoingTasks, setOngoingTasks] = useState([]);
     const [landNames, setLandNames] = useState([]);
     const [landName, setLandName] = useState([]);
-
+    const [cropName, setCropName] = useState('');
 
     const history = useHistory();
 
@@ -64,9 +64,16 @@ function Home({ setSelectedLandId, selectedLandId }) {
             if (response.data.extra.length === 0) {
                 alertService.info('No Data Found !');
             }
-
-
         });
+
+        axios.get(`http://localhost:8081/service/master/cropNameFindByLandId/${selectedLandId}`)
+            .then((response) => {
+                setCropName(response.data.cropName.extra);
+                console.log('crop name: ', cropName);
+            })
+            .catch((error) => {
+                console.error('Error fetching task card id:', error);
+            });
 
     }, [selectedLandId]);
 
@@ -100,6 +107,34 @@ function Home({ setSelectedLandId, selectedLandId }) {
             setLandName("All Lands");
         }
     }, [submitCollection.manageland, selectedLandId]);
+
+    // const handleLandChange = (event) => {
+    //     const newSelectedLandId = event.target.value;
+    //     console.log(newSelectedLandId);
+    //     setSelectedLandId(newSelectedLandId);
+
+    //     axios.post(`http://localhost:8081/service/master/findLandIdByName?name=${selectedLandId}`)
+    //         .then((response) => {
+    //             const landIdTask = response.data.extra;
+    //             const taskLand = JSON.stringify(landIdTask);
+    //             const landData = JSON.parse(taskLand);
+    //             const landId = landData.landId;
+    //             setLandId(landId)
+    //             console.log('Selected Land Id :', landId);
+    //             localStorage.setItem('SelectedLandId', landId);
+
+    //             console.log("selected land : ", selectedLandId)
+    //             console.log("landId : ", landId)
+    //             axios.get(`http://localhost:8081/service/master/ongoing-tasks-with-names?landId=${selectedLandId}`).then((response) => {
+    //                 setOngoingTasks(response.data.extra);
+    //                 console.log("Ongoing tasks : ", response.data.extra);
+
+    //             });
+    //         })
+    //         .catch((error) => {
+    //             console.error("Error fetching data:", error);
+    //         });
+    // }
 
 
     const handleChange = (event) => {
@@ -167,6 +202,10 @@ function Home({ setSelectedLandId, selectedLandId }) {
                         <FaMapMarker style={{ marginRight: '5px' }} />
                         Selected Land: {landName}
                     </p>
+                </div>
+
+                <div>
+                    <p className='crop-display'>Crop for the selected land: {cropName}</p>
                 </div>
 
                 <div className='home-heading'>

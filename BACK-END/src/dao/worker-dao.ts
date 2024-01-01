@@ -10,6 +10,7 @@ export interface WorkerDao {
   findById(workerId: number): Promise<WorkerEntity>;
   findByName(name: String): Promise<WorkerEntity>;
   findCount(workerDto: WorkerDto): Promise<number> ;
-  findByLandId(landId: number): Promise<WorkerEntity[]>;
+  findWorkerByLandId(workerDto: WorkerDto): Promise<WorkerEntity[]>;
   findWorkerIdByName(name: String): Promise<number>;
+  findByLandId(landId: number): Promise<WorkerEntity[]>;
 }

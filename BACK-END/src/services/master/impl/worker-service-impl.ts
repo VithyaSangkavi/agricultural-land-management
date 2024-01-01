@@ -155,15 +155,15 @@ export class WorkerServiceImpl implements WorkerService {
     return cr;
   }
 
-  async findByLandId(landId: number): Promise<CommonResponse> {
+  async getWorkerByLandId(workerDto: WorkerDto): Promise<CommonResponse> {
     let cr = new CommonResponse();
     try {
-      const workers = await this.workerDao.findByLandId(landId);
+      const workers = await this.workerDao.findWorkerByLandId(workerDto);
 
       let workerDtoList = new Array();
       for (const workerModel of workers) {
         let workerDto = new WorkerDto();
-        workerDto.filViaRequest(workerModel);
+        workerDto.filViaRequest(workerModel); 
         workerDtoList.push(workerDto);
       }
 
@@ -200,4 +200,25 @@ export class WorkerServiceImpl implements WorkerService {
     return cr;
   }
   
+  async findByLandId(landId: number): Promise<CommonResponse> {
+    let cr = new CommonResponse();
+    try {
+      const workers = await this.workerDao.findByLandId(landId);
+
+      let workerDtoList = new Array();
+      for (const workerModel of workers) {
+        let workerDto = new WorkerDto();
+        workerDto.filViaRequest(workerModel);
+        workerDtoList.push(workerDto);
+      }
+
+      cr.setStatus(true);
+      cr.setExtra(workerDtoList);
+    } catch (error) {
+      cr.setStatus(false);
+      cr.setExtra(error);
+      ErrorHandlerSup.handleError(error);
+    }
+    return cr;
+  }
 }
