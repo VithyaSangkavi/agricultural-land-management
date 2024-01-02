@@ -287,7 +287,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
         );
 
         if (isWorkerAlreadyAdded) {
-            alertService.warn(`Worker is already added to the list.`);
+            alertService.warn(`Worker has already been added for this date.`);
             return;
         }
 

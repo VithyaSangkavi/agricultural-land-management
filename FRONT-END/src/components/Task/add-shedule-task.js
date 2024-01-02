@@ -504,16 +504,11 @@ const ManageTask = ({ selectedLandId }) => {
                                     } else {
                                         if (addedData.date === currentDate[dateIndex]) {
                                             return (
-                                                <div key={index}>
-                                                    <p>{addedData.worker}
-                                                        <span
-                                                            style={{ cursor: 'pointer', marginLeft: '10px' }}
-                                                            onClick={() => deleteWorkAssigned(addedData.id)}
-                                                        >
-                                                            <button>delete</button>
-                                                        </span>
-                                                    </p>
-
+                                                <div key={index} style={{display: 'flex'}}>
+                                                    <p>{addedData.worker}</p>
+                                                    <div className="remove-button-container" style={{marginRight: 'auto'}}>
+                                                        <Trash onClick={() => deleteWorkAssigned(addedData.id)} />
+                                                    </div>
                                                 </div>
                                             );
                                         }

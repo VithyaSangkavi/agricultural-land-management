@@ -19,10 +19,17 @@ import { useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import { alertService } from '../../_services/alert.service';
-
 import { IoMdClose } from "react-icons/io";
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 
 const ManageTask = ({ selectedLandId }) => {
+
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+
     const [t, i18n] = useTranslation();
     const history = useHistory();
     const taskId = localStorage.getItem('TaskIDFromTaskAssigned')
@@ -152,7 +159,7 @@ const ManageTask = ({ selectedLandId }) => {
                     alertService.warn('Worker has already been added for this date.');
                     return;
                 }
-        
+
                 setSelectedWorkersList([...selectedWorkersList, selectedWorker]);
                 setSelectedWorker('');
                 console.log('selected worker: ', selectedWorker);
@@ -204,7 +211,7 @@ const ManageTask = ({ selectedLandId }) => {
                     alertService.warn('Worker has already been added for this date.');
                     return;
                 }
-        
+
                 setSelectedWorkersList([...selectedWorkersList, selectedWorker]);
                 setSelectedWorker('');
                 console.log('selected worker: ', selectedWorker);
@@ -500,28 +507,40 @@ const ManageTask = ({ selectedLandId }) => {
             </div>
 
             <br />
-            <div>
+ 
 
-                {/* <button className="add-button" onClick={handleIconClick}>Open Calendar</button> */}
-                <div>
-                    <MultiDatePicker
-                        className="rmdp-prime"
-                        value={selectedDates}
-                        onChange={setSelectedDates}
-                        format='DD/MM/YYYY'
-                        plugins={[
-                            <DatePanel />
-                        ]}
-                        ref={datePickerRef}
-                    />
-                </div>
+            <>
+                <Button className="add-button" onClick={handleShow}>
+                    Select Dates to Schedule
+                </Button>
 
-                <br />
-                <button className="add-button" onClick={handleShedule}>
-                    Shedule
-                </button>
-            </div>
-            <br />
+                <Modal show={show} onHide={handleClose} animation={false}>
+                    <Modal.Header>
+                        <Modal.Title>Select Dates</Modal.Title>
+                        <Button variant="secondary" style={{backgroundColor: '#0e4f20'}} onClick={handleShedule}>
+                            Schedule
+                        </Button>
+                        <Button variant="secondary" onClick={handleClose}>
+                            Close
+                        </Button>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <MultiDatePicker
+                            className="rmdp-prime"
+                            placeholder='Choose Dates'
+                            value={selectedDates}
+                            onChange={setSelectedDates}
+                            format='DD/MM/YYYY'
+                            plugins={[
+                                <DatePanel />
+                            ]}
+                            ref={datePickerRef}
+                        />
+                    </Modal.Body>
+                </Modal>
+            </>
+
+            <br />   <br />
             <div className="toggle-container">
                 <button
                     onClick={() => setSelectedView('tasks')}
