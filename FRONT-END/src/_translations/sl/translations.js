@@ -154,4 +154,6 @@ export const TRANSLATIONS_SL = {
     cost: 'පිරිවැය',
     yield: 'අස්වැන්න',
     costvsyieldcomparisionchart: 'පිරිවැය එදිරිව අස්වැන්න සංසන්දනාත්මක වගුව',
+
+    logout: 'පිටවීම',
 };

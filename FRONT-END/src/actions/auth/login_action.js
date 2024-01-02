@@ -1,4 +1,4 @@
-import { SIGNIN_SET, SIGNOUT_SET, LANGUAGE_SET } from '../../constants/loginTypes';
+import { SIGNIN_SET, SIGNOUT_SET, LANGUAGE_SET, RESET_ALL } from '../../constants/loginTypes';
 
 export const loginAction = (payload) => {
     return {
@@ -19,4 +19,10 @@ export const languageAction = (payload) => {
     type: LANGUAGE_SET,
     payload
   }
+};
+
+export const resetAll = () => {
+  return {
+    type: RESET_ALL
+  };
 };

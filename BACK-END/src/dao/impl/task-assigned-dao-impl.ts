@@ -51,7 +51,7 @@ export class TaskAssignedDaoImpl implements TaskAssignedDao {
       return null;
     }
   }
-  
+
   async findAll(taskAssignedDto: TaskAssignedDto): Promise<TaskAssignedEntity[]> {
     let taskAssignedRepo = getConnection().getRepository(TaskAssignedEntity);
     let searchObject: any = this.prepareSearchObject(taskAssignedDto);
@@ -135,24 +135,31 @@ export class TaskAssignedDaoImpl implements TaskAssignedDao {
     }
   }
 
-  async getOngoingTasksWithTaskNames(landId: number): Promise<TaskAssignedEntity[]> {
+  async getOngoingTasksWithTaskNames(landId?: number): Promise<TaskAssignedEntity[]> {
+
+    console.log("land id : ", landId)
+
     let taskAssignedRepo = getConnection().getRepository(TaskAssignedEntity);
 
-    const tasks = await taskAssignedRepo
-
+    const queryBuilder = taskAssignedRepo
       .createQueryBuilder('taskAssigned')
       .innerJoin('taskAssigned.task', 'task')
-      .innerJoin('taskAssigned.land', 'land')
-      .where('land.id = :landId', { landId })
+      .innerJoin('taskAssigned.land', 'land');
+
+    if (!Number.isNaN(landId)) {
+      queryBuilder.where('land.id = :landId', { landId });
+    }
+
+    const tasks = await queryBuilder
       .andWhere('taskAssigned.taskStatus = :taskStatus', { taskStatus: TaskStatus.Ongoing })
       .andWhere('taskAssigned.status = :status', { status: Status.Online })
       .groupBy('taskAssigned.taskAssignedId')
       .select(['taskAssigned.taskAssignedId as taskAssignedId', 'MAX(task.id) as taskId', 'MAX(task.taskName) as taskName', 'taskAssigned.startDate as taskStartDate', 'taskAssigned.landId as landId'])
       .getRawMany();
 
-      return tasks;
-
+    return tasks;
   }
+
 
   async getCompletedTasksWithTaskNames(landId: number): Promise<TaskAssignedEntity[]> {
     let taskAssignedRepo = getConnection().getRepository(TaskAssignedEntity);
@@ -169,7 +176,7 @@ export class TaskAssignedDaoImpl implements TaskAssignedDao {
       .select(['taskAssigned.taskAssignedId as taskAssignedId', 'MAX(task.id) as taskId', 'MAX(task.taskName) as taskName', 'taskAssigned.startDate as taskStartDate', 'taskAssigned.landId as landId'])
       .getRawMany();
 
-      return tasks;
+    return tasks;
 
   }
 

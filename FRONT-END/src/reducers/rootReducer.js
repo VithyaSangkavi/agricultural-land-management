@@ -4,12 +4,12 @@ import loginReducer from './loginReducer';
 import languageReducer from './languageReducer';
 import cropReducer from './cropReducer';
 
-import { SIGNOUT_SET, SELECTED_LAND_SET, SELECTED_CROP_SET } from '../constants/loginTypes';
+import { SIGNOUT_SET, SELECTED_LAND_SET, SELECTED_CROP_SET, RESET_ALL} from '../constants/loginTypes';
 
 const INITIAL_STATE = {
   signState: { signinDetails: false },
   langState: { languageDetails: { code: "en", text: "English (US)" } },
-  selectedLandId: null, // New state property
+  selectedLandId: 1, // New state property
 };
 
 const selectedLandIdReducer = (state = INITIAL_STATE.selectedLandId, action) => {
@@ -29,10 +29,11 @@ const appReducer = combineReducers({
 });
 
 const rootReducer = (state, action) => {
-  if(action.type === SIGNOUT_SET){
-    state = undefined
+  if (action.type === SIGNOUT_SET || action.type === RESET_ALL) {
+    state = undefined;
   }
-  return appReducer(state, action)
-}
+  return appReducer(state, action);
+};
+
 
 export default rootReducer;
