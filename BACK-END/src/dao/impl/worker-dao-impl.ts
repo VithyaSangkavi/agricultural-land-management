@@ -21,7 +21,7 @@ export class WorkerDaoImpl implements WorkerDao {
     let savedWorker = await workerRepo.save(workerModel);
     return savedWorker;
   }
-  
+
   async update(workerDto: WorkerDto): Promise<WorkerEntity> {
     let workerRepo = getConnection().getRepository(WorkerEntity);
     let workerModel = await workerRepo.findOne(workerDto.getWorkerId());
@@ -50,13 +50,16 @@ export class WorkerDaoImpl implements WorkerDao {
     let workerRepo = getConnection().getRepository(WorkerEntity);
 
     console.log(workerDto);
-    
-   
+
+
     const query = workerRepo.createQueryBuilder("worker")
       .innerJoin("worker.land", "land")
-      // .where("land.id = :landId", { landId: workerDto.getLandId() })
-      .where("worker.status = :worker_status", {worker_status: Status.Online })
+      .where("worker.status = :worker_status", { worker_status: Status.Online })
       .orderBy("worker.name", "ASC");
+
+    if (workerDto.isIsReqPagination()) {
+      query.skip(workerDto.getStartIndex()).take(workerDto.getMaxResult());
+    }
 
     const landWorkers = await query.getMany();
 
@@ -65,7 +68,7 @@ export class WorkerDaoImpl implements WorkerDao {
 
   // async findAll(workerDto: WorkerDto): Promise<WorkerEntity[]> {
   //   let workerRepo = getConnection().getRepository(WorkerEntity);
-   
+
   //   const query = workerRepo.createQueryBuilder("worker")
   //     .innerJoin("worker.land", "land")
   //     .where("land.id = :landId", { landId: workerDto.getLandId() })
@@ -86,7 +89,7 @@ export class WorkerDaoImpl implements WorkerDao {
 
   //   return result;
   // }
-  
+
   async findCount(workerDto: WorkerDto): Promise<number> {
     let workerRepo = getConnection().getRepository(WorkerEntity);
     let searchObject: any = this.prepareSearchObject(workerDto);
@@ -110,39 +113,37 @@ export class WorkerDaoImpl implements WorkerDao {
 
     let workers = null;
     console.log('workerDto: ', workerDto);
-    if(workerDto.isIsReqPagination()) {
+    if (workerDto.isIsReqPagination()) {
       workers = await workerRepo.find({
         where: {
-          land: { id: workerDto.getLandId() }, 
+          land: { id: workerDto.getLandId() },
           workerStatus: WorkerStatus.Active,
           status: Status.Online,
         },
         take: workerDto.getMaxResult(),
         skip: workerDto.getStartIndex(),
-  
+
       });
     } else {
       workers = await workerRepo.find({
         where: {
-          land: { id: workerDto.getLandId() }, 
+          land: { id: workerDto.getLandId() },
           workerStatus: WorkerStatus.Active,
           status: Status.Online,
         }
       });
     }
-
-    
     return workers;
-  }  
+  }
 
   async findWorkerIdByName(name: string): Promise<number | null> {
     try {
       const workerRepo = getConnection().getRepository(LandEntity);
       const workerModel = await workerRepo.findOne({
-        where: { name, status: Status.Online }, 
-        select: ['id'], 
+        where: { name, status: Status.Online },
+        select: ['id'],
       });
-  
+
       return workerModel ? workerModel.id : null;
     } catch (error) {
       console.error('Error finding worker ID:', error);
@@ -154,14 +155,14 @@ export class WorkerDaoImpl implements WorkerDao {
     let workerRepo = getConnection().getRepository(WorkerEntity);
     const workers = await workerRepo.find({
       where: {
-        land: { id: landId }, 
+        land: { id: landId },
         workerStatus: WorkerStatus.Active,
         status: Status.Online,
       },
     });
     return workers;
-  }  
-  
+  }
+
   async prepareWorkerModel(workerModel: WorkerEntity, workerDto: WorkerDto) {
     workerModel.name = workerDto.getName();
     workerModel.dob = workerDto.getDob();
@@ -185,31 +186,31 @@ export class WorkerDaoImpl implements WorkerDao {
       searchObject.dob = Like("%" + workerDto.getDob() + "%");
     }
     if (workerDto.getNic()) {
-        searchObject.nic = Like("%" + workerDto.getNic() + "%");
+      searchObject.nic = Like("%" + workerDto.getNic() + "%");
     }
     if (workerDto.getGender()) {
-        searchObject.gender = Like("%" + workerDto.getGender() + "%");
+      searchObject.gender = Like("%" + workerDto.getGender() + "%");
     }
     if (workerDto.getJoinedDate()) {
-        searchObject.joinedDate = Like("%" + workerDto.getJoinedDate() + "%");
+      searchObject.joinedDate = Like("%" + workerDto.getJoinedDate() + "%");
     }
     if (workerDto.getPhone()) {
-        searchObject.phone = Like("%" + workerDto.getPhone() + "%");
+      searchObject.phone = Like("%" + workerDto.getPhone() + "%");
     }
     if (workerDto.getAddress()) {
-        searchObject.address = Like("%" + workerDto.getAddress() + "%");
+      searchObject.address = Like("%" + workerDto.getAddress() + "%");
     }
     searchObject.workerStatus = WorkerStatus.Active;
     if (workerDto.getcreatedDate()) {
-        searchObject.createdDate = Like("%" + workerDto.getcreatedDate() + "%");
+      searchObject.createdDate = Like("%" + workerDto.getcreatedDate() + "%");
     }
     if (workerDto.getUpdatedDate()) {
-        searchObject.updatedDate = Like("%" + workerDto.getUpdatedDate() + "%");
+      searchObject.updatedDate = Like("%" + workerDto.getUpdatedDate() + "%");
     }
     searchObject.status = Status.Online;
     if (workerDto.getLandId()) {
-        searchObject.landId = Like("%" + workerDto.getLandId() + "%");
-      }
+      searchObject.landId = Like("%" + workerDto.getLandId() + "%");
+    }
     return searchObject;
   }
 }

@@ -2,8 +2,9 @@ import { combineReducers } from 'redux';
 
 import loginReducer from './loginReducer';
 import languageReducer from './languageReducer';
+import cropReducer from './cropReducer';
 
-import { SIGNOUT_SET, SELECTED_LAND_SET, RESET_ALL } from '../constants/loginTypes';
+import { SIGNOUT_SET, SELECTED_LAND_SET, SELECTED_CROP_SET, RESET_ALL } from '../constants/loginTypes';
 
 const INITIAL_STATE = {
   signState: { signinDetails: false },
@@ -24,7 +25,7 @@ const appReducer = combineReducers({
   signState: loginReducer,
   langState: languageReducer,
   selectedLandId: selectedLandIdReducer,
-
+  cropName: cropReducer,
 });
 
 const rootReducer = (state, action) => {

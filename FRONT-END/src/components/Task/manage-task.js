@@ -20,6 +20,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import { alertService } from '../../_services/alert.service';
 
+import { IoMdClose } from "react-icons/io";
 
 const ManageTask = ({ selectedLandId }) => {
     const [t, i18n] = useTranslation();
@@ -560,11 +561,11 @@ const ManageTask = ({ selectedLandId }) => {
                         <div className='worker-container'>
                             {selectedWorkersList.map((worker, index) => (
                                 <div key={index} className='line'>
-                                    <div className='line'>
+                                    <div className='line-two'>
                                         <p>{worker}</p>
 
                                         <button onClick={() => removeWorker(index)}>
-                                            <FontAwesomeIcon icon={faTrashAlt} />
+                                            <IoMdClose />
                                         </button>
                                     </div>
                                     {taskName === 'Pluck' && (

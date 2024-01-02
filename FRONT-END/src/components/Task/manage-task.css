@@ -236,14 +236,22 @@
   margin: 0;
 }
 
+.line-two{
+  background-color: #b3e2c1;
+  display: flex;
+  align-items: center;
+  border-radius: 12px;
+  padding: 0px 5px 2px 5px;
+}
+
 .line {
   background-color: #b3e2c1;
-  margin-top: 5px;
+  margin-top: 8px;
   margin-right: 8px;
   display: flex;
   align-items: center;
   border-radius: 12px;
-  padding: 0px 5px 0px 5px;
+  padding: 0px 5px 2px 5px;
 }
 
 .line p {
@@ -257,7 +265,6 @@
   color: black;
   border: none;
   cursor: pointer;
-  margin-left: 50px;
   font-size: small;
 }
 
@@ -297,13 +304,23 @@
   border-radius: 5px;
 }
 
-.view-task-expenses{
+.close-task-expenses{
   padding: 8px 16px;
   color: #949191;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   margin-left: 80%;
+}
+
+.view-task-expenses{
+  padding: 8px 16px;
+  color: #949191;
+  border: none;
+  width: 170px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 48%;
 }
 
 .total-display-card{

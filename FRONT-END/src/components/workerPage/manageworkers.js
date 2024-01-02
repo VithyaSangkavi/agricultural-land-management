@@ -16,6 +16,7 @@ import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 import SearchComponent from '../search/search';
 import { alertService } from '../../_services/alert.service';
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import Header from '../header/header';
 
 function ManageWorkers({ setSelectedLandId, selectedLandId }) {
 
@@ -140,47 +141,7 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
 
   return (
     <div className="worker-app-screen">
-      <div className='main-heading'>
-
-        <div className="outer-frame d-flex justify-content-between align-items-center">
-          <div className="filter-container d-flex align-items-center">
-            <MdArrowBackIos className="back-button" onClick={goBack} />
-          </div>
-
-          <div className="filter-container d-flex align-items-center">
-            <div className="land-filter">
-              <Dropdown onSelect={handleLandChange}>
-                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                  <FaMapMarker style={{ color: 'white' }} />
-                </Dropdown.Toggle>
-
-                <Dropdown.Menu>
-                  <Dropdown.Item eventKey="">All Lands</Dropdown.Item>
-                  {landNames.map((land) => (
-                    <Dropdown.Item eventKey={land.id} value={land.id}>
-                      {land.name}
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown.Menu>
-              </Dropdown>
-            </div>
-
-            <div className="language-filter">
-              <Dropdown onSelect={handleLanguageChange}>
-                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                  <FaGlobeAmericas style={{ color: 'white' }} />
-                </Dropdown.Toggle>
-
-                <Dropdown.Menu>
-                  <Dropdown.Item eventKey="en">English</Dropdown.Item>
-                  <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </div>
-          </div>
-        </div>
-
-      </div>
+      <Header/>
 
       <br />
 
@@ -243,20 +204,6 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
           filteredWorkersForSelectedLand.length > 0 && filteredWorkersForSelectedLand.length < 4 && startIndex > 0 && (
             <button className="load-more-button" onClick={handleBack}>
               See Previous <IoIosArrowUp />
-            </button>
-          )
-        )}
-      </div>
-
-      <div>
-        {filteredWorkersForSelectedLand.length >= 4 ? (
-          <button className='load-more-button' onClick={handleLoadMore}>
-            Load More
-          </button>
-        ) : (
-          filteredWorkersForSelectedLand > 0 && filteredWorkersForSelectedLand.length < 4 && startIndex > 0 && (
-            <button className='load-more-button' onClick={handleBack}>
-              See Previous
             </button>
           )
         )}

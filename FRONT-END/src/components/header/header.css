@@ -135,22 +135,21 @@
     font-weight: semi-bold;
   }
 
-  /* .crop-image-display{
-    width: 100px; 
-    height: 100px;
-    align-items: center;
-  } */
-
-  .crop-image-display {
-    display: flex; 
-    margin-top: 0;
-    margin-left: 45%;
-    height: 50px; 
-    width: 50px;
+  .header-main{
+    background-color: #0e4f20;
+    color: white;
+    padding-top: 0px;
+    margin-bottom: 0px;
+    font: bold;
+    font-size: large;
+    margin-top: 0px;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    position: fixed;
   }
-  
-  .crop-image-display img {
-    max-width: 100%;
-    max-height: 100%; 
-    display: block; 
+
+  .header-filter-container{
+    left: 80%;
   }
