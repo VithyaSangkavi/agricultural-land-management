@@ -18,7 +18,7 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 
-const ManageOngoingTask = ({selectedLandId}) => {
+const ManageOngoingTask = ({ selectedLandId }) => {
     const [t, i18n] = useTranslation();
     const { taskAssignedid } = useParams();
 
@@ -45,6 +45,7 @@ const ManageOngoingTask = ({selectedLandId}) => {
     const [ongoingTaskDate, setOngoingTaskDate] = useState('');
     const [commanTaskDetails, setCommanTaskDetails] = useState([]);
     const [taskDetails, setTaskDetails] = useState([]);
+    const [workerDetailsList, setWorkerDetails] = useState([]);
     const [taskStatus, setTaskStatus] = useState('');
     const [newTaskCardId, setNewTaskCardId] = useState('');
     const [taskExpenses, setTaskExpenses] = useState([]);
@@ -60,6 +61,8 @@ const ManageOngoingTask = ({selectedLandId}) => {
     const [workerId, setWorkerId] = useState('');
     const [showExpenses, setShowExpenses] = useState(false);
     const [totalAmount, setTotalAmount] = useState(0);
+    const [quantityForPluck, setQuantityForPluck] = useState({});
+
 
 
     const sortedTaskDetails = taskDetails && taskDetails.length > 1
@@ -154,9 +157,12 @@ const ManageOngoingTask = ({selectedLandId}) => {
             .then((response) => {
 
                 setTaskDetails(response.data.extra.cardDetails);
+                // setWorkerDetails(response.data.extra.cardDetails.workerDetails)
                 setCommanTaskDetails(response.data.extra);
                 setOngoingTaskName(response.data.extra.taskName);
                 setTaskStatus(response.data.extra.taskStatus);
+                const workerNames = [...new Set(response.data.extra.cardDetails.flatMap(card => card.workerDetails.map(worker => worker.workerName)))];
+                console.log(workerNames)
 
                 const formattedStartDate = getFormattedDate(response.data.extra.startDate);
                 setOngoingTaskDate(formattedStartDate);
@@ -165,26 +171,26 @@ const ManageOngoingTask = ({selectedLandId}) => {
                 const isCardExist = response.data.extra.cardDetails.some(
                     (card) => getFormattedDate(card.date) === today
                 );
-                
-                axios.get(`http://localhost:8081/service/master/taskAssignedFindById?taskAssignedId=${taskAssignedid}`)
-                .then((taskResponse) => {
-                    const schedule = taskResponse.data.extra.schedule;
-                    console.log('SCHEDULE ::::::: ', schedule)
-                    if (schedule !== 'scheduled' && !isCardExist) {
-                        // If the task is not scheduled and the card for today doesn't exist, generate a new card
-                        const newEmptyCard = {
-                            newTaskCardId,
-                            date: new Date(),
-                            cardStatus: 'ongoing',
-                            workerDetails: [],
-                        };
 
-                        setTaskDetails((prevTaskDetails) => [...prevTaskDetails, newEmptyCard]);
-                    }
-                })
-                .catch((taskError) => {
-                    console.error('Error fetching task schedule:', taskError);
-                });
+                axios.get(`http://localhost:8080/service/master/taskAssignedFindById?taskAssignedId=${taskAssignedid}`)
+                    .then((taskResponse) => {
+                        const schedule = taskResponse.data.extra.schedule;
+                        console.log('SCHEDULE ::::::: ', schedule)
+                        if (schedule !== 'scheduled' && !isCardExist) {
+                            // If the task is not scheduled and the card for today doesn't exist, generate a new card
+                            const newEmptyCard = {
+                                newTaskCardId,
+                                date: new Date(),
+                                cardStatus: 'ongoing',
+                                workerDetails: [],
+                            };
+
+                            setTaskDetails((prevTaskDetails) => [...prevTaskDetails, newEmptyCard]);
+                        }
+                    })
+                    .catch((taskError) => {
+                        console.error('Error fetching task schedule:', taskError);
+                    });
             })
             .catch((error) => {
                 console.error('Error fetching task details:', error);
@@ -263,16 +269,114 @@ const ManageOngoingTask = ({selectedLandId}) => {
         }));
     };
 
+    const handleQuantityChange = (taskCardId, newQuantity) => {
+        setQuantityForPluck((prevQuantities) => ({
+            ...prevQuantities,
+            [taskCardId]: newQuantity,
+        }));
+    };
+
+    console.log("11 : ", taskDetails)
+
     const handleAddSelectedWorker = (taskCardId) => {
         const selectedWorkerValue = selectedWorker[taskCardId];
 
+
+
         if (ongoingTaskName === 'Pluck') {
-            console.log('Pluck task')
+            console.log('Pluck task');
             if (selectedWorkerValue) {
                 console.log('selected worker: ', selectedWorkerValue);
-                localStorage.setItem('selectedWorker', selectedWorkerValue);
+                const name = selectedWorkerValue;
+                const quantity = quantityForPluck[taskCardId];
+
+                if (quantity === undefined) {
+                    alertService.warn('Quantity is required for Pluck task.')
+                    return 0;
+                }
+
+                setSelectedWorkersList((prevSelectedWorkers) => ({
+                    ...prevSelectedWorkers,
+                    [taskCardId]: [
+                        ...(prevSelectedWorkers[taskCardId] || []),
+                        { name, quantity },
+                    ],
+                }));
+                setSelectedWorker('');
+
+                axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${name}`)
+                    .then((response) => {
+                        const workerId = response.data.extra.workerId;
+                        console.log('Worker ID:', workerId);
+
+                        console.log('New task card id: ', taskCardId);
+
+                        if (taskCardId == null) {
+                            const newTaskCard = {
+                                taskAssignedDate: new Date(),
+                                taskAssignedId: taskAssignedid,
+                            };
+
+                            axios.post('http://localhost:8080/service/master/task-card-save', newTaskCard)
+                                .then((savedTaskCardResponse) => {
+                                    console.log('New Task card added', savedTaskCardResponse.data.extra);
+                                    const newtaskCardId = savedTaskCardResponse.data.extra.id;
+
+                                    setNewTaskCardId(newtaskCardId);
+
+                                    const addWorkAssigned = {
+                                        startDate,
+                                        workerId,
+                                        taskId,
+                                        taskAssignedId: taskAssignedid,
+                                        lotId,
+                                        taskCardId: newtaskCardId,
+                                        quantity,
+                                    };
+
+                                    axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
+                                        .then((response) => {
+                                            console.log('Work assigned added successfully:', response.data);
+                                            alertService.success('Worker added successfully');
+                                            window.location.reload();
+                                        })
+                                        .catch((error) => {
+                                            console.error('Error adding work assigned:', error);
+                                        });
+
+                                })
+                                .catch((error) => {
+                                    console.error('Error adding new task card:', error);
+                                });
+                        } else {
+                            const addWorkAssigned = {
+                                startDate,
+                                workerId,
+                                taskId,
+                                taskAssignedId: taskAssignedid,
+                                lotId,
+                                taskCardId: taskCardId,
+                                quantity,
+                            };
+
+                            axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
+                                .then((response) => {
+                                    console.log('Work assigned added successfully:', response.data);
+                                    alertService.success('Worker added successfully');
+                                    AddedWorkerList();
+                                    window.location.reload();
+                                })
+                                .catch((error) => {
+                                    console.error('Error adding work assigned:', error);
+                                });
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error getting worker id:', error);
+                    });
             }
-        } else {
+        }
+        else {
             if (selectedWorkerValue) {
                 console.log('selected worker: ', selectedWorkerValue);
                 const name = selectedWorkerValue;
@@ -613,7 +717,6 @@ const ManageOngoingTask = ({selectedLandId}) => {
 
                                             {taskStatus === 'ongoing' ? (
                                                 <>
-
                                                     <div className="dropdown-and-button-container">
                                                         <select
                                                             value={selectedWorker[taskDetail.taskCardId] || ''}
@@ -632,6 +735,21 @@ const ManageOngoingTask = ({selectedLandId}) => {
 
                                                         {taskStatus === 'ongoing' ? (
                                                             <>
+                                                                {ongoingTaskName === 'Pluck' ? (
+                                                                    <input
+                                                                        type="number"
+                                                                        value={quantityForPluck[taskDetail.taskCardId] || ''}
+                                                                        onChange={(e) =>
+                                                                            handleQuantityChange(taskDetail.taskCardId, e.target.value)
+                                                                        }
+                                                                        placeholder="Qty."
+                                                                        className="quantity-input"
+                                                                        style={{ width: '100px', height: '40px' }}
+                                                                    />
+                                                                ) : (
+                                                                    <div></div>
+                                                                )}
+
                                                                 <button className='add-small' onClick={() => handleAddSelectedWorker(taskDetail.taskCardId)}>
                                                                     {t('add')}
                                                                 </button>
@@ -645,9 +763,7 @@ const ManageOngoingTask = ({selectedLandId}) => {
                                                                         Complete
                                                                     </button>
                                                                 )}
-
                                                             </>
-
                                                         ) : (
                                                             <div></div>
                                                         )}
@@ -656,6 +772,7 @@ const ManageOngoingTask = ({selectedLandId}) => {
                                             ) : (
                                                 <div></div>
                                             )}
+
 
                                             {/* {selectedWorkersList[taskDetail.taskCardId]?.length > 0 && (
                                                 <div>
@@ -718,11 +835,11 @@ const ManageOngoingTask = ({selectedLandId}) => {
                                 <div>
                                     {showExpenses ? (
                                         <button onClick={() => setShowExpenses(false)} className='view-task-expenses'>
-                                            <MdClose /> 
+                                            <MdClose />
                                         </button>
                                     ) : (
                                         <button onClick={() => setShowExpenses(true)} className='view-task-expenses'>
-                                            <MdViewAgenda /> 
+                                            <MdViewAgenda />
                                         </button>
                                     )}
 

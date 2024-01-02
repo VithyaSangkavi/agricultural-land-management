@@ -18,6 +18,7 @@ import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 import { useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
+import { alertService } from '../../_services/alert.service';
 
 
 const ManageTask = ({ selectedLandId }) => {
@@ -145,6 +146,12 @@ const ManageTask = ({ selectedLandId }) => {
         if (taskName === 'Pluck') {
             console.log('Pluck task')
             if (selectedWorker) {
+
+                if (selectedWorkersList.includes(selectedWorker)) {
+                    alertService.warn('Worker has already been added for this date.');
+                    return;
+                }
+        
                 setSelectedWorkersList([...selectedWorkersList, selectedWorker]);
                 setSelectedWorker('');
                 console.log('selected worker: ', selectedWorker);
@@ -191,6 +198,12 @@ const ManageTask = ({ selectedLandId }) => {
             }
         } else {
             if (selectedWorker) {
+
+                if (selectedWorkersList.includes(selectedWorker)) {
+                    alertService.warn('Worker has already been added for this date.');
+                    return;
+                }
+        
                 setSelectedWorkersList([...selectedWorkersList, selectedWorker]);
                 setSelectedWorker('');
                 console.log('selected worker: ', selectedWorker);
@@ -231,7 +244,7 @@ const ManageTask = ({ selectedLandId }) => {
     }
 
     const addWorkerToPluckTaskCard = (taskCardId) => {
-        // const selectedWorker = localStorage.getItem('selectedWorker');
+        const selectedWorker = localStorage.getItem('selectedWorker');
         console.log('add -> selected worker pluck task: ', selectedWorker);
         console.log('Quantity: ', quantity);
 

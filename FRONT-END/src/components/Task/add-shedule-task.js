@@ -15,6 +15,7 @@ import { MdArrowBackIos } from "react-icons/md";
 import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 import { Trash } from 'react-bootstrap-icons';
+import { alertService } from '../../_services/alert.service';
 
 
 const ManageTask = ({ selectedLandId }) => {
@@ -240,34 +241,45 @@ const ManageTask = ({ selectedLandId }) => {
     };
 
     const handleAddSelectedWorker = (dateIndex) => {
-        if (taskName === 'Pluck' && selectedWorker[dateIndex]) {
-            const selectedWorkerName = selectedWorker[dateIndex];
-            const quantity = quantityInputs[dateIndex] !== '' ? quantityInputs[dateIndex] : null;
+        const selectedWorkerName = selectedWorker[dateIndex];
+        const quantity = quantityInputs[dateIndex] !== '' ? quantityInputs[dateIndex] : null;
 
-            if (quantity !== null) {
-                saveTaskCardAndWorker(dateIndex, selectedWorkerName, quantity);
-                // Reset the input after using it
-                const newQuantityInputs = [...quantityInputs];
-                newQuantityInputs[dateIndex] = '';
-                setQuantityInputs(newQuantityInputs);
-            }
-        } else {
-            saveTaskCardAndWorker(dateIndex, selectedWorker[dateIndex]);
+        // Check if the worker has already been added for this date
+        if (selectedWorkersLists[dateIndex].includes(selectedWorkerName)) {
+            // Display a warning or handle the duplicate entry as needed
+            alertService.warn('Worker has already been added for this date.');
+            return;
         }
 
-        const newSelectedWorkersList = [...selectedWorkersLists[dateIndex], selectedWorker[dateIndex]];
+        // Check if quantity is required for the task
+        if (taskName === 'Pluck' && selectedWorkerName && quantity === null) {
+            // Display a warning for missing quantity
+            alertService.warn('Quantity is required for Pluck task.');
+            return;
+        }
+
+        // Save task card and worker
+        saveTaskCardAndWorker(dateIndex, selectedWorkerName, quantity);
+
+        // Reset the input after using it
+        const newQuantityInputs = [...quantityInputs];
+        newQuantityInputs[dateIndex] = '';
+        setQuantityInputs(newQuantityInputs);
+
+        // Update selected workers list
         const updatedSelectedWorkersLists = [...selectedWorkersLists];
-        updatedSelectedWorkersLists[dateIndex] = newSelectedWorkersList;
+        updatedSelectedWorkersLists[dateIndex] = [...selectedWorkersLists[dateIndex], selectedWorkerName];
         setSelectedWorkersLists(updatedSelectedWorkersLists);
 
+        // Update added worker data
         const newAddedWorkerData = {
             date: currentDate[dateIndex],
-            worker: selectedWorker[dateIndex],
-            quantity: quantityInputs[dateIndex],
+            worker: selectedWorkerName,
+            quantity,
         };
-
         setAddedWorkersData([...addedWorkersData, newAddedWorkerData]);
     };
+
 
 
     const saveTaskCardAndWorker = (dateIndex, selectedWorker, quantity) => {
@@ -478,7 +490,7 @@ const ManageTask = ({ selectedLandId }) => {
                                         if (addedData.date === currentDate[dateIndex]) {
                                             return (
                                                 <div key={index}>
-                                                    
+
                                                     <p style={{ position: 'relative' }}>
                                                         <span>{addedData.worker} - {addedData.quantity}kg</span>
                                                         <div className="remove-button-container" style={{ position: 'absolute', top: 0, right: 0 }}>

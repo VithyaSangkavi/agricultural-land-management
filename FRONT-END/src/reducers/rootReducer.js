@@ -8,7 +8,7 @@ import { SIGNOUT_SET, SELECTED_LAND_SET } from '../constants/loginTypes';
 const INITIAL_STATE = {
   signState: { signinDetails: false },
   langState: { languageDetails: { code: "en", text: "English (US)" } },
-  selectedLandId: null, // New state property
+  selectedLandId: 1, // New state property
 };
 
 const selectedLandIdReducer = (state = INITIAL_STATE.selectedLandId, action) => {
