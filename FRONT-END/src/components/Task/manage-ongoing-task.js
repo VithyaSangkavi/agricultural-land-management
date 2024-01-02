@@ -279,9 +279,17 @@ const ManageOngoingTask = ({ selectedLandId }) => {
     console.log("11 : ", taskDetails)
 
     const handleAddSelectedWorker = (taskCardId) => {
+
         const selectedWorkerValue = selectedWorker[taskCardId];
 
+        const isWorkerAlreadyAdded = taskDetails.find(
+            (taskDetail) => taskDetail.taskCardId === taskCardId && taskDetail.workerDetails.some((worker) => worker.workerName === selectedWorkerValue)
+        );
 
+        if (isWorkerAlreadyAdded) {
+            alertService.warn(`Worker is already added to the list.`);
+            return;
+        }
 
         if (ongoingTaskName === 'Pluck') {
             console.log('Pluck task');
@@ -292,6 +300,14 @@ const ManageOngoingTask = ({ selectedLandId }) => {
 
                 if (quantity === undefined) {
                     alertService.warn('Quantity is required for Pluck task.')
+                    return 0;
+                }
+
+                if (
+                    selectedWorkersList[taskCardId] &&
+                    selectedWorkersList[taskCardId].some((worker) => worker.name === name)
+                ) {
+                    alertService.warn('Worker already added.');
                     return 0;
                 }
 
@@ -772,33 +788,6 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                                             ) : (
                                                 <div></div>
                                             )}
-
-
-                                            {/* {selectedWorkersList[taskDetail.taskCardId]?.length > 0 && (
-                                                <div>
-                                                    {selectedWorkersList[taskDetail.taskCardId].map((worker, index) => (
-                                                        <div key={index} className="worker-container">
-                                                            <p>{worker}</p>
-                                                            {taskName === 'Pluck' && (
-                                                                <div className="kg-input-container">
-                                                                    <div className="kg-input">
-                                                                        <input
-                                                                            type="text"
-                                                                            placeholder={t('numberofkg')}
-                                                                            value={kgValues[index] || ''}
-                                                                            onChange={(e) => handleKgChange(e, index)}
-                                                                            className="dropdown-input"
-                                                                        />
-                                                                        <span className="add-kg-icon">
-                                                                            <FontAwesomeIcon icon={faPlus} onClick={addQuantity} />
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            )} */}
                                         </div>
 
                                     ))}
