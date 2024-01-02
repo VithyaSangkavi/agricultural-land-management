@@ -379,7 +379,9 @@ const ManageOngoingTask = ({selectedLandId}) => {
                 axios.post('http://localhost:8081/service/master/task-expense-save', addTaskExpense)
                     .then((response) => {
                         console.log('Task expense added successfully:', response.data);
-                        window.reload();
+                        alertService.success('Task-expense added successfully');
+
+                        setValue('');
                     })
                     .catch((error) => {
                         // console.error('Error adding task expense:', error);
@@ -717,12 +719,12 @@ const ManageOngoingTask = ({selectedLandId}) => {
                                 <br />
                                 <div>
                                     {showExpenses ? (
-                                        <button onClick={() => setShowExpenses(false)} className='view-task-expenses'>
+                                        <button onClick={() => setShowExpenses(false)} className='close-task-expenses'>
                                             <MdClose /> 
                                         </button>
                                     ) : (
                                         <button onClick={() => setShowExpenses(true)} className='view-task-expenses'>
-                                            <MdViewAgenda /> 
+                                             View Task Expenses <MdViewAgenda /> 
                                         </button>
                                     )}
 
