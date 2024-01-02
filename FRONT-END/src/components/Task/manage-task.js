@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import Footer from '../footer/footer';
 import { useHistory } from "react-router-dom";
 import DatePicker from 'react-datepicker';
 import './manage-task.css'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
@@ -16,12 +15,16 @@ import "react-multi-date-picker/styles/layouts/prime.css"
 import { MdArrowBackIos, MdViewAgenda, MdClose } from "react-icons/md";
 import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
+import { useLocation } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
+import { alertService } from '../../_services/alert.service';
+
+import { IoMdClose } from "react-icons/io";
 
 const ManageTask = ({ selectedLandId }) => {
     const [t, i18n] = useTranslation();
-
     const history = useHistory();
-
     const taskId = localStorage.getItem('TaskIDFromTaskAssigned')
     const startDate = localStorage.getItem('StartDate');
 
@@ -36,59 +39,33 @@ const ManageTask = ({ selectedLandId }) => {
     const [selectedWorkersList, setSelectedWorkersList] = useState([]);
     const [kgValues, setKgValues] = useState([]);
     //const [workerId, setWorkerId] = useState('');
-    const [taskAssignedId, setTaskAssignedId] = useState('');
     const [lotId, setLotId] = useState('');
     const [quantity, setQuantity] = useState('');
     const [taskCardId, setTaskCardId] = useState('');
-    const thisid = localStorage.getItem('taskassignedid')
     const [workers, setWorkers] = useState([]);
     const [selectedDates, setSelectedDates] = useState([]);
     const [formattedDates, setFormattedDates] = useState([]);
     const [taskExpenses, setTaskExpenses] = useState([]);
     const [showExpenses, setShowExpenses] = useState(false);
-    const [totalAmount, setTotalAmount] = useState(0); 
+    const [totalAmount, setTotalAmount] = useState(0);
+    const datePickerRef = useRef(null);
 
-    // const handleDateChange = (value) => {
-    //     setSelectedDates(value);
-    //     console.log(value);
-    //     console.log("date : ", value.day);
-    // };
-    console.log("task id : ", taskAssignedId);
+    const location = useLocation();
+    const taskAssignedId = location.state?.taskAssignedId || null;
 
-    useEffect(() => {
-        if (showExpenses) {
-            getTaskExpenses(); 
+    console.log("task id : ", taskAssignedId)
+
+    const handleIconClick = () => {
+        if (datePickerRef.current) {
+            datePickerRef.current.openCalendar();
         }
-    }, [showExpenses]);
-
-    useEffect(() => {
-        const calculateTotalAmount = () => {
-            const total = taskExpenses.reduce((acc, expense) => acc + expense.value, 0);
-            setTotalAmount(total);
-
-            console.log('Total amount: ', total);
-        };
-
-        calculateTotalAmount();
-    }, [taskExpenses]);
-
-    const getTaskExpenses = (e) => {
-        console.log('task ass id: ', thisid);
-        axios.get(`http://localhost:8081/service/master/findByTaskAssignedId?taskAssignedId=${thisid}`)
-            .then((response) => {
-                console.log('task expenses ------------ ', response.data.extra)
-                setTaskExpenses(response.data.extra);
-            })
-            .catch((error) => {
-                console.error('Error fetching task expenses:', error);
-            });
-    }
+    };
 
     const handleShedule = (value) => {
 
         const newStatus = 'scheduled'
 
-        axios.put(`http://localhost:8081/service/master/updateSchedulStatus/${taskAssignedId}`, {
+        axios.put(`http://localhost:8080/service/master/updateSchedulStatus/${taskAssignedId}`, {
             newStatus,
         })
             .then((response) => {
@@ -114,13 +91,11 @@ const ManageTask = ({ selectedLandId }) => {
         fetchTaskName();
         fetchWorkerNames();
         fetchExpenseTypes();
-        fetchTaskAssignedId();
         fetchLotId();
-        console.log('check task assigned id: ', thisid);
     }, []);
 
     const fetchTaskName = () => {
-        axios.get(`http://localhost:8081/service/master/findTaskNameById/?taskId=${taskId}`)
+        axios.get(`http://localhost:8080/service/master/findTaskNameById/?taskId=${taskId}`)
             .then((response) => {
                 setTaskName(response.data.extra.taskName);
             })
@@ -132,7 +107,7 @@ const ManageTask = ({ selectedLandId }) => {
     //fetch worker names according to the landId
     const fetchWorkerNames = () => {
 
-        axios.get(`http://localhost:8081/service/master/findByLandId?landId=${selectedLandId}`)
+        axios.get(`http://localhost:8080/service/master/findByLandId?landId=${selectedLandId}`)
 
             .then((response) => {
                 const workerNamesArray = response.data.extra.map((worker) => worker.name);
@@ -144,7 +119,7 @@ const ManageTask = ({ selectedLandId }) => {
     };
 
     const fetchExpenseTypes = () => {
-        axios.get('http://localhost:8081/service/master/expenseFindAll')
+        axios.get('http://localhost:8080/service/master/expenseFindAll')
             .then((response) => {
                 const expenseTypeArrays = response.data.extra.map((expense) => expense.expenseType);
                 setExpenseTypes(expenseTypeArrays);
@@ -154,24 +129,8 @@ const ManageTask = ({ selectedLandId }) => {
             });
     };
 
-    const fetchTaskAssignedId = () => {
-
-        //get task-assigned id
-        axios.get(`http://localhost:8081/service/master/task-assigned?taskId=${taskId}`)
-
-            .then((response) => {
-                const taskAssignedId = response.data.extra.id;
-
-                console.log('Task assigned id: ', taskAssignedId);
-                setTaskAssignedId(taskAssignedId);
-            })
-            .catch((error) => {
-                console.error('Error fetching task assigned id:', error);
-            });
-    };
-
     const fetchLotId = () => {
-        axios.get(`http://localhost:8081/service/master/findLotByLandId?landId=${selectedLandId}`)
+        axios.get(`http://localhost:8080/service/master/findLotByLandId?landId=${selectedLandId}`)
 
             .then((response) => {
                 const thislot = response.data.extra.id;
@@ -188,6 +147,12 @@ const ManageTask = ({ selectedLandId }) => {
         if (taskName === 'Pluck') {
             console.log('Pluck task')
             if (selectedWorker) {
+
+                if (selectedWorkersList.includes(selectedWorker)) {
+                    alertService.warn('Worker has already been added for this date.');
+                    return;
+                }
+        
                 setSelectedWorkersList([...selectedWorkersList, selectedWorker]);
                 setSelectedWorker('');
                 console.log('selected worker: ', selectedWorker);
@@ -203,13 +168,13 @@ const ManageTask = ({ selectedLandId }) => {
                             taskAssignedId,
                         };
 
-                        axios.post('http://localhost:8081/service/master/task-card-save', saveTaskCard)
+                        axios.post('http://localhost:8080/service/master/task-card-save', saveTaskCard)
 
                             .then((response) => {
                                 console.log('Task card added', response.data);
                                 localStorage.setItem('taskassignedid', taskAssignedId);
 
-                                axios.get(`http://localhost:8081/service/master/taskCardFindById?taskAssignedId=${taskAssignedId}`)
+                                axios.get(`http://localhost:8080/service/master/taskCardFindById?taskAssignedId=${taskAssignedId}`)
 
 
                                     .then((response) => {
@@ -234,6 +199,12 @@ const ManageTask = ({ selectedLandId }) => {
             }
         } else {
             if (selectedWorker) {
+
+                if (selectedWorkersList.includes(selectedWorker)) {
+                    alertService.warn('Worker has already been added for this date.');
+                    return;
+                }
+        
                 setSelectedWorkersList([...selectedWorkersList, selectedWorker]);
                 setSelectedWorker('');
                 console.log('selected worker: ', selectedWorker);
@@ -245,12 +216,12 @@ const ManageTask = ({ selectedLandId }) => {
                         taskAssignedId,
                     };
 
-                    axios.post('http://localhost:8081/service/master/task-card-save', saveTaskCard)
+                    axios.post('http://localhost:8080/service/master/task-card-save', saveTaskCard)
                         .then((response) => {
                             console.log('Task card added', response.data);
                             localStorage.setItem('taskassignedid', taskAssignedId);
 
-                            axios.get(`http://localhost:8081/service/master/taskCardFindById?taskAssignedId=${taskAssignedId}`)
+                            axios.get(`http://localhost:8080/service/master/taskCardFindById?taskAssignedId=${taskAssignedId}`)
                                 .then((response) => {
                                     const taskCardId = response.data.extra.id;
 
@@ -278,7 +249,7 @@ const ManageTask = ({ selectedLandId }) => {
         console.log('add -> selected worker pluck task: ', selectedWorker);
         console.log('Quantity: ', quantity);
 
-        axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${selectedWorker}`)
+        axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${selectedWorker}`)
 
             .then((response) => {
                 const workerId = response.data.extra.workerId;
@@ -290,11 +261,11 @@ const ManageTask = ({ selectedLandId }) => {
                     quantity,
                     taskId,
                     taskAssignedId,
-                    lotId: 1,
+                    lotId,
                     taskCardId,
                 };
 
-                axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
+                axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
                     .then((response) => {
                         console.log('Work assigned added successfully:', response.data);
                     })
@@ -309,10 +280,10 @@ const ManageTask = ({ selectedLandId }) => {
 
     const addWorkerToTaskCard = (taskCardId) => {
 
-        const selectedWorker = localStorage.getItem('selectedWorker');
+        // const selectedWorker = localStorage.getItem('selectedWorker');
         console.log('add -> selected worker: ', selectedWorker);
 
-        axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${selectedWorker}`)
+        axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${selectedWorker}`)
 
             .then((response) => {
                 const workerId = response.data.extra.workerId;
@@ -323,11 +294,11 @@ const ManageTask = ({ selectedLandId }) => {
                     workerId,
                     taskId,
                     taskAssignedId,
-                    lotId: 1,
+                    lotId,
                     taskCardId,
                 };
 
-                axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
+                axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
                     .then((response) => {
                         console.log('Work assigned added successfully:', response.data);
                     })
@@ -345,7 +316,7 @@ const ManageTask = ({ selectedLandId }) => {
 
         //get expense id according to the expense type
         axios
-            .get(`http://localhost:8081/service/master/find-by-type?expenseType=${selectedExpenseType}`)
+            .get(`http://localhost:8080/service/master/find-by-type?expenseType=${selectedExpenseType}`)
             .then((response) => {
                 const expenseId = response.data.expenseId;
                 setExpenseId(expenseId);
@@ -357,7 +328,7 @@ const ManageTask = ({ selectedLandId }) => {
                 };
 
                 //save task expense 
-                axios.post('http://localhost:8081/service/master/task-expense-save', addTaskExpense)
+                axios.post('http://localhost:8080/service/master/task-expense-save', addTaskExpense)
                     .then((response) => {
                         console.log('Task expense added successfully:', response.data);
                         history.push('/home');
@@ -381,7 +352,7 @@ const ManageTask = ({ selectedLandId }) => {
 
     const addQuantity = () => {
 
-        const selectedWorker = localStorage.getItem('selectedWorker');
+        // const selectedWorker = localStorage.getItem('selectedWorker');
         console.log('selected worker: ', selectedWorker);
 
         if (!taskCardId) {
@@ -390,12 +361,12 @@ const ManageTask = ({ selectedLandId }) => {
                 taskAssignedId,
             };
 
-            axios.post('http://localhost:8081/service/master/task-card-save', saveTaskCard)
+            axios.post('http://localhost:8080/service/master/task-card-save', saveTaskCard)
                 .then((response) => {
                     console.log('Task card added', response.data);
                     localStorage.setItem('taskassignedid', taskAssignedId);
 
-                    axios.get(`http://localhost:8081/service/master/taskCardFindById?taskAssignedId=${taskAssignedId}`)
+                    axios.get(`http://localhost:8080/service/master/taskCardFindById?taskAssignedId=${taskAssignedId}`)
                         .then((response) => {
                             const taskCardId = response.data.extra.id;
 
@@ -428,7 +399,7 @@ const ManageTask = ({ selectedLandId }) => {
             taskAssignedId,
         }
 
-        axios.post('http://localhost:8081/service/master/task-card-save', saveTaskCard)
+        axios.post('http://localhost:8080/service/master/task-card-save', saveTaskCard)
             .then((response) => {
                 console.log('task card added', response.data)
             })
@@ -448,14 +419,14 @@ const ManageTask = ({ selectedLandId }) => {
     }
 
     const deleteItem = (workerName) => {
-        axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${workerName}`)
+        axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${workerName}`)
             .then((response) => {
                 const thisid = response.data.extra.workerId
                 console.log("Delete")
                 console.log('workerid:', response.data.extra.workerId);
                 console.log('Task card id: ', taskCardId)
 
-                axios.delete(`http://localhost:8081/service/master/work-assigned-delete/${thisid}/${taskCardId}`)
+                axios.delete(`http://localhost:8080/service/master/work-assigned-delete/${thisid}/${taskCardId}`)
                     .then((response) => {
                         console.log('worker assigned removed successfully:', response.data);
 
@@ -524,10 +495,14 @@ const ManageTask = ({ selectedLandId }) => {
             </div>
 
             <div className='task-heading'>
-                <p> {taskName} {t('task')} - </p>
-                <p> {t('from')} - {startDate} </p>
+                <p> {taskName} {t('task')}  </p>
+                <p> {t('from')} - {getFormattedDate(startDate)} </p>
             </div>
+
+            <br />
             <div>
+
+                {/* <button className="add-button" onClick={handleIconClick}>Open Calendar</button> */}
                 <div>
                     <MultiDatePicker
                         className="rmdp-prime"
@@ -537,11 +512,14 @@ const ManageTask = ({ selectedLandId }) => {
                         plugins={[
                             <DatePanel />
                         ]}
+                        ref={datePickerRef}
                     />
                 </div>
-                <div>
-                    <button onClick={handleShedule}>Shedule</button>
-                </div>
+
+                <br />
+                <button className="add-button" onClick={handleShedule}>
+                    Shedule
+                </button>
             </div>
             <br />
             <div className="toggle-container">
@@ -580,16 +558,15 @@ const ManageTask = ({ selectedLandId }) => {
                         <button className='add-small' onClick={handleAddSelectedWorker}>{t('add')}</button>
                     </div>
                     {selectedWorkersList.length > 0 && (
-                        <div>
+                        <div className='worker-container'>
                             {selectedWorkersList.map((worker, index) => (
-                                <div key={index} className="worker-container">
-                                    <div className='line'>
+                                <div key={index} className='line'>
+                                    <div className='line-two'>
                                         <p>{worker}</p>
 
-                                        <button onClick={() => removeWorker(index)} className="delete-button">
-                                            <FontAwesomeIcon icon={faTrashAlt} />
+                                        <button onClick={() => removeWorker(index)}>
+                                            <IoMdClose />
                                         </button>
-
                                     </div>
                                     {taskName === 'Pluck' && (
                                         <div className="kg-input-container">
@@ -616,56 +593,56 @@ const ManageTask = ({ selectedLandId }) => {
 
             {/* Finance Toggled View */}
             {selectedView === 'finance' && (
-                  <>
-                  <div>
-                      <select
-                          value={selectedExpenseType}
-                          onChange={(e) => setSelectedExpenseType(e.target.value)}
-                          className='dropdown-input'
-                      >
-                          <option value="">{t('expense')}</option>
-                          {expenseTypes.map((expenseType) => (
-                              <option key={expenseType} value={expenseType}>
-                                  {expenseType}
-                              </option>
-                          ))}
-                      </select><br />
-                      <input
-                          type="text"
-                          placeholder={t('amount')}
-                          value={value}
-                          onChange={(e) => setValue(e.target.value)}
-                          className="dropdown-input"
-                      />
-                      <button className="add-button" onClick={handleAddTaskExpense}>{t('addtaskexpense')}</button>
-                  </div>
-                  <br />
-                  <div>
-                      {showExpenses ? (
-                          <button onClick={() => setShowExpenses(false)} className='view-task-expenses'>
-                              <MdClose /> {t('closetaskexpenses')}
-                          </button>
-                      ) : (
-                          <button onClick={() => setShowExpenses(true)} className='view-task-expenses'>
-                              <MdViewAgenda /> {t('viewtaskexpenses')}
-                          </button>
-                      )}
+                <>
+                    <div>
+                        <select
+                            value={selectedExpenseType}
+                            onChange={(e) => setSelectedExpenseType(e.target.value)}
+                            className='dropdown-input'
+                        >
+                            <option value="">{t('expense')}</option>
+                            {expenseTypes.map((expenseType) => (
+                                <option key={expenseType} value={expenseType}>
+                                    {expenseType}
+                                </option>
+                            ))}
+                        </select><br />
+                        <input
+                            type="text"
+                            placeholder={t('amount')}
+                            value={value}
+                            onChange={(e) => setValue(e.target.value)}
+                            className="dropdown-input"
+                        />
+                        <button className="add-button" onClick={handleAddTaskExpense}>{t('addtaskexpense')}</button>
+                    </div>
+                    <br />
+                    <div>
+                        {showExpenses ? (
+                            <button onClick={() => setShowExpenses(false)} className='view-task-expenses'>
+                                <MdClose /> {t('closetaskexpenses')}
+                            </button>
+                        ) : (
+                            <button onClick={() => setShowExpenses(true)} className='view-task-expenses'>
+                                <MdViewAgenda /> {t('viewtaskexpenses')}
+                            </button>
+                        )}
 
-                      {/* Display task expenses when showExpenses is true */}
-                      {showExpenses && (
-                          <div>
-                              {taskExpenses.map((taskExpense) => (
-                                  <div key={taskExpense.id} className="task-expense-card">
-                                      <h3>{t('expensetype')} : {taskExpense.expenseType}</h3>
-                                      <p>{t('amount')} : {taskExpense.value}</p>
-                                  </div>
-                              ))}
-                              <p className='total-display-card'>{t('totaltaskexpenses')}: {t('rs')}{totalAmount}.00</p>
-                          </div>
-                      )}
+                        {/* Display task expenses when showExpenses is true */}
+                        {showExpenses && (
+                            <div>
+                                {taskExpenses.map((taskExpense) => (
+                                    <div key={taskExpense.id} className="task-expense-card">
+                                        <h3>{t('expensetype')} : {taskExpense.expenseType}</h3>
+                                        <p>{t('amount')} : {taskExpense.value}</p>
+                                    </div>
+                                ))}
+                                <p className='total-display-card'>{t('totaltaskexpenses')}: {t('rs')}{totalAmount}.00</p>
+                            </div>
+                        )}
 
-                  </div>
-              </>
+                    </div>
+                </>
             )}
             <br />
             <div className='footer-alignment'>

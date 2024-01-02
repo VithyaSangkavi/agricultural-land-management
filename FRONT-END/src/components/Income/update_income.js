@@ -12,11 +12,10 @@ import { useTranslation } from 'react-i18next';
 import { FaGlobeAmericas, FaLanguage, FaMapMarker } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { MdArrowBackIos } from "react-icons/md";
-import { connect } from 'react-redux';
-import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 
 
-const UpdateIncome = ({selectedLandId, setSelectedLandId}) => {
+
+const UpdateIncome = () => {
     const { incomeId } = useParams();
     const history = useHistory();
 
@@ -32,22 +31,6 @@ const UpdateIncome = ({selectedLandId, setSelectedLandId}) => {
     const handleLanguageChange = (lang) => {
         i18n.changeLanguage(lang);
     };
-
-    const handleLandChange = (event) => {
-        console.log("Land : ", event);
-        setSelectedLandId(event);
-    };
-
-    useEffect(() => {
-        submitSets(submitCollection.manageland, false).then((res) => {
-            setLandNames(res.extra);
-        });
-
-        submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true).then((res) => {
-            setLandName(res.extra.name);
-        });
-
-    }, [submitCollection.manageland, selectedLandId]);
 
 
     useEffect(() => {
@@ -66,12 +49,8 @@ const UpdateIncome = ({selectedLandId, setSelectedLandId}) => {
 
     console.log(price)
 
-    console.log("selected land id: " + selectedLandId)
     console.log("true land id : ", trueLandId)
 
-    if (trueLandId != selectedLandId && selectedLandId != '') {
-        history.push('/manageincome')
-    }
 
     const handleSubmit = () => {
         const dataToSend = {
@@ -110,19 +89,7 @@ const UpdateIncome = ({selectedLandId, setSelectedLandId}) => {
 
                     <div className="filter-container d-flex align-items-center">
                         <div className="land-filter">
-                            <Dropdown onSelect={handleLandChange}>
-                                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                                    <FaMapMarker style={{ color: 'white' }} />
-                                </Dropdown.Toggle>
-
-                                <Dropdown.Menu>
-                                    {landNames.map((land) => (
-                                        <Dropdown.Item eventKey={land.id} value={land.id}>
-                                            {land.name}
-                                        </Dropdown.Item>
-                                    ))}
-                                </Dropdown.Menu>
-                            </Dropdown>
+                          
                         </div>
 
                         <div className="language-filter">
@@ -146,10 +113,7 @@ const UpdateIncome = ({selectedLandId, setSelectedLandId}) => {
             <div className="drop-down-container" style={{marginTop: "-11px"}}>
 
                 <div className='landsectioncover'>
-                    <p className="landsection">
-                        <FaMapMarker style={{ marginRight: '5px' }} />
-                        Selected Land: {landName}
-                    </p>
+                  
                 </div>
                 <p className="home-heading">{t('updateincome')}</p>
             </div>
@@ -188,12 +152,4 @@ const UpdateIncome = ({selectedLandId, setSelectedLandId}) => {
     );
 };
 
-const mapStateToProps = (state) => ({
-    selectedLandId: state.selectedLandId,
-});
-
-const mapDispatchToProps = {
-    setSelectedLandId: setSelectedLandIdAction,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(UpdateIncome);
+export default UpdateIncome;

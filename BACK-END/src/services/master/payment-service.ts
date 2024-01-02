@@ -7,4 +7,5 @@ export interface PaymentService {
   delete(paymenPaymentDto:PaymentDto): Promise<CommonResponse>;
   find(paymenPaymentDto:PaymentDto): Promise<CommonResponse>;
   findById(paymentId: number): Promise<CommonResponse>;
+  findByWorkerId(workerId: number): Promise<CommonResponse>;
 }

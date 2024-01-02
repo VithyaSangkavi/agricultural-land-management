@@ -1,6 +1,7 @@
 .home-app-screen {
     /* max-width: 100%; */
-    height: auto;
+    height: 100vh;
+   
     margin: 0 auto;
     /* padding: 16px; */
     /* box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2); */
@@ -9,7 +10,7 @@
     background-repeat: no-repeat;
     background-position: center;
     position: relative;
-    background-color: white;
+    background-color: rgb(255, 255, 255);
 }
 
 .home-app-screen .input-field {
@@ -20,9 +21,8 @@
     margin-right: 40px;
     margin-top: 200px;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 5px;
     font-size: 16px;
-    border-radius: 20px;
 }
 
 .home-app-screen .add-button {
@@ -30,7 +30,7 @@
     background-color: #0e4f20;
     color: #fff;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
 }
@@ -43,16 +43,6 @@
     text-align: left;
 }
 
-.home-app-screen .main-heading {
-    /* background-color: #0e4f20; */
-    color: white;
-    /* padding: 10px; */
-    /* margin-top: 10px; */
-    /* margin-bottom: 20px; */
-    font: bold;
-    font-size: large;
-}
-
 .home-app-screen .add-button {
     padding: 8px 16px;
     background-color: #0e4f20;
@@ -69,15 +59,11 @@
     background-color: #0a8a2e;
 }
 
-.home-app-screen .home-heading p {
-    font-size: 18px;
-    text-align: left;
+.home-app-screen .page-name{
     font: bold;
-    color: #0e4f20;
-    font-weight: bold;
-    margin: 0px 0px 0px 10px;
-    /* background-color: #0e4f20; */
-} 
+    color: white;
+    font-size: large;
+}
 
 .home-app-screen .task-list {
     flex-grow: 1;
@@ -94,7 +80,9 @@
     width: 90%;
     /* max-width: 300px; */
     text-align: left;
-    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f2f2f2;
+    color: black;
     border-radius: 5px;
 }
 
@@ -102,3 +90,66 @@
     font-size: 18px;
     margin: 10px 0 0;
 }
+
+/* floating-button.css */
+
+.float-new-task-button {
+    position: fixed;
+    bottom: 60px;
+    right: 15px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #0e4f20; 
+    color: white; 
+    font-size: 24px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.float-new-task-button:hover {
+    background-color: #0a8a2e; 
+}
+
+.tooltip {
+    position: absolute;
+    background-color: #333;
+    color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 14px;
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .crop-display{
+    background-color: #f2f2f2;
+    padding: 5px 5px 2px 5px;
+    font-weight: semi-bold;
+  }
+
+  .header-main{
+    background-color: #0e4f20;
+    color: white;
+    padding-top: 0px;
+    margin-bottom: 0px;
+    font: bold;
+    font-size: large;
+    margin-top: 0px;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    position: fixed;
+  }
+
+  .header-filter-container{
+    left: 80%;
+  }

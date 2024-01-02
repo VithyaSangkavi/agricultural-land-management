@@ -27,6 +27,7 @@ export class TaskAssignedDaoImpl implements TaskAssignedDao {
     let savedTask = await taskAssignedRepo.save(taskAssignedModel);
     return savedTask;
   }
+
   async update(taskAssignedDto: TaskAssignedDto): Promise<TaskAssignedEntity> {
     let taskAssignedRepo = getConnection().getRepository(TaskAssignedEntity);
     let taskAssignedModel = await taskAssignedRepo.findOne(taskAssignedDto.getTaskAssignedId());
@@ -38,6 +39,7 @@ export class TaskAssignedDaoImpl implements TaskAssignedDao {
       return null;
     }
   }
+
   async delete(taskAssignedDto: TaskAssignedDto): Promise<TaskAssignedEntity> {
     let taskAssignedRepo = getConnection().getRepository(TaskAssignedEntity);
     let taskAssignedModel = await taskAssignedRepo.findOne(taskAssignedDto.getTaskAssignedId());
@@ -49,6 +51,7 @@ export class TaskAssignedDaoImpl implements TaskAssignedDao {
       return null;
     }
   }
+
   async findAll(taskAssignedDto: TaskAssignedDto): Promise<TaskAssignedEntity[]> {
     let taskAssignedRepo = getConnection().getRepository(TaskAssignedEntity);
     let searchObject: any = this.prepareSearchObject(taskAssignedDto);
@@ -60,17 +63,23 @@ export class TaskAssignedDaoImpl implements TaskAssignedDao {
     });
     return taskAssignedModel;
   }
+
   async findCount(taskAssignedDto: TaskAssignedDto): Promise<number> {
     let taskAssignedRepo = getConnection().getRepository(TaskAssignedEntity);
     let searchObject: any = this.prepareSearchObject(taskAssignedDto);
     let taskAssignedModel = await taskAssignedRepo.count({ where: searchObject });
     return taskAssignedModel;
   }
-  async findById(taskId: number): Promise<TaskAssignedEntity> {
+  
+  async findById(taskAssignedId: number): Promise<TaskAssignedEntity> {
     let taskAssignedRepo = getConnection().getRepository(TaskAssignedEntity);
-    let taskAssignedModel = await taskAssignedRepo.findOne(taskId);
+    let taskAssignedModel = await taskAssignedRepo.findOne(taskAssignedId);
+    if (!taskAssignedModel) {
+      throw new Error("TaskAssignedEntity not found"); 
+    }
     return taskAssignedModel;
   }
+  
 
   async findByName(status: Status): Promise<TaskAssignedEntity> {
     let taskAssignedRepo = getConnection().getRepository(TaskAssignedEntity);
@@ -126,24 +135,31 @@ export class TaskAssignedDaoImpl implements TaskAssignedDao {
     }
   }
 
-  async getOngoingTasksWithTaskNames(landId: number): Promise<TaskAssignedEntity[]> {
+  async getOngoingTasksWithTaskNames(landId?: number): Promise<TaskAssignedEntity[]> {
+
+    console.log("land id : ", landId)
+
     let taskAssignedRepo = getConnection().getRepository(TaskAssignedEntity);
 
-    const tasks = await taskAssignedRepo
-
+    const queryBuilder = taskAssignedRepo
       .createQueryBuilder('taskAssigned')
       .innerJoin('taskAssigned.task', 'task')
-      .innerJoin('taskAssigned.land', 'land')
-      .where('land.id = :landId', { landId })
+      .innerJoin('taskAssigned.land', 'land');
+
+    if (!Number.isNaN(landId)) {
+      queryBuilder.where('land.id = :landId', { landId });
+    }
+
+    const tasks = await queryBuilder
       .andWhere('taskAssigned.taskStatus = :taskStatus', { taskStatus: TaskStatus.Ongoing })
       .andWhere('taskAssigned.status = :status', { status: Status.Online })
       .groupBy('taskAssigned.taskAssignedId')
       .select(['taskAssigned.taskAssignedId as taskAssignedId', 'MAX(task.id) as taskId', 'MAX(task.taskName) as taskName', 'taskAssigned.startDate as taskStartDate', 'taskAssigned.landId as landId'])
       .getRawMany();
 
-      return tasks;
-
+    return tasks;
   }
+
 
   async getCompletedTasksWithTaskNames(landId: number): Promise<TaskAssignedEntity[]> {
     let taskAssignedRepo = getConnection().getRepository(TaskAssignedEntity);
@@ -160,7 +176,7 @@ export class TaskAssignedDaoImpl implements TaskAssignedDao {
       .select(['taskAssigned.taskAssignedId as taskAssignedId', 'MAX(task.id) as taskId', 'MAX(task.taskName) as taskName', 'taskAssigned.startDate as taskStartDate', 'taskAssigned.landId as landId'])
       .getRawMany();
 
-      return tasks;
+    return tasks;
 
   }
 

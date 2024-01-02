@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Axios from 'axios';
+import axios from 'axios';
 import './workerpage.css';
 import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
@@ -20,8 +20,16 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
 
   const { t, i18n } = useTranslation();
 
+
   const location = useLocation();
   const basicDetails = location.state ? location.state.basicDetails : {};
+  const paymentDetails = location.state ? location.state.paymentDetails : {};
+
+  //const basicDetails = location.state ? location.state : {};
+
+  console.log('LS: ', location.state);
+  console.log('BD: ', basicDetails);
+  console.log('PD: ', paymentDetails);
   const [showBasicDetails, setShowBasicDetails] = useState(true);
 
   const [name, setName] = useState(basicDetails.name || '');
@@ -33,17 +41,21 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
   const [address, setAddress] = useState(basicDetails.address || '');
   const [workerStatus, setWorkerStatus] = useState(basicDetails.workerStatus || '');
 
+  const [paymentType, setPaymentType] = useState(paymentDetails.paymentType || '');
+  const [basePayment, setBasePayment] = useState(paymentDetails.basePayment || '');
+  const [extraPayment, setExtraPayment] = useState(paymentDetails.extraPayment || '');
+  const [attendancePayment, setAttendancePayment] = useState(paymentDetails.attendancePayment || '');
+
 
   const [workerId, setWorkerId] = useState(basicDetails.id || -1);
-  const [paymentType, setPaymentType] = useState('');
-  const [basePayment, setBasePayment] = useState('');
-  const [extraPayment, setExtraPayment] = useState('');
-  const [attendancePayment, setAttendancePayment] = useState('');
+  const [paymentId, setPaymentId] = useState(paymentDetails.id || -1);
+
   const [landNames, setLandNames] = useState([]);
   const [landName, setLandName] = useState([]);
 
+  const isEditing = location.state ? location.state.isEditing : false;
 
-
+  console.log('base payment: ', paymentDetails.basePayment);
   const history = useHistory();
 
   const handleLandChange = (event) => {
@@ -69,7 +81,8 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
   useEffect(() => {
     // Log the basicDetails when the component mounts
     console.log('Basic Details:', basicDetails);
-  }, [basicDetails]);
+    console.log('Payment Details:', paymentDetails);
+  }, [basicDetails, paymentDetails]);
 
   console.log(selectedLandId)
 
@@ -98,6 +111,36 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
       })
   };
 
+  //update worker
+  const handleUpdateWorker = () => {
+    const updatedWorker = {
+      name,
+      dob,
+      nic,
+      gender,
+      joinedDate,
+      phone,
+      address,
+      workerStatus,
+      landId: selectedLandId
+    };
+
+    axios
+      .post(`http://localhost:8080/service/master/workerUpdate?workerId=${workerId}`, updatedWorker)
+      .then((response) => {
+        if (response.status === 200) {
+          alertService.success("Worker updated successfully")
+          history.push('/manageWorkers')
+        } else {
+          alertService.error("Updating worker failed")
+        }
+      })
+      .catch((error) => {
+        console.error('Error updating worker:', error);
+      });
+
+  };
+
 
   //Add Payment
   const handleAddPayment = () => {
@@ -118,6 +161,31 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
           alertService.error("Adding payment failed")
         }
       })
+  };
+
+  //update payment
+  const handleUpdatePayment = () => {
+    const updatedPayment = {
+      paymentType,
+      basePayment,
+      extraPayment,
+      attendancePayment
+    };
+
+    axios
+      .post(`http://localhost:8080/service/master/paymentUpdate?paymentId=${paymentId}`, updatedPayment)
+      .then((response) => {
+        if (response.status === 200) {
+          alertService.success("Payment updated successfully")
+          history.push('/manageWorkers')
+        } else {
+          alertService.error("Updating payment failed")
+        }
+      })
+      .catch((error) => {
+        console.error('Error updating payment:', error);
+      });
+
   };
 
   const handleLanguageChange = (lang) => {
@@ -183,7 +251,7 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
         </div>
 
         <p className="home-heading">{t('workermanagement')}</p>
-      
+
       </div>
 
 
@@ -275,9 +343,15 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
               <option value="Inactive">{t('fired')}</option>
               <option value="Inactive">{t('temporarystopped')}</option>
             </select>
-            <button className="add-button" onClick={handleAddWorker}>
-              {t('addworker')}
-            </button>
+            {isEditing ? (
+              <button className="add-button" onClick={handleUpdateWorker}>
+                {t('updateworker')}
+              </button>
+            ) : (
+              <button className="add-button" onClick={handleAddWorker}>
+                {t('addworker')}
+              </button>
+            )}
             <br />
           </div>
         ) : (
@@ -312,10 +386,15 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
               placeholder={t('attendancepayment')}
               className="input-field"
             />
-
-            <button className="add-button" onClick={handleAddPayment}>
-              {t('addworkerpayment')}
-            </button>
+            {isEditing ? (
+              <button className="add-button" onClick={handleUpdatePayment}>
+                {t('updateworkerpayment')}
+              </button>
+            ) : (
+              <button className="add-button" onClick={handleAddPayment}>
+                {t('addworkerpayment')}
+              </button>
+            )}
             <br />
           </div>
         )}

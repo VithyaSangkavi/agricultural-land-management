@@ -64,17 +64,6 @@ export class WorkerServiceImpl implements WorkerService {
   async update(workerDto: WorkerDto): Promise<CommonResponse> {
     let cr = new CommonResponse();
     try {
-      // validation
-      if (workerDto.getName()) {
-        // check name already have
-        let nameWorkerMode = await this.workerDao.findByName(workerDto.getName());
-        if (nameWorkerMode && nameWorkerMode.id != workerDto.getWorkerId()) {
-          return CommonResSupport.getValidationException("Worker Name Already In Use !");
-        }
-      } else {
-        return CommonResSupport.getValidationException("Worker Name Cannot Be null !");
-      }
-
       // update worker
       let updateWorker = await this.workerDao.update(workerDto);
       if (updateWorker) {
@@ -166,15 +155,15 @@ export class WorkerServiceImpl implements WorkerService {
     return cr;
   }
 
-  async findByLandId(landId: number): Promise<CommonResponse> {
+  async getWorkerByLandId(workerDto: WorkerDto): Promise<CommonResponse> {
     let cr = new CommonResponse();
     try {
-      const workers = await this.workerDao.findByLandId(landId);
+      const workers = await this.workerDao.findWorkerByLandId(workerDto);
 
       let workerDtoList = new Array();
       for (const workerModel of workers) {
         let workerDto = new WorkerDto();
-        workerDto.filViaRequest(workerModel);
+        workerDto.filViaRequest(workerModel); 
         workerDtoList.push(workerDto);
       }
 
@@ -211,4 +200,25 @@ export class WorkerServiceImpl implements WorkerService {
     return cr;
   }
   
+  async findByLandId(landId: number): Promise<CommonResponse> {
+    let cr = new CommonResponse();
+    try {
+      const workers = await this.workerDao.findByLandId(landId);
+
+      let workerDtoList = new Array();
+      for (const workerModel of workers) {
+        let workerDto = new WorkerDto();
+        workerDto.filViaRequest(workerModel);
+        workerDtoList.push(workerDto);
+      }
+
+      cr.setStatus(true);
+      cr.setExtra(workerDtoList);
+    } catch (error) {
+      cr.setStatus(false);
+      cr.setExtra(error);
+      ErrorHandlerSup.handleError(error);
+    }
+    return cr;
+  }
 }

@@ -6,5 +6,7 @@ export interface ReportDao {
   getCostBreakdownLineReport(fromDate:string, landId: number): Promise<any>;
   getCostBreakdownPieReport(): Promise<any>;
   getSummaryReport(landId: number, cateNum: number): Promise<any>
+  getWeeklySummaryReport(landId: number): Promise<any>
+
   
 }

@@ -18,7 +18,7 @@ export class WorkerDto extends PaginationDto {
   private status: Status;
   private landId: number;
 
-  filViaRequest(body) {
+  filViaRequest(body: any) {
 
     if (body.id) {
       this.id = body.id;
@@ -37,10 +37,10 @@ export class WorkerDto extends PaginationDto {
     this.landId = body.landId;
 
 
-    if (body.startIndex && body.maxResult) {
       this.setStartIndex(body.startIndex);
       this.setMaxResult(body.maxResult);
-    }
+      this.setIsReqPagination(body.isReqPagination);
+  
   }
 
   filViaDbObject(workerModel: WorkerEntity) {

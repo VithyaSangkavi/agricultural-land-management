@@ -23,6 +23,7 @@ import { Status } from "../../../enum/Status";
 import { TaskCardDao } from "../../../dao/task-card-dao";
 import { TaskCardDaoImpl } from "../../../dao/impl/task-card-dao-impl";
 import { TaskCardEntity } from "../../../entity/master/task-card-entity";
+import { WorkAssignedResDto } from "../../../dto/master/work-assign-res-dto";
 
 /**
  * workAssigned service layer
@@ -87,8 +88,11 @@ export class WorkAssignedServiceImpl implements WorkAssignedService {
 
       // save new workAssigned
       let newworkAssigned = await this.workAssignedDao.save(workAssignedDto, workerModel, taskTypeModel, lotModel, taskAssignedModel, taskCardModel);
+
+      let workAssignedResDto: WorkAssignedResDto = new WorkAssignedResDto()
+      workAssignedResDto.fillViaDbObject(newworkAssigned)
       
-      cr.setExtra(newworkAssigned);
+      cr.setExtra(workAssignedResDto);
 
       cr.setStatus(true);
     } catch (error) {

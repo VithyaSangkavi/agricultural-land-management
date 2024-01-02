@@ -50,6 +50,7 @@ export const TRANSLATIONS_EN = {
     fired: 'Fired',
     temporarystopped: 'Temporary Stopped',
     addworker: 'Add Worker',
+    updateworker: 'Update Worker',
 
     //save payment
     monthlydailypay : 'Monthly / Daily Pay',
@@ -59,6 +60,7 @@ export const TRANSLATIONS_EN = {
     extraPayment : 'Extra Kg Pay',
     attendancepayment: 'Attendance Payment',
     addworkerpayment: 'Add Worker Payment',
+    updateworkerpayment: 'Update Worker Payment',
 
     //manage workers
     workermanagement: 'Worker Management',
@@ -91,8 +93,8 @@ export const TRANSLATIONS_EN = {
 
     //manage task
     managetask: 'Manage Task',
-    task: 'task',
-    from: 'from',
+    task: 'Task',
+    from: 'From',
     tasks: 'Tasks',
     dateongoing: 'Date - Ongoing',
     selectaworker: 'Select a worker',
@@ -150,4 +152,6 @@ export const TRANSLATIONS_EN = {
     cost: 'Cost',
     yield: 'Yield',
     costvsyieldcomparisionchart: 'Cost vs Yield Comparison Chart',
+
+    logout: 'Logout',
 };

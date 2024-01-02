@@ -437,8 +437,11 @@ export class ReportDaoImpl implements ReportDao {
 
     const monthlyExpenses3 = await getRepository(TaskExpenseEntity)
       .createQueryBuilder("taskExpense")
+      .innerJoin("taskExpense.taskAssigned", "taskAssigned")
       .innerJoin("taskExpense.expense", "expense")
+      .innerJoin("taskAssigned.land", "land")
       .where("expense.expenseType != :salaryExpenseType", { salaryExpenseType: "Salary" })
+      .andWhere("land.id = :landId", { landId })
       .groupBy("DATE_FORMAT(taskExpense.createdDate, '%M %Y')")
       .select("DATE_FORMAT(taskExpense.createdDate, '%M %Y')", "monthYear")
       .addSelect("SUM(taskExpense.value)", "totalExpense")
@@ -510,6 +513,107 @@ export class ReportDaoImpl implements ReportDao {
         CIR: parseFloat(CIR),
       };
     });
+    return combinedSummary;
+  }
+
+
+  //Total - weekly Summary Report
+  async getWeeklySummaryReport(landId) {
+    const workAssignedRepository = getConnection().getRepository(WorkAssignedEntity);
+
+    const workAssignedEntities = await workAssignedRepository
+      .createQueryBuilder("workAssigned")
+      .leftJoinAndSelect("workAssigned.taskCard", "taskCard")
+      .leftJoinAndSelect("taskCard.taskAssigned", "taskAssigned")
+      .leftJoinAndSelect("taskAssigned.land", "land")
+      .where("land.id = :landId", { landId })
+      .getMany();
+
+    const weeklyExpenses = await getRepository(TaskExpenseEntity)
+      .createQueryBuilder("taskExpense")
+      .innerJoin("taskExpense.taskAssigned", "taskAssigned")
+      .innerJoin("taskAssigned.land", "land")
+      .innerJoin(TaskTypeEntity, "task", "task.taskName = :taskName AND task.id = taskAssigned.taskId", { taskName: "Pluck" })
+      .where("land.id = :landId", { landId })
+      .groupBy("EXTRACT(YEAR FROM taskExpense.createdDate), EXTRACT(WEEK FROM taskExpense.createdDate)")
+      .select([
+        "EXTRACT(YEAR FROM taskExpense.createdDate) AS year",
+        "EXTRACT(WEEK FROM taskExpense.createdDate) AS weekNumber",
+        "SUM(taskExpense.value) AS totalExpense"
+      ])
+      .getRawMany();
+
+
+    const weeklyExpenses2 = await getRepository(TaskExpenseEntity)
+      .createQueryBuilder("taskExpense")
+      .innerJoin("taskExpense.taskAssigned", "taskAssigned")
+      .innerJoin("taskAssigned.land", "land")
+      .innerJoin(TaskTypeEntity, "task", "task.taskName <> :pluckTaskName AND task.id = taskAssigned.taskId", { pluckTaskName: "Pluck" })
+      .where("land.id = :landId", { landId })
+      .groupBy("EXTRACT(YEAR FROM taskExpense.createdDate), EXTRACT(WEEK FROM taskExpense.createdDate)")
+      .select([
+        "EXTRACT(YEAR FROM taskExpense.createdDate) AS year",
+        "EXTRACT(WEEK FROM taskExpense.createdDate) AS weekNumber",
+        "SUM(taskExpense.value) AS totalExpense"
+      ])
+      .getRawMany();
+
+
+    const weeklyExpenses3 = await getRepository(TaskExpenseEntity)
+      .createQueryBuilder("taskExpense")
+      .innerJoin("taskExpense.taskAssigned", "taskAssigned")
+      .innerJoin("taskExpense.expense", "expense")
+      .innerJoin("taskAssigned.land", "land")
+      .where("expense.expenseType != :salaryExpenseType", { salaryExpenseType: "Salary" })
+      .andWhere("land.id = :landId", { landId })
+      .groupBy("EXTRACT(YEAR FROM taskExpense.createdDate), EXTRACT(WEEK FROM taskExpense.createdDate)")
+      .select([
+        "EXTRACT(YEAR FROM taskExpense.createdDate) AS year",
+        "EXTRACT(WEEK FROM taskExpense.createdDate) AS weekNumber",
+        "SUM(taskExpense.value) AS totalExpense"
+      ])
+      .getRawMany();
+
+
+    const quantitySummary = workAssignedEntities.reduce((summary, workAssigned) => {
+      const workDate = workAssigned.taskCard.workDate || workAssigned.startDate.toISOString().split("T")[0];
+      const year = moment(workDate).isoWeekYear();
+      const weekNumber = moment(workDate).isoWeek();
+
+      const key = `${year} W${weekNumber}`;
+
+      if (!summary[key]) {
+        summary[key] = 0;
+      }
+
+      summary[key] += workAssigned.quantity || 0;
+
+      return summary;
+    }, {});
+
+
+    const combinedSummary = Object.entries(quantitySummary).map(([key, totalQuantity]) => {
+      const [year, weekNumber] = key.split(' W');
+      const weekYear = `${year} W${weekNumber}`;
+
+      const expenseForWeek = weeklyExpenses.find(expense => expense.weekNumber === parseInt(weekNumber) && expense.year === parseInt(year));
+      const finalWeeklyExpenses = weeklyExpenses2.find(otherExpense => otherExpense.weekNumber === parseInt(weekNumber) && otherExpense.year === parseInt(year));
+      const additionalWeeklyExpenses = weeklyExpenses3.find(taskExpense => taskExpense.weekNumber === parseInt(weekNumber) && taskExpense.year === parseInt(year));
+
+      return {
+        year: parseInt(year),
+        weekNumber: parseInt(weekNumber),
+        totalQuantity,
+        PluckExpense: expenseForWeek ? parseFloat(expenseForWeek.totalExpense) : 0,
+        OtherExpenses: finalWeeklyExpenses ? parseFloat(finalWeeklyExpenses.totalExpense) : 0,
+        NonCrewExpenses: additionalWeeklyExpenses ? parseFloat(additionalWeeklyExpenses.totalExpense) : 0,
+        TotalIncome: "-",
+        TaskExpenses: "-",
+        Profit: "-",
+        CIR: "-",
+      };
+    });
+
     return combinedSummary;
   }
 }

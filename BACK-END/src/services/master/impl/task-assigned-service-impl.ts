@@ -15,6 +15,7 @@ import { WorkAssignedEntity } from "../../../entity/master/work-assigned-entity"
 import { getConnection } from "typeorm";
 import { Status } from "../../../enum/Status";
 import { TaskAssignedEntity } from "../../../entity/master/task-assigned-entity";
+import { TaskAssignedResDto } from "../../../dto/master/task-assignId-dto";
 
 /**
  * taskAssigned service layer
@@ -34,6 +35,8 @@ export class TaskAssignedServiceImpl implements TaskAssignedService {
     let cr = new CommonResponse();
     try {
 
+      let taskAssignedResDto: TaskAssignedResDto = new TaskAssignedResDto();
+
       //check land id
       let landModel: LandEntity = null;
       if (taskAssignedDto.getLandId() > 0) {
@@ -52,7 +55,11 @@ export class TaskAssignedServiceImpl implements TaskAssignedService {
 
       // save new taskAssigned
       let newtaskAssigned = await this.taskAssignedDao.save(taskAssignedDto, landModel, taskTypeModel);
+      taskAssignedResDto.filViaDbObject(newtaskAssigned);
+
+      cr.setExtra(taskAssignedResDto)
       cr.setStatus(true);
+
     } catch (error) {
       cr.setStatus(false);
       cr.setExtra(error);
@@ -154,21 +161,21 @@ export class TaskAssignedServiceImpl implements TaskAssignedService {
   async findById(taskAssignedId: number): Promise<CommonResponse> {
     let cr = new CommonResponse();
     try {
-      // find taskAssigned
       let taskAssigned = await this.taskAssignedDao.findById(taskAssignedId);
-
+  
       let taskAssignedDto = new TaskAssignedDto();
-      taskAssignedDto.filViaDbObject(taskAssigned);
-
+      taskAssignedDto.filViaRequest(taskAssigned);
+  
       cr.setStatus(true);
       cr.setExtra(taskAssignedDto);
     } catch (error) {
+      console.error(error); 
       cr.setStatus(false);
-      cr.setExtra(error);
-      ErrorHandlerSup.handleError(error);
+      cr.setExtra(error.message); 
     }
     return cr;
   }
+  
 
   async findByTaskId(taskId: number): Promise<CommonResponse> {
     const cr = new CommonResponse();
@@ -206,7 +213,7 @@ export class TaskAssignedServiceImpl implements TaskAssignedService {
 
     return cr;
   }
-  
+
 
   async getCompletedTasksWithTaskNames(landId: number): Promise<CommonResponse> {
     let cr = new CommonResponse();
@@ -223,7 +230,7 @@ export class TaskAssignedServiceImpl implements TaskAssignedService {
 
     return cr;
   }
-  
+
 
   async updateEndDate(taskAssignedId: number, endDate: Date, newStatus: string): Promise<CommonResponse> {
     let cr = new CommonResponse();

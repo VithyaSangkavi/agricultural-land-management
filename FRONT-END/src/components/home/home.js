@@ -1,23 +1,28 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useHistory } from "react-router-dom";
+import tea from '../../assets/img/crop_images/tea.png';
+import wheat from '../../assets/img/crop_images/wheat.png';
+import coconut from '../../assets/img/crop_images/coconut.png';
 import './home.css';
 import '../css/common.css';
 import Footer from '../footer/footer';
+import Header from '../header/header';
 import { FaGlobeAmericas } from 'react-icons/fa';
 import { Dropdown } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { FaPlus, FaMapMarker } from 'react-icons/fa';
 import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
+import { setSelectedCropAction } from '../../actions/auth/crop_action';
 import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
 import { Col, Form } from 'react-bootstrap';
 import '../css/common.css';
 import { alertService } from '../../_services/alert.service';
+import { useSelector } from 'react-redux';
 
-
-function Home({ setSelectedLandId, selectedLandId }) {
+function Home({ setSelectedLandId, selectedLandId, setSelectedCropName, selectedCropName }) {
     const [t, i18n] = useTranslation();
 
     const [searchQuery, setSearchQuery] = useState('');
@@ -28,9 +33,17 @@ function Home({ setSelectedLandId, selectedLandId }) {
     const [OngoingTasks, setOngoingTasks] = useState([]);
     const [landNames, setLandNames] = useState([]);
     const [landName, setLandName] = useState([]);
+    const [cropName, setCropName] = useState('');
 
+    let selectedImage = null;
 
     const history = useHistory();
+
+    const cropNameFromRedux = useSelector((state) => state.selectedCropName);
+
+    const actualCropName = cropNameFromRedux ? cropNameFromRedux.cropName : '';
+
+    console.log('Crop Name from Redux:', actualCropName);
 
     const getFormattedDate = (dateString) => {
         const date = new Date(dateString);
@@ -47,26 +60,35 @@ function Home({ setSelectedLandId, selectedLandId }) {
 
 
     useEffect(() => {
-        axios.post('http://localhost:8081/service/master/taskAssignedFindAll').then((response) => {
+        axios.post('http://localhost:8080/service/master/taskAssignedFindAll').then((response) => {
             setTaskAssigned(response.data);
             console.log("Task Assigned: ", response.data);
         });
 
-        axios.post('http://localhost:8081/service/master/taskFindAll').then((response) => {
+        axios.post('http://localhost:8080/service/master/taskFindAll').then((response) => {
             setTask(response.data.extra);
             console.log("Tasks : ", response.data.extra);
         });
 
-        axios.get(`http://localhost:8081/service/master/ongoing-tasks-with-names?landId=${selectedLandId}`).then((response) => {
+        axios.get(`http://localhost:8080/service/master/ongoing-tasks-with-names?landId=${selectedLandId}`).then((response) => {
             setOngoingTasks(response.data.extra);
             console.log("Ongoing tasks : ", response.data);
 
             if (response.data.extra.length === 0) {
                 alertService.info('No Data Found !');
-            }            
-
-
+            }
         });
+
+        axios.get(`http://localhost:8080/service/master/cropNameFindByLandId/${selectedLandId}`)
+            .then((response) => {
+                setCropName(response.data.cropName.extra);
+                setSelectedCropName(response.data.cropName.extra);
+                console.log('crop name: ', cropName);
+
+            })
+            .catch((error) => {
+                console.error('Error fetching task card id:', error);
+            });
 
     }, [selectedLandId]);
 
@@ -85,28 +107,28 @@ function Home({ setSelectedLandId, selectedLandId }) {
 
     useEffect(() => {
         submitSets(submitCollection.manageland, false).then((res) => {
-          setLandNames(res.extra);
+            setLandNames(res.extra);
         });
-      
+
         if (selectedLandId) {
-          submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true)
-            .then((res) => {
-              setLandName(res.extra ? res.extra.name : "All Lands");
-            })
-            .catch((error) => {
-              console.error("Error fetching land by id:", error);
-            });
+            submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true)
+                .then((res) => {
+                    setLandName(res.extra ? res.extra.name : "All Lands");
+                })
+                .catch((error) => {
+                    console.error("Error fetching land by id:", error);
+                });
         } else {
-          setLandName("All Lands");
+            setLandName("All Lands");
         }
-      }, [submitCollection.manageland, selectedLandId]);
+    }, [submitCollection.manageland, selectedLandId]);
 
     // const handleLandChange = (event) => {
     //     const newSelectedLandId = event.target.value;
     //     console.log(newSelectedLandId);
     //     setSelectedLandId(newSelectedLandId);
 
-    //     axios.post(`http://localhost:8081/service/master/findLandIdByName?name=${selectedLandId}`)
+    //     axios.post(`http://localhost:8080/service/master/findLandIdByName?name=${selectedLandId}`)
     //         .then((response) => {
     //             const landIdTask = response.data.extra;
     //             const taskLand = JSON.stringify(landIdTask);
@@ -118,7 +140,7 @@ function Home({ setSelectedLandId, selectedLandId }) {
 
     //             console.log("selected land : ", selectedLandId)
     //             console.log("landId : ", landId)
-    //             axios.get(`http://localhost:8081/service/master/ongoing-tasks-with-names?landId=${selectedLandId}`).then((response) => {
+    //             axios.get(`http://localhost:8080/service/master/ongoing-tasks-with-names?landId=${selectedLandId}`).then((response) => {
     //                 setOngoingTasks(response.data.extra);
     //                 console.log("Ongoing tasks : ", response.data.extra);
 
@@ -145,49 +167,25 @@ function Home({ setSelectedLandId, selectedLandId }) {
         console.log("task assigned : ", taskAssignedid);
     };
 
+    switch (cropName) {
+        case 'Tea':
+            selectedImage = tea;
+            break;
+        case 'Wheat':
+            selectedImage = wheat;
+            break;
+        case 'Coconut':
+            selectedImage = coconut;
+            break;
+        default:
+            console.log(`Unhandled crop name: ${cropName}`);
+            break;
+    }
+
     return (
         <div className="home-app-screen">
-            <div className='main-heading'>
+            <Header />
 
-                <div className="outer-frame d-flex justify-content-between align-items-center">
-                    <div className="filter-container d-flex align-items-center">
-                        {/* <MdArrowBackIos className="back-button" onClick={goBack} /> */}
-                    </div>
-
-                    <div className="filter-container d-flex align-items-center">
-                        <div className="land-filter">
-                            <Dropdown onSelect={handleLandChange}>
-                                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                                    <FaMapMarker style={{ color: 'white' }} />
-                                </Dropdown.Toggle>
-
-                                <Dropdown.Menu>
-                                <Dropdown.Item eventKey="">All Lands</Dropdown.Item>
-                                    {landNames.map((land) => (
-                                        <Dropdown.Item eventKey={land.id} value={land.id}>
-                                            {land.name}
-                                        </Dropdown.Item>
-                                    ))}
-                                </Dropdown.Menu>
-                            </Dropdown>
-                        </div>
-
-                        <div className="language-filter">
-                            <Dropdown onSelect={handleLanguageChange}>
-                                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                                    <FaGlobeAmericas style={{ color: 'white' }} />
-                                </Dropdown.Toggle>
-
-                                <Dropdown.Menu>
-                                    <Dropdown.Item eventKey="en">English</Dropdown.Item>
-                                    <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-                                </Dropdown.Menu>
-                            </Dropdown>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
             <div className="drop-down-container">
 
                 <div className='landsectioncover'>
@@ -195,6 +193,10 @@ function Home({ setSelectedLandId, selectedLandId }) {
                         <FaMapMarker style={{ marginRight: '5px' }} />
                         Selected Land: {landName}
                     </p>
+                </div>
+
+                <div className='crop-image-display' >
+                    {selectedImage && <img src={selectedImage} alt={`Image for ${cropName}`} />}
                 </div>
 
                 <div className='home-heading'>
@@ -224,10 +226,12 @@ function Home({ setSelectedLandId, selectedLandId }) {
 
 const mapStateToProps = (state) => ({
     selectedLandId: state.selectedLandId,
+    selectedCropName: state.SelectedCropName
 });
 
 const mapDispatchToProps = {
     setSelectedLandId: setSelectedLandIdAction,
+    setSelectedCropName: setSelectedCropAction,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

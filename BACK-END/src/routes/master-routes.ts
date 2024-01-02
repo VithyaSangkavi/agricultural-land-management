@@ -23,11 +23,13 @@ router.post("/login", userController.login);
 //crop routes
 router.post("/cropSave", cropController.save);
 router.get('/cropFindByLandId/:landId', cropController.findCropIdByLandId);
+router.get('/cropNameFindByLandId/:landId', cropController.findCropNameByLandId);
 /* router.post("/cropUpdate", cropController.update);
 router.post("/cropDelete", cropController.delete);
 router.post("/cropFindAll", cropController.findAll);
 router.get("/cropFindById", cropController.findById); */
-//
+
+//expense routes
 router.post("/expenseSave", expenseController.save);
 //router.post("/expenseUpdate", expenseController.update);
 //router.post("/expenseDelete", expenseController.delete);
@@ -35,20 +37,20 @@ router.get("/expenseFindAll", expenseController.findAll);
 //router.get("/expenseFindById", expenseController.findById);
 router.get('/find-by-type', expenseController.findIdByType);
 
-//
+//income routes
 router.post("/incomeSave", incomeController.save);
 router.put("/updatePrice/:incomeId", incomeController.updatePrice);
 router.get("/incomeFindAll", incomeController.findAll);
 router.get("/incomeFindById/:incomeId", incomeController.findById);
 router.get("/incomeFindByLandId/:landId", incomeController.findByLandId);
 
-//
+//land routes
 router.post("/landSave", landController.save);
 router.get("/landFindAll", landController.findAll);
 router.get("/landFind", landController.findById);
 router.post('/findLandIdByName', landController.findLandIdByName);
 
-//
+//lot routes
 router.post("/lotSave", lotController.save);
 router.get("/lotFindAll", lotController.findAll);
 router.get("/lotFindByLandId/:landId", lotController.findByLandId);
@@ -60,9 +62,9 @@ router.post("/workerUpdate", workerController.update);
 router.post("/workerDelete", workerController.delete);
 router.post("/workerFindAll", workerController.findAll);
 router.get("/workerFindById", workerController.findById);
-router.get('/findByLandId', workerController.findByLandId);
+router.post('/findWorkByLandId', workerController.findWorkByLandId);
 router.post('/findWorkerIdByName', workerController.findWorkerIdByName);
-
+router.get('/findByLandId', workerController.findByLandId);
 
 // task-type routes
 router.post("/taskSave", taskTypeController.save);
@@ -74,10 +76,11 @@ router.get('/findTaskNameById', taskTypeController.findTaskNameById);
 
 // payment routes
 router.post("/paymentSave", paymentController.save);
-// router.post("/taskUpdate", taskTypeController.update);
+router.get('/findByWorkerId', paymentController.findByWorkerId);
+router.post("/paymentUpdate", paymentController.update);
 // router.post("/taskDelete", taskTypeController.delete);
 // router.post("/taskFindAll", taskTypeController.findAll);
-// router.get("/taskFindById", taskTypeController.findById);
+router.get("/paymentFindById", paymentController.findById);
 
 // task-assigned routes
 router.post("/task-assigned-save", taskAssignedController.save);
@@ -85,7 +88,7 @@ router.post("/task-assigned-save", taskAssignedController.save);
 // router.post("/taskDelete", taskTypeController.delete);
 router.post("/taskAssignedFindAll", taskAssignedController.findAll);
 router.get('/task-assigned', taskAssignedController.findByTaskId);
-router.get("/taskFindById", taskTypeController.findById);
+router.get("/taskAssignedFindById", taskAssignedController.findById);
 router.get("/ongoing-tasks-with-names", taskAssignedController.getOngoingTasksWithTaskNames);
 router.get("/completed-tasks-with-names", taskAssignedController.getCompletedTasksWithTaskNames);
 router.put("/updateEndDate/:taskAssignedId", taskAssignedController.updateEndDate);
@@ -133,5 +136,6 @@ router.get('/cost-breakdown-line', reportController.getCostBreakdownLineReport);
 router.get('/cost-breakdown-pie', reportController.getgetCostBreakdownPieReport);
 //daily weekly monthly summary report
 router.get('/summary', reportController.getSummaryReport);
+router.get('/summary-weekly', reportController.getWeeklySummaryReport);
 
 module.exports = router;

@@ -51,6 +51,7 @@ export const TRANSLATIONS_SL = {
     fired: 'ඉවත් කර ඇත',
     temporarystopped: 'තාවකාලිකව නතර කර ඇත',
     addworker: 'සේවකයා එකතු කරන්න',
+    updateworker: 'සේවකයා යාවත්කාලීන කරන්න',
 
     //save payment
     monthlydailypay: 'මාසික / දෛනික ගෙවීම',
@@ -60,6 +61,7 @@ export const TRANSLATIONS_SL = {
     extrapayment: 'අමතර Kg ගෙවීම',
     attendancepayment: 'පැමිණීමේ ගෙවීම',
     addworkerpayment: 'සේවක ගෙවීම් එකතු කරන්න',
+    updateworkerpayment: 'සේවක ගෙවීම් යාවත්කාලීන කරන්න',
 
     //manage workers
     workermanagement: 'සේවක කළමනාකරණය',
@@ -152,4 +154,6 @@ export const TRANSLATIONS_SL = {
     cost: 'පිරිවැය',
     yield: 'අස්වැන්න',
     costvsyieldcomparisionchart: 'පිරිවැය එදිරිව අස්වැන්න සංසන්දනාත්මක වගුව',
+
+    logout: 'පිටවීම',
 };

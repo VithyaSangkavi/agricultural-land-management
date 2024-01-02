@@ -15,7 +15,8 @@ import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 import SearchComponent from '../search/search';
 import { alertService } from '../../_services/alert.service';
-
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import Header from '../header/header';
 
 function ManageWorkers({ setSelectedLandId, selectedLandId }) {
 
@@ -28,13 +29,20 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
   const [landNames, setLandNames] = useState([]);
   const [landName, setLandName] = useState([]);
 
+  const [isReqPagination] = useState(true);
+  const [maxResult, setMaxResult] = useState(4);
+  const [startIndex, setStartIndex] = useState(0);
+
   const history = useHistory();
 
   useEffect(() => {
 
-    axios.post('http://localhost:8081/service/master/workerFindAll').then((response) => {
-      setWorkers(response.data.extra);
-      console.log("Workers : ", response.data.extra);
+    submitSets(submitCollection.manageworker, false).then((res) => {
+      setWorkers(res.extra);
+
+      if (res.extra.length === 0) {
+        alertService.info('No Data Found !');
+      }
     });
 
   }, []);
@@ -55,7 +63,7 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
     submitSets(submitCollection.manageland, false).then((res) => {
       setLandNames(res.extra);
     });
-  
+
     if (selectedLandId) {
       submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true)
         .then((res) => {
@@ -75,30 +83,42 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
   };
 
   useEffect(() => {
-    axios.get(`http://localhost:8081/service/master/findByLandId?landId=${selectedLandId}`)
-      .then((response) => {
+    const getWorker = {
+      landId: parseInt(selectedLandId),
+      isReqPagination,
+      maxResult,
+      startIndex
+    }
 
-        if (response.data.extra.length === 0) {
-          alertService.info('No Data Found !');
+    submitSets(submitCollection.findworkerbyland, getWorker, false)
+      .then(res => {
+        if (res.extra.length === 0) {
+          alertService.info('No Data Found !')
         }
 
-        console.log("Workers for selected land:", response.data.extra);
-
-        if (Array.isArray(response.data.extra)) {
-          setFilteredWorkersForSelectedLand(response.data.extra);
+        if (Array.isArray(res.extra)) {
+          setFilteredWorkersForSelectedLand(res.extra);
         } else {
           setFilteredWorkersForSelectedLand([]);
         }
       })
+
+  }, [selectedLandId, startIndex]);
+
+  const handleWorkerCardClick = async (worker) => {
+    const workerId = worker.id;
+
+    console.log('worker id: ', workerId);
+
+    submitSets(submitCollection.findpaymentbyworkerid, "?workerId=" + workerId, true)
+      .then((res) => {
+        const paymentDetails = res.extra;
+
+        history.push('/addWorker', { basicDetails: worker, paymentDetails, isEditing: true });
+      })
       .catch((error) => {
-        console.error("Error fetching workers for the selected land:", error);
+        console.error('Error fetching worker/payment details:', error);
       });
-  }, [selectedLandId]);
-
-
-
-  const handleWorkerCardClick = (worker) => {
-    history.push('/addWorker', { basicDetails: worker });
   };
 
   const handleLanguageChange = (lang) => {
@@ -109,49 +129,19 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
     history.goBack();
   };
 
+  const handleLoadMore = () => {
+    setStartIndex(startIndex + maxResult);
+  };
+
+  const handleBack = () => {
+    if (startIndex > 0) {
+      setStartIndex(startIndex - maxResult);
+    }
+  };
+
   return (
     <div className="worker-app-screen">
-      <div className='main-heading'>
-
-        <div className="outer-frame d-flex justify-content-between align-items-center">
-          <div className="filter-container d-flex align-items-center">
-            <MdArrowBackIos className="back-button" onClick={goBack} />
-          </div>
-
-          <div className="filter-container d-flex align-items-center">
-            <div className="land-filter">
-              <Dropdown onSelect={handleLandChange}>
-                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                  <FaMapMarker style={{ color: 'white' }} />
-                </Dropdown.Toggle>
-
-                <Dropdown.Menu>
-                  <Dropdown.Item eventKey="">All Lands</Dropdown.Item>
-                  {landNames.map((land) => (
-                    <Dropdown.Item eventKey={land.id} value={land.id}>
-                      {land.name}
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown.Menu>
-              </Dropdown>
-            </div>
-
-            <div className="language-filter">
-              <Dropdown onSelect={handleLanguageChange}>
-                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                  <FaGlobeAmericas style={{ color: 'white' }} />
-                </Dropdown.Toggle>
-
-                <Dropdown.Menu>
-                  <Dropdown.Item eventKey="en">English</Dropdown.Item>
-                  <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </div>
-          </div>
-        </div>
-
-      </div>
+      <Header/>
 
       <br />
 
@@ -184,7 +174,6 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
           </div>
         </div>
       </div>
-
       <div className="worker-list">
 
         {selectedLandId && selectedLandId !== ""
@@ -204,6 +193,24 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
         }
       </div>
 
+      <br />
+
+      <div>
+        {filteredWorkersForSelectedLand.length >= 4 ? (
+          <button className="load-more-button" onClick={handleLoadMore}>
+            Load More <IoIosArrowDown />
+          </button>
+        ) : (
+          filteredWorkersForSelectedLand.length > 0 && filteredWorkersForSelectedLand.length < 4 && startIndex > 0 && (
+            <button className="load-more-button" onClick={handleBack}>
+              See Previous <IoIosArrowUp />
+            </button>
+          )
+        )}
+      </div>
+
+      <br />
+      <br />
       <br />
       <div className='footer-alignment'>
         <Footer />

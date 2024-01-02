@@ -236,17 +236,36 @@
   margin: 0;
 }
 
-.line {
+.line-two{
+  background-color: #b3e2c1;
   display: flex;
   align-items: center;
+  border-radius: 12px;
+  padding: 0px 5px 2px 5px;
 }
 
-.delete-button {
+.line {
+  background-color: #b3e2c1;
+  margin-top: 8px;
+  margin-right: 8px;
+  display: flex;
+  align-items: center;
+  border-radius: 12px;
+  padding: 0px 5px 2px 5px;
+}
+
+.line p {
+  margin: 0;
+  margin-right: 8px; 
+  font-size: small;
+}
+
+.line button {
   background: none;
   color: black;
   border: none;
   cursor: pointer;
-  margin-left: 50px;
+  font-size: small;
 }
 
 .worker-details {
@@ -259,8 +278,13 @@
   flex: 1;
 }
 
+.worker-name-container p{
+  font-size: 14px;
+}
+
 .remove-button-container {
   margin-left: 10px; 
+  font-size: 14px;
 }
 
 .task-scroll{
@@ -280,16 +304,23 @@
   border-radius: 5px;
 }
 
-.view-task-expenses{
+.close-task-expenses{
   padding: 8px 16px;
-  background-color: #0e4f20;
-  color: #fff;
+  color: #949191;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s;
-  width: 90%;
-  margin-left: 15px;
+  margin-left: 80%;
+}
+
+.view-task-expenses{
+  padding: 8px 16px;
+  color: #949191;
+  border: none;
+  width: 170px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 48%;
 }
 
 .total-display-card{
@@ -301,4 +332,10 @@
   color: black;
   border-radius: 5px;
   font-size: medium;
+}
+
+.worker-container{
+  display: flex;
+  flex-wrap: wrap; 
+  gap: 8px; 
 }

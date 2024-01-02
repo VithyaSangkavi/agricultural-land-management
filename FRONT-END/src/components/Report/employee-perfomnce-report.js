@@ -21,7 +21,7 @@ const EmployeePerfomnceReport = ({ dateRange: { fromDate, toDate }, selectedLand
 
         const fetchPerfomnceData = async () => {
             try {
-                const baseURL = 'http://localhost:8081/service/master/employee-perfomance';
+                const baseURL = 'http://localhost:8080/service/master/employee-perfomance';
 
                 if (selectedLand) {
                     if (fromDate && toDate) {
@@ -99,7 +99,10 @@ const EmployeePerfomnceReport = ({ dateRange: { fromDate, toDate }, selectedLand
             <div className='report-app-screen'>
                 <div className='info-card'>
                     {fromDate && toDate && (
-                        <p>Date Range : {fromDate} - {toDate}</p>
+                        <p>
+                            Date Range :
+                            {fromDate === '1970-01-01' && toDate === '2100-12-31' ? ' all' : `${fromDate} - ${toDate}`}
+                        </p>
                     )}
                 </div>
                 <h2>Employee Perfomnce Report</h2>
@@ -122,19 +125,22 @@ const EmployeePerfomnceReport = ({ dateRange: { fromDate, toDate }, selectedLand
                     </tbody>
                 </table>
             </div>
-            <br />
+            
             <div className='report-app-screen'>
                 <div className='attendance-chart'>
-                    <h2>Employee Perfomnce Chart</h2>
                     {perfomnceData.length > 0 ? (
-                        <Line data={chartData} options={chartOptions} />
+                        <>
+                            <h2>Employee Perfomnce Chart</h2> <br />
+
+                            <Line data={chartData} options={chartOptions} />
+                        </>
                     ) : (
                         <p className='reportnotfound'>
                             Data Not Found !
                         </p>
                     )}
                 </div>
-            </div>
+            </div >
             <br />
         </>
     );

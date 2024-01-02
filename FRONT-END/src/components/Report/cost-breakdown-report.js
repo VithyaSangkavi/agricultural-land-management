@@ -17,11 +17,11 @@ const CostBreakdownReport = ({ dateRange: { fromDate }, selectedLand }) => {
 
     console.log("Cost-b-down fromDate: ", fromDate)
 
-    useEffect(() => {
+    useEffect((fromDate) => {
         const fetchCostBreakdownLineData = async () => {
             try {
 
-                const baseURL = 'http://localhost:8081/service/master/cost-breakdown-line'
+                const baseURL = 'http://localhost:8080/service/master/cost-breakdown-line'
                 const fetchURL = selectedLand ? `${baseURL}?landId=${selectedLand}` : baseURL;
 
 
@@ -58,10 +58,9 @@ const CostBreakdownReport = ({ dateRange: { fromDate }, selectedLand }) => {
             }
         };
 
-
         const fetchCostBreakdownPieData = async () => {
             try {
-                const response = await axios.get('http://localhost:8081/service/master/cost-breakdown-pie');
+                const response = await axios.get('http://localhost:8080/service/master/cost-breakdown-pie');
                 console.log("Pie : ", response.data);
                 setCostBreakdownPieData(response.data);
             } catch (error) {
@@ -194,7 +193,7 @@ const CostBreakdownReport = ({ dateRange: { fromDate }, selectedLand }) => {
         <>
             <div className='report-app-screen'>
                 {fromDate ? (
-                    <h2>Cost Breakdown {yearMonth[0].yearMonth}</h2>
+                    <h2>Cost Breakdown {fromDate}</h2>
                 ) : (
                     <h2>Cost Breakdown Line Chart</h2>
                 )}

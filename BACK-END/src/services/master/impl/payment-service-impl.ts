@@ -39,9 +39,9 @@ export class PaymentServiceImpl implements PaymentService {
 
       //check worker id
       let workerModel: WorkerEntity = null;
-      if(paymentDto.getWorkerId() > 0){
+      if (paymentDto.getWorkerId() > 0) {
         workerModel = await this.workerDao.findById(paymentDto.getWorkerId());
-      } else{ 
+      } else {
         return CommonResSupport.getValidationException("Worker with the specified ID does not exist!");
       }
 
@@ -63,17 +63,6 @@ export class PaymentServiceImpl implements PaymentService {
   async update(paymentDto: PaymentDto): Promise<CommonResponse> {
     let cr = new CommonResponse();
     try {
-      // validation
-      if (paymentDto.getPaymentType()) {
-        // check name already have
-        let typePaymentMode = await this.paymentDao.findByName(paymentDto.getPaymentType());
-        if (typePaymentMode && typePaymentMode.id != paymentDto.getPaymentId()) {
-          return CommonResSupport.getValidationException("payment Name Already In Use !");
-        }
-      } else {
-        return CommonResSupport.getValidationException("payment Name Cannot Be null !");
-      }
-
       // update payment
       let updatePayment = await this.paymentDao.update(paymentDto);
       if (updatePayment) {
@@ -157,6 +146,25 @@ export class PaymentServiceImpl implements PaymentService {
 
       cr.setStatus(true);
       cr.setExtra(paymentDto);
+    } catch (error) {
+      cr.setStatus(false);
+      cr.setExtra(error);
+      ErrorHandlerSup.handleError(error);
+    }
+    return cr;
+  }
+
+  async findByWorkerId(workerId: number): Promise<CommonResponse> {
+    let cr = new CommonResponse();
+    try {
+      const payment = await this.paymentDao.findByWorkerId(workerId);
+
+      let paymentDto = new PaymentDto();;
+
+      paymentDto.filViaRequest(payment);
+
+      cr.setStatus(true);
+      cr.setExtra(payment);
     } catch (error) {
       cr.setStatus(false);
       cr.setExtra(error);

@@ -13,6 +13,7 @@ import { MdArrowBackIos } from "react-icons/md";
 import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 
+
 const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
     const [data, setData] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
@@ -63,9 +64,12 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
         } else {
             // Fetch lots for the selected land
             submitSets(submitCollection.managelot, `/${selectedLandId}`, true).then(res => {
-                if (res && res.status) {
-                    setData(res.extra);
+                setData(res.extra);
+
+                if (res.extra.length === 0) {
+                    alertService.info('No Data Found !');
                 }
+
             }).catch(error => {
                 console.error("Error fetching lots for the selected land:", error);
                 setData([]);
@@ -173,12 +177,15 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
             </div>
 
             <div className='lot-list'>
-                {filteredData.map((lot) => (
-                    <div key={lot.id} className="lot-card">
-                        <h3>{lot.name}</h3>
-                        <p>{t('area')}: {lot.area} {lot.areaUOM}</p>
-                    </div>
-                ))}
+                {
+                    filteredData.map((lot) => (
+                        <div key={lot.id} className="lot-card">
+                            <h3>{lot.name}</h3>
+                            <p>{t('area')}: {lot.area} {lot.areaUOM}</p>
+                        </div>
+                    ))
+                }
+
             </div>
 
             <div>

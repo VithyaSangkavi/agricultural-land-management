@@ -69,3 +69,13 @@ exports.update = async (req: Request, res: Response, next: NextFunction) => {
     }
   };
   
+  exports.findByWorkerId = async(req: Request, res: Response) => {
+    try {
+      const workerId = Number(req.query.workerId); 
+      console.log('Received workerId:', workerId);
+      const result = await paymentService.findByWorkerId(workerId);
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ error: 'An error occurred' });
+    }
+  }
