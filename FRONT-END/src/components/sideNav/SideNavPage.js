@@ -14,8 +14,15 @@ import { MdOutlineBallot, MdTask } from "react-icons/md";
 import { FaLandmark, FaCashRegister } from "react-icons/fa6";
 import { HiOutlineCash } from "react-icons/hi";
 import { ImCross } from "react-icons/im";
+import { CiLogout } from "react-icons/ci";
+import { useDispatch } from 'react-redux';
+import { logoutAction } from '../../actions/auth/login_action';
+import { alertService } from '../../_services/alert.service';
+
 
 function SideNavBar() {
+
+  const dispatch = useDispatch();
 
   const history = useHistory();
   const { t, i18n } = useTranslation();
@@ -50,6 +57,12 @@ function SideNavBar() {
 
   const Reports = () => {
     history.push('/report');
+  };
+
+  const Logout = () => {
+    dispatch(logoutAction());
+    alertService.success("Logout completed")
+    history.push('/');
   };
 
 
@@ -140,6 +153,14 @@ function SideNavBar() {
             <button className='menu-click'>
               <div onClick={CompletedTasks}>
                 <MdTask />  {t('completedtasks')}
+              </div>
+            </button>
+          </div>
+
+          <div className="side-nav-menu">
+            <button className='menu-click'>
+              <div onClick={Logout}>
+                <CiLogout />  {t('logout')}
               </div>
             </button>
           </div>

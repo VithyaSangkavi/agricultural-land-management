@@ -152,4 +152,6 @@ export const TRANSLATIONS_EN = {
     cost: 'Cost',
     yield: 'Yield',
     costvsyieldcomparisionchart: 'Cost vs Yield Comparison Chart',
+
+    logout: 'Logout',
 };

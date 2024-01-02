@@ -3,7 +3,7 @@ import { combineReducers } from 'redux';
 import loginReducer from './loginReducer';
 import languageReducer from './languageReducer';
 
-import { SIGNOUT_SET, SELECTED_LAND_SET } from '../constants/loginTypes';
+import { SIGNOUT_SET, SELECTED_LAND_SET, RESET_ALL } from '../constants/loginTypes';
 
 const INITIAL_STATE = {
   signState: { signinDetails: false },
@@ -28,10 +28,11 @@ const appReducer = combineReducers({
 });
 
 const rootReducer = (state, action) => {
-  if(action.type === SIGNOUT_SET){
-    state = undefined
+  if (action.type === SIGNOUT_SET || action.type === RESET_ALL) {
+    state = undefined;
   }
-  return appReducer(state, action)
-}
+  return appReducer(state, action);
+};
+
 
 export default rootReducer;
