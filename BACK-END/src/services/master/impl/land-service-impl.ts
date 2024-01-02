@@ -110,10 +110,12 @@ export class LandServiceImpl implements LandService {
       // find land
       let lands = await this.landDao.findAll(landDto);
       let landDtoList = new Array();
+      console.log('land: ', lands)
       for (const landModel of lands) {
         let landDto = new LandDto();
         landDto.filViaDbObject(landModel);
         landDtoList.push(landDto);
+      
       }
       if (landDto.getStartIndex() == 0) {
         let count = await this.landDao.findCount(landDto);

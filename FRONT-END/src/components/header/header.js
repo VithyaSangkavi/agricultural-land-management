@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
+import axios from 'axios';
 import './header.css';
 import '../css/common.css';
 import { FaGlobeAmericas } from 'react-icons/fa';
@@ -57,6 +58,16 @@ function Header({ setSelectedLandId, selectedLandId }) {
         } else {
             setLandName("All Lands");
         }
+
+        axios.get(`http://localhost:8080/service/master/cropNameFindByLandId/${selectedLandId}`)
+            .then((response) => {
+                setCropName(response.data.cropName.extra);
+                console.log('crop name header: ', cropName);
+
+            })
+            .catch((error) => {
+                console.error('Error fetching task card id:', error);
+            });
     }, [submitCollection.manageland, selectedLandId]);
 
 

@@ -4,6 +4,7 @@ import Footer from '../footer/footer';
 import { useHistory } from "react-router-dom";
 import DatePicker from 'react-datepicker';
 import './manage-task.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
@@ -16,7 +17,6 @@ import { MdArrowBackIos, MdViewAgenda, MdClose } from "react-icons/md";
 import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 import { useLocation } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import { alertService } from '../../_services/alert.service';
 import { IoMdClose } from "react-icons/io";
@@ -61,12 +61,6 @@ const ManageTask = ({ selectedLandId }) => {
     const taskAssignedId = location.state?.taskAssignedId || null;
 
     console.log("task id : ", taskAssignedId)
-
-    const handleIconClick = () => {
-        if (datePickerRef.current) {
-            datePickerRef.current.openCalendar();
-        }
-    };
 
     const handleShedule = (value) => {
 
@@ -252,7 +246,7 @@ const ManageTask = ({ selectedLandId }) => {
     }
 
     const addWorkerToPluckTaskCard = (taskCardId) => {
-        const selectedWorker = localStorage.getItem('selectedWorker');
+        // const selectedWorker = localStorage.getItem('selectedWorker');
         console.log('add -> selected worker pluck task: ', selectedWorker);
         console.log('Quantity: ', quantity);
 
@@ -502,8 +496,8 @@ const ManageTask = ({ selectedLandId }) => {
             </div>
 
             <div className='task-heading'>
-                <p> {taskName} {t('task')}  </p>
-                <p> {t('from')} - {getFormattedDate(startDate)} </p>
+                <p> {taskName} {t('task')} - </p>
+                <p> {t('from')} - {startDate} </p>
             </div>
 
             <br />
