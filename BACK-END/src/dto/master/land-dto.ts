@@ -12,6 +12,7 @@ export class LandDto extends PaginationDto {
     private createdDate: Date;
     private updatedDate: Date;
     private status: Status;
+    private cropName: string;
 
     filViaRequest(body) {
 
@@ -39,7 +40,8 @@ export class LandDto extends PaginationDto {
         this.areaUOM = LandModel.areaUOM;
         this.createdDate = LandModel.createdDate;
         this.updatedDate = LandModel.updatedDate;
-        this.status = LandModel.status
+        this.status = LandModel.status;
+        this.cropName = LandModel.crop ? LandModel.crop.cropName : null;
     }
 
     public getLandId(): number {
@@ -104,5 +106,13 @@ export class LandDto extends PaginationDto {
 
     public setStatus(status: Status): void {
         this.status = status;
+    }
+
+    public getCropName(): string {
+        return this.cropName;
+    }
+
+    public setCropName(cropName: string): void {
+        this.cropName = cropName;
     }
 }

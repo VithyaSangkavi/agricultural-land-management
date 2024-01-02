@@ -63,24 +63,25 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
     submitSets(submitCollection.manageland, false).then((res) => {
       setLandNames(res.extra);
     });
+  })
 
-    if (selectedLandId) {
-      submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true)
-        .then((res) => {
-          setLandName(res.extra ? res.extra.name : "All Lands");
-        })
-        .catch((error) => {
-          console.error("Error fetching land by id:", error);
-        });
-    } else {
-      setLandName("All Lands");
-    }
-  }, [submitCollection.manageland, selectedLandId]);
+  //   if (selectedLandId) {
+  //     submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true)
+  //       .then((res) => {
+  //         setLandName(res.extra ? res.extra.name : "All Lands");
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error fetching land by id:", error);
+  //       });
+  //   } else {
+  //     setLandName("All Lands");
+  //   }
+  // }, [submitCollection.manageland, selectedLandId]);
 
-  const handleLandChange = (event) => {
-    console.log("Land : ", event);
-    setSelectedLandId(event);
-  };
+  // const handleLandChange = (event) => {
+  //   console.log("Land : ", event);
+  //   setSelectedLandId(event);
+  // };
 
   useEffect(() => {
     const getWorker = {
@@ -121,13 +122,13 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
       });
   };
 
-  const handleLanguageChange = (lang) => {
-    i18n.changeLanguage(lang);
-  };
+  // const handleLanguageChange = (lang) => {
+  //   i18n.changeLanguage(lang);
+  // };
 
-  const goBack = () => {
-    history.goBack();
-  };
+  // const goBack = () => {
+  //   history.goBack();
+  // };
 
   const handleLoadMore = () => {
     setStartIndex(startIndex + maxResult);
