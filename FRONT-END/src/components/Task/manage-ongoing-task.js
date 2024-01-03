@@ -712,13 +712,15 @@ const ManageOngoingTask = ({ selectedLandId }) => {
 
                                             {taskDetail.workerDetails
                                                 .map((workerDetail) => (
-                                                    <div key={workerDetail.id} className="worker-details">
+                                                    <div key={workerDetail.id} className="line">
                                                         <div className="worker-name-container">
                                                             {ongoingTaskName === 'Pluck' ? (
+                                                                <div>
                                                                 <p>
                                                                     {workerDetail.workerName} - {workerDetail.quantity}
                                                                     {workerDetail.units}
                                                                 </p>
+                                                                </div>
                                                             ) : (
                                                                 <p>{workerDetail.workerName}</p>
                                                             )}

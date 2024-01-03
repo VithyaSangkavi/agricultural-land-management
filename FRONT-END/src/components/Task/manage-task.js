@@ -497,7 +497,7 @@ const ManageTask = ({ selectedLandId }) => {
 
             <div className='task-heading'>
                 <p> {taskName} {t('task')} - </p>
-                <p> {t('from')} - {startDate} </p>
+                <p> {t('from')} - {getFormattedDate(startDate)} </p>
             </div>
 
             <br />
