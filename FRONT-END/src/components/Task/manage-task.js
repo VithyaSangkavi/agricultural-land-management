@@ -501,17 +501,23 @@ const ManageTask = ({ selectedLandId }) => {
             </div>
 
             <br />
- 
+
 
             <>
                 <Button className="add-button" onClick={handleShow}>
                     Select Dates to Schedule
                 </Button>
 
-                <Modal show={show} onHide={handleClose} animation={false}>
+                <Modal
+                    show={show}
+                    onHide={handleClose}
+                    animation={false}
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered
+                >
                     <Modal.Header>
                         <Modal.Title>Select Dates</Modal.Title>
-                        <Button variant="secondary" style={{backgroundColor: '#0e4f20'}} onClick={handleShedule}>
+                        <Button variant="secondary" style={{ backgroundColor: '#0e4f20' }} onClick={handleShedule}>
                             Schedule
                         </Button>
                         <Button variant="secondary" onClick={handleClose}>
