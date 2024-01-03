@@ -61,163 +61,162 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
 
   useEffect(() => {
     submitSets(submitCollection.manageland, false).then((res) => {
-      setLandNames(res.extra);
+        setLandNames(res.extra);
     });
-  })
 
-  //   if (selectedLandId) {
-  //     submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true)
-  //       .then((res) => {
-  //         setLandName(res.extra ? res.extra.name : "All Lands");
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error fetching land by id:", error);
-  //       });
-  //   } else {
-  //     setLandName("All Lands");
-  //   }
-  // }, [submitCollection.manageland, selectedLandId]);
-
-  // const handleLandChange = (event) => {
-  //   console.log("Land : ", event);
-  //   setSelectedLandId(event);
-  // };
-
-  useEffect(() => {
-    const getWorker = {
-      landId: parseInt(selectedLandId),
-      isReqPagination,
-      maxResult,
-      startIndex
+    if (selectedLandId) {
+        submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true)
+            .then((res) => {
+                setLandName(res.extra ? res.extra.name : "All Lands");
+            })
+            .catch((error) => {
+                console.error("Error fetching land by id:", error);
+            });
+    } else {
+        setLandName("All Lands");
     }
+}, [submitCollection.manageland, selectedLandId]);
 
-    submitSets(submitCollection.findworkerbyland, getWorker, false)
-      .then(res => {
-        if (res.extra.length === 0) {
-          alertService.info('No Data Found !')
-        }
+const handleLandChange = (event) => {
+  console.log("Land : ", event);
+  setSelectedLandId(event);
+};
 
-        if (Array.isArray(res.extra)) {
-          setFilteredWorkersForSelectedLand(res.extra);
-        } else {
-          setFilteredWorkersForSelectedLand([]);
-        }
-      })
+useEffect(() => {
+  const getWorker = {
+    landId: parseInt(selectedLandId),
+    isReqPagination,
+    maxResult,
+    startIndex
+  }
 
-  }, [selectedLandId, startIndex]);
+  submitSets(submitCollection.findworkerbyland, getWorker, false)
+    .then(res => {
+      if (res.extra.length === 0) {
+        alertService.info('No Data Found !')
+      }
 
-  const handleWorkerCardClick = async (worker) => {
-    const workerId = worker.id;
+      if (Array.isArray(res.extra)) {
+        setFilteredWorkersForSelectedLand(res.extra);
+      } else {
+        setFilteredWorkersForSelectedLand([]);
+      }
+    })
 
-    console.log('worker id: ', workerId);
+}, [selectedLandId, startIndex]);
 
-    submitSets(submitCollection.findpaymentbyworkerid, "?workerId=" + workerId, true)
-      .then((res) => {
-        const paymentDetails = res.extra;
+const handleWorkerCardClick = async (worker) => {
+  const workerId = worker.id;
 
-        history.push('/addWorker', { basicDetails: worker, paymentDetails, isEditing: true });
-      })
-      .catch((error) => {
-        console.error('Error fetching worker/payment details:', error);
-      });
-  };
+  console.log('worker id: ', workerId);
 
-  // const handleLanguageChange = (lang) => {
-  //   i18n.changeLanguage(lang);
-  // };
+  submitSets(submitCollection.findpaymentbyworkerid, "?workerId=" + workerId, true)
+    .then((res) => {
+      const paymentDetails = res.extra;
 
-  // const goBack = () => {
-  //   history.goBack();
-  // };
+      history.push('/addWorker', { basicDetails: worker, paymentDetails, isEditing: true });
+    })
+    .catch((error) => {
+      console.error('Error fetching worker/payment details:', error);
+    });
+};
 
-  const handleLoadMore = () => {
-    setStartIndex(startIndex + maxResult);
-  };
+// const handleLanguageChange = (lang) => {
+//   i18n.changeLanguage(lang);
+// };
 
-  const handleBack = () => {
-    if (startIndex > 0) {
-      setStartIndex(startIndex - maxResult);
-    }
-  };
+// const goBack = () => {
+//   history.goBack();
+// };
 
-  return (
-    <div className="worker-app-screen">
-      <Header/>
+const handleLoadMore = () => {
+  setStartIndex(startIndex + maxResult);
+};
 
-      <br />
+const handleBack = () => {
+  if (startIndex > 0) {
+    setStartIndex(startIndex - maxResult);
+  }
+};
 
-      <div className='drop-down-container' style={{ marginTop: "-25px" }}>
+return (
+  <div className="worker-app-screen">
+    <Header />
 
-        <div className='landsectioncover'>
-          <p className="landsection">
-            <FaMapMarker style={{ marginRight: '5px' }} />
-            Selected Land: {landName}
-          </p>
+    <br />
+
+    <div className='drop-down-container' style={{ marginTop: "-25px" }}>
+
+      <div className='landsectioncover'>
+        <p className="landsection">
+          <FaMapMarker style={{ marginRight: '5px' }} />
+          Selected Land: {landName}
+        </p>
+      </div>
+
+      <p className="home-heading">{t('workermanagement')}</p>
+
+      <button className="add-worker-button" onClick={AddWorker}>
+        {t('addworker')}
+      </button>
+    </div>
+    <div className="search-container">
+      <div className="search-wrapper">
+        <input
+          className='search-field'
+          type="text"
+          placeholder={t('searchworkers')}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        <div className="search-icon">
+          <FaSearch />
         </div>
-
-        <p className="home-heading">{t('workermanagement')}</p>
-
-        <button className="add-worker-button" onClick={AddWorker}>
-          {t('addworker')}
-        </button>
-      </div>
-      <div className="search-container">
-        <div className="search-wrapper">
-          <input
-            className='search-field'
-            type="text"
-            placeholder={t('searchworkers')}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <div className="search-icon">
-            <FaSearch />
-          </div>
-        </div>
-      </div>
-      <div className="worker-list">
-
-        {selectedLandId && selectedLandId !== ""
-          ? filteredWorkersForSelectedLand.map((worker) => (
-
-            <div key={worker.id} className="worker-card" onClick={() => handleWorkerCardClick(worker)}>
-              <h3>{t('name')}: {worker.name}</h3>
-              <p>{t('phone')}: {worker.phone}</p>
-            </div>
-          ))
-          : filteredWorkers1.map((worker) => (
-            <div key={worker.id} className="worker-card" onClick={() => handleWorkerCardClick(worker)}>
-              <h3>{t('name')}: {worker.name}</h3>
-              <p>{t('phone')}: {worker.phone}</p>
-            </div>
-          ))
-        }
-      </div>
-
-      <br />
-
-      <div>
-        {filteredWorkersForSelectedLand.length >= 4 ? (
-          <button className="load-more-button" onClick={handleLoadMore}>
-            Load More <IoIosArrowDown />
-          </button>
-        ) : (
-          filteredWorkersForSelectedLand.length > 0 && filteredWorkersForSelectedLand.length < 4 && startIndex > 0 && (
-            <button className="load-more-button" onClick={handleBack}>
-              See Previous <IoIosArrowUp />
-            </button>
-          )
-        )}
-      </div>
-
-      <br />
-      <br />
-      <br />
-      <div className='footer-alignment'>
-        <Footer />
       </div>
     </div>
-  );
+    <div className="worker-list">
+
+      {selectedLandId && selectedLandId !== ""
+        ? filteredWorkersForSelectedLand.map((worker) => (
+
+          <div key={worker.id} className="worker-card" onClick={() => handleWorkerCardClick(worker)}>
+            <h3>{t('name')}: {worker.name}</h3>
+            <p>{t('phone')}: {worker.phone}</p>
+          </div>
+        ))
+        : filteredWorkers1.map((worker) => (
+          <div key={worker.id} className="worker-card" onClick={() => handleWorkerCardClick(worker)}>
+            <h3>{t('name')}: {worker.name}</h3>
+            <p>{t('phone')}: {worker.phone}</p>
+          </div>
+        ))
+      }
+    </div>
+
+    <br />
+
+    <div>
+      {filteredWorkersForSelectedLand.length >= 4 ? (
+        <button className="load-more-button" onClick={handleLoadMore}>
+          Load More <IoIosArrowDown />
+        </button>
+      ) : (
+        filteredWorkersForSelectedLand.length > 0 && filteredWorkersForSelectedLand.length < 4 && startIndex > 0 && (
+          <button className="load-more-button" onClick={handleBack}>
+            See Previous <IoIosArrowUp />
+          </button>
+        )
+      )}
+    </div>
+
+    <br />
+    <br />
+    <br />
+    <div className='footer-alignment'>
+      <Footer />
+    </div>
+  </div>
+);
 }
 
 const mapStateToProps = (state) => ({

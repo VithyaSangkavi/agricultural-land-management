@@ -112,6 +112,7 @@
 
 .worker-app-screen .search-field {
   margin-left: 20px;
+  z-index: 0;
 }
 
 /* .add-worker-button {
@@ -152,6 +153,7 @@
 
 .search-container {
   position: relative;
+  z-index: 0;
 }
 
 .search-wrapper {
@@ -168,6 +170,7 @@
   border: 1px solid #ccc; 
   border-radius: 5px; 
   outline: none; 
+  z-index: 0;
 }
 
 .search-icon {

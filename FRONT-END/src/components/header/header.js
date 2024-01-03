@@ -13,38 +13,22 @@ import { submitSets } from '../UiComponents/SubmitSets';
 import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 import { MdArrowBackIos } from "react-icons/md";
+import { IoIosLeaf } from "react-icons/io";
+import { GiWheat, GiCoconuts } from "react-icons/gi";
 
 function Header({ setSelectedLandId, selectedLandId }) {
     const [t, i18n] = useTranslation();
 
-    const [searchQuery, setSearchQuery] = useState('');
-
-    const [query, setQuery] = useState('');
-    const [task, setTask] = useState([]);
-    const [taskAssigned, setTaskAssigned] = useState([]);
-    const [OngoingTasks, setOngoingTasks] = useState([]);
     const [landNames, setLandNames] = useState([]);
     const [landName, setLandName] = useState([]);
-    const [cropName, setCropName] = useState('');
+    const [selectedCrop, setSelectedCrop] = useState(null);
 
     const history = useHistory();
-
-    const getFormattedDate = (dateString) => {
-        const date = new Date(dateString);
-        const day = date.getDate();
-        const month = date.getMonth() + 1;
-        const year = date.getFullYear();
-
-        const formattedDate = `${day}/${month}/${year}`;
-
-        return formattedDate;
-    };
-
-    console.log("selected land : ", selectedLandId);
 
     useEffect(() => {
         submitSets(submitCollection.manageland, false).then((res) => {
             setLandNames(res.extra);
+            console.log('land details : ', landNames);
         });
 
         if (selectedLandId) {
@@ -58,18 +42,12 @@ function Header({ setSelectedLandId, selectedLandId }) {
         } else {
             setLandName("All Lands");
         }
-
-        axios.get(`http://localhost:8081/service/master/cropNameFindByLandId/${selectedLandId}`)
-            .then((response) => {
-                setCropName(response.data.cropName.extra);
-                console.log('crop name header: ', cropName);
-
-            })
-            .catch((error) => {
-                console.error('Error fetching task card id:', error);
-            });
     }, [submitCollection.manageland, selectedLandId]);
 
+    const handleCropName = (cropName) => {
+        console.log("Crop Name:", cropName);
+        setSelectedCrop(cropName);
+    }
 
     const handleLandChange = (event) => {
         console.log("Land : ", event);
@@ -79,15 +57,14 @@ function Header({ setSelectedLandId, selectedLandId }) {
     const handleLanguageChange = (lang) => {
         i18n.changeLanguage(lang);
     };
-    const handleTaskClick = (taskAssignedid) => {
-        history.push(`/manageOngoingTask/${taskAssignedid}`);
-        console.log("task assigned : ", taskAssignedid);
-    };
-
 
     const goBack = () => {
         history.goBack();
     };
+
+    const TeaIcon = () => <IoIosLeaf />;
+    const WheatIcon = () => <GiWheat />;
+    const CoconutIcon = () => <GiCoconuts />;
 
     return (
         <div className='header-main'>
@@ -96,39 +73,45 @@ function Header({ setSelectedLandId, selectedLandId }) {
                 <div className="filter-container d-flex align-items-center">
                     <MdArrowBackIos className="back-button" onClick={goBack} />
                 </div>
+            </div>
+            <div className='icons-container'>
+                <div className="land-filter">
+                    <Dropdown onSelect={handleLandChange}>
+                        <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                            <FaMapMarker style={{ color: 'white' }} />
+                        </Dropdown.Toggle>
 
-                <div className="filter-container d-flex align-items-center">
-                    <div className="land-filter">
-                        <Dropdown onSelect={handleLandChange}>
-                            <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                                <FaMapMarker style={{ color: 'white' }} />
-                            </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            <Dropdown.Item eventKey="">All Lands</Dropdown.Item>
+                            {landNames.map((land) => (
+                                <Dropdown.Item eventKey={land.id} value={land.id} onClick={() => handleCropName(land.cropName)}>
+                                    {land.name}
+                                </Dropdown.Item>
+                            ))}
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </div>
 
-                            <Dropdown.Menu>
-                                <Dropdown.Item eventKey="">All Lands</Dropdown.Item>
-                                {landNames.map((land) => (
-                                    <Dropdown.Item eventKey={land.id} value={land.id}>
-                                        {land.name}
-                                    </Dropdown.Item>
-                                ))}
-                            </Dropdown.Menu>
-                        </Dropdown>
-                    </div>
+                <div className="language-filter">
+                    <Dropdown onSelect={handleLanguageChange}>
+                        <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
+                            <FaGlobeAmericas style={{ color: 'white' }} />
+                        </Dropdown.Toggle>
 
-                    <div className="language-filter">
-                        <Dropdown onSelect={handleLanguageChange}>
-                            <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                                <FaGlobeAmericas style={{ color: 'white' }} />
-                            </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            <Dropdown.Item eventKey="en">English</Dropdown.Item>
+                            <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </div>
 
-                            <Dropdown.Menu>
-                                <Dropdown.Item eventKey="en">English</Dropdown.Item>
-                                <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-                            </Dropdown.Menu>
-                        </Dropdown>
-                    </div>
+                <div className="crop-icon-container">
+                    {selectedCrop === 'Tea' && <TeaIcon />}
+                    {selectedCrop === 'Wheat' && <WheatIcon />}
+                    {selectedCrop === 'Coconut' && <CoconutIcon />}
                 </div>
             </div>
+
         </div>
     );
 }

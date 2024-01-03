@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import Footer from '../footer/footer';
+import Header from '../header/header';
 import '../lot/manage_lot.css';
 import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
@@ -100,51 +101,7 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
 
     return (
         <div className='managelot-app-screen'>
-            <div className='main-heading'>
-
-                <div className="outer-frame d-flex justify-content-between align-items-center">
-                    <div className="filter-container d-flex align-items-center">
-                        <MdArrowBackIos className="back-button" onClick={goBack} />
-                    </div>
-
-                    <div className="filter-container d-flex align-items-center">
-                        <div className="land-filter">
-                            <Dropdown onSelect={handleLandChange}>
-                                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                                    <FaMapMarker style={{ color: 'white' }} />
-                                </Dropdown.Toggle>
-
-                                <Dropdown.Menu>
-                                    <Dropdown.Item eventKey="">All Lands</Dropdown.Item>
-                                    {landNames.map((land) => (
-                                        <Dropdown.Item eventKey={land.id} value={land.id}>
-                                            {land.name}
-                                        </Dropdown.Item>
-                                    ))}
-                                </Dropdown.Menu>
-                            </Dropdown>
-                        </div>
-
-                        <div className="language-filter">
-                            <Dropdown onSelect={handleLanguageChange}>
-                                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                                    <FaGlobeAmericas style={{ color: 'white' }} />
-                                </Dropdown.Toggle>
-
-                                <Dropdown.Menu>
-                                    <Dropdown.Item eventKey="en">English</Dropdown.Item>
-                                    <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-                                </Dropdown.Menu>
-                            </Dropdown>
-                        </div>
-                    </div>
-                </div>
-
-
-            </div>
-
-            <br />
-
+            <Header/> 
             <div className="drop-down-container" style={{ marginTop: "-25px" }}>
 
                 <div className='landsectioncover'>

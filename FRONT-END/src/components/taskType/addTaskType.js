@@ -1,6 +1,7 @@
 import  { useState, useEffect } from 'react';
 import './addTaskType.css';
 import Footer from '../footer/footer';
+import Header from '../header/header';
 import { useHistory } from "react-router-dom";
 import { FaGlobeAmericas, FaLanguage, FaMapMarker } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
@@ -66,47 +67,7 @@ const AddTaskType = ({ setSelectedLandId, selectedLandId }) => {
 
   return (
     <div className="task-app-screen">
-      <div className='main-heading'>
-
-        <div className="outer-frame d-flex justify-content-between align-items-center">
-          <div className="filter-container d-flex align-items-center">
-            <MdArrowBackIos className="back-button" onClick={goBack} />
-          </div>
-
-          <div className="filter-container d-flex align-items-center">
-            <div className="land-filter">
-              <Dropdown onSelect={handleLandChange}>
-                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                  <FaMapMarker style={{ color: 'white' }} />
-                </Dropdown.Toggle>
-
-                <Dropdown.Menu>
-                  {landNames.map((land) => (
-                    <Dropdown.Item eventKey={land.id} value={land.id}>
-                      {land.name}
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown.Menu>
-              </Dropdown>
-            </div>
-
-            <div className="language-filter">
-              <Dropdown onSelect={handleLanguageChange}>
-                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                  <FaGlobeAmericas style={{ color: 'white' }} />
-                </Dropdown.Toggle>
-
-                <Dropdown.Menu>
-                  <Dropdown.Item eventKey="en">English</Dropdown.Item>
-                  <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </div>
-          </div>
-        </div>
-
-
-      </div>
+      <Header/>
       <div className="drop-down-container" style={{marginTop: "-11px"}}>
 
         <div className='landsectioncover'>

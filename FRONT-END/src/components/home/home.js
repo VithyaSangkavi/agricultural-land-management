@@ -99,10 +99,10 @@ function Home({ setSelectedLandId, selectedLandId, setSelectedCropName, selected
         task.taskName.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const handleLandChange = (event) => {
-        console.log("Land : ", event);
-        setSelectedLandId(event);
-    };
+    // const handleLandChange = (event) => {
+    //     console.log("Land : ", event);
+    //     setSelectedLandId(event);
+    // };
 
 
     useEffect(() => {
@@ -134,7 +134,7 @@ function Home({ setSelectedLandId, selectedLandId, setSelectedCropName, selected
     //             const taskLand = JSON.stringify(landIdTask);
     //             const landData = JSON.parse(taskLand);
     //             const landId = landData.landId;
-    //             setLandId(landId)
+               
     //             console.log('Selected Land Id :', landId);
     //             localStorage.setItem('SelectedLandId', landId);
 
@@ -167,21 +167,6 @@ function Home({ setSelectedLandId, selectedLandId, setSelectedCropName, selected
         console.log("task assigned : ", taskAssignedid);
     };
 
-    switch (cropName) {
-        case 'Tea':
-            selectedImage = tea;
-            break;
-        case 'Wheat':
-            selectedImage = wheat;
-            break;
-        case 'Coconut':
-            selectedImage = coconut;
-            break;
-        default:
-            console.log(`Unhandled crop name: ${cropName}`);
-            break;
-    }
-
     return (
         <div className="home-app-screen">
             <Header />
@@ -193,10 +178,6 @@ function Home({ setSelectedLandId, selectedLandId, setSelectedCropName, selected
                         <FaMapMarker style={{ marginRight: '5px' }} />
                         Selected Land: {landName}
                     </p>
-                </div>
-
-                <div className='crop-image-display' >
-                    {selectedImage && <img src={selectedImage} alt={`Image for ${cropName}`} />}
                 </div>
 
                 <div className='home-heading'>

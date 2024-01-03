@@ -12,6 +12,7 @@ import { alertService } from '../../_services/alert.service';
 import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 import Footer from '../footer/footer';
+import Header from '../header/header';
 import '../Income/manage_income.css';
 import '../css/common.css';
 
@@ -38,22 +39,22 @@ function ManageIncome({ setSelectedLandId, selectedLandId }) {
 
     useEffect(() => {
         submitSets(submitCollection.manageland, false).then((res) => {
-          setLandNames(res.extra);
+            setLandNames(res.extra);
         });
-      
+
         if (selectedLandId) {
-          submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true)
-            .then((res) => {
-              setLandName(res.extra ? res.extra.name : "All Lands");
-            })
-            .catch((error) => {
-              console.error("Error fetching land by id:", error);
-            });
+            submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true)
+                .then((res) => {
+                    setLandName(res.extra ? res.extra.name : "All Lands");
+                })
+                .catch((error) => {
+                    console.error("Error fetching land by id:", error);
+                });
         } else {
-          setLandName("All Lands");
+            setLandName("All Lands");
         }
-      }, [submitCollection.manageland, selectedLandId]);
-    
+    }, [submitCollection.manageland, selectedLandId]);
+
 
     useEffect(() => {
         if (selectedLandId || selectedLandId === '') {
@@ -100,49 +101,8 @@ function ManageIncome({ setSelectedLandId, selectedLandId }) {
 
     return (
         <div className='manageincome-app-screen'>
-            <div className='main-heading'>
-
-                <div className="outer-frame d-flex justify-content-between align-items-center">
-                    <div className="filter-container d-flex align-items-center">
-                        <MdArrowBackIos className="back-button" onClick={goBack} />
-                    </div>
-
-                    <div className="filter-container d-flex align-items-center">
-                        <div className="land-filter">
-                            <Dropdown onSelect={handleLandChange}>
-                                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                                    <FaMapMarker style={{ color: 'white' }} />
-                                </Dropdown.Toggle>
-
-                                <Dropdown.Menu>
-                                    <Dropdown.Item eventKey="">All Lands</Dropdown.Item>
-                                    {landNames.map((land) => (
-                                        <Dropdown.Item eventKey={land.id} value={land.id}>
-                                            {land.name}
-                                        </Dropdown.Item>
-                                    ))}
-                                </Dropdown.Menu>
-                            </Dropdown>
-                        </div>
-
-                        <div className="language-filter">
-                            <Dropdown onSelect={handleLanguageChange}>
-                                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                                    <FaGlobeAmericas style={{ color: 'white' }} />
-                                </Dropdown.Toggle>
-
-                                <Dropdown.Menu>
-                                    <Dropdown.Item eventKey="en">English</Dropdown.Item>
-                                    <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-                                </Dropdown.Menu>
-                            </Dropdown>
-                        </div>
-                    </div>
-                </div>
-
-
-            </div>
-
+            <Header />
+            <br/> <br/>
             <div className='drop-down-container' style={{ marginTop: "-11px" }}>
 
                 <div className='landsectioncover' style={{ marginTop: "12px" }}>
