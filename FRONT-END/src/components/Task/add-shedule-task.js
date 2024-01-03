@@ -17,6 +17,7 @@ import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 import { Trash } from 'react-bootstrap-icons';
 import { alertService } from '../../_services/alert.service';
+import { IoMdClose } from "react-icons/io";
 
 
 const ManageTask = ({ selectedLandId }) => {
@@ -85,7 +86,7 @@ const ManageTask = ({ selectedLandId }) => {
     }, []);
 
     const fetchTaskName = () => {
-        axios.get(`http://localhost:8081/service/master/findTaskNameById/?taskId=${taskId}`)
+        axios.get(`http://localhost:8080/service/master/findTaskNameById/?taskId=${taskId}`)
 
             .then((response) => {
                 setTaskName(response.data.extra.taskName);
@@ -98,7 +99,7 @@ const ManageTask = ({ selectedLandId }) => {
 
 
     const fetchWorkerNames = () => {
-        axios.post('http://localhost:8081/service/master/workerFindAll')
+        axios.post('http://localhost:8080/service/master/workerFindAll')
             .then((response) => {
                 const workerNamesArray = response.data.extra.map((worker) => worker.name);
                 setWorkerNames(workerNamesArray);
@@ -109,7 +110,7 @@ const ManageTask = ({ selectedLandId }) => {
     };
 
     const fetchExpenseTypes = () => {
-        axios.get('http://localhost:8081/service/master/expenseFindAll')
+        axios.get('http://localhost:8080/service/master/expenseFindAll')
             .then((response) => {
                 const expenseTypeArrays = response.data.extra.map((expense) => expense.expenseType);
                 setExpenseTypes(expenseTypeArrays);
@@ -120,10 +121,10 @@ const ManageTask = ({ selectedLandId }) => {
     };
 
     const fetchLotId = () => {
-        axios.get(`http://localhost:8081/service/master/findLotByLandId?landId=${selectedLandId}`)
+        axios.get(`http://localhost:8080/service/master/findLotByLandId?landId=${selectedLandId}`)
 
             //get task-assigned id
-            //axios.get(`http://localhost:8081/service/master/task-assigned?taskId=${taskId}`)
+            //axios.get(`http://localhost:8080/service/master/task-assigned?taskId=${taskId}`)
 
 
 
@@ -143,7 +144,7 @@ const ManageTask = ({ selectedLandId }) => {
 
         //get expense id according to the expense type
         axios
-            .get(`http://localhost:8081/service/master/find-by-type?expenseType=${selectedExpenseType}`)
+            .get(`http://localhost:8080/service/master/find-by-type?expenseType=${selectedExpenseType}`)
             .then((response) => {
                 const expenseId = response.data.expenseId;
                 setExpenseId(expenseId);
@@ -155,7 +156,7 @@ const ManageTask = ({ selectedLandId }) => {
                 };
 
                 //save task expense 
-                axios.post('http://localhost:8081/service/master/task-expense-save', addTaskExpense)
+                axios.post('http://localhost:8080/service/master/task-expense-save', addTaskExpense)
                     .then((response) => {
                         console.log('Task expense added successfully:', response.data);
                         history.push('/home');
@@ -182,12 +183,12 @@ const ManageTask = ({ selectedLandId }) => {
                 taskAssignedId,
             };
 
-            axios.post('http://localhost:8081/service/master/task-card-save', saveTaskCard)
+            axios.post('http://localhost:8080/service/master/task-card-save', saveTaskCard)
                 .then((response) => {
                     console.log('Task card added', response.data);
                     localStorage.setItem('taskassignedid', taskAssignedId);
 
-                    axios.get(`http://localhost:8081/service/master/taskCardFindById?taskAssignedId=${taskAssignedId}`)
+                    axios.get(`http://localhost:8080/service/master/taskCardFindById?taskAssignedId=${taskAssignedId}`)
                         .then((response) => {
                             const taskCardId = response.data.extra.id;
 
@@ -219,7 +220,7 @@ const ManageTask = ({ selectedLandId }) => {
             taskAssignedId
         }
 
-        axios.post('http://localhost:8081/service/master/task-card-save', saveTaskCard)
+        axios.post('http://localhost:8080/service/master/task-card-save', saveTaskCard)
             .then((response) => {
                 console.log('task card added', response.data)
             })
@@ -244,6 +245,8 @@ const ManageTask = ({ selectedLandId }) => {
     const handleAddSelectedWorker = (dateIndex) => {
         const selectedWorkerName = selectedWorker[dateIndex];
         const quantity = quantityInputs[dateIndex] !== '' ? quantityInputs[dateIndex] : null;
+
+        console.log('adding worker', selectedWorkersLists)
 
         // Check if the worker has already been added for this date
         if (selectedWorkersLists[dateIndex].includes(selectedWorkerName)) {
@@ -293,7 +296,7 @@ const ManageTask = ({ selectedLandId }) => {
                 workDate: currentDate[dateIndex]
             };
 
-            axios.post('http://localhost:8081/service/master/task-card-save', saveTaskCard)
+            axios.post('http://localhost:8080/service/master/task-card-save', saveTaskCard)
                 .then((response) => {
                     console.log('Task card added', response.data);
                     const newTaskCardId = response.data.extra.id;
@@ -313,7 +316,7 @@ const ManageTask = ({ selectedLandId }) => {
     };
 
     const addWorkerToTaskCard = (taskCardId, selectedWorker, quantity, dateIndex) => {
-        axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${selectedWorker}`)
+        axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${selectedWorker}`)
 
             .then((response) => {
                 const workerId = response.data.extra.workerId;
@@ -329,7 +332,7 @@ const ManageTask = ({ selectedLandId }) => {
                     taskCardId: taskCardId,
                 };
 
-                axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
+                axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
                     .then((response) => {
                         console.log('Work assigned added successfully:', response.data.extra);
                         setAddedWorkerDetails(response.data.extra)
@@ -351,13 +354,27 @@ const ManageTask = ({ selectedLandId }) => {
             });
     };
 
-    const deleteWorkAssigned = (workAssignedId) => {
-        axios.delete(`http://localhost:8081/service/master/work-assigned-delete/${workAssignedId}`)
+    const deleteWorkAssigned = (workAssignedId, dateIndex, workerName) => {
+
+        console.log('date index:', dateIndex)
+        console.log('date index:', workerName)
+
+        axios.delete(`http://localhost:8080/service/master/work-assigned-delete/${workAssignedId}`)
             .then(response => {
                 console.log('Worker removed successfully:', response.data);
 
                 // Update state to remove the deleted item
                 setWorkerList(prevList => prevList.filter(item => item.id !== workAssignedId));
+
+                // Update selectedWorkersLists to remove the workerName from the corresponding array
+                setSelectedWorkersLists(prevLists => {
+                    const updatedLists = [...prevLists];
+                    updatedLists[dateIndex] = updatedLists[dateIndex].filter(name => name !== workerName);
+                    return updatedLists;
+                });
+
+                console.log(selectedWorkersLists)
+
             })
             .catch(error => {
                 console.error('Error removing worker:', error);
@@ -437,7 +454,7 @@ const ManageTask = ({ selectedLandId }) => {
                                             setSelectedWorker(newSelectedWorkers);
                                         }}
                                         className='dropdown-input'
-                                        style={{ height: '40px' }}
+                                        style={{ height: '40px', border: '1px solid' }}
                                     >
                                         <option value="">{t('selectaworker')}</option>
                                         {workerNames.map((workerName, index) => (
@@ -469,42 +486,41 @@ const ManageTask = ({ selectedLandId }) => {
 
                                 </div>
 
+                                <div className='worker-container'>
+                                    {addedWorkersList.map((addedData, index) => {
+                                        if (taskName === 'Pluck') {
+                                            if (addedData.date === currentDate[dateIndex]) {
+                                                return (
+                                                    <div key={index} className='line'>
 
-                                {addedWorkersList.map((addedData, index) => {
-                                    if (taskName === 'Pluck') {
-                                        if (addedData.date === currentDate[dateIndex]) {
-                                            return (
-                                                <div key={index}>
+                                                        <div className='line-two'>
+                                                            <p>{addedData.worker} - {addedData.quantity}kg</p>
+                                                            <button onClick={() => deleteWorkAssigned(addedData.id)}>
+                                                                <IoMdClose />
+                                                            </button>
 
-                                                    <p style={{ position: 'relative' }}>
-                                                        <span>{addedData.worker} - {addedData.quantity}kg</span>
-                                                        <div className="remove-button-container" style={{ position: 'absolute', top: 0, right: 0 }}>
-                                                            <Trash onClick={() => deleteWorkAssigned(addedData.id)} />
                                                         </div>
-                                                    </p>
 
-                                                </div>
-                                            );
+                                                    </div>
+                                                );
+                                            }
+                                        } else {
+                                            if (addedData.date === currentDate[dateIndex]) {
+                                                return (
+                                                    <div key={index} className='line'>
+                                                        <div className='line-two'>
+                                                            <p>{addedData.worker}</p>
+                                                            <button onClick={() => deleteWorkAssigned(addedData.id, dateIndex, addedData.worker)}>
+                                                                <IoMdClose />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            }
                                         }
-                                    } else {
-                                        if (addedData.date === currentDate[dateIndex]) {
-                                            return (
-                                                <div key={index}>
-                                                    <p>{addedData.worker}
-                                                        <span
-                                                            style={{ cursor: 'pointer', marginLeft: '10px' }}
-                                                            onClick={() => deleteWorkAssigned(addedData.id)}
-                                                        >
-                                                            <button>delete</button>
-                                                        </span>
-                                                    </p>
-
-                                                </div>
-                                            );
-                                        }
-                                    }
-                                    return null;
-                                })}
+                                        return null;
+                                    })}
+                                </div>
 
 
                             </div>

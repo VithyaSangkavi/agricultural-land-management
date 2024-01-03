@@ -143,7 +143,7 @@ function Report({ setSelectedLandId, selectedLandId }) {
 
     useEffect(() => {
         //lot find all
-        axios.get('http://localhost:8081/service/master/lotFindAll').then((response) => {
+        axios.get('http://localhost:8080/service/master/lotFindAll').then((response) => {
             setLots(response.data.extra);
             console.log("Lots : ", response.data.extra);
         });
@@ -190,7 +190,8 @@ function Report({ setSelectedLandId, selectedLandId }) {
         i18n.changeLanguage(lang);
     };
 
-    console.log(dateRange);
+    console.log(dateRange.fromDate);
+    const fromDate = dateRange.fromDate;
 
     const goBack = () => {
         history.goBack();
@@ -331,7 +332,7 @@ function Report({ setSelectedLandId, selectedLandId }) {
                                 >
                                     <option value="0">Monthly</option>
                                     <option value="1">Weekly</option>
-                                    <option value="2">Daily</option>
+                                    {/* <option value="2">Daily</option> */}
                                 </select>
                             </div>
                         ) : null}
@@ -347,7 +348,7 @@ function Report({ setSelectedLandId, selectedLandId }) {
             {showMonthlyCropReport && <MonthlyCropReport dateRange={formatDate(dateRange)} lotId={lotId} selectedLot={selectedLot} />}
             {showCostYieldReport && <CostYieldReport dateRange={formatDate(dateRange)} landId={selectedLandId} lotId={lotId} selectedLot={selectedLot} />}
             {showEmployeePerfomnce && <EmployeePerfomnce dateRange={formatDate(dateRange)} selectedLand={selectedLandId} />}
-            {showCostBreakdown && <CostBreakdownReport selectedLand={selectedLandId} dateRange={formatDate(dateRange)} />}
+            {showCostBreakdown && <CostBreakdownReport selectedLand={selectedLandId} fromDate={fromDate} />}
             {showSummary && <SummaryReport selectedLand={selectedLandId} category={category} />}
             < br /> <br/> <br/>
             <Footer />
