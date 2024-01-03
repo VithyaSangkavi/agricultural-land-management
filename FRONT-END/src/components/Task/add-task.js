@@ -29,7 +29,7 @@ const AddTask = ({ selectedLandId }) => {
   const startDate = selectedDate;
   const taskAssignedDate = selectedDate;
   const [selectedDates, setSelectedDates] = useState([]);
-  
+
 
   const handleDateChange = (dates) => {
     setSelectedDates(dates);
@@ -85,7 +85,7 @@ const AddTask = ({ selectedLandId }) => {
           pathname: '/manageTask',
           state: { taskAssignedId: response.data.extra.id }
         });
-        
+
       })
       .catch((error) => {
         console.error('Error adding task assigned:', error);
@@ -107,8 +107,8 @@ const AddTask = ({ selectedLandId }) => {
 
   return (
     <div className="task-app-screen">
-      <Header/>
-<br/>
+      <Header />
+      <br />
       <div style={{ marginTop: "10%" }}>
         <select value={initialSelectedValue} onChange={(e) => setTaskName(e.target.value)} className="inputs">
           {taskNames.map((taskName) => (
@@ -135,7 +135,7 @@ const AddTask = ({ selectedLandId }) => {
       </button>
       <br />
 
-        <Footer />
+      <Footer />
     </div>
   );
 };

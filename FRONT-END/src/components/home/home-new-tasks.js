@@ -91,7 +91,7 @@ function HomeNewTasks({ setSelectedLandId, selectedLandId }) {
     };
 
     const goBack = () => {
-        history.goBack(); // Go back to the previous page
+        history.goBack(); 
     };
 
     return (
