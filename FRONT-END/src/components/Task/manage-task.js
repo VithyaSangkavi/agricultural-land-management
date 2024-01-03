@@ -144,6 +144,14 @@ const ManageTask = ({ selectedLandId }) => {
             });
     }
 
+    const handleKgChange = (e, index) => {
+        const updatedKgValues = [...kgValues];
+        updatedKgValues[index] = e.target.value;
+        setKgValues(updatedKgValues);
+        const kg = e.target.value;
+        setQuantity(kg);
+    };
+
     const handleAddSelectedWorker = () => {
 
         if (taskName === 'Pluck') {
@@ -247,7 +255,7 @@ const ManageTask = ({ selectedLandId }) => {
     }
 
     const addWorkerToPluckTaskCard = (taskCardId) => {
-        // const selectedWorker = localStorage.getItem('selectedWorker');
+        const selectedWorker = localStorage.getItem('selectedWorker');
         console.log('add -> selected worker pluck task: ', selectedWorker);
         console.log('Quantity: ', quantity);
 
@@ -270,11 +278,13 @@ const ManageTask = ({ selectedLandId }) => {
                 axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
                     .then((response) => {
                         console.log('Work assigned added successfully:', response.data);
+                        setQuantity('')
                     })
                     .catch((error) => {
                         console.error('Error adding work assigned:', error);
                     });
             })
+
             .catch((error) => {
                 console.error('Error getting worker id:', error);
             });
@@ -343,14 +353,6 @@ const ManageTask = ({ selectedLandId }) => {
                 //console.error('Error fetching expense id:', error);
             });
     }
-
-    const handleKgChange = (e, index) => {
-        const updatedKgValues = [...kgValues];
-        updatedKgValues[index] = e.target.value;
-        setKgValues(updatedKgValues);
-        const kg = e.target.value;
-        setQuantity(kg);
-    };
 
     const addQuantity = () => {
 
