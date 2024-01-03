@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import '../Income/insert_income.css';
 import axios from 'axios';
 import Footer from '../footer/footer';
+import Header from '../header/header';
 import { submitCollection } from '../../_services/submit.service';
 import { Form, Button, Col } from 'react-bootstrap';
 import { submitSets } from '../UiComponents/SubmitSets';
@@ -69,51 +70,11 @@ const InsertIncome = ({ setSelectedLandId, selectedLandId }) => {
 
     return (
         <div className='insertincome-app-screen'>
-            <div className='main-heading'>
+            <Header />
+            <br /> <br/>
+            <div className="drop-down-container" style={{ marginTop: "-11px" }}>
 
-                <div className="outer-frame d-flex justify-content-between align-items-center">
-                    <div className="filter-container d-flex align-items-center">
-                        <MdArrowBackIos className="back-button" onClick={goBack} />
-                    </div>
-
-                    <div className="filter-container d-flex align-items-center">
-                        <div className="land-filter">
-                            <Dropdown onSelect={handleLandChange}>
-                                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                                    <FaMapMarker style={{ color: 'white' }} />
-                                </Dropdown.Toggle>
-
-                                <Dropdown.Menu>
-                                    {landNames.map((land) => (
-                                        <Dropdown.Item eventKey={land.id} value={land.id}>
-                                            {land.name}
-                                        </Dropdown.Item>
-                                    ))}
-                                </Dropdown.Menu>
-                            </Dropdown>
-                        </div>
-
-                        <div className="language-filter">
-                            <Dropdown onSelect={handleLanguageChange}>
-                                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                                    <FaGlobeAmericas style={{ color: 'white' }} />
-                                </Dropdown.Toggle>
-
-                                <Dropdown.Menu>
-                                    <Dropdown.Item eventKey="en">English</Dropdown.Item>
-                                    <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-                                </Dropdown.Menu>
-                            </Dropdown>
-                        </div>
-                    </div>
-                </div>
-
-
-            </div>
-
-            <div className="drop-down-container" style={{marginTop: "-11px"}}>
-
-                <div className='landsectioncover' style={{marginTop: "12px"}}>
+                <div className='landsectioncover' style={{ marginTop: "12px" }}>
                     <p className="landsection">
                         <FaMapMarker style={{ marginRight: '5px' }} />
                         Selected Land: {landName}

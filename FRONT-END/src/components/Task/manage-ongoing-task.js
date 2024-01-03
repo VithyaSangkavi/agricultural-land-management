@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Footer from '../footer/footer';
+import Header from '../header/header';
 import { useHistory } from "react-router-dom";
 import DatePicker from 'react-datepicker';
 import './manage-task.css';
@@ -619,33 +620,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
 
     return (
         <div className="manage-task-app-screen">
-            <div className='main-heading'>
-
-                <div className="outer-frame d-flex justify-content-between align-items-center">
-                    <div className="filter-container d-flex align-items-center">
-                        <MdArrowBackIos className="back-button" onClick={goBack} />
-                    </div>
-
-                    <div className="filter-container d-flex align-items-center">
-                        <div className="land-filter">
-
-                        </div>
-
-                        <div className="language-filter">
-                            <Dropdown onSelect={handleLanguageChange}>
-                                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                                    <FaGlobeAmericas style={{ color: 'white' }} />
-                                </Dropdown.Toggle>
-
-                                <Dropdown.Menu>
-                                    <Dropdown.Item eventKey="en">English</Dropdown.Item>
-                                    <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-                                </Dropdown.Menu>
-                            </Dropdown>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <Header/>
 
             <div className='task-heading'>
 

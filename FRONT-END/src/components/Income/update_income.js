@@ -3,6 +3,7 @@ import { useLocation, useParams, useHistory } from 'react-router-dom'; // Import
 import axios from 'axios';
 import '../Income/update_income.css';
 import Footer from '../footer/footer';
+import Header from '../header/header';
 import Navbar from '../navBar/navbar';
 import { submitCollection } from '../../_services/submit.service';
 import { Form, Button, Container, Col, Row, Card } from 'react-bootstrap';
@@ -80,36 +81,7 @@ const UpdateIncome = () => {
 
     return (
         <div className='updateincome-app-screen'>
-            <div className='main-heading'>
-
-                <div className="outer-frame d-flex justify-content-between align-items-center">
-                    <div className="filter-container d-flex align-items-center">
-                        <MdArrowBackIos className="back-button" onClick={goBack} />
-                    </div>
-
-                    <div className="filter-container d-flex align-items-center">
-                        <div className="land-filter">
-                          
-                        </div>
-
-                        <div className="language-filter">
-                            <Dropdown onSelect={handleLanguageChange}>
-                                <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                                    <FaGlobeAmericas style={{ color: 'white' }} />
-                                </Dropdown.Toggle>
-
-                                <Dropdown.Menu>
-                                    <Dropdown.Item eventKey="en">English</Dropdown.Item>
-                                    <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-                                </Dropdown.Menu>
-                            </Dropdown>
-                        </div>
-                    </div>
-                </div>
-
-
-            </div>
-
+            <Header/>       
             <div className="drop-down-container" style={{marginTop: "-11px"}}>
 
                 <div className='landsectioncover'>

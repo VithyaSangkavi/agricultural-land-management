@@ -1,7 +1,7 @@
 .home-app-screen {
     /* max-width: 100%; */
     height: 100vh;
-   
+
     margin: 0 auto;
     /* padding: 16px; */
     /* box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2); */
@@ -59,7 +59,7 @@
     background-color: #0a8a2e;
 }
 
-.home-app-screen .page-name{
+.home-app-screen .page-name {
     font: bold;
     color: white;
     font-size: large;
@@ -100,8 +100,8 @@
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background-color: #0e4f20; 
-    color: white; 
+    background-color: #0e4f20;
+    color: white;
     font-size: 24px;
     font-weight: bold;
     border: none;
@@ -113,7 +113,7 @@
 }
 
 .float-new-task-button:hover {
-    background-color: #0a8a2e; 
+    background-color: #0a8a2e;
 }
 
 .tooltip {
@@ -127,15 +127,15 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-  }
-  
-  .crop-display{
+}
+
+.crop-display {
     background-color: #f2f2f2;
     padding: 5px 5px 2px 5px;
     font-weight: semi-bold;
-  }
+}
 
-  .header-main{
+.header-main {
     background-color: #0e4f20;
     color: white;
     padding-top: 0px;
@@ -148,8 +148,32 @@
     right: 0;
     display: flex;
     position: fixed;
-  }
+    z-index: 9999; 
+}
 
-  .header-filter-container{
+.header-filter-container {
     left: 80%;
-  }
+}
+
+.land-filter .dropdown-menu.show {
+    z-index: 9999;
+}
+
+.crop-icon-container{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    color: white;
+}
+
+.crop-icon-container svg {
+    width: 30px;
+    height: 30px;
+    margin-left: 5px;
+}
+
+.icons-container{
+    display: flex;
+    align-items: center;
+    margin-left: 45%;
+}
