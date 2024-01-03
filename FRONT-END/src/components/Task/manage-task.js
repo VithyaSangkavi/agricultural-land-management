@@ -517,7 +517,8 @@ const ManageTask = ({ selectedLandId }) => {
                 >
                     <Modal.Header>
                         <Modal.Title>Select Dates</Modal.Title>
-                        <Button variant="secondary" style={{ backgroundColor: '#0e4f20' }} onClick={handleShedule}>
+                        <Button variant="secondary" style={{ backgroundColor: '#0e4f20' }} onClick={handleShedule}
+                            disabled={selectedDates.length === 0}>
                             Schedule
                         </Button>
                         <Button variant="secondary" onClick={handleClose}>
