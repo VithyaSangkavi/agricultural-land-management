@@ -75,7 +75,7 @@
 .task-heading {
   padding: 5px;
   margin-left: 20px;
-  margin-top: 25px;
+  margin-top: 50px;
   font-size: 20px;
   font-weight: bold;
   color: black;
@@ -115,6 +115,7 @@
   margin: 15px 15px;
   margin-bottom: 20px;
   color: black;
+  z-index: 1; 
 }
 
 .card p {
@@ -300,7 +301,7 @@
   background-color: #0e4f20;
   color: white;
   cursor: pointer;
-  z-index: 9999; 
+  z-index: 1; 
   border-radius: 5px;
 }
 

@@ -14,8 +14,6 @@ export class CropDaoImpl implements CropDao {
     let cropRepo = getConnection().getRepository(CropEntity);
     let cropModel = new CropEntity();
 
-    cropModel.land = landModel;
-
     this.preparecropModel(cropModel, cropDto);
     let savedDept = await cropRepo.save(cropModel);
     return savedDept;
@@ -111,10 +109,7 @@ export class CropDaoImpl implements CropDao {
   
     
     searchObject.status = Status.Online;
-    
-    if (cropDto.getLandId()) {
-      searchObject.color = Like("%" + cropDto.getLandId() + "%");
-    }
+  
     return searchObject;
   }
 }

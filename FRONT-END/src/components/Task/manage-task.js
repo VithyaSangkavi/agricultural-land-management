@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import Footer from '../footer/footer';
+import Header from '../header/header';
 import { useHistory } from "react-router-dom";
 import DatePicker from 'react-datepicker';
 import './manage-task.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
@@ -16,13 +18,19 @@ import { MdArrowBackIos, MdViewAgenda, MdClose } from "react-icons/md";
 import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 import { useLocation } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import { alertService } from '../../_services/alert.service';
-
 import { IoMdClose } from "react-icons/io";
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 
 const ManageTask = ({ selectedLandId }) => {
+
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+
     const [t, i18n] = useTranslation();
     const history = useHistory();
     const taskId = localStorage.getItem('TaskIDFromTaskAssigned')
@@ -54,12 +62,6 @@ const ManageTask = ({ selectedLandId }) => {
     const taskAssignedId = location.state?.taskAssignedId || null;
 
     console.log("task id : ", taskAssignedId)
-
-    const handleIconClick = () => {
-        if (datePickerRef.current) {
-            datePickerRef.current.openCalendar();
-        }
-    };
 
     const handleShedule = (value) => {
 
@@ -142,6 +144,14 @@ const ManageTask = ({ selectedLandId }) => {
             });
     }
 
+    const handleKgChange = (e, index) => {
+        const updatedKgValues = [...kgValues];
+        updatedKgValues[index] = e.target.value;
+        setKgValues(updatedKgValues);
+        const kg = e.target.value;
+        setQuantity(kg);
+    };
+
     const handleAddSelectedWorker = () => {
 
         if (taskName === 'Pluck') {
@@ -152,7 +162,7 @@ const ManageTask = ({ selectedLandId }) => {
                     alertService.warn('Worker has already been added for this date.');
                     return;
                 }
-        
+
                 setSelectedWorkersList([...selectedWorkersList, selectedWorker]);
                 setSelectedWorker('');
                 console.log('selected worker: ', selectedWorker);
@@ -204,7 +214,7 @@ const ManageTask = ({ selectedLandId }) => {
                     alertService.warn('Worker has already been added for this date.');
                     return;
                 }
-        
+
                 setSelectedWorkersList([...selectedWorkersList, selectedWorker]);
                 setSelectedWorker('');
                 console.log('selected worker: ', selectedWorker);
@@ -268,11 +278,13 @@ const ManageTask = ({ selectedLandId }) => {
                 axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
                     .then((response) => {
                         console.log('Work assigned added successfully:', response.data);
+                        setQuantity('')
                     })
                     .catch((error) => {
                         console.error('Error adding work assigned:', error);
                     });
             })
+
             .catch((error) => {
                 console.error('Error getting worker id:', error);
             });
@@ -341,14 +353,6 @@ const ManageTask = ({ selectedLandId }) => {
                 //console.error('Error fetching expense id:', error);
             });
     }
-
-    const handleKgChange = (e, index) => {
-        const updatedKgValues = [...kgValues];
-        updatedKgValues[index] = e.target.value;
-        setKgValues(updatedKgValues);
-        const kg = e.target.value;
-        setQuantity(kg);
-    };
 
     const addQuantity = () => {
 
@@ -477,51 +481,54 @@ const ManageTask = ({ selectedLandId }) => {
 
     return (
         <div className="manage-task-app-screen">
-            <div className="header-bar">
-                <MdArrowBackIos className="back-button" onClick={goBack} />
-                <p className="main-heading">{t('managetask')}</p>
-                <div className="position-absolute top-0 end-0 me-2">
-                    <Dropdown alignRight onSelect={handleLanguageChange}>
-                        <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                            <FaGlobeAmericas style={{ color: 'white' }} />
-                        </Dropdown.Toggle>
-
-                        <Dropdown.Menu>
-                            <Dropdown.Item eventKey="en">English</Dropdown.Item>
-                            <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown>
-                </div>
-            </div>
-
+            <Header/>
             <div className='task-heading'>
-                <p> {taskName} {t('task')}  </p>
+                <p> {taskName} {t('task')} - </p>
                 <p> {t('from')} - {getFormattedDate(startDate)} </p>
             </div>
 
             <br />
-            <div>
 
-                {/* <button className="add-button" onClick={handleIconClick}>Open Calendar</button> */}
-                <div>
-                    <MultiDatePicker
-                        className="rmdp-prime"
-                        value={selectedDates}
-                        onChange={setSelectedDates}
-                        format='DD/MM/YYYY'
-                        plugins={[
-                            <DatePanel />
-                        ]}
-                        ref={datePickerRef}
-                    />
-                </div>
 
-                <br />
-                <button className="add-button" onClick={handleShedule}>
-                    Shedule
-                </button>
-            </div>
-            <br />
+            <>
+                <Button className="add-button" onClick={handleShow}>
+                    Select Dates to Schedule
+                </Button>
+
+                <Modal
+                    show={show}
+                    onHide={handleClose}
+                    animation={false}
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered
+                >
+                    <Modal.Header>
+                        <Modal.Title>Select Dates</Modal.Title>
+                        <Button variant="secondary" style={{ backgroundColor: '#0e4f20' }} onClick={handleShedule}
+                            disabled={selectedDates.length === 0}>
+                            Schedule
+                        </Button>
+                        <Button variant="secondary" onClick={handleClose}>
+                            Close
+                        </Button>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <MultiDatePicker
+                            className="rmdp-prime"
+                            placeholder='Choose Dates'
+                            value={selectedDates}
+                            onChange={setSelectedDates}
+                            format='DD/MM/YYYY'
+                            plugins={[
+                                <DatePanel />
+                            ]}
+                            ref={datePickerRef}
+                        />
+                    </Modal.Body>
+                </Modal>
+            </>
+
+            <br />   <br />
             <div className="toggle-container">
                 <button
                     onClick={() => setSelectedView('tasks')}

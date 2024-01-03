@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Footer from '../footer/footer';
+import Header from '../header/header';
 import { useHistory } from "react-router-dom";
 import DatePicker from 'react-datepicker';
 import './manage-task.css'
@@ -16,6 +17,7 @@ import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 import { Trash } from 'react-bootstrap-icons';
 import { alertService } from '../../_services/alert.service';
+import { IoMdClose } from "react-icons/io";
 
 
 const ManageTask = ({ selectedLandId }) => {
@@ -244,6 +246,8 @@ const ManageTask = ({ selectedLandId }) => {
         const selectedWorkerName = selectedWorker[dateIndex];
         const quantity = quantityInputs[dateIndex] !== '' ? quantityInputs[dateIndex] : null;
 
+        console.log('adding worker', selectedWorkersLists)
+
         // Check if the worker has already been added for this date
         if (selectedWorkersLists[dateIndex].includes(selectedWorkerName)) {
             // Display a warning or handle the duplicate entry as needed
@@ -350,13 +354,27 @@ const ManageTask = ({ selectedLandId }) => {
             });
     };
 
-    const deleteWorkAssigned = (workAssignedId) => {
+    const deleteWorkAssigned = (workAssignedId, dateIndex, workerName) => {
+
+        console.log('date index:', dateIndex)
+        console.log('date index:', workerName)
+
         axios.delete(`http://localhost:8080/service/master/work-assigned-delete/${workAssignedId}`)
             .then(response => {
                 console.log('Worker removed successfully:', response.data);
 
                 // Update state to remove the deleted item
                 setWorkerList(prevList => prevList.filter(item => item.id !== workAssignedId));
+
+                // Update selectedWorkersLists to remove the workerName from the corresponding array
+                setSelectedWorkersLists(prevLists => {
+                    const updatedLists = [...prevLists];
+                    updatedLists[dateIndex] = updatedLists[dateIndex].filter(name => name !== workerName);
+                    return updatedLists;
+                });
+
+                console.log(selectedWorkersLists)
+
             })
             .catch(error => {
                 console.error('Error removing worker:', error);
@@ -397,23 +415,7 @@ const ManageTask = ({ selectedLandId }) => {
 
     return (
         <div className="manage-task-app-screen">
-            <div className="header-bar">
-                <MdArrowBackIos className="back-button" onClick={goBack} />
-                <p className="main-heading">Scheduled Task</p>
-                <div className="position-absolute top-0 end-0 me-0">
-                    <Dropdown alignRight onSelect={handleLanguageChange}>
-                        <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                            <FaGlobeAmericas style={{ color: 'white' }} />
-                        </Dropdown.Toggle>
-
-                        <Dropdown.Menu>
-                            <Dropdown.Item eventKey="en">English</Dropdown.Item>
-                            <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown>
-                </div>
-            </div>
-
+            <Header/>
             <div className='task-heading'>
                 <p> {taskName} {t('task')}  </p>
                 <p> {t('from')} - {getFormattedDate(startDate)} </p>
@@ -452,7 +454,7 @@ const ManageTask = ({ selectedLandId }) => {
                                             setSelectedWorker(newSelectedWorkers);
                                         }}
                                         className='dropdown-input'
-                                        style={{ height: '40px' }}
+                                        style={{ height: '40px', border: '1px solid' }}
                                     >
                                         <option value="">{t('selectaworker')}</option>
                                         {workerNames.map((workerName, index) => (
@@ -484,42 +486,41 @@ const ManageTask = ({ selectedLandId }) => {
 
                                 </div>
 
+                                <div className='worker-container'>
+                                    {addedWorkersList.map((addedData, index) => {
+                                        if (taskName === 'Pluck') {
+                                            if (addedData.date === currentDate[dateIndex]) {
+                                                return (
+                                                    <div key={index} className='line'>
 
-                                {addedWorkersList.map((addedData, index) => {
-                                    if (taskName === 'Pluck') {
-                                        if (addedData.date === currentDate[dateIndex]) {
-                                            return (
-                                                <div key={index}>
+                                                        <div className='line-two'>
+                                                            <p>{addedData.worker} - {addedData.quantity}kg</p>
+                                                            <button onClick={() => deleteWorkAssigned(addedData.id)}>
+                                                                <IoMdClose />
+                                                            </button>
 
-                                                    <p style={{ position: 'relative' }}>
-                                                        <span>{addedData.worker} - {addedData.quantity}kg</span>
-                                                        <div className="remove-button-container" style={{ position: 'absolute', top: 0, right: 0 }}>
-                                                            <Trash onClick={() => deleteWorkAssigned(addedData.id)} />
                                                         </div>
-                                                    </p>
 
-                                                </div>
-                                            );
+                                                    </div>
+                                                );
+                                            }
+                                        } else {
+                                            if (addedData.date === currentDate[dateIndex]) {
+                                                return (
+                                                    <div key={index} className='line'>
+                                                        <div className='line-two'>
+                                                            <p>{addedData.worker}</p>
+                                                            <button onClick={() => deleteWorkAssigned(addedData.id, dateIndex, addedData.worker)}>
+                                                                <IoMdClose />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            }
                                         }
-                                    } else {
-                                        if (addedData.date === currentDate[dateIndex]) {
-                                            return (
-                                                <div key={index}>
-                                                    <p>{addedData.worker}
-                                                        <span
-                                                            style={{ cursor: 'pointer', marginLeft: '10px' }}
-                                                            onClick={() => deleteWorkAssigned(addedData.id)}
-                                                        >
-                                                            <button>delete</button>
-                                                        </span>
-                                                    </p>
-
-                                                </div>
-                                            );
-                                        }
-                                    }
-                                    return null;
-                                })}
+                                        return null;
+                                    })}
+                                </div>
 
 
                             </div>

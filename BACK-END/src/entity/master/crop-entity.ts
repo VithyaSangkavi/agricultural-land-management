@@ -23,9 +23,8 @@ export class CropEntity {
     @Column({ type: "enum", enum:Status, default: Status.Online})
     status: Status;
 
-    @ManyToOne(() => LandEntity, (land) => land.crop)
-    @JoinColumn({ name: "landId" })
-    land: LandEntity
+    @OneToMany(() => LandEntity, (land) => land.crop)
+    land: LandEntity[];
 
     @OneToMany(() => TaskTypeEntity, (task) => task.crop)
     task: TaskTypeEntity[];

@@ -7,7 +7,7 @@ import 'chartjs-plugin-datalabels';
 
 ChartJS.register(...registerables);
 
-const CostBreakdownReport = ({ dateRange: { fromDate }, selectedLand }) => {
+const CostBreakdownReport = ({ fromDate, selectedLand }) => {
     const [costBreakdownLineData, setCostBreakdownLineData] = useState([]);
     const [costBreakdownPieData, setCostBreakdownPieData] = useState([]);
     const [yearMonth, setYearMonth] = useState('');
@@ -16,6 +16,12 @@ const CostBreakdownReport = ({ dateRange: { fromDate }, selectedLand }) => {
     console.log("Cost-b-down land: ", selectedLand)
 
     console.log("Cost-b-down fromDate: ", fromDate)
+
+    if(fromDate === `1970-01-01`){
+        fromDate = '';
+    }
+
+    console.log("Cost-b-down fromDate 1: ", fromDate)
 
     useEffect((fromDate) => {
         const fetchCostBreakdownLineData = async () => {

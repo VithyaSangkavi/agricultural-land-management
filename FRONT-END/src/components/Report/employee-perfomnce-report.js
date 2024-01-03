@@ -15,6 +15,17 @@ const EmployeePerfomnceReport = ({ dateRange: { fromDate, toDate }, selectedLand
 
     const [perfomnceData, setPerfomnceData] = useState([]);
     console.log("emp-per-rep : ", fromDate, toDate);
+    const [visibleRecords, setVisibleRecords] = useState(3);
+
+    const handleSeeMore = () => {
+        setVisibleRecords(prevVisibleRecords => prevVisibleRecords + 3);
+    };
+
+    const handleSeeLess = () => {
+        setVisibleRecords(prevVisibleRecords =>
+            prevVisibleRecords > 3 ? prevVisibleRecords - 3 : 3
+        );
+    };
 
 
     useEffect(() => {
@@ -65,6 +76,7 @@ const EmployeePerfomnceReport = ({ dateRange: { fromDate, toDate }, selectedLand
     };
 
     const chartOptions = {
+        maintainAspectRatio: false,
         scales: {
             x: {
                 type: 'time',
@@ -115,7 +127,7 @@ const EmployeePerfomnceReport = ({ dateRange: { fromDate, toDate }, selectedLand
                         </tr>
                     </thead>
                     <tbody>
-                        {perfomnceData.map((item, index) => (
+                        {perfomnceData.slice(0, visibleRecords).map((item, index) => (
                             <tr key={index}>
                                 <td>{item.workDate}</td>
                                 <td>{item.quantity}</td>
@@ -124,10 +136,28 @@ const EmployeePerfomnceReport = ({ dateRange: { fromDate, toDate }, selectedLand
                         ))}
                     </tbody>
                 </table>
+
+                {perfomnceData.length > visibleRecords ? (
+                    <div>
+                        <button className='see-more' onClick={handleSeeMore}>
+                            See More
+                        </button>
+                        {visibleRecords > 3 && (
+                            <button className='see-more' onClick={handleSeeLess}>
+                                See Less
+                            </button>
+                        )}
+                    </div>
+                ) : (
+                    <button className='see-more' onClick={handleSeeLess}>
+                        See Less
+                    </button>
+                )}
+
             </div>
-            
-            <div className='report-app-screen'>
-                <div className='attendance-chart'>
+
+            <div className='report-app-screen' style={{height: '360px', backgroundColor: ''}}>
+                <div className='attendance-chart' style={{height: "300px", boxShadow: 'none'}}>
                     {perfomnceData.length > 0 ? (
                         <>
                             <h2>Employee Perfomnce Chart</h2> <br />
@@ -141,7 +171,6 @@ const EmployeePerfomnceReport = ({ dateRange: { fromDate, toDate }, selectedLand
                     )}
                 </div>
             </div >
-            <br />
         </>
     );
 };

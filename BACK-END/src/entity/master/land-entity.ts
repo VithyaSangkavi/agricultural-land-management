@@ -1,4 +1,4 @@
-import { Column, Double, Entity, OneToMany, PrimaryGeneratedColumn, Table } from "typeorm";
+import { Column, Double, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Table } from "typeorm";
 import { Status } from "../../enum/Status";
 import { areaUOM } from "../../enum/areaUOM";
 import { LotEntity } from "./lot-entity";
@@ -39,8 +39,9 @@ export class LandEntity {
     @OneToMany(() => LotEntity, (lot) => lot.land)
     lot: LotEntity[];
 
-    @OneToMany(() => CropEntity, (crop) => crop.land)
-    crop: CropEntity[];
+    @ManyToOne(() => CropEntity, (crop) => crop.land)
+    @JoinColumn({ name: "cropId" })
+    crop: CropEntity;
 
     @OneToMany(() => WorkerEntity, (worker) => worker.land)
     worker: WorkerEntity[];

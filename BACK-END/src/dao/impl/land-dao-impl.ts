@@ -47,7 +47,8 @@ export class LandDaoImpl implements LandDao {
       where: searchObject,
       skip: landDto.getStartIndex(),
       take: landDto.getMaxResult(),
-      order:{id:"DESC"}
+      order:{id:"DESC"},
+      relations: ["crop"]
     });
     return landModel;
   }

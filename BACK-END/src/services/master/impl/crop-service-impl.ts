@@ -37,16 +37,16 @@ export class CropServiceImpl implements CropService {
       }
 
       //check land id
-      let landModel: LandEntity = null;
-      if (cropDto.getLandId() > 0) {
-        landModel = await this.landDao.findById(cropDto.getLandId());
-      } else {
+      // let landModel: LandEntity = null;
+      // if (cropDto.getLandId() > 0) {
+      //   landModel = await this.landDao.findById(cropDto.getLandId());
+      // } else {
 
-        return CommonResSupport.getValidationException("Land with the specified ID does not exist!");
-      }
+      //   return CommonResSupport.getValidationException("Land with the specified ID does not exist!");
+      // }
 
       // save new crop
-      let newCrop = await this.cropDao.save(cropDto, landModel);
+      let newCrop = await this.cropDao.save(cropDto, null);
       cr.setStatus(true);
     } catch (error) {
       cr.setStatus(false);

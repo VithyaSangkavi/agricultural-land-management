@@ -8,13 +8,11 @@ export class CropDto extends PaginationDto {
     private createdDate: Date;
     private updatedDate: Date;
     private status: Status;
-    private landId: number;
 
     filViaRequest(body) {
         if (body.id) {
             this.id = body.id;
         }
-        this.landId = body.landId;
         this.cropName = body.cropName;
         this.createdDate = body.createdDate;
         this.updatedDate = body.updatedDate;
@@ -32,7 +30,6 @@ export class CropDto extends PaginationDto {
         this.createdDate = cropModel.createdDate;
         this.updatedDate = cropModel.updatedDate;
         this.status = cropModel.status;
-        this.landId = cropModel.land.id;
     }
 
     public getCropId(): number {
@@ -42,15 +39,7 @@ export class CropDto extends PaginationDto {
     public setcropId(id: number): void {
         this.id = id;
     }
-
-    public getLandId(): number {
-        return this.landId;
-    }
-
-    public setLandId(landId: number): void {
-        this.landId = landId;
-    }
-
+    
     public getCropName(): string {
         return this.cropName;
     }
