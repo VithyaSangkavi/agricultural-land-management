@@ -17,8 +17,15 @@ import { MdArrowBackIos, MdViewAgenda, MdClose } from "react-icons/md";
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 
 const ManageOngoingTask = ({ selectedLandId }) => {
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
     const [t, i18n] = useTranslation();
     const { taskAssignedid } = useParams();
 
@@ -605,6 +612,11 @@ const ManageOngoingTask = ({ selectedLandId }) => {
             });
     }
 
+    const Delete = (worker) => {
+        handleRemoveWorker(worker)
+        handleClose()
+    }
+
     return (
         <div className="manage-task-app-screen">
             <div className='main-heading'>
@@ -717,9 +729,40 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                                                             <>
 
                                                                 {taskDetail.cardStatus !== 'completed' && (
-                                                                    <div className="remove-button-container">
-                                                                        <Trash onClick={() => handleRemoveWorker(workerDetail.workAssigned)} />
-                                                                    </div>
+                                                                    <>
+                                                                        <div className="remove-button-container">
+                                                                            {/* <Trash onClick={() => handleRemoveWorker(workerDetail.workAssigned)} /> */}
+
+                                                                            <Trash variant="primary" onClick={handleShow} />
+
+                                                                        </div>
+
+                                                                        <div>
+
+                                                                            <Modal show={show} onHide={handleClose} animation={false}
+                                                                                aria-labelledby="contained-modal-title-vcenter"
+                                                                                centered>
+                                                                                <Modal.Header>
+                                                                                    <Modal.Title>Delete Worker !</Modal.Title>
+                                                                                </Modal.Header>
+                                                                                <Modal.Body>Are you sure you want to delete worker ?</Modal.Body>
+                                                                                <Modal.Footer>
+                                                                                    <Button variant="secondary"
+                                                                                        onClick={handleClose}
+                                                                                        style={{ border: 'none' }}>
+                                                                                        Close
+                                                                                    </Button>
+                                                                                    <Button
+                                                                                        variant="primary"
+                                                                                        style={{ backgroundColor: 'red', border: 'none' }}
+                                                                                        onClick={() => Delete(workerDetail.workAssigned)}>
+                                                                                        Delete
+                                                                                    </Button>
+                                                                                </Modal.Footer>
+                                                                            </Modal>
+
+                                                                        </div>
+                                                                    </>
                                                                 )}
 
                                                             </>
@@ -826,11 +869,11 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                                 <div>
                                     {showExpenses ? (
                                         <button onClick={() => setShowExpenses(false)} className='close-task-expenses'>
-                                            <MdClose /> 
+                                            <MdClose />
                                         </button>
                                     ) : (
                                         <button onClick={() => setShowExpenses(true)} className='view-task-expenses'>
-                                             View Task Expenses <MdViewAgenda /> 
+                                            View Task Expenses <MdViewAgenda />
                                         </button>
                                     )}
 
