@@ -135,7 +135,7 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
     };
 
     axios
-      .post(`http://localhost:8080/service/master/workerUpdate?workerId=${workerId}`, updatedWorker)
+      .post(`http://localhost:8081/service/master/workerUpdate?workerId=${workerId}`, updatedWorker)
       .then((response) => {
         if (response.status === 200) {
           alertService.success("Worker updated successfully")
@@ -182,7 +182,7 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
     };
 
     axios
-      .post(`http://localhost:8080/service/master/paymentUpdate?paymentId=${paymentId}`, updatedPayment)
+      .post(`http://localhost:8081/service/master/paymentUpdate?paymentId=${paymentId}`, updatedPayment)
       .then((response) => {
         if (response.status === 200) {
           alertService.success("Payment updated successfully")
