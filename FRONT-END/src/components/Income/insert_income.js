@@ -81,7 +81,7 @@ const InsertIncome = ({ setSelectedLandId, selectedLandId }) => {
                     </p>
                 </div>
 
-                <p className="home-heading">{t('addincome')}</p>
+                {/* <p className="home-heading">{t('addincome')}</p> */}
 
             </div>
 
@@ -122,7 +122,7 @@ const InsertIncome = ({ setSelectedLandId, selectedLandId }) => {
                     className="add-button"
                     onClick={handleSubmit}
                 >
-                    {t('add')}
+                    {t('addincome')}
                 </Button>
 
             </div>

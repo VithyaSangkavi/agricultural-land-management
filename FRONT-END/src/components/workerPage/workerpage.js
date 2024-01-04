@@ -69,9 +69,17 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
       setLandNames(res.extra);
     });
 
-    submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true).then((res) => {
-      setLandName(res.extra.name);
-    });
+    if (selectedLandId) {
+      submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true)
+          .then((res) => {
+              setLandName(res.extra ? res.extra.name : "All Lands");
+          })
+          .catch((error) => {
+              console.error("Error fetching land by id:", error);
+          });
+  } else {
+      setLandName("All Lands");
+  }
 
   }, [submitCollection.manageland, selectedLandId]);
 
@@ -127,7 +135,7 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
     };
 
     axios
-      .post(`http://localhost:8080/service/master/workerUpdate?workerId=${workerId}`, updatedWorker)
+      .post(`http://localhost:8081/service/master/workerUpdate?workerId=${workerId}`, updatedWorker)
       .then((response) => {
         if (response.status === 200) {
           alertService.success("Worker updated successfully")
@@ -174,7 +182,7 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
     };
 
     axios
-      .post(`http://localhost:8080/service/master/paymentUpdate?paymentId=${paymentId}`, updatedPayment)
+      .post(`http://localhost:8081/service/master/paymentUpdate?paymentId=${paymentId}`, updatedPayment)
       .then((response) => {
         if (response.status === 200) {
           alertService.success("Payment updated successfully")
