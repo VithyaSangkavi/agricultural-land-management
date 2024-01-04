@@ -69,9 +69,17 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
       setLandNames(res.extra);
     });
 
-    submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true).then((res) => {
-      setLandName(res.extra.name);
-    });
+    if (selectedLandId) {
+      submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true)
+          .then((res) => {
+              setLandName(res.extra ? res.extra.name : "All Lands");
+          })
+          .catch((error) => {
+              console.error("Error fetching land by id:", error);
+          });
+  } else {
+      setLandName("All Lands");
+  }
 
   }, [submitCollection.manageland, selectedLandId]);
 

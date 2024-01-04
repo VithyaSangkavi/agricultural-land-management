@@ -40,9 +40,6 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
     submitSets(submitCollection.manageworker, false).then((res) => {
       setWorkers(res.extra);
 
-      if (res.extra.length === 0) {
-        alertService.info('No Data Found !');
-      }
     });
 
   }, []);
