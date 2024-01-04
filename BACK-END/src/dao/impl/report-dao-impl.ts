@@ -616,4 +616,97 @@ export class ReportDaoImpl implements ReportDao {
 
     return combinedSummary;
   }
+
+  //Total - weekly Summary Report
+  async getDailySummaryReport(landId) {
+    const workAssignedRepository = getConnection().getRepository(WorkAssignedEntity);
+
+    const workAssignedEntities = await workAssignedRepository
+      .createQueryBuilder("workAssigned")
+      .leftJoinAndSelect("workAssigned.taskCard", "taskCard")
+      .leftJoinAndSelect("taskCard.taskAssigned", "taskAssigned")
+      .leftJoinAndSelect("taskAssigned.land", "land")
+      .where("land.id = :landId", { landId })
+      .getMany();
+
+    const weeklyExpenses = await getRepository(TaskExpenseEntity)
+      .createQueryBuilder("taskExpense")
+      .innerJoin("taskExpense.taskAssigned", "taskAssigned")
+      .innerJoin("taskAssigned.land", "land")
+      .innerJoin(TaskTypeEntity, "task", "task.taskName = :taskName AND task.id = taskAssigned.taskId", { taskName: "Pluck" })
+      .where("land.id = :landId", { landId })
+      .groupBy("EXTRACT(YEAR FROM taskExpense.createdDate), EXTRACT(MONTH FROM taskExpense.createdDate), EXTRACT(DAY FROM taskExpense.createdDate)")
+      .select([
+        "EXTRACT(YEAR FROM taskExpense.createdDate) AS year",
+        "EXTRACT(MONTH FROM taskExpense.createdDate) AS monthNumber",
+        "EXTRACT(DAY FROM taskExpense.createdDate) AS dayNumber",
+        "SUM(taskExpense.value) AS totalExpense"
+      ])
+      .getRawMany();
+
+
+    const weeklyExpenses2 = await getRepository(TaskExpenseEntity)
+      .createQueryBuilder("taskExpense")
+      .innerJoin("taskExpense.taskAssigned", "taskAssigned")
+      .innerJoin("taskAssigned.land", "land")
+      .innerJoin(TaskTypeEntity, "task", "task.taskName <> :pluckTaskName AND task.id = taskAssigned.taskId", { pluckTaskName: "Pluck" })
+      .where("land.id = :landId", { landId })
+      .groupBy("EXTRACT(YEAR FROM taskExpense.createdDate), EXTRACT(MONTH FROM taskExpense.createdDate), EXTRACT(DAY FROM taskExpense.createdDate)")
+      .select([
+        "EXTRACT(YEAR FROM taskExpense.createdDate) AS year",
+        "EXTRACT(MONTH FROM taskExpense.createdDate) AS monthNumber",
+        "EXTRACT(DAY FROM taskExpense.createdDate) AS dayNumber",
+        "SUM(taskExpense.value) AS totalExpense"
+      ])
+      .getRawMany();
+
+
+    const weeklyExpenses3 = await getRepository(TaskExpenseEntity)
+      .createQueryBuilder("taskExpense")
+      .innerJoin("taskExpense.taskAssigned", "taskAssigned")
+      .innerJoin("taskExpense.expense", "expense")
+      .innerJoin("taskAssigned.land", "land")
+      .where("expense.expenseType != :salaryExpenseType", { salaryExpenseType: "Salary" })
+      .andWhere("land.id = :landId", { landId })
+      .groupBy("EXTRACT(YEAR FROM taskExpense.createdDate), EXTRACT(MONTH FROM taskExpense.createdDate), EXTRACT(DAY FROM taskExpense.createdDate)")
+      .select([
+        "EXTRACT(YEAR FROM taskExpense.createdDate) AS year",
+        "EXTRACT(MONTH FROM taskExpense.createdDate) AS monthNumber",
+        "EXTRACT(DAY FROM taskExpense.createdDate) AS dayNumber",
+        "SUM(taskExpense.value) AS totalExpense"
+      ])
+      .getRawMany();
+
+
+    const quantitySummary = workAssignedEntities.reduce((summary, workAssigned) => {
+      const workDate = workAssigned.taskCard.workDate || workAssigned.startDate.toISOString().split("T")[0];
+      const date = moment(workDate).format("YYYY-MM-DD");
+
+      if (!summary[date]) {
+        summary[date] = 0;
+      }
+
+      summary[date] += workAssigned.quantity || 0;
+
+      return summary;
+    }, {});
+
+    const combinedSummary = Object.entries(quantitySummary).map(([date, totalQuantity]) => {
+      const expenseForDate = weeklyExpenses.find(expense => expense.date === date);
+      const finalDailyExpenses = weeklyExpenses2.find(otherExpense => otherExpense.date === date);
+      const additionalDailyExpenses = weeklyExpenses3.find(taskExpense => taskExpense.date === date);
+
+      return {
+        date,
+        totalQuantity,
+        PluckExpense: expenseForDate ? parseFloat(expenseForDate.totalExpense) : 0,
+        OtherExpenses: finalDailyExpenses ? parseFloat(finalDailyExpenses.totalExpense) : 0,
+        NonCrewExpenses: additionalDailyExpenses ? parseFloat(additionalDailyExpenses.totalExpense) : 0,
+        Profit: "-",
+        CIR: "-",
+      };
+    });
+
+    return combinedSummary;
+  }
 }

@@ -143,7 +143,7 @@ function Report({ setSelectedLandId, selectedLandId }) {
 
     useEffect(() => {
         //lot find all
-        axios.get('http://localhost:8081/service/master/lotFindAll').then((response) => {
+        axios.get('http://localhost:8080/service/master/lotFindAll').then((response) => {
             setLots(response.data.extra);
             console.log("Lots : ", response.data.extra);
         });
@@ -336,7 +336,7 @@ function Report({ setSelectedLandId, selectedLandId }) {
                                 >
                                     <option value="0">Monthly</option>
                                     <option value="1">Weekly</option>
-                                    {/* <option value="2">Daily</option> */}
+                                    <option value="2">Daily</option>
                                 </select>
                             </div>
                         ) : null}

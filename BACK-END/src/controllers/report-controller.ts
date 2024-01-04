@@ -147,3 +147,16 @@ export const getWeeklySummaryReport = async (req: Request, res: Response): Promi
   }
 };
 
+export const getDailySummaryReport = async (req: Request, res: Response): Promise<void> => {
+  const landId = req.query.landId;
+  console.log("Back-end ctr land: ", landId);
+  try {
+    const costSummaryReport = await reportServiceImpl.getDailySummaryReport(landId);
+    res.json(costSummaryReport);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to generate cost Summary Report report' });
+  }
+};
+
+
+
