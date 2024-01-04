@@ -86,6 +86,7 @@ export class TaskExpenseDaoImpl implements TaskExpenseDao {
     const query = taskExpenseRepo.createQueryBuilder("task-expense")
       .innerJoin('task-expense.expense', 'expense')
       .where('task-expense.taskAssigned = :taskAssignedId', { taskAssignedId: taskExpenseDto.getTaskAssignedId() })
+      .orderBy('id', "DESC")
       .select(['task-expense.id AS id', 'task-expense.value AS value', 'expense.id AS expenseId', 'expense.expenseType AS expenseType'])
   
     const taskExpenses = await query.getRawMany();
