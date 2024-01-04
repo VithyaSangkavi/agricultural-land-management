@@ -4,13 +4,10 @@ const initialState = {
   selectedCrop: '', 
 };
 
-const cropReducer = (state = initialState, action) => {
+const cropReducer = (state = initialState.selectedCrop, action) => {
   switch (action.type) {
     case SELECTED_CROP_SET:
-      return {
-        ...state,
-        selectedCrop: action.payload,
-      };
+      return action.payload;
     default:
       return state;
   }

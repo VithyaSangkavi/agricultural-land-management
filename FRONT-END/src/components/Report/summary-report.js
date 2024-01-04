@@ -37,6 +37,14 @@ const SummaryReport = ({ selectedLand, category }) => {
                 } catch (error) {
                     console.error("Error fetching weekly summary data:", error);
                 }
+            } else {
+                try {
+                    const response = await axios.get(`http://localhost:8080/service/master/summary-daily?landId=${selectedLand}`);
+                    console.log(response.data);
+                    setSummaryData(response.data);
+                } catch (error) {
+                    console.error("Error fetching weekly summary data:", error);
+                }
             }
         };
 
@@ -53,9 +61,10 @@ const SummaryReport = ({ selectedLand, category }) => {
                     <table className='attendance-table'>
                         <thead>
                             <tr>
-                                <th>Year</th>
+
                                 {category == 1 ? (
                                     <>
+                                        <th>Year</th>
                                         <th>Week</th>
                                         <th>Kg</th>
                                         <th>Plucking Expenses</th>
@@ -65,8 +74,19 @@ const SummaryReport = ({ selectedLand, category }) => {
                                         <th>Profit</th>
                                         <th>CIR</th>
                                     </>
+                                ) : category == 2 ? (
+                                    <>
+                                        <th>Date</th>
+                                        <th>Kg</th>
+                                        <th>Plucking Expenses</th>
+                                        <th>Other Expenses</th>
+                                        <th>Non-crew Expenses</th>
+                                        <th>Profit</th>
+                                        <th>CIR</th>
+                                    </>
                                 ) : (
                                     <>
+                                        <th>Year</th>
                                         <th>Month</th>
                                         <th>Kg</th>
                                         <th>Plucking Expenses</th>
@@ -96,6 +116,17 @@ const SummaryReport = ({ selectedLand, category }) => {
                                             <td>{item.Profit}</td>
                                             <td>{item.CIR}</td>
                                         </>
+                                    ) : category == 2 ? (
+                                        <>
+                                            <td>{item.date}</td>
+                                            <td>{item.totalQuantity}</td>
+                                            <td>{item.PluckExpense}</td>
+                                            <td>{item.OtherExpenses}</td>
+                                            <td>{item.NonCrewExpenses}</td>
+                                            <td>{item.Profit}</td>
+                                            <td>{item.CIR}</td>
+                                        </>
+
                                     ) : (
                                         <>
                                             <td>{item.month}</td>
@@ -111,7 +142,7 @@ const SummaryReport = ({ selectedLand, category }) => {
                                 </tr>
                             ))}
                         </tbody>
-                    </table>
+                    </table >
 
                 ) : (
                     <div>
@@ -124,7 +155,7 @@ const SummaryReport = ({ selectedLand, category }) => {
                     </div>
 
                 )}
-            </div>
+            </div >
             <br />
         </>
     );

@@ -12,16 +12,16 @@ import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
 import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
+import { setSelectedCropAction } from '../../actions/auth/crop_action';
 import { MdArrowBackIos } from "react-icons/md";
 import { IoIosLeaf } from "react-icons/io";
 import { GiWheat, GiCoconuts } from "react-icons/gi";
 
-function Header({ setSelectedLandId, selectedLandId }) {
+function Header({ setSelectedLandId, selectedLandId, setSelectedCrop, selectedCrop }) {
     const [t, i18n] = useTranslation();
 
     const [landNames, setLandNames] = useState([]);
     const [landName, setLandName] = useState([]);
-    const [selectedCrop, setSelectedCrop] = useState(null);
 
     const history = useHistory();
 
@@ -118,10 +118,12 @@ function Header({ setSelectedLandId, selectedLandId }) {
 
 const mapStateToProps = (state) => ({
     selectedLandId: state.selectedLandId,
+    selectedCrop: state.selectedCrop
 });
 
 const mapDispatchToProps = {
     setSelectedLandId: setSelectedLandIdAction,
+    setSelectedCrop: setSelectedCropAction
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

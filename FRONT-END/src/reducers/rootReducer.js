@@ -9,7 +9,7 @@ import { SIGNOUT_SET, SELECTED_LAND_SET, SELECTED_CROP_SET, RESET_ALL } from '..
 const INITIAL_STATE = {
   signState: { signinDetails: false },
   langState: { languageDetails: { code: "en", text: "English (US)" } },
-  selectedLandId: 1, // New state property
+  selectedLandId: 1, 
 };
 
 const selectedLandIdReducer = (state = INITIAL_STATE.selectedLandId, action) => {
@@ -25,7 +25,7 @@ const appReducer = combineReducers({
   signState: loginReducer,
   langState: languageReducer,
   selectedLandId: selectedLandIdReducer,
-  cropName: cropReducer,
+  selectedCrop: cropReducer,
 });
 
 const rootReducer = (state, action) => {

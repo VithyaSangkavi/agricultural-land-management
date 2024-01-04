@@ -22,7 +22,7 @@ import '../css/common.css';
 import { alertService } from '../../_services/alert.service';
 import { useSelector } from 'react-redux';
 
-function Home({ setSelectedLandId, selectedLandId, setSelectedCropName, selectedCropName }) {
+function Home({ setSelectedLandId, selectedLandId, selectedCrop }) {
     const [t, i18n] = useTranslation();
 
     const [searchQuery, setSearchQuery] = useState('');
@@ -33,17 +33,7 @@ function Home({ setSelectedLandId, selectedLandId, setSelectedCropName, selected
     const [OngoingTasks, setOngoingTasks] = useState([]);
     const [landNames, setLandNames] = useState([]);
     const [landName, setLandName] = useState([]);
-    const [cropName, setCropName] = useState('');
-
-    let selectedImage = null;
-
     const history = useHistory();
-
-    const cropNameFromRedux = useSelector((state) => state.selectedCropName);
-
-    const actualCropName = cropNameFromRedux ? cropNameFromRedux.cropName : '';
-
-    console.log('Crop Name from Redux:', actualCropName);
 
     const getFormattedDate = (dateString) => {
         const date = new Date(dateString);
@@ -57,6 +47,7 @@ function Home({ setSelectedLandId, selectedLandId, setSelectedCropName, selected
     };
 
     console.log("selected land : ", selectedLandId)
+    console.log('selected crop: ', selectedCrop)
 
 
     useEffect(() => {
@@ -79,17 +70,6 @@ function Home({ setSelectedLandId, selectedLandId, setSelectedCropName, selected
             }
         });
 
-        axios.get(`http://localhost:8080/service/master/cropNameFindByLandId/${selectedLandId}`)
-            .then((response) => {
-                setCropName(response.data.cropName.extra);
-                setSelectedCropName(response.data.cropName.extra);
-                console.log('crop name: ', cropName);
-
-            })
-            .catch((error) => {
-                console.error('Error fetching task card id:', error);
-            });
-
     }, [selectedLandId]);
 
     const handleSearchChange = (event) => {
@@ -103,7 +83,6 @@ function Home({ setSelectedLandId, selectedLandId, setSelectedCropName, selected
     //     console.log("Land : ", event);
     //     setSelectedLandId(event);
     // };
-
 
     useEffect(() => {
         submitSets(submitCollection.manageland, false).then((res) => {
@@ -207,12 +186,12 @@ function Home({ setSelectedLandId, selectedLandId, setSelectedCropName, selected
 
 const mapStateToProps = (state) => ({
     selectedLandId: state.selectedLandId,
-    selectedCropName: state.SelectedCropName
+    selectedCrop: state.selectedCrop
 });
 
 const mapDispatchToProps = {
     setSelectedLandId: setSelectedLandIdAction,
-    setSelectedCropName: setSelectedCropAction,
+    setSelectedCrop: setSelectedCropAction,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
