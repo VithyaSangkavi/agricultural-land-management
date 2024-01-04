@@ -69,6 +69,12 @@ export class ReportServiceImpl implements ReportService {
     return this.reportDao.getWeeklySummaryReport(landId);
   }
 
+  async getDailySummaryReport(landId?: number): Promise<any> {
+    return this.reportDao.getDailySummaryReport(landId);
+  }
+
+  
+
 }
 
 

@@ -7,6 +7,7 @@ export interface ReportService {
     getCostBreakdownLineReport(fromDate?: string, landId?: number): Promise<any>;
     getCostBreakdownPieReport(): Promise<any>;
     getSummaryReport(landId?: number, cateNum?: number): Promise<any>;   
-    getWeeklySummaryReport(landId?: number): Promise<any>; 
+    getWeeklySummaryReport(landId?: number): Promise<any>;
+    getDailySummaryReport(landId?: number): Promise<any>;
   }
   
