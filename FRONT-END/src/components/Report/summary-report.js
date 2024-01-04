@@ -103,10 +103,11 @@ const SummaryReport = ({ selectedLand, category }) => {
                         <tbody>
                             {summaryData.map((item, index) => (
                                 <tr key={index}>
-                                    <td>{item.year}</td>
+
 
                                     {category == 1 ? (
                                         <>
+                                            <td>{item.year}</td>
                                             <td>{item.weekNumber}</td>
                                             <td>{item.totalQuantity}</td>
                                             <td>{item.PluckExpense}</td>
@@ -129,6 +130,7 @@ const SummaryReport = ({ selectedLand, category }) => {
 
                                     ) : (
                                         <>
+                                            <td>{item.year}</td>
                                             <td>{item.month}</td>
                                             <td>{item.totalQuantity}</td>
                                             <td>{item.PluckExpense}</td>
