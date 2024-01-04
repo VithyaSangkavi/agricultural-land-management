@@ -11,6 +11,7 @@ import { WorkerEntity } from '../../entity/master/worker-entity';
 import { ExpensesEntity } from '../../entity/master/expense-entity';
 
 import moment from 'moment';
+import { ISummeryDaoRes, ISummeryRes } from '../../types/report-types';
 export class ReportDaoImpl implements ReportDao {
 
   //employee-attendance report
@@ -397,10 +398,7 @@ export class ReportDaoImpl implements ReportDao {
   }
 
   //Total - Monthly Summary Report
-  async getSummaryReport(landId?: number, cateNum?: number): Promise<any> {
-
-    console.log("catenum dao-impl : ", cateNum);
-    console.log("landnum dao-impl : ", cateNum);
+  async getSummaryReport(landId?: number): Promise<ISummeryDaoRes> {
 
     const workAssignedRepository = getConnection().getRepository(WorkAssignedEntity);
 
@@ -410,6 +408,7 @@ export class ReportDaoImpl implements ReportDao {
       .leftJoinAndSelect("taskCard.taskAssigned", "taskAssigned")
       .leftJoinAndSelect("taskAssigned.land", "land")
       .where("land.id = :landId", { landId })
+      .distinct(true)
       .getMany();
 
     const monthlyExpenses = await getRepository(TaskExpenseEntity)
@@ -421,6 +420,7 @@ export class ReportDaoImpl implements ReportDao {
       .groupBy("DATE_FORMAT(taskExpense.createdDate, '%M %Y')")
       .select("DATE_FORMAT(taskExpense.createdDate, '%M %Y')", "monthYear")
       .addSelect("SUM(taskExpense.value)", "totalExpense")
+      .distinct(true)
       .getRawMany();
 
 
@@ -433,6 +433,7 @@ export class ReportDaoImpl implements ReportDao {
       .groupBy("DATE_FORMAT(taskExpense.createdDate, '%M %Y')")
       .select("DATE_FORMAT(taskExpense.createdDate, '%M %Y')", "monthYear")
       .addSelect("SUM(taskExpense.value)", "totalExpense")
+      .distinct(true)
       .getRawMany();
 
     const monthlyExpenses3 = await getRepository(TaskExpenseEntity)
@@ -445,6 +446,7 @@ export class ReportDaoImpl implements ReportDao {
       .groupBy("DATE_FORMAT(taskExpense.createdDate, '%M %Y')")
       .select("DATE_FORMAT(taskExpense.createdDate, '%M %Y')", "monthYear")
       .addSelect("SUM(taskExpense.value)", "totalExpense")
+      .distinct(true)
       .getRawMany();
 
     const groupedIncomeByMonthAndYear = await getRepository(IncomeEntity)
@@ -453,6 +455,7 @@ export class ReportDaoImpl implements ReportDao {
         "CONCAT(income.month, ' ', YEAR(income.createdDate)) AS monthYear",
         "SUM(income.price) AS totalIncome"
       ])
+      .distinct(true)
       .where("income.landId = :landId", { landId })
       .groupBy("monthYear")
       .getRawMany();
@@ -465,55 +468,37 @@ export class ReportDaoImpl implements ReportDao {
         "DATE_FORMAT(taskExpense.createdDate, '%M %Y') AS monthYear",
         "SUM(taskExpense.value) AS totalExpense"
       ])
+      .distinct(true)
       .where("land.id = :landId", { landId })
       .groupBy("monthYear")
       .getRawMany();
 
 
+      const quantitySummary = workAssignedEntities.reduce((summary, workAssigned) => {
+        const workDate = workAssigned.taskCard.workDate || workAssigned.startDate.toISOString().split("T")[0];
+        const year = new Date(workDate).getFullYear();
+        const month = new Date(workDate).toLocaleString('en-US', { month: 'long' });
+        const key = `${month} ${year}`;
+  
+        if (!summary[key]) {
+          summary[key] = 0;
+        }
+  
+        summary[key] += workAssigned.quantity || 0;
+  
+        return summary;
+      }, {})
 
-    const quantitySummary = workAssignedEntities.reduce((summary, workAssigned) => {
-      const workDate = workAssigned.taskCard.workDate || workAssigned.startDate.toISOString().split("T")[0];
-      const year = new Date(workDate).getFullYear();
-      const month = new Date(workDate).toLocaleString('en-US', { month: 'long' });
-      const key = `${month} ${year}`;
+    const result: ISummeryDaoRes = {
+      monthlyExpenses: monthlyExpenses && monthlyExpenses.length > 0 ? monthlyExpenses : [],
+      monthlyExpenses2: monthlyExpenses2 && monthlyExpenses2.length > 0 ? monthlyExpenses2 : [],
+      monthlyExpenses3: monthlyExpenses3 && monthlyExpenses3.length > 0 ? monthlyExpenses3 : [],
+      groupedIncomeByMonthAndYear: groupedIncomeByMonthAndYear && groupedIncomeByMonthAndYear.length > 0 ? groupedIncomeByMonthAndYear : [],
+      monthlyExpenses4: monthlyExpenses4 && monthlyExpenses4.length > 0 ? monthlyExpenses4 : [], 
+      quantitySummary: quantitySummary,
+    }
 
-      if (!summary[key]) {
-        summary[key] = 0;
-      }
-
-      summary[key] += workAssigned.quantity || 0;
-
-      return summary;
-    }, {});
-
-
-    const combinedSummary = Object.entries(quantitySummary).map(([key, totalQuantity]) => {
-      const [month, year] = key.split(' ');
-
-      const expenseForMonth = monthlyExpenses.find(expense => expense.monthYear === `${month} ${year}`);
-      const finalMonthlyExpenses = monthlyExpenses2.find(otherExpense => otherExpense.monthYear === `${month} ${year}`);
-      const additionalMonthlyExpenses = monthlyExpenses3.find(taskExpense => taskExpense.monthYear === `${month} ${year}`);
-      const incomeForMonth = groupedIncomeByMonthAndYear.find(income => income.monthYear === `${month} ${year}`);
-      const taskExpenseForMonth = monthlyExpenses4.find(taskExpense => taskExpense.monthYear === `${month} ${year}`);
-
-      const CIR = ((taskExpenseForMonth ? parseFloat(taskExpenseForMonth.totalExpense) : 0) /
-        (incomeForMonth ? parseFloat(incomeForMonth.totalIncome) : 0)).toFixed(2);
-
-      return {
-        month,
-        year,
-        totalQuantity,
-        PluckExpense: expenseForMonth ? parseFloat(expenseForMonth.totalExpense) : 0,
-        OtherExpenses: finalMonthlyExpenses ? parseFloat(finalMonthlyExpenses.totalExpense) : 0,
-        NonCrewExpenses: additionalMonthlyExpenses ? parseFloat(additionalMonthlyExpenses.totalExpense) : 0,
-        TotalIncome: incomeForMonth ? parseFloat(incomeForMonth.totalIncome) : 0,
-        TaskExpenses: taskExpenseForMonth ? parseFloat(taskExpenseForMonth.totalExpense) : 0,
-
-        Profit: (incomeForMonth ? parseFloat(incomeForMonth.totalIncome) : 0) - (taskExpenseForMonth ? parseFloat(taskExpenseForMonth.totalExpense) : 0),
-        CIR: parseFloat(CIR),
-      };
-    });
-    return combinedSummary;
+    return result;
   }
 
 

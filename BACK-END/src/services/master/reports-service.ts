@@ -9,5 +9,6 @@ export interface ReportService {
     getSummaryReport(landId?: number, cateNum?: number): Promise<any>;   
     getWeeklySummaryReport(landId?: number): Promise<any>;
     getDailySummaryReport(landId?: number): Promise<any>;
+    getSummary(landId: number): Promise<any>;
   }
   
