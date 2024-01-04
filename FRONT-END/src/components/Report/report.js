@@ -235,7 +235,7 @@ function Report({ setSelectedLandId, selectedLandId }) {
 
     return (
         <div className="home-app-screen">
-            <Header/>
+            <Header />
             <div className="drop-down-container" style={{ marginTop: "0px" }}>
 
                 <div className='landsectioncover'>
@@ -280,24 +280,28 @@ function Report({ setSelectedLandId, selectedLandId }) {
                                 </>
                             ) : (
                                 <>
-                                    <label className='custom-label'>
-                                        {t('daterange')} :
-                                    </label>
-                                    <FaCalendarAlt className='calendar-icon' onClick={handleLabelClick} />
+                                    {selectedReport !== 'Summary' && (
+                                        <div>
+                                            <label className='custom-label'>
+                                                {t('daterange')} :
+                                            </label>
+                                            <FaCalendarAlt className='calendar-icon' onClick={handleLabelClick} />
 
 
-                                    <div className='date-range-picker'>
-                                        {showPicker && (
-                                            <DateRange
-                                                ranges={dateRange}
-                                                onChange={handleSelect}
-                                                editableDateInputs={true}
-                                                dragSelectionEnabled={true}
-                                                rangeColors={['#0079224D']}
+                                            <div className='date-range-picker'>
+                                                {showPicker && (
+                                                    <DateRange
+                                                        ranges={dateRange}
+                                                        onChange={handleSelect}
+                                                        editableDateInputs={true}
+                                                        dragSelectionEnabled={true}
+                                                        rangeColors={['#0079224D']}
 
-                                            />
-                                        )}
-                                    </div>
+                                                    />
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
                                 </>
                             )}
                         </div>
@@ -350,7 +354,7 @@ function Report({ setSelectedLandId, selectedLandId }) {
             {showEmployeePerfomnce && <EmployeePerfomnce dateRange={formatDate(dateRange)} selectedLand={selectedLandId} />}
             {showCostBreakdown && <CostBreakdownReport selectedLand={selectedLandId} fromDate={fromDate} />}
             {showSummary && <SummaryReport selectedLand={selectedLandId} category={category} />}
-            < br /> <br/> <br/>
+            < br /> <br /> <br />
             <Footer />
         </div >
     );
