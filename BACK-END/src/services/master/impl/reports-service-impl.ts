@@ -61,53 +61,97 @@ export class ReportServiceImpl implements ReportService {
   }
 
 
-  //employee prefomnce report
+  /**
+   * Employee Prefomnce Report
+   * @param fromDate 
+   * @param toDate 
+   * @param landId 
+   * @returns 
+   */
   async getEmployeePerfomanceReport(fromDate?: string, toDate?: string, landId?: number): Promise<any> {
     return this.reportDao.getEmployeePerfomanceReport(fromDate, toDate, landId);
   }
-  //Cost Breakdown Line Report
+  
+
+  /**
+   * Cost Breakdown Line chart Report
+   * @param fromDate 
+   * @param landId 
+   * @returns 
+   */
   async getCostBreakdownLineReport(fromDate?: string, landId?: number): Promise<any> {
     return this.reportDao.getCostBreakdownLineReport(fromDate, landId);
 
   }
+  
 
-  //Cost Breakdown Pi eReport
+  /**
+   * Cost Breakdown Pie chart Report
+   * @returns 
+   */
   async getCostBreakdownPieReport(): Promise<any> {
     return this.reportDao.getCostBreakdownPieReport()
   }
 
 
-  //Summary Report
+  /**
+   * Monthly Summary Report
+   * @param landId 
+   * @param cateNum 
+   * @returns 
+   */
   async getSummaryReport(landId?: number, cateNum?: number): Promise<any> {
     return this.getSummary(landId);
   }
 
+  /**
+   * Weekly Summary Report
+   * @param landId 
+   * @returns 
+   */
   async getWeeklySummaryReport(landId?: number): Promise<any> {
     return this.reportDao.getWeeklySummaryReport(landId);
   }
 
+  /**
+   * Daily Summary Report
+   * @param landId 
+   * @returns 
+   */
   async getDailySummaryReport(landId?: number): Promise<any> {
     return this.reportDao.getDailySummaryReport(landId);
   }
 
-  //Summary
+
+  /**
+   * Get Summary Report
+   * @param landId 
+   * @returns any
+   */
   async getSummary(landId: number): Promise<any> {
 
     try {
-      const summeryResult = await this.reportDao.getSummaryReport(landId);
+      const workAssignedEntity = await this.reportDao.getWorkAssignedEntity(landId);
+      const monthlyExpenses = await this.reportDao.getPluckExpense(landId);
+      const monthlyExpenses2 = await this.reportDao.getOtherExpenses(landId);
+      const monthlyExpenses3 = await this.reportDao.getNonCrewExpenses(landId);
+      const groupedIncomeByMonthAndYear = await this.reportDao.getTotalIncome(landId);
+      const monthlyExpenses4 = await this.reportDao.getTaskExpenses(landId);
 
-      const combinedSummary = Object.entries(summeryResult.quantitySummary).map(([key, totalQuantity]) => {
+      const quantitySummary = await this.GetQuantitySummary(workAssignedEntity);
+
+      const combinedSummary = await Promise.all(Object.entries(quantitySummary).map(async ([key, totalQuantity]) => {
         const [month, year] = key.split(' ');
-  
-        const expenseForMonth = summeryResult.monthlyExpenses.find(expense => expense.monthYear === `${month} ${year}`);
-        const finalMonthlyExpenses = summeryResult.monthlyExpenses2.find(otherExpense => otherExpense.monthYear === `${month} ${year}`);
-        const additionalMonthlyExpenses = summeryResult.monthlyExpenses3.find(taskExpense => taskExpense.monthYear === `${month} ${year}`);
-        const incomeForMonth = summeryResult.groupedIncomeByMonthAndYear.find(income => income.monthYear === `${month} ${year}`);
-        const taskExpenseForMonth = summeryResult.monthlyExpenses4.find(taskExpense => taskExpense.monthYear === `${month} ${year}`);
-  
-        const CIR = findCIR(taskExpenseForMonth, incomeForMonth);
+
+        const expenseForMonth = monthlyExpenses.find(expense => expense.monthYear === `${month} ${year}`);
+        const finalMonthlyExpenses = monthlyExpenses2.find(otherExpense => otherExpense.monthYear === `${month} ${year}`);
+        const additionalMonthlyExpenses = monthlyExpenses3.find(taskExpense => taskExpense.monthYear === `${month} ${year}`);
+        const incomeForMonth = groupedIncomeByMonthAndYear.find(income => income.monthYear === `${month} ${year}`);
+        const taskExpenseForMonth = monthlyExpenses4.find(taskExpense => taskExpense.monthYear === `${month} ${year}`);
+
+        const CIR = await this.findCIR(taskExpenseForMonth, incomeForMonth);
         const profit = findProfit(incomeForMonth, taskExpenseForMonth);
-  
+        
         return {
           month,
           year,
@@ -121,23 +165,44 @@ export class ReportServiceImpl implements ReportService {
           Profit: profit,
           CIR: CIR,
         };
-      });
+      }));
+
       return combinedSummary;
+
     } catch (e) {
       console.log(e);
-      
+
     }
   }
-}
 
-export function findCIR(taskExpenseForMonth: any, incomeForMonth: any): number {
+  async findCIR(taskExpenseForMonth: any, incomeForMonth: any): Promise<number> {
 
-  console.log(taskExpenseForMonth, incomeForMonth);
-  
-  const CIR = ((taskExpenseForMonth ? parseFloat(taskExpenseForMonth.totalExpense) : 0) /
-        (incomeForMonth ? parseFloat(incomeForMonth.totalIncome) : 0)).toFixed(2);
+    const CIR = ((taskExpenseForMonth ? parseFloat(taskExpenseForMonth.totalExpense) : 0) /
+      (incomeForMonth ? parseFloat(incomeForMonth.totalIncome) : 0)).toFixed(2);
 
-  return parseFloat(CIR);
+    return parseFloat(CIR);
+  }
+
+  async GetQuantitySummary(workAssignedEntity : any): Promise<any> {
+
+    const quantitySummary = workAssignedEntity.reduce((summary : any, workAssigned : any) => {
+      const workDate = workAssigned.taskCard.workDate || workAssigned.startDate.toISOString().split("T")[0];
+      const year = new Date(workDate).getFullYear();
+      const month = new Date(workDate).toLocaleString('en-US', { month: 'long' });
+      const key = `${month} ${year}`;
+
+      if (!summary[key]) {
+        summary[key] = 0;
+      }
+
+      summary[key] += workAssigned.quantity || 0;
+
+      return summary;
+    }, {})
+
+    return quantitySummary;
+
+  }
 }
 
 export function findProfit(incomeForMonth: any, taskExpenseForMonth: any): number {
