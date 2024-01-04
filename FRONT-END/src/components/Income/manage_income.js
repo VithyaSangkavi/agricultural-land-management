@@ -58,7 +58,7 @@ function ManageIncome({ setSelectedLandId, selectedLandId }) {
 
     useEffect(() => {
         if (selectedLandId || selectedLandId === '') {
-            let apiUrl = 'http://localhost:8081/service/master/incomeFindByLandId/';
+            let apiUrl = 'http://localhost:8080/service/master/incomeFindByLandId/';
             if (selectedLandId !== '') {
                 apiUrl += selectedLandId;
             }

@@ -23,7 +23,7 @@ const SummaryReport = ({ selectedLand, category }) => {
 
             if (category == 0) {
                 try {
-                    const response = await axios.get(`http://localhost:8081/service/master/summary?landId=${selectedLand}`);
+                    const response = await axios.get(`http://localhost:8080/service/master/summary?landId=${selectedLand}`);
                     console.log(response.data);
                     setSummaryData(response.data);
                 } catch (error) {
@@ -31,7 +31,7 @@ const SummaryReport = ({ selectedLand, category }) => {
                 }
             } else if (category == 1) {
                 try {
-                    const response = await axios.get(`http://localhost:8081/service/master/summary-weekly?landId=${selectedLand}`);
+                    const response = await axios.get(`http://localhost:8080/service/master/summary-weekly?landId=${selectedLand}`);
                     console.log(response.data);
                     setSummaryData(response.data);
                 } catch (error) {
