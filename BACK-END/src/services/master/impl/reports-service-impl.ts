@@ -24,7 +24,14 @@ export class ReportServiceImpl implements ReportService {
 
   reportDao: ReportDao = new ReportDaoImpl();
     
-  //employee-attendance report
+  /**
+   * Get employee attendance report
+   * @param startDate 
+   * @param endDate 
+   * @param lotId 
+   * @param landId 
+   * @returns any
+   */
   async generateEmployeeAttendanceReport(startDate: Date, endDate: Date, lotId: number, landId: number): Promise<any[]> {
     return this.reportDao.generateEmployeeAttendanceReport(startDate, endDate, lotId, landId);
   }
@@ -85,6 +92,7 @@ export class ReportServiceImpl implements ReportService {
         const taskExpenseForMonth = summeryResult.monthlyExpenses4.find(taskExpense => taskExpense.monthYear === `${month} ${year}`);
   
         const CIR = findCIR(taskExpenseForMonth, incomeForMonth);
+        const profit = findProfit(incomeForMonth, taskExpenseForMonth);
   
         return {
           month,
@@ -96,7 +104,7 @@ export class ReportServiceImpl implements ReportService {
           TotalIncome: incomeForMonth ? parseFloat(incomeForMonth.totalIncome) : 0,
           TaskExpenses: taskExpenseForMonth ? parseFloat(taskExpenseForMonth.totalExpense) : 0,
   
-          Profit: (incomeForMonth ? parseFloat(incomeForMonth.totalIncome) : 0) - (taskExpenseForMonth ? parseFloat(taskExpenseForMonth.totalExpense) : 0),
+          Profit: profit,
           CIR: CIR,
         };
       });
@@ -118,4 +126,8 @@ export function findCIR(taskExpenseForMonth: any, incomeForMonth: any): number {
   return parseFloat(CIR);
 }
 
+export function findProfit(incomeForMonth: any, taskExpenseForMonth: any): number {
+  const profit = (incomeForMonth ? parseFloat(incomeForMonth.totalIncome) : 0) - (taskExpenseForMonth ? parseFloat(taskExpenseForMonth.totalExpense) : 0);
 
+  return parseFloat(profit.toString());
+}
