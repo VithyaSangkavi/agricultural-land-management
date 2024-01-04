@@ -11,7 +11,6 @@ import { WorkerEntity } from '../../entity/master/worker-entity';
 import { ExpensesEntity } from '../../entity/master/expense-entity';
 
 import moment from 'moment';
-import { ISummeryDaoRes, ISummeryRes } from '../../types/report-types';
 export class ReportDaoImpl implements ReportDao {
 
   //employee-attendance report
@@ -397,8 +396,9 @@ export class ReportDaoImpl implements ReportDao {
     return result;
   }
 
-  //Total - Monthly Summary Report
-  async getSummaryReport(landId?: number): Promise<ISummeryDaoRes> {
+  //Monthly Summary Report - Start
+
+  async getWorkAssignedEntity(landId?: number): Promise<WorkAssignedEntity[]> {
 
     const workAssignedRepository = getConnection().getRepository(WorkAssignedEntity);
 
@@ -410,6 +410,12 @@ export class ReportDaoImpl implements ReportDao {
       .where("land.id = :landId", { landId })
       .distinct(true)
       .getMany();
+
+    return workAssignedEntities;
+
+  }
+
+  async getPluckExpense(landId?: number): Promise<any[]> {
 
     const monthlyExpenses = await getRepository(TaskExpenseEntity)
       .createQueryBuilder("taskExpense")
@@ -423,6 +429,12 @@ export class ReportDaoImpl implements ReportDao {
       .distinct(true)
       .getRawMany();
 
+    return monthlyExpenses
+
+  }
+
+
+  async getOtherExpenses(landId?: number): Promise<any[]> {
 
     const monthlyExpenses2 = await getRepository(TaskExpenseEntity)
       .createQueryBuilder("taskExpense")
@@ -435,6 +447,12 @@ export class ReportDaoImpl implements ReportDao {
       .addSelect("SUM(taskExpense.value)", "totalExpense")
       .distinct(true)
       .getRawMany();
+
+    return monthlyExpenses2;
+
+  }
+
+  async getNonCrewExpenses(landId?: number): Promise<any[]> {
 
     const monthlyExpenses3 = await getRepository(TaskExpenseEntity)
       .createQueryBuilder("taskExpense")
@@ -449,6 +467,12 @@ export class ReportDaoImpl implements ReportDao {
       .distinct(true)
       .getRawMany();
 
+    return monthlyExpenses3;
+
+  }
+
+  async getTotalIncome(landId?: number): Promise<any[]> {
+
     const groupedIncomeByMonthAndYear = await getRepository(IncomeEntity)
       .createQueryBuilder("income")
       .select([
@@ -459,6 +483,12 @@ export class ReportDaoImpl implements ReportDao {
       .where("income.landId = :landId", { landId })
       .groupBy("monthYear")
       .getRawMany();
+
+      return groupedIncomeByMonthAndYear
+
+  }
+
+  async getTaskExpenses(landId?: number): Promise<any[]> {
 
     const monthlyExpenses4 = await getRepository(TaskExpenseEntity)
       .createQueryBuilder("taskExpense")
@@ -473,33 +503,15 @@ export class ReportDaoImpl implements ReportDao {
       .groupBy("monthYear")
       .getRawMany();
 
+      return monthlyExpenses4;
 
-      const quantitySummary = workAssignedEntities.reduce((summary, workAssigned) => {
-        const workDate = workAssigned.taskCard.workDate || workAssigned.startDate.toISOString().split("T")[0];
-        const year = new Date(workDate).getFullYear();
-        const month = new Date(workDate).toLocaleString('en-US', { month: 'long' });
-        const key = `${month} ${year}`;
-  
-        if (!summary[key]) {
-          summary[key] = 0;
-        }
-  
-        summary[key] += workAssigned.quantity || 0;
-  
-        return summary;
-      }, {})
-
-    const result: ISummeryDaoRes = {
-      monthlyExpenses: monthlyExpenses && monthlyExpenses.length > 0 ? monthlyExpenses : [],
-      monthlyExpenses2: monthlyExpenses2 && monthlyExpenses2.length > 0 ? monthlyExpenses2 : [],
-      monthlyExpenses3: monthlyExpenses3 && monthlyExpenses3.length > 0 ? monthlyExpenses3 : [],
-      groupedIncomeByMonthAndYear: groupedIncomeByMonthAndYear && groupedIncomeByMonthAndYear.length > 0 ? groupedIncomeByMonthAndYear : [],
-      monthlyExpenses4: monthlyExpenses4 && monthlyExpenses4.length > 0 ? monthlyExpenses4 : [], 
-      quantitySummary: quantitySummary,
-    }
-
-    return result;
   }
+
+
+
+
+
+
 
 
   //Total - weekly Summary Report
@@ -602,7 +614,7 @@ export class ReportDaoImpl implements ReportDao {
     return combinedSummary;
   }
 
-  //Total - weekly Summary Report
+  //Total - daily Summary Report
   async getDailySummaryReport(landId) {
     const workAssignedRepository = getConnection().getRepository(WorkAssignedEntity);
 
