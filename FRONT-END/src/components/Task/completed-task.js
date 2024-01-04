@@ -3,25 +3,20 @@ import axios from 'axios';
 import Footer from '../footer/footer';
 import Header from '../header/header';
 import { useHistory } from "react-router-dom";
-import DatePicker from 'react-datepicker';
 import './manage-task.css';
 import '../css/common.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faCheck, faReopen } from '@fortawesome/free-solid-svg-icons';
-import { FaGlobeAmericas, FaLanguage } from 'react-icons/fa';
-import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { Trash } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { alertService } from '../../_services/alert.service';
-import { MdArrowBackIos, MdViewAgenda, MdClose } from "react-icons/md";
-import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-const ManageOngoingTask = ({ selectedLandId }) => {
+const CompletedTask = ({ selectedLandId }) => {
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
@@ -41,47 +36,27 @@ const ManageOngoingTask = ({ selectedLandId }) => {
     const [workerNames, setWorkerNames] = useState([]);
     const [selectedWorker, setSelectedWorker] = useState({});
     const [expenseTypes, setExpenseTypes] = useState([]);
-    const [selectedExpenseType, setSelectedExpenseType] = useState('');
-    const [value, setValue] = useState('');
-    const [expenseId, setExpenseId] = useState('');
-    // const [selectedWorkersList, setSelectedWorkersList] = useState([]);
     const [selectedWorkersList, setSelectedWorkersList] = useState({});
-
-    const [kgValues, setKgValues] = useState('');
-
     const [ongoingTaskName, setOngoingTaskName] = useState('');
     const [ongoingTaskDate, setOngoingTaskDate] = useState('');
     const [commanTaskDetails, setCommanTaskDetails] = useState([]);
     const [taskDetails, setTaskDetails] = useState([]);
-    const [workerDetailsList, setWorkerDetails] = useState([]);
     const [taskStatus, setTaskStatus] = useState('');
     const [newTaskCardId, setNewTaskCardId] = useState('');
     const [taskExpenses, setTaskExpenses] = useState([]);
-
-    //const [workerId, setWorkerId] = useState('');
     const [taskAssignedId, setTaskAssignedId] = useState('');
     const [lotId, setLotId] = useState('');
     const [quantity, setQuantity] = useState('');
-
-    const [workers, setWorkers] = useState([]);
-    const [isCompleted, setIsCompleted] = useState(false);
-    const [completedTasks, setCompletedTasks] = useState([]);
-    const [workerId, setWorkerId] = useState('');
-    const [showExpenses, setShowExpenses] = useState(false);
     const [totalAmount, setTotalAmount] = useState(0);
     const [quantityForPluck, setQuantityForPluck] = useState({});
-
-
 
     const sortedTaskDetails = taskDetails && taskDetails.length > 1
         ? taskDetails.sort((a, b) => new Date(b.date) - new Date(a.date))
         : taskDetails;
 
     useEffect(() => {
-        if (showExpenses) {
-            getTaskExpenses();
-        }
-    }, [showExpenses]);
+        getTaskExpenses();
+    })
 
     useEffect(() => {
         const calculateTotalAmount = () => {
@@ -486,85 +461,6 @@ const ManageOngoingTask = ({ selectedLandId }) => {
         }
     };
 
-    // add task expense
-    const handleAddTaskExpense = () => {
-
-        //get expense id according to the expense type
-        axios
-            .get(`http://localhost:8081/service/master/find-by-type?expenseType=${selectedExpenseType}`)
-            .then((response) => {
-                const expenseId = response.data.expenseId;
-                setExpenseId(expenseId);
-
-                const addTaskExpense = {
-                    value,
-                    taskId,
-                    expenseId,
-                    taskAssignedId: taskAssignedid,
-                };
-
-                //save task expense 
-                axios.post('http://localhost:8081/service/master/task-expense-save', addTaskExpense)
-                    .then((response) => {
-                        console.log('Task expense added successfully:', response.data);
-                        alertService.success('Task-expense added successfully');
-
-                        setValue('');
-                    })
-                    .catch((error) => {
-                        // console.error('Error adding task expense:', error);
-                    });
-            })
-            .catch((error) => {
-                //console.error('Error fetching expense id:', error);
-            });
-    }
-
-    const handleKgChange = (e, index) => {
-        const updatedKgValues = [...kgValues];
-        updatedKgValues[index] = e.target.value;
-        setKgValues(updatedKgValues);
-        setQuantity(updatedKgValues);
-    };
-
-    const addQuantity = () => {
-
-        const selectedWorker = localStorage.getItem('selectedWorker');
-        console.log('selected worker: ', selectedWorker);
-
-        axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${selectedWorker}`)
-            .then((response) => {
-                const workerId = response.data.extra.workerId
-                // setWorkerId(storeWorkerId);
-                console.log('Worker ID :', workerId);
-
-                const addWorkAssigned = {
-                    quantity,
-                    startDate,
-                    workerId,
-                    taskId,
-                    taskAssignedId,
-                    lotId
-                }
-
-                axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
-                    .then((response) => {
-                        console.log('Work assigned added successfully:', response.data);
-
-                    })
-                    .catch((error) => {
-                        console.error('Error adding work assigned:', error);
-                    });
-            })
-            .catch((error) => {
-                console.error('Error getting worker id:', error);
-            });
-    }
-
-    const handleLanguageChange = (lang) => {
-        i18n.changeLanguage(lang);
-    };
-
     const EndTask = () => {
         const details = {
             newStatus: 'completed',
@@ -595,10 +491,6 @@ const ManageOngoingTask = ({ selectedLandId }) => {
             });
     };
 
-    const goBack = () => {
-        history.goBack();
-    };
-
     console.log("taskDetails : ", taskDetails)
 
     const getTaskExpenses = (e) => {
@@ -620,7 +512,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
 
     return (
         <div className="manage-task-app-screen">
-            <Header/>
+            <Header />
 
             <div className='task-heading'>
 
@@ -691,10 +583,10 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                                                         <div className="worker-name-container">
                                                             {ongoingTaskName === 'Pluck' ? (
                                                                 <div>
-                                                                <p>
-                                                                    {workerDetail.workerName} - {workerDetail.quantity}
-                                                                    {workerDetail.units}
-                                                                </p>
+                                                                    <p>
+                                                                        {workerDetail.workerName} - {workerDetail.quantity}
+                                                                        {workerDetail.units}
+                                                                    </p>
                                                                 </div>
                                                             ) : (
                                                                 <p>{workerDetail.workerName}</p>
@@ -819,56 +711,17 @@ const ManageOngoingTask = ({ selectedLandId }) => {
 
                         {/* Finance Toggled View */}
                         {selectedView === 'finance' && (
-                            <>
-                                <div>
-                                    <select
-                                        value={selectedExpenseType}
-                                        onChange={(e) => setSelectedExpenseType(e.target.value)}
-                                        className='dropdown-input'
-                                    >
-                                        <option value="">{t('expense')}</option>
-                                        {expenseTypes.map((expenseType) => (
-                                            <option key={expenseType} value={expenseType}>
-                                                {expenseType}
-                                            </option>
-                                        ))}
-                                    </select><br />
-                                    <input
-                                        type="text"
-                                        placeholder={t('amount')}
-                                        value={value}
-                                        onChange={(e) => setValue(e.target.value)}
-                                        className="dropdown-input"
-                                    />
-                                    <button className="add-button" onClick={handleAddTaskExpense}>{t('addtaskexpense')}</button>
-                                </div>
-                                <br />
-                                <div>
-                                    {showExpenses ? (
-                                        <button onClick={() => setShowExpenses(false)} className='close-task-expenses'>
-                                            <MdClose />
-                                        </button>
-                                    ) : (
-                                        <button onClick={() => setShowExpenses(true)} className='view-task-expenses'>
-                                            View Task Expenses <MdViewAgenda />
-                                        </button>
-                                    )}
 
-                                    {/* Display task expenses when showExpenses is true */}
-                                    {showExpenses && (
-                                        <div>
-                                            {taskExpenses.map((taskExpense) => (
-                                                <div key={taskExpense.id} className="task-expense-card">
-                                                    <h3>{t('expensetype')} : {taskExpense.expenseType}</h3>
-                                                    <p>{t('amount')} : {taskExpense.value}</p>
-                                                </div>
-                                            ))}
-                                            <p className='total-display-card'>{t('totaltaskexpenses')}: {t('rs')}{totalAmount}.00</p>
-                                        </div>
-                                    )}
+                            <div>
+                                {taskExpenses.map((taskExpense) => (
+                                    <div key={taskExpense.id} className="task-expense-card">
+                                        <h3>{t('expensetype')} : {taskExpense.expenseType}</h3>
+                                        <p>{t('amount')} : {taskExpense.value}</p>
+                                    </div>
+                                ))}
+                                <p className='total-display-card'>{t('totaltaskexpenses')}: {t('rs')}{totalAmount}.00</p>
+                            </div>
 
-                                </div>
-                            </>
                         )}
                     </>
 
@@ -876,9 +729,6 @@ const ManageOngoingTask = ({ selectedLandId }) => {
             </>
 
             <br />
-
-            <br /><br /><br />
-
             <br />
             <div className='footer-alignment'>
                 <Footer />
@@ -895,4 +745,4 @@ const mapDispatchToProps = {
     setSelectedLandId: setSelectedLandIdAction,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ManageOngoingTask);
+export default connect(mapStateToProps, mapDispatchToProps)(CompletedTask);

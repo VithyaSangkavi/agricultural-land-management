@@ -61,6 +61,7 @@ import CostYieldReport from './components/Report/other-cost-yield-report';
 import EmployeePerfomnce from './components/Report/employee-perfomnce-report';
 import CostBreakdownReport from './components/Report/cost-breakdown-report';
 import SummaryReport from './components/Report/summary-report';
+import CompletedTask from './components/Task/completed-task';
 
 class App extends React.Component {
   _isMounted = false;
@@ -167,6 +168,7 @@ class App extends React.Component {
 
           <RoleBasedRouting path="/addsheduledtask"><AddSheduledTask /></RoleBasedRouting>
           <RoleBasedRouting path="/manageTaskSheduled"><ManageTaskSheduled /></RoleBasedRouting>
+          <RoleBasedRouting path="/completedTask/:taskAssignedid"><CompletedTask /></RoleBasedRouting>
 
           <RoleBasedRouting path="/homeNewTasks"><HomeNewTasks /></RoleBasedRouting>
           

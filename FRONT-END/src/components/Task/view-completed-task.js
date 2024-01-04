@@ -67,7 +67,7 @@ function Home({ setSelectedLandId, selectedLandId }) {
     }, [submitCollection.manageland, selectedLandId]);
 
     useEffect(() => {
-        let apiUrl = 'http://localhost:8080/service/master/completed-tasks-with-names';
+        let apiUrl = 'http://localhost:8081/service/master/completed-tasks-with-names';
 
         if (selectedLandId) {
             apiUrl += `?landId=${selectedLandId}`;
@@ -87,7 +87,7 @@ function Home({ setSelectedLandId, selectedLandId }) {
                 setOngoingTasks([]);
             });
 
-        axios.get(`http://localhost:8080/service/master/completed-tasks-with-names?landId=${selectedLandId}`).then((response) => {
+        axios.get(`http://localhost:8081/service/master/completed-tasks-with-names?landId=${selectedLandId}`).then((response) => {
 
             if (response.data.extra.length === 0) {
                 alertService.info('No Data Found !');
@@ -120,7 +120,7 @@ function Home({ setSelectedLandId, selectedLandId }) {
     };
 
     const handleTaskClick = (taskAssignedid) => {
-        history.push(`/manageOngoingTask/${taskAssignedid}`);
+        history.push(`/completedTask/${taskAssignedid}`);
         console.log("task assigned : ", taskAssignedid);
     };
 

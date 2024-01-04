@@ -76,7 +76,7 @@ const AddTaskType = ({ setSelectedLandId, selectedLandId }) => {
             Selected Land: {landName}
           </p>
         </div>
-        <p className="home-heading">{t('addtasktype')}</p>
+        {/* <p className="home-heading">{t('addtasktype')}</p> */}
       </div>
 
       <div>
@@ -89,7 +89,7 @@ const AddTaskType = ({ setSelectedLandId, selectedLandId }) => {
         />
         <br />
         <button className="add-button" onClick={handleAddTask}>
-          {t('add')}
+          {t('addtasktype')}
         </button>
       </div>
 

@@ -77,7 +77,7 @@ const AddExpenseType = ({ setSelectedLandId, selectedLandId }) => {
               Selected Land: {landName}
             </p>
           </div>
-          <p className="home-heading">{t('addexpensetype')}</p>
+          {/* <p className="home-heading">{t('addexpensetype')}</p> */}
         </div>
 
         <div className="basic-details">
@@ -90,7 +90,7 @@ const AddExpenseType = ({ setSelectedLandId, selectedLandId }) => {
           />
           <br />
           <button className="add-button" onClick={handleAddExpense}>
-            {t('add')}
+            {t('addexpensetype')}
           </button>
         </div>
         <br /> <br /> <br />
