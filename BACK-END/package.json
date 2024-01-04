@@ -4,7 +4,7 @@
   "description": "planigo",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --NODE_ENV=test --detectOpenHandles",
     "start-dev": "nodemon --exec ts-node src/app.ts --NODE_ENV=dev",
     "build": "tsc",
     "start": "tsc && node dist/app.js --NODE_ENV=prod ",

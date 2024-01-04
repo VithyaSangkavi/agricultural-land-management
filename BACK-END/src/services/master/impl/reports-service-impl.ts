@@ -15,19 +15,15 @@ import { Units } from "../../../enum/units";
 import { Status } from '../../../enum/Status';
 import { TaskStatus } from '../../../enum/taskStatus';
 import { Schedule } from '../../../enum/schedule';
+import { ReportDaoImpl } from '../../../dao/impl/report-dao-impl';
 
 
 
 export class ReportServiceImpl implements ReportService {
 
 
-  private reportDao: ReportDao;
-
-  constructor(reportDao: ReportDao) {
-    this.reportDao = reportDao;
-  }
+  reportDao: ReportDao = new ReportDaoImpl();
     
-
   //employee-attendance report
   async generateEmployeeAttendanceReport(startDate: Date, endDate: Date, lotId: number, landId: number): Promise<any[]> {
     return this.reportDao.generateEmployeeAttendanceReport(startDate, endDate, lotId, landId);
@@ -62,7 +58,7 @@ export class ReportServiceImpl implements ReportService {
 
   //Summary Report
   async getSummaryReport(landId?: number, cateNum?: number): Promise<any> {
-    return this.reportDao.getSummaryReport(landId, cateNum);
+    return this.getSummary(landId);
   }
 
   async getWeeklySummaryReport(landId?: number): Promise<any> {
@@ -73,8 +69,53 @@ export class ReportServiceImpl implements ReportService {
     return this.reportDao.getDailySummaryReport(landId);
   }
 
-  
+  //Summary
+  async getSummary(landId: number): Promise<any> {
 
+    try {
+      const summeryResult = await this.reportDao.getSummaryReport(landId);
+
+      const combinedSummary = Object.entries(summeryResult.quantitySummary).map(([key, totalQuantity]) => {
+        const [month, year] = key.split(' ');
+  
+        const expenseForMonth = summeryResult.monthlyExpenses.find(expense => expense.monthYear === `${month} ${year}`);
+        const finalMonthlyExpenses = summeryResult.monthlyExpenses2.find(otherExpense => otherExpense.monthYear === `${month} ${year}`);
+        const additionalMonthlyExpenses = summeryResult.monthlyExpenses3.find(taskExpense => taskExpense.monthYear === `${month} ${year}`);
+        const incomeForMonth = summeryResult.groupedIncomeByMonthAndYear.find(income => income.monthYear === `${month} ${year}`);
+        const taskExpenseForMonth = summeryResult.monthlyExpenses4.find(taskExpense => taskExpense.monthYear === `${month} ${year}`);
+  
+        const CIR = findCIR(taskExpenseForMonth, incomeForMonth);
+  
+        return {
+          month,
+          year,
+          totalQuantity,
+          PluckExpense: expenseForMonth ? parseFloat(expenseForMonth.totalExpense) : 0,
+          OtherExpenses: finalMonthlyExpenses ? parseFloat(finalMonthlyExpenses.totalExpense) : 0,
+          NonCrewExpenses: additionalMonthlyExpenses ? parseFloat(additionalMonthlyExpenses.totalExpense) : 0,
+          TotalIncome: incomeForMonth ? parseFloat(incomeForMonth.totalIncome) : 0,
+          TaskExpenses: taskExpenseForMonth ? parseFloat(taskExpenseForMonth.totalExpense) : 0,
+  
+          Profit: (incomeForMonth ? parseFloat(incomeForMonth.totalIncome) : 0) - (taskExpenseForMonth ? parseFloat(taskExpenseForMonth.totalExpense) : 0),
+          CIR: CIR,
+        };
+      });
+      return combinedSummary;
+    } catch (e) {
+      console.log(e);
+      
+    }
+  }
+}
+
+export function findCIR(taskExpenseForMonth: any, incomeForMonth: any): number {
+
+  console.log(taskExpenseForMonth, incomeForMonth);
+  
+  const CIR = ((taskExpenseForMonth ? parseFloat(taskExpenseForMonth.totalExpense) : 0) /
+        (incomeForMonth ? parseFloat(incomeForMonth.totalIncome) : 0)).toFixed(2);
+
+  return parseFloat(CIR);
 }
 
 

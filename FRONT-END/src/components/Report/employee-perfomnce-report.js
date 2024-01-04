@@ -69,7 +69,7 @@ const EmployeePerfomnceReport = ({ dateRange: { fromDate, toDate }, selectedLand
                 .filter((item) => item.workerName === workerName)
                 .map((item) => ({ x: item.workDate, y: item.quantity })),
             fill: false,
-            borderColor: `rgba(${index * 100}, 0, 0, 1)`, // Adjust color as needed
+            borderColor: `rgba(${index * 100}, 0, 0, 1)`,
             borderWidth: 2,
             lineTension: 0.1,
         })),
