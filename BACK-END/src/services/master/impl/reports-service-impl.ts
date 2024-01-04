@@ -36,12 +36,26 @@ export class ReportServiceImpl implements ReportService {
     return this.reportDao.generateEmployeeAttendanceReport(startDate, endDate, lotId, landId);
   }
   
-  //monthly-crop report
+  /**
+   * Get monthly-crop report
+   * @param lotId 
+   * @param startDate 
+   * @param endDate 
+   * @param landId 
+   * @returns any
+   */
   async generateMonthlyCropReport(lotId: number, startDate: Date, endDate: Date, landId: number): Promise<any[]> {
     return this.reportDao.generateMonthlyCropReport(lotId, startDate, endDate, landId);
   }
 
-  //other-cost-yield report
+  /**
+   * Get other cost / yield
+   * @param startDate 
+   * @param endDate 
+   * @param landId 
+   * @param lotId 
+   * @returns any
+   */
   async generateOtherCostYieldReport(startDate: Date, endDate: Date, landId: number, lotId: number): Promise<any[]> {
     return this.reportDao.generateOtherCostYieldReport(startDate, endDate, landId, lotId);
   }
