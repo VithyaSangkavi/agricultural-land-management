@@ -120,7 +120,7 @@ function Home({ setSelectedLandId, selectedLandId }) {
     };
 
     const handleTaskClick = (taskAssignedid) => {
-        history.push(`/manageOngoingTask/${taskAssignedid}`);
+        history.push(`/completedTask/${taskAssignedid}`);
         console.log("task assigned : ", taskAssignedid);
     };
 
