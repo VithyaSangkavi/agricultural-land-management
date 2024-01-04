@@ -30,23 +30,23 @@ const CostYieldReport = ({ dateRange, landId, lotId, selectedLot }) => {
                 if (fromDate && toDate && landId) {
                     // filter by fromDate, toDate and landId
                     console.log('inside from to land')
-                    response = await axios.get(`http://localhost:8080/service/master/other-cost-yield?startDate=${fromDate}&endDate=${toDate}&landId=${landId}`);
+                    response = await axios.get(`http://localhost:8081/service/master/other-cost-yield?startDate=${fromDate}&endDate=${toDate}&landId=${landId}`);
                 } else if (fromDate && toDate && lotId) {
                     // filter by fromDate, toDate and lotId
                     console.log('inside from to lot')
-                    response = await axios.get(`http://localhost:8080/service/master/other-cost-yield?startDate=${fromDate}&endDate=${toDate}&lotId=${lotId}`);
+                    response = await axios.get(`http://localhost:8081/service/master/other-cost-yield?startDate=${fromDate}&endDate=${toDate}&lotId=${lotId}`);
                 } else if (fromDate && toDate) {
                     // filter by fromDate, toDate
-                    response = await axios.get(`http://localhost:8080/service/master/other-cost-yield?startDate=${fromDate}&endDate=${toDate}`);
+                    response = await axios.get(`http://localhost:8081/service/master/other-cost-yield?startDate=${fromDate}&endDate=${toDate}`);
                 } else if (lotId) {
                     // filter by lotId 
-                    response = await axios.get(`http://localhost:8080/service/master/other-cost-yield?lotId=${lotId}`);
+                    response = await axios.get(`http://localhost:8081/service/master/other-cost-yield?lotId=${lotId}`);
                 } else if (landId) {
                     // filter by landId 
-                    response = await axios.get(`http://localhost:8080/service/master/other-cost-yield?landId=${landId}`);
+                    response = await axios.get(`http://localhost:8081/service/master/other-cost-yield?landId=${landId}`);
                 } else {
                     // without any filters
-                    response = await axios.get('http://localhost:8080/service/master/other-cost-yield');
+                    response = await axios.get('http://localhost:8081/service/master/other-cost-yield');
                 }
                 setCostYieldData(response.data);
             } catch (error) {
