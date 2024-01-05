@@ -16,17 +16,18 @@ describe("Summary Service Test ", () => {
 
         const CIR = await reportService.findCIR(taskExpenseForMonth, incomeForMonth)
 
-        console.log(CIR);
         expect(CIR).toEqual(expectedValue);
     });
 
-    test("find profit", async () => {
+    test("find Profit", async () => {
         const expectedValue = 87500;
         const incomeForMonth = { monthYear: 'December 2023', totalIncome: 90000 };
         const taskExpenseForMonth = { monthYear: 'December 2023', totalExpense: '2500' };
 
-        const profit = await reportService.findProfit(incomeForMonth, taskExpenseForMonth);
-        expect(profit).toEqual(expectedValue);
+        const Profit = await reportService.findProfit(incomeForMonth, taskExpenseForMonth)
 
+        expect(Profit).toEqual(expectedValue);
     });
-});
+
+
+  });

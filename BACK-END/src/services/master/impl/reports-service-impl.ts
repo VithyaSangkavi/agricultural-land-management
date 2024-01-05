@@ -71,7 +71,7 @@ export class ReportServiceImpl implements ReportService {
   async getEmployeePerfomanceReport(fromDate?: string, toDate?: string, landId?: number): Promise<any> {
     return this.reportDao.getEmployeePerfomanceReport(fromDate, toDate, landId);
   }
-  
+
 
   /**
    * Cost Breakdown Line chart Report
@@ -83,7 +83,7 @@ export class ReportServiceImpl implements ReportService {
     return this.reportDao.getCostBreakdownLineReport(fromDate, landId);
 
   }
-  
+
 
   /**
    * Cost Breakdown Pie chart Report
@@ -150,7 +150,7 @@ export class ReportServiceImpl implements ReportService {
         const taskExpenseForMonth = monthlyExpenses4.find(taskExpense => taskExpense.monthYear === `${month} ${year}`);
 
         const CIR = await this.findCIR(taskExpenseForMonth, incomeForMonth);
-        const profit = await this.findProfit(incomeForMonth, taskExpenseForMonth);
+        const Profit = await this.findProfit(incomeForMonth, taskExpenseForMonth);
 
         return {
           month,
@@ -161,8 +161,8 @@ export class ReportServiceImpl implements ReportService {
           NonCrewExpenses: additionalMonthlyExpenses ? parseFloat(additionalMonthlyExpenses.totalExpense) : 0,
           TotalIncome: incomeForMonth ? parseFloat(incomeForMonth.totalIncome) : 0,
           TaskExpenses: taskExpenseForMonth ? parseFloat(taskExpenseForMonth.totalExpense) : 0,
-  
-          Profit: profit,
+
+          Profit: Profit,
           CIR: CIR,
         };
       }));
@@ -175,6 +175,14 @@ export class ReportServiceImpl implements ReportService {
     }
   }
 
+  async findProfit(incomeForMonth: any, taskExpenseForMonth: any): Promise<number> {
+
+    const Profit = (incomeForMonth ? parseFloat(incomeForMonth.totalIncome) : 0) -
+      (taskExpenseForMonth ? parseFloat(taskExpenseForMonth.totalExpense) : 0);
+
+    return Profit;
+  }
+
   async findCIR(taskExpenseForMonth: any, incomeForMonth: any): Promise<number> {
 
     const CIR = ((taskExpenseForMonth ? parseFloat(taskExpenseForMonth.totalExpense) : 0) /
@@ -183,9 +191,9 @@ export class ReportServiceImpl implements ReportService {
     return parseFloat(CIR);
   }
 
-  async GetQuantitySummary(workAssignedEntity : any): Promise<any> {
+  async GetQuantitySummary(workAssignedEntity: any): Promise<any> {
 
-    const quantitySummary = workAssignedEntity.reduce((summary : any, workAssigned : any) => {
+    const quantitySummary = workAssignedEntity.reduce((summary: any, workAssigned: any) => {
       const workDate = workAssigned.taskCard.workDate || workAssigned.startDate.toISOString().split("T")[0];
       const year = new Date(workDate).getFullYear();
       const month = new Date(workDate).toLocaleString('en-US', { month: 'long' });
@@ -204,10 +212,10 @@ export class ReportServiceImpl implements ReportService {
 
   }
 
-  async findProfit(incomeForMonth: any, taskExpenseForMonth: any): Promise<number> {
+  // async findProfit(incomeForMonth: any, taskExpenseForMonth: any): Promise<number> {
 
-    const profit = (incomeForMonth ? parseFloat(incomeForMonth.totalIncome) : 0) - (taskExpenseForMonth ? parseFloat(taskExpenseForMonth.totalExpense) : 0);
+  //   const profit = (incomeForMonth ? parseFloat(incomeForMonth.totalIncome) : 0) - (taskExpenseForMonth ? parseFloat(taskExpenseForMonth.totalExpense) : 0);
 
-    return parseFloat(profit.toString());
-  }
+  //   return parseFloat(profit.toString());
+  // }
 }
