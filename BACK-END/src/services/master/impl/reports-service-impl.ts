@@ -16,6 +16,7 @@ import { Status } from '../../../enum/Status';
 import { TaskStatus } from '../../../enum/taskStatus';
 import { Schedule } from '../../../enum/schedule';
 import { ReportDaoImpl } from '../../../dao/impl/report-dao-impl';
+import moment from 'moment';
 
 
 
@@ -110,7 +111,7 @@ export class ReportServiceImpl implements ReportService {
    * @returns 
    */
   async getWeeklySummaryReport(landId?: number): Promise<any> {
-    return this.reportDao.getWeeklySummaryReport(landId);
+    return this.getWeekSummary(landId);
   }
 
   /**
@@ -119,12 +120,12 @@ export class ReportServiceImpl implements ReportService {
    * @returns 
    */
   async getDailySummaryReport(landId?: number): Promise<any> {
-    return this.reportDao.getDailySummaryReport(landId);
+    return this.GetDailySummary(landId);
   }
 
 
   /**
-   * Get Summary Report
+   * Get Month - Summary Report
    * @param landId 
    * @returns any
    */
@@ -137,7 +138,6 @@ export class ReportServiceImpl implements ReportService {
       const monthlyExpenses3 = await this.reportDao.getNonCrewExpenses(landId);
       const groupedIncomeByMonthAndYear = await this.reportDao.getTotalIncome(landId);
       const monthlyExpenses4 = await this.reportDao.getTaskExpenses(landId);
-
       const quantitySummary = await this.GetQuantitySummary(workAssignedEntity);
 
       const combinedSummary = await Promise.all(Object.entries(quantitySummary).map(async ([key, totalQuantity]) => {
@@ -183,6 +183,13 @@ export class ReportServiceImpl implements ReportService {
     return parseFloat(CIR);
   }
 
+  async findProfit(incomeForMonth: any, taskExpenseForMonth: any): Promise<number> {
+
+    const profit = (incomeForMonth ? parseFloat(incomeForMonth.totalIncome) : 0) - (taskExpenseForMonth ? parseFloat(taskExpenseForMonth.totalExpense) : 0);
+
+    return parseFloat(profit.toString());
+  }
+
   async GetQuantitySummary(workAssignedEntity: any): Promise<any> {
 
     const quantitySummary = workAssignedEntity.reduce((summary: any, workAssigned: any) => {
@@ -204,10 +211,139 @@ export class ReportServiceImpl implements ReportService {
 
   }
 
-  async findProfit(incomeForMonth: any, taskExpenseForMonth: any): Promise<number> {
 
-    const profit = (incomeForMonth ? parseFloat(incomeForMonth.totalIncome) : 0) - (taskExpenseForMonth ? parseFloat(taskExpenseForMonth.totalExpense) : 0);
+  /**
+   * Get Week - Summary Report
+   * @param landId 
+   */
+  async getWeekSummary(landId: number): Promise<any> {
 
-    return parseFloat(profit.toString());
+    try {
+
+      const workAssignedEntity = await this.reportDao.getWorkAssignedEntityForWeek(landId);
+      const weeklyExpenses = await this.reportDao.getPluckExpenseWeek(landId);
+      const weeklyExpenses2 = await this.reportDao.getOtherExpensesWeek(landId);
+      const weeklyExpenses3 = await this.reportDao.getNonCrewExpensesWeek(landId);
+      const quantitySummary = await this.GetQuantitySummaryWeek(workAssignedEntity);
+
+      const combinedSummary = Object.entries(quantitySummary).map(([key, totalQuantity]) => {
+        const [year, weekNumber] = key.split(' W');
+        const weekYear = `${year} W${weekNumber}`;
+
+        const expenseForWeek = weeklyExpenses.find(expense => expense.weekNumber === parseInt(weekNumber) && expense.year === parseInt(year));
+        const finalWeeklyExpenses = weeklyExpenses2.find(otherExpense => otherExpense.weekNumber === parseInt(weekNumber) && otherExpense.year === parseInt(year));
+        const additionalWeeklyExpenses = weeklyExpenses3.find(taskExpense => taskExpense.weekNumber === parseInt(weekNumber) && taskExpense.year === parseInt(year));
+
+        return {
+          year: parseInt(year),
+          weekNumber: parseInt(weekNumber),
+          totalQuantity,
+          PluckExpense: expenseForWeek ? parseFloat(expenseForWeek.totalExpense) : 0,
+          OtherExpenses: finalWeeklyExpenses ? parseFloat(finalWeeklyExpenses.totalExpense) : 0,
+          NonCrewExpenses: additionalWeeklyExpenses ? parseFloat(additionalWeeklyExpenses.totalExpense) : 0,
+          TotalIncome: "-",
+          TaskExpenses: "-",
+          Profit: "-",
+          CIR: "-",
+        };
+      });
+
+      return combinedSummary;
+
+    } catch (err) {
+      console.error(err);
+    }
+
   }
+
+  /**
+   * Get Weekly Quntity
+   * @param workAssignedEntity 
+   * @returns 
+   */
+  async GetQuantitySummaryWeek(workAssignedEntity: any): Promise<any> {
+
+    const quantitySummary = workAssignedEntity.reduce((summary: any, workAssigned: any) => {
+      const workDate = workAssigned.taskCard.workDate || workAssigned.startDate.toISOString().split("T")[0];
+      const year = moment(workDate).isoWeekYear();
+      const weekNumber = moment(workDate).isoWeek();
+
+      const key = `${year} W${weekNumber}`;
+
+      if (!summary[key]) {
+        summary[key] = 0;
+      }
+
+      summary[key] += workAssigned.quantity || 0;
+
+      return summary;
+    }, {});
+
+    return quantitySummary;
+
+  }
+
+/**
+ * Get Daily Quntity
+ * @param landId 
+ * @returns 
+ */
+  async GetDailySummary(landId: number): Promise<any> {
+
+    try {
+
+      const workAssignedEntity = await this.reportDao.getWorkAssignedEntityForDay(landId);
+      const dailyExpenses = await this.reportDao.getPluckExpenseDay(landId);
+      const dailyExpenses2 = await this.reportDao.getOtherExpensesDay(landId);
+      const dailyExpenses3 = await this.reportDao.getNonCrewExpensesDay(landId);
+      const quantitySummary = await this.GetQuantitySummaryDay(workAssignedEntity);
+
+      const combinedSummary = Object.entries(quantitySummary).map(([date, totalQuantity]) => {
+        const expenseForDate = dailyExpenses.find(expense => expense.date === date);
+        const finalDailyExpenses = dailyExpenses2.find(otherExpense => otherExpense.date === date);
+        const additionalDailyExpenses = dailyExpenses3.find(taskExpense => taskExpense.date === date);
+
+        return {
+          date,
+          totalQuantity,
+          PluckExpense: expenseForDate ? parseFloat(expenseForDate.totalExpense) : 0,
+          OtherExpenses: finalDailyExpenses ? parseFloat(finalDailyExpenses.totalExpense) : 0,
+          NonCrewExpenses: additionalDailyExpenses ? parseFloat(additionalDailyExpenses.totalExpense) : 0,
+          Profit: "-",
+          CIR: "-",
+        };
+      });
+
+      return combinedSummary;
+
+    } catch (err) {
+
+    }
+
+  }
+
+  /**
+   * Get Daily Quantity
+   * @param workAssignedEntity 
+   * @returns 
+   */
+  async GetQuantitySummaryDay(workAssignedEntity: any): Promise<any> {
+
+    const quantitySummary = workAssignedEntity.reduce((summary, workAssigned) => {
+      const workDate = workAssigned.taskCard.workDate || workAssigned.startDate.toISOString().split("T")[0];
+      const date = moment(workDate).format("YYYY-MM-DD");
+
+      if (!summary[date]) {
+        summary[date] = 0;
+      }
+
+      summary[date] += workAssigned.quantity || 0;
+
+      return summary;
+    }, {});
+
+    return quantitySummary;
+
+  }
+
 }
