@@ -40,3 +40,4 @@ export const ConnectToDatabase = async () => {
     console.log("Database connection Failed !");
   }
 };
+
