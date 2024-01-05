@@ -28,14 +28,14 @@ function HomeNewTasks({ setSelectedLandId, selectedLandId }) {
     const history = useHistory();
 
     useEffect(() => {
-        axios.post('http://localhost:8080/service/master/taskAssignedFindAll').then((response) => {
-            setTaskAssigned(response.data);
-            console.log("Task Assigned: ", response.data);
+        submitSets(submitCollection.taskAssignedFindAll, false).then((response) => {
+            setTaskAssigned(response);
+            console.log("Task Assigned: ", response);
         });
 
-        axios.post('http://localhost:8080/service/master/taskFindAll').then((response) => {
-            setTask(response.data.extra);
-            console.log("Tasks : ", response.data.extra);
+        submitSets(submitCollection.taskFindAll, false).then((response) => {
+            setTask(response.extra);
+            console.log("Tasks : ", response.extra);
         });
 
 

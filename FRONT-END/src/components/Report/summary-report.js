@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import './summary.css';
 import { Chart as ChartJS, LineElement, PointElement, Tooltip, Legend, LinearScale, TimeScale } from 'chart.js';
 import 'chartjs-adapter-date-fns';
-import { Line } from 'react-chartjs-2';
+import { submitCollection } from '../../_services/submit.service';
+import { submitSets } from '../UiComponents/SubmitSets';
 
 ChartJS.register(LineElement, PointElement, Tooltip, Legend, LinearScale, TimeScale);
 
@@ -23,25 +23,25 @@ const SummaryReport = ({ selectedLand, category }) => {
 
             if (category == 0) {
                 try {
-                    const response = await axios.get(`http://localhost:8080/service/master/summary?landId=${selectedLand}`);
-                    console.log(response.data);
-                    setSummaryData(response.data);
+                    const response = await submitSets(submitCollection.summary, '?landId=' + selectedLand, true);
+                    console.log(response);
+                    setSummaryData(response);
                 } catch (error) {
                     console.error("Error fetching summary data:", error);
                 }
             } else if (category == 1) {
                 try {
-                    const response = await axios.get(`http://localhost:8080/service/master/summary-weekly?landId=${selectedLand}`);
-                    console.log(response.data);
-                    setSummaryData(response.data);
+                    const response = await submitSets(submitCollection.summary_weekly, '?landId=' + selectedLand, true);
+                    console.log(response);
+                    setSummaryData(response);
                 } catch (error) {
                     console.error("Error fetching weekly summary data:", error);
                 }
             } else {
                 try {
-                    const response = await axios.get(`http://localhost:8080/service/master/summary-daily?landId=${selectedLand}`);
-                    console.log(response.data);
-                    setSummaryData(response.data);
+                    const response = await submitSets(submitCollection.summary_daily, '?landId=' + selectedLand, true);
+                    console.log(response);
+                    setSummaryData(response);
                 } catch (error) {
                     console.error("Error fetching weekly summary data:", error);
                 }

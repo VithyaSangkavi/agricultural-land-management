@@ -29,6 +29,24 @@ const submitCollection = {
     savetasktype: { ptype: "POST", url: basePath+"/service/master/taskSave", queryparam: false, data:true, auth: true },
     findworkerbyland: { ptype: "POST", url: basePath+"/service/master/findWorkByLandId", queryparam: false, data:true, auth: true },
     findpaymentbyworkerid: { ptype: "GET", url: basePath+"/service/master/findByWorkerId", queryparam: true, data:true, auth: true },
+
+    //home & home-new-task
+    taskAssignedFindAll: { ptype: "POST", url: basePath+"/service/master/taskAssignedFindAll", queryparam: false, data:true, auth: true },
+    taskFindAll: { ptype: "POST", url: basePath+"/service/master/taskFindAll", queryparam: false, data:true, auth: true },
+    ongoing_tasks_with_names: { ptype: "GET", url: basePath+"/service/master/ongoing-tasks-with-names", queryparam: true, data:true, auth: true },
+
+    //cost breakdown report
+    cost_breakdown_line: { ptype: "GET", url: basePath+"/service/master/cost-breakdown-line", queryparam: true, data:true, auth: true },
+    cost_breakdown_pie: { ptype: "GET", url: basePath+"/service/master/cost-breakdown-pie", queryparam: true, data:true, auth: true },
+
+    //employee-performance report
+    employee_perfomance : { ptype: "GET", url: basePath+"/service/master/employee-perfomance", queryparam: true, data:true, auth: true },
+
+    //summary report
+    summary: { ptype: "GET", url: basePath+"/service/master/summary", queryparam: true, data:true, auth: true },
+    summary_weekly: { ptype: "GET", url: basePath+"/service/master/summary-weekly", queryparam: true, data:true, auth: true },
+    summary_daily: { ptype: "GET", url: basePath+"/service/master/summary-daily", queryparam: true, data:true, auth: true },
+
 }
 
 const autoClose = true;
