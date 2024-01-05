@@ -507,13 +507,6 @@ export class ReportDaoImpl implements ReportDao {
 
   }
 
-
-
-
-
-
-
-
   //Total - weekly Summary Report
   async getWeeklySummaryReport(landId) {
     const workAssignedRepository = getConnection().getRepository(WorkAssignedEntity);
