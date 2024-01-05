@@ -1,18 +1,22 @@
-import { ConnectToDatabase } from "../../configuration/database-configuration";
-import { findCIR, findProfit } from "../../services/master/impl/reports-service-impl";
+import { ReportServiceImpl } from "../../services/master/impl/reports-service-impl";
+import { ReportService } from "../../services/master/reports-service";
+
 
 jest.setTimeout(9000000);
 
-
-
 describe("Summary Service Test ", () => {
+
+    const reportService: ReportService = new ReportServiceImpl();
+
 
     test("find CIR", async () => {
         const expectedValue = 0.03;
         const taskExpenseForMonth = { monthYear: 'December 2023', totalExpense: '2500' };
         const incomeForMonth = { monthYear: 'December 2023', totalIncome: 90000 };
 
-        const CIR = findCIR(taskExpenseForMonth, incomeForMonth);
+        const CIR = await reportService.findCIR(taskExpenseForMonth, incomeForMonth)
+
+        console.log(CIR);
         expect(CIR).toEqual(expectedValue);
     });
 
@@ -21,7 +25,8 @@ describe("Summary Service Test ", () => {
         const incomeForMonth = { monthYear: 'December 2023', totalIncome: 90000 };
         const taskExpenseForMonth = { monthYear: 'December 2023', totalExpense: '2500' };
 
-        const profit = findProfit(incomeForMonth, taskExpenseForMonth);
+        const profit = await reportService.findProfit(incomeForMonth, taskExpenseForMonth);
         expect(profit).toEqual(expectedValue);
+
     });
-  });
+});

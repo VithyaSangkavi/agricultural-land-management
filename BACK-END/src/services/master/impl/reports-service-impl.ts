@@ -150,8 +150,8 @@ export class ReportServiceImpl implements ReportService {
         const taskExpenseForMonth = monthlyExpenses4.find(taskExpense => taskExpense.monthYear === `${month} ${year}`);
 
         const CIR = await this.findCIR(taskExpenseForMonth, incomeForMonth);
-        const profit = findProfit(incomeForMonth, taskExpenseForMonth);
-        
+        const profit = await this.findProfit(incomeForMonth, taskExpenseForMonth);
+
         return {
           month,
           year,
@@ -203,10 +203,11 @@ export class ReportServiceImpl implements ReportService {
     return quantitySummary;
 
   }
-}
 
-export function findProfit(incomeForMonth: any, taskExpenseForMonth: any): number {
-  const profit = (incomeForMonth ? parseFloat(incomeForMonth.totalIncome) : 0) - (taskExpenseForMonth ? parseFloat(taskExpenseForMonth.totalExpense) : 0);
+  async findProfit(incomeForMonth: any, taskExpenseForMonth: any): Promise<number> {
 
-  return parseFloat(profit.toString());
+    const profit = (incomeForMonth ? parseFloat(incomeForMonth.totalIncome) : 0) - (taskExpenseForMonth ? parseFloat(taskExpenseForMonth.totalExpense) : 0);
+
+    return parseFloat(profit.toString());
+  }
 }
