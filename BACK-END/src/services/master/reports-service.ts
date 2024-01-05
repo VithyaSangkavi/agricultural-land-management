@@ -6,12 +6,20 @@ export interface ReportService {
     generateOtherCostYieldReport(startDate: Date, endDate: Date, landId: number, lotId: number): Promise<any>;
     getCostBreakdownLineReport(fromDate?: string, landId?: number): Promise<any>;
     getCostBreakdownPieReport(): Promise<any>;
+
     getSummaryReport(landId?: number, cateNum?: number): Promise<any>;   
     getWeeklySummaryReport(landId?: number): Promise<any>;
     getDailySummaryReport(landId?: number): Promise<any>;
+
     getSummary(landId: number): Promise<any>;
     findCIR(taskExpenseForMonth: any, incomeForMonth: any): Promise<number>
     GetQuantitySummary(workAssignedEntity : any): Promise<any>
     findProfit(incomeForMonth: any, taskExpenseForMonth: any): Promise<number>
+
+    getWeekSummary(landId: number): Promise<any>
+    GetQuantitySummaryWeek(workAssignedEntity: any): Promise<any>
+
+    GetDailySummary(landId: number): Promise<any>
+    GetQuantitySummaryDay(workAssignedEntity: any): Promise<any>
   }
   
