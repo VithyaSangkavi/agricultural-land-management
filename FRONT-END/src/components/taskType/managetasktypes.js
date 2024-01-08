@@ -77,22 +77,22 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
   );
 
 
-  useEffect(() => {
-    //get crop id by using landid
-    axios.get(`http://localhost:8081/service/master/cropFindByLandId/${selectedLandId}`)
+  // useEffect(() => {
+  //   //get crop id by using landid
+  //   axios.get(`http://localhost:8081/service/master/cropFindByLandId/${selectedLandId}`)
 
-      .then((response) => {
-        const cropIdLand = response.data.cropId.extra;
-        localStorage.setItem('CropIdLand', cropIdLand);
-        console.log('Crop API Response:', response.data);
+  //     .then((response) => {
+  //       const cropIdLand = response.data.cropId.extra;
+  //       localStorage.setItem('CropIdLand', cropIdLand);
+  //       console.log('Crop API Response:', response.data);
 
-        console.log('Crop ID From Land :', cropIdLand);
+  //       console.log('Crop ID From Land :', cropIdLand);
 
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, [selectedLandId]);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching data:", error);
+  //     });
+  // }, [selectedLandId]);
 
   const AddTaskType = () => {
     history.push('/addTaskType')

@@ -69,18 +69,18 @@ export class CropDaoImpl implements CropDao {
     return cropModel;
   }
 
-  async findCropIdByLandId(landId: number): Promise<number | null> {
-    let cropRepo = getConnection().getRepository(CropEntity);
-    let cropModel = await cropRepo.findOne({
-      where: { land: landId, status: Status.Online },
-    });
+  // async findCropIdByLandId(landId: number): Promise<number | null> {
+  //   let cropRepo = getConnection().getRepository(CropEntity);
+  //   let cropModel = await cropRepo.findOne({
+  //     where: { land: landId, status: Status.Online },
+  //   });
   
-    if (cropModel) {
-      return cropModel.id;
-    }
+  //   if (cropModel) {
+  //     return cropModel.id;
+  //   }
   
-    return null;
-  }
+  //   return null;
+  // }
 
   async findCropNameByLandId(landId: number): Promise<string | null> {
     let cropRepo = getConnection().getRepository(CropEntity);

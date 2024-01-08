@@ -85,6 +85,19 @@ export class LandDaoImpl implements LandDao {
     }
   }
 
+  async findCropIdByLandId(landId: number): Promise<number | null> {
+    let landRepo = getConnection().getRepository(LandEntity);
+    let landModel = await landRepo.findOne({
+      where: { id: landId, status: Status.Online }, relations: ['crop']
+    });
+  
+    if (landModel) {
+      return landModel.crop.id;
+    }
+  
+    return null;
+  }  
+
   async preparelandModel(landModel: LandEntity, landDto: LandDto) {
     landModel.name = landDto.getlandName();
     landModel.area = landDto.getArea();

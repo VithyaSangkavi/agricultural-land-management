@@ -22,7 +22,6 @@ router.post("/login", userController.login);
 
 //crop routes
 router.post("/cropSave", cropController.save);
-router.get('/cropFindByLandId/:landId', cropController.findCropIdByLandId);
 router.get('/cropNameFindByLandId/:landId', cropController.findCropNameByLandId);
 /* router.post("/cropUpdate", cropController.update);
 router.post("/cropDelete", cropController.delete);
@@ -49,6 +48,7 @@ router.post("/landSave", landController.save);
 router.get("/landFindAll", landController.findAll);
 router.get("/landFind", landController.findById);
 router.post('/findLandIdByName', landController.findLandIdByName);
+router.get('/cropFindByLandId/:landId', landController.findCropIdByLandId);
 
 //lot routes
 router.post("/lotSave", lotController.save);

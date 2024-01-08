@@ -93,10 +93,12 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
 
     submitSets(submitCollection.findworkerbyland, getWorker, false)
       .then(res => {
-        if (res.extra.length === 0) {
-          alertService.info('No Data Found !')
+        if(selectedLandId !== ''){
+          if (res.extra.length === 0) {
+            alertService.info('No Data Found !')
+          }
         }
-
+        
         if (Array.isArray(res.extra)) {
           setFilteredWorkersForSelectedLand(res.extra);
         } else {
