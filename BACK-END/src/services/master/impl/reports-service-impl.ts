@@ -1,30 +1,12 @@
 import { ReportDao } from '../../../dao/report-dao';
 import { ReportService } from '../reports-service';
-import { getConnection, getRepository } from 'typeorm';
-import { WorkAssignedEntity } from '../../../entity/master/work-assigned-entity';
-import { TaskTypeEntity } from '../../../entity/master/task-type-entity';
-import { CropEntity } from '../../../entity/master/crop-entity';
-import { IncomeEntity } from '../../../entity/master/income-entity';
-import { TaskExpenseEntity } from '../../../entity/master/task-expense-entity';
-import { TaskCardEntity } from "../../../entity/master/task-card-entity";
-import { WorkerEntity } from "../../../entity/master/worker-entity";
-import { TaskAssignedEntity } from '../../../entity/master/task-assigned-entity';
-import { ExpensesEntity } from "../../../entity/master/expense-entity";
-import { LandEntity } from "../../../entity/master/land-entity";
-import { Units } from "../../../enum/units";
-import { Status } from '../../../enum/Status';
-import { TaskStatus } from '../../../enum/taskStatus';
-import { Schedule } from '../../../enum/schedule';
 import { ReportDaoImpl } from '../../../dao/impl/report-dao-impl';
 import moment from 'moment';
 
-
-
 export class ReportServiceImpl implements ReportService {
 
-
   reportDao: ReportDao = new ReportDaoImpl();
-    
+
   /**
    * Get employee attendance report
    * @param startDate 
@@ -34,9 +16,13 @@ export class ReportServiceImpl implements ReportService {
    * @returns any
    */
   async generateEmployeeAttendanceReport(startDate: Date, endDate: Date, lotId: number, landId: number): Promise<any[]> {
-    return this.reportDao.generateEmployeeAttendanceReport(startDate, endDate, lotId, landId);
+    try{
+      return this.reportDao.generateEmployeeAttendanceReport(startDate, endDate, lotId, landId);
+    } catch (err) {
+      console.error(err);
+    }
   }
-  
+
   /**
    * Get monthly-crop report
    * @param lotId 
@@ -45,8 +31,80 @@ export class ReportServiceImpl implements ReportService {
    * @param landId 
    * @returns any
    */
-  async generateMonthlyCropReport(lotId: number, startDate: Date, endDate: Date, landId: number): Promise<any[]> {
-    return this.reportDao.generateMonthlyCropReport(lotId, startDate, endDate, landId);
+  async generateMonthlyCropReport(lotId: number, startDate: Date, endDate: Date, landId: number): Promise<any> {
+    try {
+
+      const currentYear = new Date().getFullYear();
+      const pastYear = currentYear - 1;
+
+      const quantitiesForCurrentYear = await this.reportDao.getCurrentYearQuantityForMonthlyCrop(currentYear, lotId, startDate, endDate, landId);
+      const quantitiesForPastYear = await this.reportDao.getPastYearQuantityForMonthlyCrop(pastYear, lotId, startDate, endDate, landId);
+
+      const getMonthName = (monthNumber: number): string => {
+        const monthNames = [
+          'January', 'February', 'March', 'April', 'May', 'June',
+          'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+
+        if (monthNumber >= 1 && monthNumber <= 12) {
+          return monthNames[monthNumber - 1];
+        }
+        return 'Invalid Month';
+      };
+
+      const formattedQuantitiesForCurrentYear = {};
+      const formattedQuantitiesForPastYear = {};
+
+      quantitiesForCurrentYear.forEach(item => {
+        const monthName = getMonthName(item.month);
+        if (!formattedQuantitiesForCurrentYear[monthName]) {
+          formattedQuantitiesForCurrentYear[monthName] = [];
+        }
+        formattedQuantitiesForCurrentYear[monthName].push({
+          PastYearTotalQuantity: '-',
+          CurrentYearTotalQuantity: item.totalQuantity
+        });
+      });
+
+      quantitiesForPastYear.forEach(item => {
+        const monthName = getMonthName(item.month);
+        if (!formattedQuantitiesForPastYear[monthName]) {
+          formattedQuantitiesForPastYear[monthName] = [];
+        }
+        formattedQuantitiesForPastYear[monthName].push({
+          PastYearTotalQuantity: item.totalQuantity,
+          CurrentYearTotalQuantity: '-'
+        });
+      });
+
+      // Merging quantities for each month
+      const monthlyQuantities = {};
+
+      const months = new Set([
+        ...Object.keys(formattedQuantitiesForCurrentYear),
+        ...Object.keys(formattedQuantitiesForPastYear)
+      ]);
+
+      months.forEach(month => {
+        if (!monthlyQuantities[month]) {
+          monthlyQuantities[month] = [];
+        }
+        const pastYearData = formattedQuantitiesForPastYear[month] || [{ PastYearTotalQuantity: 0 }];
+        const currentYearData = formattedQuantitiesForCurrentYear[month] || [{ CurrentYearTotalQuantity: 0 }];
+
+        pastYearData.forEach(pastYearItem => {
+          const currentYearItem = currentYearData.find(currentYearItem => currentYearItem.CurrentYearTotalQuantity !== '-');
+          monthlyQuantities[month].push({
+            PastYearTotalQuantity: pastYearItem.PastYearTotalQuantity || 0,
+            CurrentYearTotalQuantity: currentYearItem ? currentYearItem.CurrentYearTotalQuantity : '-'
+          });
+        });
+      });
+
+      return monthlyQuantities;
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   /**
@@ -57,10 +115,37 @@ export class ReportServiceImpl implements ReportService {
    * @param lotId 
    * @returns any
    */
-  async generateOtherCostYieldReport(startDate: Date, endDate: Date, landId: number, lotId: number): Promise<any[]> {
-    return this.reportDao.generateOtherCostYieldReport(startDate, endDate, landId, lotId);
-  }
+  async generateOtherCostYieldReport(startDate: Date, endDate: Date, landId: number, lotId: number): Promise<any> {
+    try{
+      const monthNames = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+      ];
 
+      const taskExpenses = await this.reportDao.getTaskExpenseForCostYield(startDate, endDate, landId, lotId);
+      const incomes = await this.reportDao.getIncomeForCostYield(startDate, endDate, landId, lotId);
+
+      const monthlyData = {};
+      const incomeMonths = incomes.map(item => item.income_month);
+
+      monthNames.forEach((monthName, index) => {
+        const costEntry = taskExpenses.find(item => Number(item.month) === index + 1);
+        const yieldEntry = incomes.find(item => item.income_month === monthName);
+
+        if (costEntry || yieldEntry) {
+          monthlyData[monthName] = {
+            Cost: costEntry ? costEntry.cost || 0 : 0,
+            Yield: yieldEntry ? yieldEntry.yield || 0 : 0
+          };
+        }
+      });
+
+      return monthlyData;
+
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   /**
    * Employee Prefomnce Report
@@ -283,11 +368,11 @@ export class ReportServiceImpl implements ReportService {
 
   }
 
-/**
- * Get Daily Quntity
- * @param landId 
- * @returns 
- */
+  /**
+   * Get Daily Quntity
+   * @param landId 
+   * @returns 
+   */
   async GetDailySummary(landId: number): Promise<any> {
 
     try {
