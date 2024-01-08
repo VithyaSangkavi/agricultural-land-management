@@ -87,16 +87,18 @@ function Home({ setSelectedLandId, selectedLandId }) {
                 setOngoingTasks([]);
             });
 
-        axios.get(`http://localhost:8080/service/master/completed-tasks-with-names?landId=${selectedLandId}`).then((response) => {
+        // axios.get(`http://localhost:8080/service/master/completed-tasks-with-names?landId=${selectedLandId}`)
+        submitSets(submitCollection.completed_tasks_with_names, "?landId=" + selectedLandId, true)
+            .then((response) => {
 
-            if (response.data.extra.length === 0) {
-                alertService.info('No Data Found !');
-            }
+                if (response.extra.length === 0) {
+                    alertService.info('No Data Found !');
+                }
 
-            setOngoingTasks(response.data.extra);
-            console.log("Ongoing tasks : ", response.data.extra);
+                setOngoingTasks(response.extra);
+                console.log("Ongoing tasks : ", response.extra);
 
-        });
+            });
 
     }, [selectedLandId]);
 
@@ -130,7 +132,7 @@ function Home({ setSelectedLandId, selectedLandId }) {
 
     return (
         <div className="home-app-screen">
-           <Header/>
+            <Header />
             <br />
 
             <div className="drop-down-container" style={{ marginTop: "-25px" }}>

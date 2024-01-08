@@ -47,6 +47,23 @@ const submitCollection = {
     summary_weekly: { ptype: "GET", url: basePath+"/service/master/summary-weekly", queryparam: true, data:true, auth: true },
     summary_daily: { ptype: "GET", url: basePath+"/service/master/summary-daily", queryparam: true, data:true, auth: true },
 
+    findTaskNameById: { ptype: "GET", url: basePath+"/service/master/findTaskNameById", queryparam: true, data:true, auth: true },
+    task_assigned_save: { ptype: "POST", url: basePath+"/service/master/task-assigned-save", queryparam: true, data:true, auth: true },
+    work_assigned_details: { ptype: "GET", url: basePath+"/service/master/work-assigned-details", queryparam: true, data:true, auth: true},
+    findByLandId: { ptype: "GET", url: basePath+"/service/master/findByLandId", queryparam: true, data:true, auth: true},
+    findLotByLandId : { ptype: "GET", url: basePath+"/service/master/findLotByLandId", queryparam: true, data:true, auth: true},
+    find_by_type : { ptype: "GET", url: basePath+"/service/master/find-by-type", queryparam: true, data:true, auth: true},
+    task_expense_save : { ptype: "POST", url: basePath+"/service/master/task-expense-save", queryparam: true, data:true, auth: true},
+    task_card_save: { ptype: "POST", url: basePath+"/service/master/task-card-save", queryparam: true, data:true, auth: true},
+    taskCardFindById: { ptype: "GET", url: basePath+"/service/master/taskCardFindById", queryparam: true, data:true, auth: true},
+    findWorkerIdByName: { ptype: "POST", url: basePath+"/service/master/findWorkerIdByName", queryparam: true, data:true, auth: true},
+    work_assigned_save: { ptype: "POST", url: basePath+"/service/master/work-assigned-save", queryparam: true, data:true, auth: true},
+    work_assigned_delete: { ptype: "DELETE", url: basePath+"/service/master/work-assigned-delete", queryparam: true, data:true, auth: true},
+    taskAssignedFindById: { ptype: "GET", url: basePath+"/service/master/taskAssignedFindById", queryparam: true, data:true, auth: true},
+    task_assigned: { ptype: "GET", url: basePath+"/service/master/task-assigned", queryparam: true, data:true, auth: true},
+    findByTaskAssignedId: { ptype: "GET", url: basePath+"/service/master/findByTaskAssignedId", queryparam: true, data:true, auth: true},
+    completed_tasks_with_names: { ptype: "GET", url: basePath+"/service/master/completed-tasks-with-names", queryparam: true, data:true, auth: true},
+
 }
 
 const autoClose = true;
