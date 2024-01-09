@@ -37,7 +37,7 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
     submitSets(submitCollection.manageland, false).then((res) => {
       setLandNames(res.extra || []);
     });
-  
+
     if (selectedLandId && selectedLandId !== "") {
       submitSets(submitCollection.getlandbyid, `?landId=${selectedLandId}`, true)
         .then((res) => {
@@ -55,18 +55,22 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
       setLandName("All Lands");
     }
   }, [submitCollection.manageland, selectedLandId]);
-  
+
   useEffect(() => {
 
-    axios.post('http://localhost:8080/service/master/taskFindAll').then((response) => {
-      setTasks(response.data.extra);
-      console.log("Tasks : ", response.data.extra);
-    });
+    // axios.post('http://localhost:8080/service/master/taskFindAll')
+    submitSets(submitCollection.taskFindAll, true)
+      .then((response) => {
+        setTasks(response.data.extra);
+        console.log("Tasks : ", response.data.extra);
+      });
 
-    axios.get('http://localhost:8080/service/master/landFindAll').then((response) => {
-      setLands(response.data.extra);
-      console.log("Lands : ", response.data.extra);
-    });
+    // axios.get('http://localhost:8080/service/master/landFindAll')
+    submitSets(submitCollection.manageland, true)
+      .then((response) => {
+        setLands(response.data.extra);
+        console.log("Lands : ", response.data.extra);
+      });
   }, []);
 
   const handleSearchChange = (event) => {
@@ -79,7 +83,8 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
 
   useEffect(() => {
     //get crop id by using landid
-    axios.get(`http://localhost:8080/service/master/cropFindByLandId/${selectedLandId}`)
+    // axios.get(`http://localhost:8080/service/master/cropFindByLandId/${selectedLandId}`)
+    submitSets(submitCollection.cropFindByLandId, "/" + selectedLandId, true)
 
       .then((response) => {
         const cropIdLand = response.data.cropId.extra;
@@ -108,7 +113,7 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
 
   return (
     <div className="task-app-screen">
-      <Header/>
+      <Header />
       <br />
 
       <div className='drop-down-container' style={{ marginTop: "-25px" }}>

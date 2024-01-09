@@ -91,8 +91,8 @@ router.get('/task-assigned', taskAssignedController.findByTaskId);
 router.get("/taskAssignedFindById", taskAssignedController.findById);
 router.get("/ongoing-tasks-with-names", taskAssignedController.getOngoingTasksWithTaskNames);
 router.get("/completed-tasks-with-names", taskAssignedController.getCompletedTasksWithTaskNames);
-router.put("/updateEndDate/:taskAssignedId", taskAssignedController.updateEndDate);
-router.put("/updateSchedulStatus/:taskAssignedId", taskAssignedController.updateStatus);
+router.post("/updateEndDate/:taskAssignedId", taskAssignedController.updateEndDate);
+router.post("/updateSchedulStatus/:taskAssignedId", taskAssignedController.updateStatus);
 
 
 // task-expense routes
@@ -115,11 +115,11 @@ router.post('/work-assigned-saveWorkDates', workAssignedController.saveWorkDates
 
 // task-card routes
 router.post("/task-card-save", taskCardController.save);
-router.put("/task-card-update", taskCardController.update);
+router.post("/task-card-update", taskCardController.update);
 router.get("/task-card-findAll", taskCardController.findAll);
 router.get("/task-card-findById", taskCardController.findById);
 router.get("/taskCardFindById", taskCardController.findTaskCardByTaskId);
-router.put("/updateStatus/:taskCardId", taskCardController.updateStatus);
+router.post("/updateStatus", taskCardController.updateStatus);
 
 //report routes
 //employee-attendance report

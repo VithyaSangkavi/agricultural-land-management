@@ -5,6 +5,8 @@ import './footer.css'
 import { useHistory, useLocation } from 'react-router-dom'
 import Navbar from 'react-bootstrap/Navbar';
 import axios from 'axios';
+import { submitSets } from '../UiComponents/SubmitSets';
+import { submitCollection } from '../../_services/submit.service';
 
 
 const Footer = () => {
@@ -28,7 +30,8 @@ const Footer = () => {
 
     const clickReport = () => {
         history.push('/report')
-        axios.post('http://localhost:8080/service/master/work-assigned-saveWorkDates')
+        // axios.post('http://localhost:8080/service/master/work-assigned-saveWorkDates')
+        submitSets(submitCollection.work_assigned_saveWorkDates)
             .then((response) => {
                 console.log('successfull', response);
             })

@@ -505,7 +505,7 @@ const ManageTask = ({ selectedLandId }) => {
 
                                                         <div className='line-two'>
                                                             <p>{addedData.worker} - {addedData.quantity}kg</p>
-                                                            <button onClick={() => deleteWorkAssigned(addedData.id)}>
+                                                            <button onClick={() => deleteWorkAssigned(addedData.id, dateIndex, addedData.worker)}>
                                                                 <IoMdClose />
                                                             </button>
 

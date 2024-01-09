@@ -35,9 +35,6 @@ const InsertIncome = ({ setSelectedLandId, selectedLandId }) => {
     };
 
     useEffect(() => {
-        submitSets(submitCollection.manageland, false).then((res) => {
-            setLandNames(res.extra);
-        });
 
         submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true).then((res) => {
             setLandName(res.extra.name);
@@ -57,7 +54,9 @@ const InsertIncome = ({ setSelectedLandId, selectedLandId }) => {
         submitSets(submitCollection.saveincome, dataToSend, false).then(res => {
             if (res && res.status) {
                 alertService.success("Data sent successfully!")
-                window.location.reload();
+                // window.location.reload();
+                setMonth('')
+                setValue('')
             } else {
                 alertService.error("Error sending data");
             };

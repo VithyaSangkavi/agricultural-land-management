@@ -69,7 +69,7 @@ const ManageTask = ({ selectedLandId }) => {
 
         const newStatus = 'scheduled'
 
-        axios.put(`http://localhost:8080/service/master/updateSchedulStatus/${taskAssignedId}`, {
+        axios.post(`http://localhost:8080/service/master/updateSchedulStatus/${taskAssignedId}`, {
             newStatus,
         })
             .then((response) => {

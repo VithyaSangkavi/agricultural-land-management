@@ -118,11 +118,18 @@ const ManageOngoingTask = ({ selectedLandId }) => {
     };
 
     const updateTaskCardStatus = (taskCardId, newStatus) => {
-        axios.put(`http://localhost:8080/service/master/updateStatus/${taskCardId}`, {
+
+        axios.post(`http://localhost:8080/service/master/updateStatus?taskCardId=${taskCardId}`, {
             newStatus,
         })
+
+        // submitSets(submitCollection.updateStatus, "?taskCardId=" + taskCardId, true, {
+        //     newStatus: newStatus,
+        // })
             .then((response) => {
-                window.location.reload();
+
+                // window.location.reload();
+                console.log(response);
             })
             .catch((error) => {
                 console.error(`Error updating TaskCard ${taskCardId} status:`, error);
@@ -349,7 +356,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                 setSelectedWorker('');
 
                 axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${name}`)
-                // submitSets(submitCollection.findWorkerIdByName, '?name=' + name, true)
+                    // submitSets(submitCollection.findWorkerIdByName, '?name=' + name, true)
                     .then((response) => {
                         console.log("save worker : ", response);
                         const workerId = 1
@@ -437,7 +444,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
 
 
                 axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${name}`)
-                // submitSets(submitCollection.findWorkerIdByName, '?name=' + name, true)
+                    // submitSets(submitCollection.findWorkerIdByName, '?name=' + name, true)
                     .then((response) => {
                         const workerId = response.extra.workerId
                         console.log('Worker ID :', workerId);
@@ -564,7 +571,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
         console.log('selected worker: ', selectedWorker);
 
         axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${selectedWorker}`)
-        // submitSets(submitCollection.findWorkerIdByName, '?name=' + selectedWorker, true)
+            // submitSets(submitCollection.findWorkerIdByName, '?name=' + selectedWorker, true)
             .then((response) => {
                 const workerId = response.extra.workerId
                 // setWorkerId(storeWorkerId);
@@ -603,7 +610,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
             newStatus: 'completed',
         }
 
-        axios.put(`http://localhost:8080/service/master/updateEndDate/${taskAssignedid}`, details)
+        axios.post(`http://localhost:8080/service/master/updateEndDate/${taskAssignedid}`, details)
             .then((response) => {
                 window.location.reload();
             })

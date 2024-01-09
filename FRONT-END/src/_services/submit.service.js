@@ -16,7 +16,6 @@ const submitCollection = {
     updateprice: { ptype: "PUT", url: basePath+"/service/master/updatePrice", queryparam: true, data:true, auth: true },
     getlandbyid: { ptype: "GET", url: basePath+"/service/master/landFind", queryparam: true, data:true, auth: true },
 
-
     login: { ptype: "POST", url: basePath+"/service/master/login", queryparam: false, data:true },
 
     updatepayment: { ptype: "POST", url: basePath+"/service/master/paymentUpdate", queryparam: true, data:true, auth: true },
@@ -29,8 +28,6 @@ const submitCollection = {
     savetasktype: { ptype: "POST", url: basePath+"/service/master/taskSave", queryparam: false, data:true, auth: true },
     findworkerbyland: { ptype: "POST", url: basePath+"/service/master/findWorkByLandId", queryparam: false, data:true, auth: true },
     findpaymentbyworkerid: { ptype: "GET", url: basePath+"/service/master/findByWorkerId", queryparam: true, data:true, auth: true },
-
-    //home & home-new-task
     taskAssignedFindAll: { ptype: "POST", url: basePath+"/service/master/taskAssignedFindAll", queryparam: false, data:true, auth: true },
     taskFindAll: { ptype: "POST", url: basePath+"/service/master/taskFindAll", queryparam: false, data:true, auth: true },
     ongoing_tasks_with_names: { ptype: "GET", url: basePath+"/service/master/ongoing-tasks-with-names", queryparam: true, data:true, auth: true },
@@ -62,7 +59,11 @@ const submitCollection = {
     taskAssignedFindById: { ptype: "GET", url: basePath+"/service/master/taskAssignedFindById", queryparam: true, data:true, auth: true},
     task_assigned: { ptype: "GET", url: basePath+"/service/master/task-assigned", queryparam: true, data:true, auth: true},
     findByTaskAssignedId: { ptype: "GET", url: basePath+"/service/master/findByTaskAssignedId", queryparam: true, data:true, auth: true},
-    completed_tasks_with_names: { ptype: "GET", url: basePath+"/service/master/completed-tasks-with-names", queryparam: true, data:true, auth: true},
+    work_assigned_saveWorkDates: { ptype: "POST", url: basePath+"/service/master/work-assigned-saveWorkDates", queryparam: true, data:true, auth: true},
+    incomeFindByLandId: { ptype: "GET", url: basePath+"/service/master/incomeFindByLandId", queryparam: true, data:true, auth: true},
+    cropFindByLandId: { ptype: "GET", url: basePath+"/service/master/cropFindByLandId", queryparam: true, data:true, auth: true},
+    updateStatus: { ptype: "POST", url: basePath+"/service/master/updateStatus", queryparam: true, data:true, auth: true},
+
 
 }
 
