@@ -45,6 +45,9 @@ const submitCollection = {
     summary_weekly: { ptype: "GET", url: basePath+"/service/master/summary-weekly", queryparam: true, data:true, auth: true },
     summary_daily: { ptype: "GET", url: basePath+"/service/master/summary-daily", queryparam: true, data:true, auth: true },
 
+    //employee-attendance report
+    employee_attendance: {ptype: "GET", url: basePath+"/service/master/employee-perfomance", queryparam: true, data:true, auth: true },
+
     findTaskNameById: { ptype: "GET", url: basePath+"/service/master/findTaskNameById", queryparam: true, data:true, auth: true },
     task_assigned_save: { ptype: "POST", url: basePath+"/service/master/task-assigned-save", queryparam: true, data:true, auth: true },
     work_assigned_details: { ptype: "GET", url: basePath+"/service/master/work-assigned-details", queryparam: true, data:true, auth: true},

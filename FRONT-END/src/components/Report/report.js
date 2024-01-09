@@ -122,9 +122,6 @@ function Report({ setSelectedLandId, selectedLandId }) {
     };
 
     useEffect(() => {
-        submitSets(submitCollection.manageland, false).then((res) => {
-            setLandNames(res.extra);
-        });
 
         if (selectedLandId) {
             submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true)
@@ -143,8 +140,8 @@ function Report({ setSelectedLandId, selectedLandId }) {
 
     useEffect(() => {
         //lot find all
-        // axios.get('http://localhost:8081/service/master/lotFindAll')
-        submitSets(submitCollection.findalllot, true)
+        axios.get('http://localhost:8081/service/master/lotFindAll')
+       // submitSets(submitCollection.findalllot, true)
             .then((response) => {
                 setLots(response.data.extra);
                 console.log("Lots : ", response.data.extra);
