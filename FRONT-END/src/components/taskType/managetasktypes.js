@@ -45,14 +45,22 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
       setLandName("All Lands");
     }
   }, [submitCollection.manageland, selectedLandId]);
-  
+
   useEffect(() => {
 
-    axios.post('http://localhost:8081/service/master/taskFindAll').then((response) => {
-      setTasks(response.data.extra);
-      console.log("Tasks : ", response.data.extra);
-    });
+    // axios.post('http://localhost:8080/service/master/taskFindAll')
+    submitSets(submitCollection.taskFindAll, true)
+      .then((response) => {
+        setTasks(response.data.extra);
+        console.log("Tasks : ", response.data.extra);
+      });
 
+    // axios.get('http://localhost:8080/service/master/landFindAll')
+    submitSets(submitCollection.manageland, true)
+      .then((response) => {
+        setLands(response.data.extra);
+        console.log("Lands : ", response.data.extra);
+      });
   }, []);
 
   const handleSearchChange = (event) => {
@@ -61,24 +69,6 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
   const filteredTasks = tasks.filter((tasks) =>
     tasks.taskName.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-
-  // useEffect(() => {
-  //   //get crop id by using landid
-  //   axios.get(`http://localhost:8081/service/master/cropFindByLandId/${selectedLandId}`)
-
-  //     .then((response) => {
-  //       const cropIdLand = response.data.cropId.extra;
-  //       localStorage.setItem('CropIdLand', cropIdLand);
-  //       console.log('Crop API Response:', response.data);
-
-  //       console.log('Crop ID From Land :', cropIdLand);
-
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching data:", error);
-  //     });
-  // }, [selectedLandId]);
 
   const AddTaskType = () => {
     history.push('/addTaskType')
@@ -94,7 +84,7 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
 
   return (
     <div className="task-app-screen">
-      <Header/>
+      <Header />
       <br />
 
       <div className='drop-down-container' style={{ marginTop: "-25px" }}>

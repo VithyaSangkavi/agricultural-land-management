@@ -38,10 +38,6 @@ function ManageIncome({ setSelectedLandId, selectedLandId }) {
     };
 
     useEffect(() => {
-        submitSets(submitCollection.manageland, false).then((res) => {
-            setLandNames(res.extra);
-        });
-
         if (selectedLandId) {
             submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true)
                 .then((res) => {
@@ -58,24 +54,37 @@ function ManageIncome({ setSelectedLandId, selectedLandId }) {
 
     useEffect(() => {
         if (selectedLandId || selectedLandId === '') {
-            let apiUrl = 'http://localhost:8081/service/master/incomeFindByLandId/';
             if (selectedLandId !== '') {
-                apiUrl += selectedLandId;
-            }
-
-            axios.get(apiUrl)
+                submitSets(submitCollection.incomeFindByLandId, "/" + selectedLandId, true)
                 .then((res) => {
 
-                    if (res.data.extra.length === 0) {
+                    if (res.extra.length === 0) {
                         alertService.info('No Data Found !');
                     }
-                    setData(res.data.extra);
-                    console.log(res.data.extra);
+                    setData(res.extra);
+                    console.log(res.extra);
                 })
                 .catch((error) => {
                     console.error('Error fetching data:', error);
                     setData([]);
                 });
+            }else{
+                submitSets(submitCollection.incomeFindByLandId, "/", true)
+                .then((res) => {
+
+                    if (res.extra.length === 0) {
+                        alertService.info('No Data Found !');
+                    }
+                    setData(res.extra);
+                    console.log(res.extra);
+                })
+                .catch((error) => {
+                    console.error('Error fetching data:', error);
+                    setData([]);
+                });
+            }
+
+           
         } else {
             setData([]);
         }

@@ -15,9 +15,11 @@ function Navbar(props) {
     const [landNames, setLandNames] = useState([]);
 
     useEffect(() => {
-        axios.get('http://localhost:8081/service/master/landFindAll').then((res) => {
-            setLandNames(res.extra);
-        });
+        // axios.get('http://localhost:8080/service/master/landFindAll')
+        submitSets(submitCollection.manageland, true)
+            .then((res) => {
+                setLandNames(res.extra);
+            });
     }, []);
 
     const handleLandChange = (event) => {

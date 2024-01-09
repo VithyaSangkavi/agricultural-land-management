@@ -1,15 +1,9 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useHistory } from "react-router-dom";
-import tea from '../../assets/img/crop_images/tea.png';
-import wheat from '../../assets/img/crop_images/wheat.png';
-import coconut from '../../assets/img/crop_images/coconut.png';
 import './home.css';
 import '../css/common.css';
 import Footer from '../footer/footer';
 import Header from '../header/header';
-import { FaGlobeAmericas } from 'react-icons/fa';
-import { Dropdown } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { FaPlus, FaMapMarker } from 'react-icons/fa';
 import { connect } from 'react-redux';
@@ -17,10 +11,8 @@ import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 import { setSelectedCropAction } from '../../actions/auth/crop_action';
 import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
-import { Col, Form } from 'react-bootstrap';
 import '../css/common.css';
 import { alertService } from '../../_services/alert.service';
-import { useSelector } from 'react-redux';
 
 function Home({ setSelectedLandId, selectedLandId, selectedCrop }) {
     const [t, i18n] = useTranslation();
@@ -51,21 +43,24 @@ function Home({ setSelectedLandId, selectedLandId, selectedCrop }) {
 
 
     useEffect(() => {
-        axios.post('http://localhost:8081/service/master/taskAssignedFindAll').then((response) => {
-            setTaskAssigned(response.data);
-            console.log("Task Assigned: ", response.data);
+        
+        submitSets(submitCollection.taskAssignedFindAll, false).then((response) => {
+            setTaskAssigned(response);
+            console.log("Task Assigned: ", response);
         });
 
-        axios.post('http://localhost:8081/service/master/taskFindAll').then((response) => {
-            setTask(response.data.extra);
-            console.log("Tasks : ", response.data.extra);
+        submitSets(submitCollection.taskFindAll, false).then((response) => {
+
+            console.log(response.extra)
+            setTask(response.extra);
+            console.log("Tasks : ", response.extra);
         });
 
-        axios.get(`http://localhost:8081/service/master/ongoing-tasks-with-names?landId=${selectedLandId}`).then((response) => {
-            setOngoingTasks(response.data.extra);
-            console.log("Ongoing tasks : ", response.data);
+        submitSets(submitCollection.ongoing_tasks_with_names, "?landId=" + selectedLandId, true).then((response) => {
+            setOngoingTasks(response.extra);
+            console.log("Ongoing tasks : ", response.extra);
 
-            if (response.data.extra.length === 0) {
+            if (response.extra.length === 0) {
                 alertService.info('No Data Found !');
             }
         });
@@ -97,34 +92,6 @@ function Home({ setSelectedLandId, selectedLandId, selectedCrop }) {
             setLandName("All Lands");
         }
     }, [submitCollection.manageland, selectedLandId]);
-
-    // const handleLandChange = (event) => {
-    //     const newSelectedLandId = event.target.value;
-    //     console.log(newSelectedLandId);
-    //     setSelectedLandId(newSelectedLandId);
-
-    //     axios.post(`http://localhost:8081/service/master/findLandIdByName?name=${selectedLandId}`)
-    //         .then((response) => {
-    //             const landIdTask = response.data.extra;
-    //             const taskLand = JSON.stringify(landIdTask);
-    //             const landData = JSON.parse(taskLand);
-    //             const landId = landData.landId;
-               
-    //             console.log('Selected Land Id :', landId);
-    //             localStorage.setItem('SelectedLandId', landId);
-
-    //             console.log("selected land : ", selectedLandId)
-    //             console.log("landId : ", landId)
-    //             axios.get(`http://localhost:8081/service/master/ongoing-tasks-with-names?landId=${selectedLandId}`).then((response) => {
-    //                 setOngoingTasks(response.data.extra);
-    //                 console.log("Ongoing tasks : ", response.data.extra);
-
-    //             });
-    //         })
-    //         .catch((error) => {
-    //             console.error("Error fetching data:", error);
-    //         });
-    // }
 
 
     const handleChange = (event) => {

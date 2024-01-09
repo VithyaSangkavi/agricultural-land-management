@@ -35,9 +35,6 @@ const InsertIncome = ({ setSelectedLandId, selectedLandId }) => {
     };
 
     useEffect(() => {
-        submitSets(submitCollection.manageland, false).then((res) => {
-            setLandNames(res.extra);
-        });
 
         submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true).then((res) => {
             setLandName(res.extra.name);

@@ -38,11 +38,6 @@ const InsertLot = ({ setSelectedLandId, selectedLandId }) => {
     };
 
     useEffect(() => {
-        submitSets(submitCollection.manageland, false).then((res) => {
-
-            setLandNames(res.extra);
-        });
-
         submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true).then((res) => {
             setLandName(res.extra.name);
         });
@@ -65,7 +60,10 @@ const InsertLot = ({ setSelectedLandId, selectedLandId }) => {
 
             if (res && res.status) {
                 alertService.success("Data sent successfully!")
-                window.location.reload();
+                // window.location.reload();
+               setArea('')
+               setAreaUom('')
+               setName('')
             } else {
                 alertService.error("Error sending data");
             };
@@ -78,7 +76,7 @@ const InsertLot = ({ setSelectedLandId, selectedLandId }) => {
 
     return (
         <div className='inserlot-app-screen'>
-            <Header/>      
+            <Header />
 
             <div className="drop-down-container">
 

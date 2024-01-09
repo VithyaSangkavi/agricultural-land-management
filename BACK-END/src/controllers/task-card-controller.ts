@@ -91,7 +91,7 @@ exports.findTaskCardByTaskId = async (req, res, next) => {
 
 export const updateStatus = async (req, res, next) => {
   try {
-    const taskCardId = parseInt(req.params.taskCardId, 10);
+    const taskCardId = parseInt(req.query.taskCardId, 10);
     const newStatus = req.body.newStatus;
 
     if (isNaN(taskCardId) || !isValidTaskCardStatus(newStatus)) {
