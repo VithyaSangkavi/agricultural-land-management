@@ -61,9 +61,6 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
   }
 
   useEffect(() => {
-    submitSets(submitCollection.manageland, false).then((res) => {
-      setLandNames(res.extra);
-    });
 
     if (selectedLandId) {
       submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true)
@@ -77,11 +74,6 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
       setLandName("All Lands");
     }
   }, [submitCollection.manageland, selectedLandId]);
-
-  const handleLandChange = (event) => {
-    console.log("Land : ", event);
-    setSelectedLandId(event);
-  };
 
   useEffect(() => {
     const getWorker = {

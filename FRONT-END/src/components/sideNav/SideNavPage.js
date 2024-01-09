@@ -83,21 +83,8 @@ function SideNavBar() {
     <>
       <AnimatedPage>
         <div className={`side-nav-screen ${isBackClicked ? 'back-animation' : ''}`}>
-          {/* <div className="position-absolute top-0 start-0 ms-0">
-            <IoMdArrowRoundBack className="side-back-button" onClick={goBack} />
-          </div> */}
           <p className='main-heading-welcome'>{t('welcome')}</p>
           <div className="position-absolute top-0 end-0 me-0">
-            {/* <Dropdown alignRight onSelect={handleLanguageChange}>
-              <Dropdown.Toggle variant="secondary" style={{ background: 'none', border: 'none' }}>
-                <FaGlobeAmericas style={{ color: 'white' }} />
-              </Dropdown.Toggle>
-
-              <Dropdown.Menu>
-                <Dropdown.Item eventKey="en">English</Dropdown.Item>
-                <Dropdown.Item eventKey="sl">Sinhala</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown> */}
             <ImCross className="side-back-button" onClick={goBack}/>
           </div>
           

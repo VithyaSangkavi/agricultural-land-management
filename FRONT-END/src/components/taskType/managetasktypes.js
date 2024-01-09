@@ -24,20 +24,10 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
   const [landNames, setLandNames] = useState([]);
   const [landName, setLandName] = useState([]);
 
-
-
   const history = useHistory();
 
-  const handleLandChange = (event) => {
-    console.log("Land : ", event);
-    setSelectedLandId(event);
-  };
-
   useEffect(() => {
-    submitSets(submitCollection.manageland, false).then((res) => {
-      setLandNames(res.extra || []);
-    });
-  
+    
     if (selectedLandId && selectedLandId !== "") {
       submitSets(submitCollection.getlandbyid, `?landId=${selectedLandId}`, true)
         .then((res) => {
@@ -63,10 +53,6 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
       console.log("Tasks : ", response.data.extra);
     });
 
-    axios.get('http://localhost:8081/service/master/landFindAll').then((response) => {
-      setLands(response.data.extra);
-      console.log("Lands : ", response.data.extra);
-    });
   }, []);
 
   const handleSearchChange = (event) => {

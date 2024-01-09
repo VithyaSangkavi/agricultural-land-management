@@ -64,7 +64,7 @@ router.post("/workerFindAll", workerController.findAll);
 router.get("/workerFindById", workerController.findById);
 router.post('/findWorkByLandId', workerController.findWorkByLandId);
 router.post('/findWorkerIdByName', workerController.findWorkerIdByName);
-router.get('/findByLandId', workerController.findByLandId);
+router.get('/findWorkersByLandId', workerController.findByLandId);
 
 // task-type routes
 router.post("/taskSave", taskTypeController.save);
@@ -76,7 +76,7 @@ router.get('/findTaskNameById', taskTypeController.findTaskNameById);
 
 // payment routes
 router.post("/paymentSave", paymentController.save);
-router.get('/findByWorkerId', paymentController.findByWorkerId);
+router.get('/findPaymentByWorkerId', paymentController.findByWorkerId);
 router.post("/paymentUpdate", paymentController.update);
 // router.post("/taskDelete", taskTypeController.delete);
 // router.post("/taskFindAll", taskTypeController.findAll);

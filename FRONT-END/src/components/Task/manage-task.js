@@ -109,7 +109,7 @@ const ManageTask = ({ selectedLandId }) => {
     //fetch worker names according to the landId
     const fetchWorkerNames = () => {
 
-        axios.get(`http://localhost:8081/service/master/findByLandId?landId=${selectedLandId}`)
+        axios.get(`http://localhost:8081/service/master/findWorkersByLandId?landId=${selectedLandId}`)
 
             .then((response) => {
                 const workerNamesArray = response.data.extra.map((worker) => worker.name);
