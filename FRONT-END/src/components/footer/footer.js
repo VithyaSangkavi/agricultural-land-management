@@ -30,7 +30,7 @@ const Footer = () => {
 
     const clickReport = () => {
         history.push('/report')
-        // axios.post('http://localhost:8080/service/master/work-assigned-saveWorkDates')
+        // axios.post('http://localhost:8081/service/master/work-assigned-saveWorkDates')
         submitSets(submitCollection.work_assigned_saveWorkDates)
             .then((response) => {
                 console.log('successfull', response);

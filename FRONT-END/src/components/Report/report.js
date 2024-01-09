@@ -143,7 +143,7 @@ function Report({ setSelectedLandId, selectedLandId }) {
 
     useEffect(() => {
         //lot find all
-        // axios.get('http://localhost:8080/service/master/lotFindAll')
+        // axios.get('http://localhost:8081/service/master/lotFindAll')
         submitSets(submitCollection.findalllot, true)
             .then((response) => {
                 setLots(response.data.extra);

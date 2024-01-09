@@ -83,7 +83,7 @@ function Home({ setSelectedLandId, selectedLandId }) {
                 setOngoingTasks([]);
             });
 
-        axios.get(`http://localhost:8080/service/master/completed-tasks-with-names?landId=${selectedLandId}`)
+        axios.get(`http://localhost:8081/service/master/completed-tasks-with-names?landId=${selectedLandId}`)
         // submitSets(submitCollection.completed_tasks_with_names, "?landId=" + selectedLandId, true)
             .then((response) => {
 

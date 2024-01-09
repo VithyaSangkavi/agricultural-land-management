@@ -119,7 +119,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
 
     const updateTaskCardStatus = (taskCardId, newStatus) => {
 
-        axios.post(`http://localhost:8080/service/master/updateStatus?taskCardId=${taskCardId}`, {
+        axios.post(`http://localhost:8081/service/master/updateStatus?taskCardId=${taskCardId}`, {
             newStatus,
         })
 
@@ -181,7 +181,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
 
     const AddedWorkerList = () => {
 
-        // axios.get(`http://localhost:8080/service/master/work-assigned-details/${taskAssignedid}`)
+        // axios.get(`http://localhost:8081/service/master/work-assigned-details/${taskAssignedid}`)
         submitSets(submitCollection.work_assigned_details, "/" + taskAssignedid, true)
             .then((response) => {
 
@@ -201,7 +201,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                     (card) => getFormattedDate(card.date) === today
                 );
 
-                // axios.get(`http://localhost:8080/service/master/taskAssignedFindById?taskAssignedId=${taskAssignedid}`)
+                // axios.get(`http://localhost:8081/service/master/taskAssignedFindById?taskAssignedId=${taskAssignedid}`)
                 submitSets(submitCollection.taskAssignedFindById, '?taskAssignedId=' + taskAssignedid, true)
                     .then((taskResponse) => {
                         const schedule = taskResponse.extra.schedule;
@@ -229,7 +229,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
 
 
     const fetchTaskName = () => {
-        // axios.get(`http://localhost:8080/service/master/findTaskNameById/?taskId=${taskId}`)
+        // axios.get(`http://localhost:8081/service/master/findTaskNameById/?taskId=${taskId}`)
         submitSets(submitCollection.findTaskNameById, '/?taskId=' + taskId, true)
             .then((response) => {
 
@@ -247,7 +247,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
 
     const fetchWorkerNames = () => {
 
-        // axios.get(`http://localhost:8080/service/master/findByLandId?landId=${selectedLandId}`)
+        // axios.get(`http://localhost:8081/service/master/findByLandId?landId=${selectedLandId}`)
         submitSets(submitCollection.findByLandId, "?landId=" + selectedLandId, true)
 
             .then((response) => {
@@ -260,7 +260,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
     };
 
     const fetchExpenseTypes = () => {
-        // axios.get('http://localhost:8080/service/master/expenseFindAll')
+        // axios.get('http://localhost:8081/service/master/expenseFindAll')
         submitSets(submitCollection.manageexpense, false)
             .then((response) => {
                 const expenseTypeArrays = response.extra.map((expense) => expense.expenseType);
@@ -273,7 +273,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
 
     const fetchTaskAssignedId = () => {
         //get task-assigned id
-        // axios.get(`http://localhost:8080/service/master/task-assigned?taskId=${taskId}`)
+        // axios.get(`http://localhost:8081/service/master/task-assigned?taskId=${taskId}`)
         submitSets(submitCollection.task_assigned, '?taskId=' + taskId, true)
             .then((response) => {
                 console.log('Task assigned id: ', response.extra.id)
@@ -285,7 +285,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
     }
 
     const fetchLotId = () => {
-        // axios.get(`http://localhost:8080/service/master/findLotByLandId?landId=${selectedLandId}`)
+        // axios.get(`http://localhost:8081/service/master/findLotByLandId?landId=${selectedLandId}`)
         submitSets(submitCollection.findLotByLandId, '?landId=' + selectedLandId, true)
             .then((response) => {
                 const thislot = response.extra.id;
@@ -355,7 +355,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                 }));
                 setSelectedWorker('');
 
-                axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${name}`)
+                axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${name}`)
                     // submitSets(submitCollection.findWorkerIdByName, '?name=' + name, true)
                     .then((response) => {
                         console.log("save worker : ", response);
@@ -370,7 +370,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                                 taskAssignedId: taskAssignedid,
                             };
 
-                            // axios.post('http://localhost:8080/service/master/task-card-save', newTaskCard)
+                            // axios.post('http://localhost:8081/service/master/task-card-save', newTaskCard)
                             submitSets(submitCollection.task_card_save, newTaskCard, true)
                                 .then((savedTaskCardResponse) => {
                                     console.log('New Task card added', savedTaskCardResponse.extra);
@@ -388,7 +388,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                                         quantity,
                                     };
 
-                                    // axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
+                                    // axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
                                     submitSets(submitCollection.work_assigned_save, addWorkAssigned, true)
                                         .then((response) => {
                                             console.log('Work assigned added successfully:', response);
@@ -414,7 +414,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                                 quantity,
                             };
 
-                            // axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
+                            // axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
                             submitSets(submitCollection.work_assigned_save, addWorkAssigned, true)
                                 .then((response) => {
                                     console.log('Work assigned added successfully:', response);
@@ -443,7 +443,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                 setSelectedWorker('');
 
 
-                axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${name}`)
+                axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${name}`)
                     // submitSets(submitCollection.findWorkerIdByName, '?name=' + name, true)
                     .then((response) => {
                         const workerId = response.extra.workerId
@@ -458,7 +458,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                                 taskAssignedId: taskAssignedid
                             };
 
-                            // axios.post('http://localhost:8080/service/master/task-card-save', newTaskCard)
+                            // axios.post('http://localhost:8081/service/master/task-card-save', newTaskCard)
                             submitSets(submitCollection.task_card_save, newTaskCard, true)
                                 .then((savedTaskCardResponse) => {
                                     console.log('New Task card added', savedTaskCardResponse.extra);
@@ -475,7 +475,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                                         taskCardId: newtaskCardId
                                     }
 
-                                    // axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
+                                    // axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
                                     submitSets(submitCollection.work_assigned_save, addWorkAssigned, true)
                                         .then((response) => {
                                             console.log('Work assigned added successfully:', response);
@@ -501,7 +501,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                                 taskCardId: taskCardId
                             }
 
-                            // axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
+                            // axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
                             submitSets(submitCollection.work_assigned_save, addWorkAssigned, true)
                                 .then((response) => {
                                     console.log('Work assigned added successfully:', response);
@@ -527,7 +527,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
 
         //get expense id according to the expense type
 
-        // axios.get(`http://localhost:8080/service/master/find-by-type?expenseType=${selectedExpenseType}`)
+        // axios.get(`http://localhost:8081/service/master/find-by-type?expenseType=${selectedExpenseType}`)
         submitSets(submitCollection.find_by_type, '?expenseType=' + selectedExpenseType, true)
             .then((response) => {
                 const expenseId = response.expenseId;
@@ -541,7 +541,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                 };
 
                 //save task expense 
-                // axios.post('http://localhost:8080/service/master/task-expense-save', addTaskExpense)
+                // axios.post('http://localhost:8081/service/master/task-expense-save', addTaskExpense)
                 submitSets(submitCollection.task_expense_save, addTaskExpense, true)
                     .then((response) => {
                         console.log('Task expense added successfully:', response);
@@ -570,7 +570,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
         const selectedWorker = localStorage.getItem('selectedWorker');
         console.log('selected worker: ', selectedWorker);
 
-        axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${selectedWorker}`)
+        axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${selectedWorker}`)
             // submitSets(submitCollection.findWorkerIdByName, '?name=' + selectedWorker, true)
             .then((response) => {
                 const workerId = response.extra.workerId
@@ -586,7 +586,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                     lotId
                 }
 
-                // axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
+                // axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
                 submitSets(submitCollection.work_assigned_save, addWorkAssigned, true)
                     .then((response) => {
                         console.log('Work assigned added successfully:', response);
@@ -610,7 +610,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
             newStatus: 'completed',
         }
 
-        axios.post(`http://localhost:8080/service/master/updateEndDate/${taskAssignedid}`, details)
+        axios.post(`http://localhost:8081/service/master/updateEndDate/${taskAssignedid}`, details)
             .then((response) => {
                 window.location.reload();
             })
@@ -643,7 +643,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
 
     const getTaskExpenses = (e) => {
         console.log('task ass id: ', taskAssignedid);
-        // axios.get(`http://localhost:8080/service/master/findByTaskAssignedId?taskAssignedId=${taskAssignedid}`)
+        // axios.get(`http://localhost:8081/service/master/findByTaskAssignedId?taskAssignedId=${taskAssignedid}`)
         submitSets(submitCollection.findByTaskAssignedId, '?taskAssignedId=' + taskAssignedid, true)
             .then((response) => {
                 console.log('task expenses ------------ ', response.extra)

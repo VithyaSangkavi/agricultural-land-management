@@ -132,7 +132,7 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
     };
 
 
-    // axios.post(`http://localhost:8080/service/master/workerUpdate?workerId=${workerId}`, updatedWorker)
+    // axios.post(`http://localhost:8081/service/master/workerUpdate?workerId=${workerId}`, updatedWorker)
     submitSets(submitCollection.updateworker, "?workerId=" + workerId, updatedWorker, true)
       .then((response) => {
         if (response.status === 200) {
@@ -180,7 +180,7 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
     };
 
 
-    // axios.post(`http://localhost:8080/service/master/paymentUpdate?paymentId=${paymentId}`, updatedPayment)
+    // axios.post(`http://localhost:8081/service/master/paymentUpdate?paymentId=${paymentId}`, updatedPayment)
     submitSets(submitCollection.updatepayment, "?paymentId=" + paymentId, updatedPayment, true)
       .then((response) => {
         if (response.status === 200) {

@@ -48,14 +48,14 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
 
   useEffect(() => {
 
-    // axios.post('http://localhost:8080/service/master/taskFindAll')
+    // axios.post('http://localhost:8081/service/master/taskFindAll')
     submitSets(submitCollection.taskFindAll, true)
       .then((response) => {
         setTasks(response.data.extra);
         console.log("Tasks : ", response.data.extra);
       });
 
-    // axios.get('http://localhost:8080/service/master/landFindAll')
+    // axios.get('http://localhost:8081/service/master/landFindAll')
     submitSets(submitCollection.manageland, true)
       .then((response) => {
         setLands(response.data.extra);
