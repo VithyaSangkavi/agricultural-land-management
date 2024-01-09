@@ -178,7 +178,6 @@ export class TaskTypeServiceImpl implements TaskTypeService {
       const taskType = await this.taskTypeDao.findById(taskId);
 
       if (taskType) {
-        // Return only the taskName
         cr.setStatus(true);
         cr.setExtra({ taskName: taskType.taskName });
       } else {
