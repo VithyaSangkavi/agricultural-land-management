@@ -143,10 +143,12 @@ function Report({ setSelectedLandId, selectedLandId }) {
 
     useEffect(() => {
         //lot find all
-        axios.get('http://localhost:8080/service/master/lotFindAll').then((response) => {
-            setLots(response.data.extra);
-            console.log("Lots : ", response.data.extra);
-        });
+        // axios.get('http://localhost:8081/service/master/lotFindAll')
+        submitSets(submitCollection.findalllot, true)
+            .then((response) => {
+                setLots(response.data.extra);
+                console.log("Lots : ", response.data.extra);
+            });
     }, [])
 
     const handleResetFilters = () => {

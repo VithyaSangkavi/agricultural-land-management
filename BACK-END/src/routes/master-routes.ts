@@ -22,7 +22,6 @@ router.post("/login", userController.login);
 
 //crop routes
 router.post("/cropSave", cropController.save);
-router.get('/cropFindByLandId/:landId', cropController.findCropIdByLandId);
 router.get('/cropNameFindByLandId/:landId', cropController.findCropNameByLandId);
 /* router.post("/cropUpdate", cropController.update);
 router.post("/cropDelete", cropController.delete);
@@ -49,6 +48,7 @@ router.post("/landSave", landController.save);
 router.get("/landFindAll", landController.findAll);
 router.get("/landFind", landController.findById);
 router.post('/findLandIdByName', landController.findLandIdByName);
+router.get('/cropFindByLandId/:landId', landController.findCropIdByLandId);
 
 //lot routes
 router.post("/lotSave", lotController.save);
@@ -64,7 +64,7 @@ router.post("/workerFindAll", workerController.findAll);
 router.get("/workerFindById", workerController.findById);
 router.post('/findWorkByLandId', workerController.findWorkByLandId);
 router.post('/findWorkerIdByName', workerController.findWorkerIdByName);
-router.get('/findByLandId', workerController.findByLandId);
+router.get('/findWorkersByLandId', workerController.findByLandId);
 
 // task-type routes
 router.post("/taskSave", taskTypeController.save);
@@ -76,7 +76,7 @@ router.get('/findTaskNameById', taskTypeController.findTaskNameById);
 
 // payment routes
 router.post("/paymentSave", paymentController.save);
-router.get('/findByWorkerId', paymentController.findByWorkerId);
+router.get('/findPaymentByWorkerId', paymentController.findByWorkerId);
 router.post("/paymentUpdate", paymentController.update);
 // router.post("/taskDelete", taskTypeController.delete);
 // router.post("/taskFindAll", taskTypeController.findAll);
@@ -91,8 +91,8 @@ router.get('/task-assigned', taskAssignedController.findByTaskId);
 router.get("/taskAssignedFindById", taskAssignedController.findById);
 router.get("/ongoing-tasks-with-names", taskAssignedController.getOngoingTasksWithTaskNames);
 router.get("/completed-tasks-with-names", taskAssignedController.getCompletedTasksWithTaskNames);
-router.put("/updateEndDate/:taskAssignedId", taskAssignedController.updateEndDate);
-router.put("/updateSchedulStatus/:taskAssignedId", taskAssignedController.updateStatus);
+router.post("/updateEndDate/:taskAssignedId", taskAssignedController.updateEndDate);
+router.post("/updateSchedulStatus/:taskAssignedId", taskAssignedController.updateStatus);
 
 
 // task-expense routes
@@ -115,11 +115,11 @@ router.post('/work-assigned-saveWorkDates', workAssignedController.saveWorkDates
 
 // task-card routes
 router.post("/task-card-save", taskCardController.save);
-router.put("/task-card-update", taskCardController.update);
+router.post("/task-card-update", taskCardController.update);
 router.get("/task-card-findAll", taskCardController.findAll);
 router.get("/task-card-findById", taskCardController.findById);
 router.get("/taskCardFindById", taskCardController.findTaskCardByTaskId);
-router.put("/updateStatus/:taskCardId", taskCardController.updateStatus);
+router.post("/updateStatus", taskCardController.updateStatus);
 
 //report routes
 //employee-attendance report

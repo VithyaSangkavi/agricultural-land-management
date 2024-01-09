@@ -33,10 +33,6 @@ const ManageLot = ({ setSelectedLandId, selectedLandId }) => {
     };
 
     useEffect(() => {
-        submitSets(submitCollection.manageland, false).then((res) => {
-            setLandNames(res.extra);
-        });
-
         if (selectedLandId) {
             submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true)
                 .then((res) => {

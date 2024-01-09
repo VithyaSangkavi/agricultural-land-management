@@ -3,8 +3,8 @@ import { WorkAssignedEntity } from "../entity/master/work-assigned-entity";
 
 export interface ReportDao {
   generateEmployeeAttendanceReport(startDate: Date, endDate: Date, lotId: number, landId: number): Promise<any[]>;
-  generateMonthlyCropReport(lotId: number, startDate: Date, endDate: Date, landId: number): Promise<any[]>;
-  generateOtherCostYieldReport(startDate: Date, endDate: Date, landId: number, lotId: number): Promise<any[]>;
+  //generateMonthlyCropReport(lotId: number, startDate: Date, endDate: Date, landId: number): Promise<any[]>;
+  //generateOtherCostYieldReport(startDate: Date, endDate: Date, landId: number, lotId: number): Promise<any[]>;
   getEmployeePerfomanceReport(fromDate: string, toDate: string, landId: number): Promise<any>;
   getCostBreakdownLineReport(fromDate:string, landId: number): Promise<any>;
   getCostBreakdownPieReport(): Promise<any>;
@@ -25,6 +25,8 @@ export interface ReportDao {
   getOtherExpensesDay(landId?: number): Promise<any[]>
   getNonCrewExpensesDay(landId?: number): Promise<any[]>
 
-  
-  
+  getCurrentYearQuantityForMonthlyCrop(currentYear: number, lotId?: number, startDate?: Date, endDate?: Date, landId?: number): Promise<any>;
+  getPastYearQuantityForMonthlyCrop(pastYear: number, lotId?: number, startDate?: Date, endDate?: Date, landId?: number): Promise<any>;
+  getTaskExpenseForCostYield(startDate: Date, endDate: Date, landId: number, lotId: number): Promise<any>;
+  getIncomeForCostYield(startDate: Date, endDate: Date, landId: number, lotId: number): Promise<any>;
 }

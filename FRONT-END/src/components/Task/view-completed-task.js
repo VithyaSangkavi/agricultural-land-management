@@ -49,10 +49,6 @@ function Home({ setSelectedLandId, selectedLandId }) {
     };
 
     useEffect(() => {
-        submitSets(submitCollection.manageland, false).then((res) => {
-            setLandNames(res.extra);
-        });
-
         if (selectedLandId) {
             submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true)
                 .then((res) => {
@@ -67,7 +63,7 @@ function Home({ setSelectedLandId, selectedLandId }) {
     }, [submitCollection.manageland, selectedLandId]);
 
     useEffect(() => {
-        let apiUrl = 'http://localhost:8080/service/master/completed-tasks-with-names';
+        let apiUrl = 'http://localhost:8081/service/master/completed-tasks-with-names';
 
         if (selectedLandId) {
             apiUrl += `?landId=${selectedLandId}`;
@@ -87,16 +83,18 @@ function Home({ setSelectedLandId, selectedLandId }) {
                 setOngoingTasks([]);
             });
 
-        axios.get(`http://localhost:8080/service/master/completed-tasks-with-names?landId=${selectedLandId}`).then((response) => {
+        axios.get(`http://localhost:8081/service/master/completed-tasks-with-names?landId=${selectedLandId}`)
+        // submitSets(submitCollection.completed_tasks_with_names, "?landId=" + selectedLandId, true)
+            .then((response) => {
 
-            if (response.data.extra.length === 0) {
-                alertService.info('No Data Found !');
-            }
+                if (response.data.extra.length === 0) {
+                    alertService.info('No Data Found !');
+                }
 
-            setOngoingTasks(response.data.extra);
-            console.log("Ongoing tasks : ", response.data.extra);
+                setOngoingTasks(response.data.extra);
+                console.log("Ongoing tasks : ", response.data.extra);
 
-        });
+            });
 
     }, [selectedLandId]);
 
@@ -130,7 +128,7 @@ function Home({ setSelectedLandId, selectedLandId }) {
 
     return (
         <div className="home-app-screen">
-           <Header/>
+            <Header />
             <br />
 
             <div className="drop-down-container" style={{ marginTop: "-25px" }}>

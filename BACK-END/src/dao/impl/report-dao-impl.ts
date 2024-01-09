@@ -49,224 +49,143 @@ export class ReportDaoImpl implements ReportDao {
     }
   }
 
-  //Monthly-crop report
-  async generateMonthlyCropReport(lotId: number, startDate: Date, endDate: Date, landId: number): Promise<any> {
+  //monthly-crop report
+
+  async getCurrentYearQuantityForMonthlyCrop(currentYear: number, lotId?: number, startDate?: Date, endDate?: Date, landId?: number): Promise<any> {
     const workAssignedRepository = getConnection().getRepository(WorkAssignedEntity);
+    let query = workAssignedRepository.createQueryBuilder('work_assigned')
+      .leftJoin(TaskTypeEntity, 'task', 'work_assigned.taskId = task.id')
+      .leftJoin(CropEntity, 'crop', 'task.cropId = crop.id')
+      .select('SUM(work_assigned.quantity)', 'totalQuantity')
+      .addSelect('EXTRACT(MONTH FROM work_assigned.updatedDate)', 'month')
+      .where('EXTRACT(YEAR FROM work_assigned.updatedDate) = :currentYear', { currentYear })
+      .where(`EXTRACT(YEAR FROM work_assigned.updatedDate) = ${currentYear}`)
+      .groupBy('EXTRACT(MONTH FROM work_assigned.updatedDate)');
 
-    try {
-      const currentYear = new Date().getFullYear();
-      const pastYear = currentYear - 1;
-
-      const queryForCurrentYear = workAssignedRepository.createQueryBuilder('work_assigned')
-        .leftJoin(TaskTypeEntity, 'task', 'work_assigned.taskId = task.id')
-        .leftJoin(CropEntity, 'crop', 'task.cropId = crop.id')
-        .select('SUM(work_assigned.quantity)', 'totalQuantity')
-        .addSelect('EXTRACT(MONTH FROM work_assigned.updatedDate)', 'month')
-        .where('EXTRACT(YEAR FROM work_assigned.updatedDate) = :currentYear', { currentYear });
-
-      const queryForPastYear = workAssignedRepository.createQueryBuilder('work_assigned')
-        .leftJoin(TaskTypeEntity, 'task', 'work_assigned.taskId = task.id')
-        .leftJoin(CropEntity, 'crop', 'task.cropId = crop.id')
-        .select('SUM(work_assigned.quantity)', 'totalQuantity')
-        .addSelect('EXTRACT(MONTH FROM work_assigned.updatedDate)', 'month')
-        .where('EXTRACT(YEAR FROM work_assigned.updatedDate) = :pastYear', { pastYear });
-
-      //filter by lot id
-      if (lotId !== undefined) {
-        queryForCurrentYear.andWhere('work_assigned.lotId = :lotId', { lotId });
-        queryForPastYear.andWhere('work_assigned.lotId = :lotId', { lotId });
-      }
-
-      // Filter by date range
-      if (startDate && endDate) {
-
-        const currentYearStartDate = moment(startDate).toDate();
-        const currentYearEndDate = moment(endDate).toDate();
-        const pastYearStartDate = moment(startDate).subtract(1, 'year').startOf('year').toDate();
-        const pastYearEndDate = moment(endDate).subtract(1, 'year').endOf('year').toDate();
-
-        queryForCurrentYear.andWhere('work_assigned.updatedDate BETWEEN :currentYearStartDate AND :currentYearEndDate', { currentYearStartDate, currentYearEndDate });
-        queryForPastYear.andWhere('work_assigned.updatedDate BETWEEN :pastYearStartDate AND :pastYearEndDate', { pastYearStartDate, pastYearEndDate });
-      }
-
-      if (landId) {
-        queryForCurrentYear
-          .innerJoin('work_assigned.lot', 'lot')
-          .innerJoin('lot.land', 'land')
-          .andWhere('land.id = :landId', { landId });
-
-        queryForPastYear
-          .innerJoin('work_assigned.lot', 'lot')
-          .innerJoin('lot.land', 'land')
-          .andWhere('land.id = :landId', { landId });
-      }
-
-      const quantitiesForCurrentYear = await queryForCurrentYear
-        .groupBy('EXTRACT(MONTH FROM work_assigned.updatedDate)')
-        .getRawMany();
-
-      const quantitiesForPastYear = await queryForPastYear
-        .groupBy('EXTRACT(MONTH FROM work_assigned.updatedDate)')
-        .getRawMany();
-
-      //console
-      console.log('Current year: ', queryForCurrentYear.getSql());
-      console.log('Past year: ', queryForPastYear.getSql());
-
-      const getMonthName = (monthNumber: number): string => {
-        const monthNames = [
-          'January', 'February', 'March', 'April', 'May', 'June',
-          'July', 'August', 'September', 'October', 'November', 'December'
-        ];
-
-        if (monthNumber >= 1 && monthNumber <= 12) {
-          return monthNames[monthNumber - 1];
-        }
-        return 'Invalid Month';
-      };
-
-      const formattedQuantitiesForCurrentYear = {};
-      const formattedQuantitiesForPastYear = {};
-
-      quantitiesForCurrentYear.forEach(item => {
-        const monthName = getMonthName(item.month);
-        if (!formattedQuantitiesForCurrentYear[monthName]) {
-          formattedQuantitiesForCurrentYear[monthName] = [];
-        }
-        formattedQuantitiesForCurrentYear[monthName].push({
-          PastYearTotalQuantity: '-',
-          CurrentYearTotalQuantity: item.totalQuantity
-        });
-      });
-
-      quantitiesForPastYear.forEach(item => {
-        const monthName = getMonthName(item.month);
-        if (!formattedQuantitiesForPastYear[monthName]) {
-          formattedQuantitiesForPastYear[monthName] = [];
-        }
-        formattedQuantitiesForPastYear[monthName].push({
-          PastYearTotalQuantity: item.totalQuantity,
-          CurrentYearTotalQuantity: '-'
-        });
-      });
-
-      console.log(formattedQuantitiesForCurrentYear);
-      console.log(formattedQuantitiesForPastYear);
-
-      // Merging quantities for each month
-      const monthlyQuantities = {};
-
-      const months = new Set([
-        ...Object.keys(formattedQuantitiesForCurrentYear),
-        ...Object.keys(formattedQuantitiesForPastYear)
-      ]);
-
-      months.forEach(month => {
-        if (!monthlyQuantities[month]) {
-          monthlyQuantities[month] = [];
-        }
-        const pastYearData = formattedQuantitiesForPastYear[month] || [{ PastYearTotalQuantity: 0 }];
-        const currentYearData = formattedQuantitiesForCurrentYear[month] || [{ CurrentYearTotalQuantity: 0 }];
-
-        pastYearData.forEach(pastYearItem => {
-          const currentYearItem = currentYearData.find(currentYearItem => currentYearItem.CurrentYearTotalQuantity !== '-');
-          monthlyQuantities[month].push({
-            PastYearTotalQuantity: pastYearItem.PastYearTotalQuantity || 0,
-            CurrentYearTotalQuantity: currentYearItem ? currentYearItem.CurrentYearTotalQuantity : '-'
-          });
-        });
-      });
-
-      return monthlyQuantities;
-    } catch (error) {
-      throw new Error(`Error generating monthly crop report: ${error}`);
+    if (lotId !== undefined) {
+      query = query.andWhere('work_assigned.lotId = :lotId', { lotId });
     }
+
+    if (startDate && endDate) {
+      query = query.andWhere('work_assigned.updatedDate BETWEEN :startDate AND :endDate', { startDate, endDate });
+    }
+
+    if (landId) {
+      query = query
+        .innerJoin('work_assigned.lot', 'lot')
+        .innerJoin('lot.land', 'land')
+        .andWhere('land.id = :landId', { landId });
+    }
+
+    const result = query.getRawMany();
+    return result;
   }
 
-  //other-cost-yield report
-  async generateOtherCostYieldReport(startDate: Date, endDate: Date, landId: number, lotId: number): Promise<any> {
+  async getPastYearQuantityForMonthlyCrop(pastYear: number, lotId?: number, startDate?: Date, endDate?: Date, landId?: number): Promise<any> {
+    const workAssignedRepository = getConnection().getRepository(WorkAssignedEntity);
+    let query = workAssignedRepository.createQueryBuilder('work_assigned')
+      .leftJoin(TaskTypeEntity, 'task', 'work_assigned.taskId = task.id')
+      .leftJoin(CropEntity, 'crop', 'task.cropId = crop.id')
+      .select('SUM(work_assigned.quantity)', 'totalQuantity')
+      .addSelect('EXTRACT(MONTH FROM work_assigned.updatedDate)', 'month')
+      .where('EXTRACT(YEAR FROM work_assigned.updatedDate) = :pastYear', { pastYear })
+      .groupBy('EXTRACT(MONTH FROM work_assigned.updatedDate)');
+
+    if (lotId !== undefined) {
+      query = query.andWhere('work_assigned.lotId = :lotId', { lotId });
+    }
+
+    if (startDate && endDate) {
+      query = query.andWhere('work_assigned.updatedDate BETWEEN :startDate AND :endDate', { startDate, endDate });
+    }
+
+    if (landId) {
+      query = query
+        .innerJoin('work_assigned.lot', 'lot')
+        .innerJoin('lot.land', 'land')
+        .andWhere('land.id = :landId', { landId });
+    }
+
+    const result = query.getRawMany();
+    return result;
+  }
+
+  //Other cost / yield report
+
+  async getTaskExpenseForCostYield(startDate: Date, endDate: Date, landId: number, lotId: number): Promise<any> {
     const taskExpenseRepository = getConnection().getRepository(TaskExpenseEntity);
+
+    const taskExpensesQuery = taskExpenseRepository.createQueryBuilder('task_expense')
+    .select('SUM(task_expense.value)', 'cost')
+    .addSelect('EXTRACT(MONTH FROM task_expense.createdDate)', 'month')
+
+     // Filter by date range
+     if (startDate && endDate) {
+      taskExpensesQuery.andWhere('task_expense.createdDate BETWEEN :startDate AND :endDate', {
+        startDate,
+        endDate,
+      });
+    }
+
+    // filtering by landId
+    if (landId) {
+      taskExpensesQuery
+        .innerJoin('task_expense.taskType', 'taskType')
+        .innerJoin('taskType.crop', 'crop')
+        .innerJoin('crop.land', 'land')
+        .andWhere('land.id = :landId', { landId });
+    }
+
+     // filtering by lotId
+     if (lotId) {
+      taskExpensesQuery
+        .innerJoin('task_expense.taskType', 'taskType')
+        .innerJoin('taskType.crop', 'crop')
+        .innerJoin('crop.land', 'land')
+        .innerJoin('land.lot', 'lot')
+        .andWhere('lot.id = :lotId', { lotId });
+    }
+
+    const taskExpenses = await taskExpensesQuery
+      .groupBy('EXTRACT(MONTH FROM task_expense.createdDate)')
+      .getRawMany();
+
+    return taskExpenses;
+  }
+
+  async getIncomeForCostYield(startDate: Date, endDate: Date, landId: number, lotId: number): Promise<any> {
     const incomeRepository = getConnection().getRepository(IncomeEntity);
 
-    try {
-      const monthNames = [
-        'January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'
-      ];
+    const incomesQuery = incomeRepository.createQueryBuilder('income')
+    .select('SUM(income.price)', 'yield')
+    .addSelect('income.month')
 
-      const taskExpensesQuery = taskExpenseRepository.createQueryBuilder('task_expense')
-        .select('SUM(task_expense.value)', 'cost')
-        .addSelect('EXTRACT(MONTH FROM task_expense.createdDate)', 'month')
-
-      const incomesQuery = incomeRepository.createQueryBuilder('income')
-        .select('SUM(income.price)', 'yield')
-        .addSelect('income.month')
-
-      // Filter by date range
-      if (startDate && endDate) {
-        taskExpensesQuery.andWhere('task_expense.createdDate BETWEEN :startDate AND :endDate', {
-          startDate,
-          endDate,
-        });
-        incomesQuery.andWhere('income.createdDate BETWEEN :startDate AND :endDate', {
-          startDate,
-          endDate,
-        });
-      }
-
-      // filtering by landId
-      if (landId) {
-        taskExpensesQuery
-          .innerJoin('task_expense.taskType', 'taskType')
-          .innerJoin('taskType.crop', 'crop')
-          .innerJoin('crop.land', 'land')
-          .andWhere('land.id = :landId', { landId });
-
-        incomesQuery.andWhere('income.landId = :landId', { landId });
-      }
-
-      // filtering by lotId
-      if (lotId) {
-        taskExpensesQuery
-          .innerJoin('task_expense.taskType', 'taskType')
-          .innerJoin('taskType.crop', 'crop')
-          .innerJoin('crop.land', 'land')
-          .innerJoin('land.lot', 'lot')
-          .andWhere('lot.id = :lotId', { lotId });
-
-        incomesQuery
-          .innerJoin('income.land', 'land')
-          .innerJoin('land.lot', 'lot')
-          .andWhere('lot.id = :lotId', { lotId });
-      }
-
-      const taskExpenses = await taskExpensesQuery
-        .groupBy('EXTRACT(MONTH FROM task_expense.createdDate)')
-        .getRawMany();
-
-      const incomes = await incomesQuery
-        .groupBy('income.month')
-        .getRawMany();
-
-      const monthlyData = {};
-      const incomeMonths = incomes.map(item => item.income_month);
-
-      monthNames.forEach((monthName, index) => {
-        const costEntry = taskExpenses.find(item => Number(item.month) === index + 1);
-        const yieldEntry = incomes.find(item => item.income_month === monthName);
-
-        if (costEntry || yieldEntry) {
-          monthlyData[monthName] = {
-            Cost: costEntry ? costEntry.cost || 0 : 0,
-            Yield: yieldEntry ? yieldEntry.yield || 0 : 0
-          };
-        }
+    // Filter by date range
+    if (startDate && endDate) {
+      incomesQuery.andWhere('income.createdDate BETWEEN :startDate AND :endDate', {
+        startDate,
+        endDate,
       });
-
-      return monthlyData;
-    } catch (error) {
-      throw new Error(`Error generating Other Cost / Yield report: ${error}`);
     }
+
+    // filtering by landId
+    if (landId) {
+      incomesQuery.andWhere('income.landId = :landId', { landId });
+    }
+
+    // filtering by lotId
+    if (lotId) {
+      incomesQuery
+        .innerJoin('income.land', 'land')
+        .innerJoin('land.lot', 'lot')
+        .andWhere('lot.id = :lotId', { lotId });
+    }
+
+    const incomes = await incomesQuery
+      .groupBy('income.month')
+      .getRawMany();
+
+    return incomes;
   }
 
   //Employee Perfomance Report
@@ -506,13 +425,6 @@ export class ReportDaoImpl implements ReportDao {
     return monthlyExpenses4;
 
   }
-
-
-
-
-
-
-
 
   //Total - weekly Summary Report
 

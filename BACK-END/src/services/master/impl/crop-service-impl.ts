@@ -165,33 +165,33 @@ export class CropServiceImpl implements CropService {
     return cr;
   }
 
-  /**
- * Find Crop ID by Land ID
- * @param landId - The Land ID to search for
- * @returns CommonResponse with Crop ID or an error message
- */
-  async findCropIdByLandId(landId: number): Promise<CommonResponse> {
-    let cr = new CommonResponse();
-    try {
-      if (landId <= 0) {
-        return CommonResSupport.getValidationException("Invalid Land ID");
-      }
+//   /**
+//  * Find Crop ID by Land ID
+//  * @param landId - The Land ID to search for
+//  * @returns CommonResponse with Crop ID or an error message
+//  */
+//   async findCropIdByLandId(landId: number): Promise<CommonResponse> {
+//     let cr = new CommonResponse();
+//     try {
+//       if (landId <= 0) {
+//         return CommonResSupport.getValidationException("Invalid Land ID");
+//       }
 
-      const cropId = await this.cropDao.findCropIdByLandId(landId);
+//       const cropId = await this.cropDao.findCropIdByLandId(landId);
 
-      if (cropId !== null) {
-        cr.setStatus(true);
-        cr.setExtra(cropId);
-      } else {
-        return CommonResSupport.getValidationException("Crop not found for the given Land ID");
-      }
-    } catch (error) {
-      cr.setStatus(false);
-      cr.setExtra(error);
-      ErrorHandlerSup.handleError(error);
-    }
-    return cr;
-  }
+//       if (cropId !== null) {
+//         cr.setStatus(true);
+//         cr.setExtra(cropId);
+//       } else {
+//         return CommonResSupport.getValidationException("Crop not found for the given Land ID");
+//       }
+//     } catch (error) {
+//       cr.setStatus(false);
+//       cr.setExtra(error);
+//       ErrorHandlerSup.handleError(error);
+//     }
+//     return cr;
+//   }
 
     /**
  * Find Crop name by Land ID

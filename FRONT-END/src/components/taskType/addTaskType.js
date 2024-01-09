@@ -1,4 +1,5 @@
 import  { useState, useEffect } from 'react';
+import axios from 'axios';
 import './addTaskType.css';
 import Footer from '../footer/footer';
 import Header from '../header/header';
@@ -19,9 +20,8 @@ const AddTaskType = ({ setSelectedLandId, selectedLandId }) => {
   const history = useHistory();
 
   const [taskName, setTaskName] = useState('');
-  const [landNames, setLandNames] = useState([]);
   const [landName, setLandName] = useState([]);
-  const cropId = localStorage.getItem('CropIdLand');
+  const [cropId, setCropId] = useState();
 
   //add task type
   const handleAddTask = () => {
@@ -29,6 +29,8 @@ const AddTaskType = ({ setSelectedLandId, selectedLandId }) => {
       taskName,
       cropId
     };
+
+    console.log('Crop id add task type: ', cropId);
 
     submitSets(submitCollection.savetasktype, addTask, false)
       .then(res => {
@@ -41,27 +43,23 @@ const AddTaskType = ({ setSelectedLandId, selectedLandId }) => {
       })
   };
 
-  const handleLanguageChange = (lang) => {
-    i18n.changeLanguage(lang);
-  };
-
-  const goBack = () => {
-    history.goBack();
-  };
-
-  const handleLandChange = (event) => {
-    console.log("Land : ", event);
-    setSelectedLandId(event);
-  };
-
   useEffect(() => {
-    submitSets(submitCollection.manageland, false).then((res) => {
-      setLandNames(res.extra);
-    });
-
     submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true).then((res) => {
       setLandName(res.extra.name);
     });
+
+    //get crop id by using landid
+    axios.get(`http://localhost:8081/service/master/cropFindByLandId/${selectedLandId}`)
+
+      .then((response) => {
+        const cropIdLand = response.data.cropId.extra;
+        setCropId(cropIdLand);
+        console.log('Crop ID From Land :', cropIdLand);
+
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
 
   }, [submitCollection.manageland, selectedLandId]);
 

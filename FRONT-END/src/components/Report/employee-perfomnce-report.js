@@ -4,6 +4,8 @@ import './report.css';
 import { Chart as ChartJS, LineElement, PointElement, Tooltip, Legend, LinearScale, TimeScale } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { Line } from 'react-chartjs-2';
+import { submitCollection } from '../../_services/submit.service';
+import { submitSets } from '../UiComponents/SubmitSets';
 
 ChartJS.register(LineElement, PointElement, Tooltip, Legend, LinearScale, TimeScale);
 
@@ -32,25 +34,33 @@ const EmployeePerfomnceReport = ({ dateRange: { fromDate, toDate }, selectedLand
 
         const fetchPerfomnceData = async () => {
             try {
-                const baseURL = 'http://localhost:8080/service/master/employee-perfomance';
 
                 if (selectedLand) {
                     if (fromDate && toDate) {
-                        const fetchURL = `${baseURL}?landId=${selectedLand}&fromDate=${fromDate}&toDate=${toDate}`
-                        const response = await axios.get(fetchURL);
-                        setPerfomnceData(response.data);
+                        const response = await submitSets(submitCollection.employee_perfomance, '?landId=' + selectedLand + '&fromDate=' + fromDate + '&toDate=' +toDate);
+                        setPerfomnceData(response);
 
                     } else {
-                        const fetchURL = `${baseURL}?landId=${selectedLand}`
-                        const response = await axios.get(fetchURL);
-                        setPerfomnceData(response.data);
+                        const response = await submitSets(submitCollection.employee_perfomance, '?landId=' + selectedLand);
+                        setPerfomnceData(response);
 
                     }
 
                 } else {
-                    const fetchURL = fromDate && toDate ? `${baseURL}?fromDate=${fromDate}&toDate=${toDate}` : baseURL;
-                    const response = await axios.get(fetchURL);
-                    setPerfomnceData(response.data);
+
+                    if(fromDate && toDate) {
+
+                        const response = await submitSets(submitCollection.employee_perfomance, '?fromDate=' + fromDate + '&toDate=' +toDate);
+                        setPerfomnceData(response);
+
+
+                    }else{
+
+                        const response = await submitSets(submitCollection.employee_perfomance);
+                        setPerfomnceData(response);
+
+
+                    }
                 }
 
             } catch (error) {

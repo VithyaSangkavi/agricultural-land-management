@@ -40,24 +40,7 @@ const AddExpenseType = ({ setSelectedLandId, selectedLandId }) => {
       })
   };
 
-  const handleLanguageChange = (lang) => {
-    i18n.changeLanguage(lang);
-  };
-
-  const goBack = () => {
-    history.goBack();
-  };
-
-  const handleLandChange = (event) => {
-    console.log("Land : ", event);
-    setSelectedLandId(event);
-  };
-
   useEffect(() => {
-    submitSets(submitCollection.manageland, false).then((res) => {
-      setLandNames(res.extra);
-    });
-
     submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true).then((res) => {
       setLandName(res.extra.name);
     });

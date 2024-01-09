@@ -30,16 +30,7 @@ function ManageExpenseTypes({ setSelectedLandId, selectedLandId }) {
 
   const history = useHistory();
 
-  const handleLandChange = (event) => {
-    console.log("Land : ", event);
-    setSelectedLandId(event);
-  };
-
   useEffect(() => {
-    submitSets(submitCollection.manageland, false).then((res) => {
-      setLandNames(res.extra);
-    });
-  
     if (selectedLandId) {
       submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true)
         .then((res) => {

@@ -6,8 +6,7 @@ jest.setTimeout(9000000);
 
 describe("Summary Service Test ", () => {
 
-    const reportService: ReportService = new ReportServiceImpl();
-
+    let reportService: ReportService = new ReportServiceImpl();
 
     test("find CIR", async () => {
         const expectedValue = 0.03;
@@ -28,6 +27,5 @@ describe("Summary Service Test ", () => {
 
         expect(Profit).toEqual(expectedValue);
     });
-
 
   });

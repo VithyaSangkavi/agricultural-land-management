@@ -41,6 +41,7 @@ export class TaskTypeDaoImpl implements TaskTypeDao {
       return null;
     }
   }
+
   async findAll(taskDto: TaskTypeDto): Promise<TaskTypeEntity[]> {
     let taskRepo = getConnection().getRepository(TaskTypeEntity);
     let searchObject: any = this.prepareSearchObject(taskDto);
@@ -52,12 +53,14 @@ export class TaskTypeDaoImpl implements TaskTypeDao {
     });
     return taskModel;
   }
+
   async findCount(taskDto: TaskTypeDto): Promise<number> {
     let taskRepo = getConnection().getRepository(TaskTypeEntity);
     let searchObject: any = this.prepareSearchObject(taskDto);
     let taskModel = await taskRepo.count({ where: searchObject });
     return taskModel;
   }
+  
   async findById(taskId: number): Promise<TaskTypeEntity> {
     let taskRepo = getConnection().getRepository(TaskTypeEntity);
     let taskModel = await taskRepo.findOne(taskId);
@@ -69,6 +72,7 @@ export class TaskTypeDaoImpl implements TaskTypeDao {
     let taskModel = await taskRepo.findOne({ where: { taskName: taskName, status: Status.Online } });
     return taskModel;
   }
+  
   async prepareTaskModel(taskModel: TaskTypeEntity, taskDto: TaskTypeDto) {
     taskModel.taskName = taskDto.getTaskName();
     taskModel.createdDate = new Date();

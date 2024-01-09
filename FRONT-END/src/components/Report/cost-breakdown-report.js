@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import './report.css';
 import { Chart as ChartJS, registerables } from 'chart.js';
 import { Line, Pie, Bar } from 'react-chartjs-2';
 import 'chartjs-plugin-datalabels';
+import { submitCollection } from '../../_services/submit.service';
+import { submitSets } from '../UiComponents/SubmitSets';
 
 ChartJS.register(...registerables);
 
@@ -17,45 +18,49 @@ const CostBreakdownReport = ({ fromDate, selectedLand }) => {
 
     console.log("Cost-b-down fromDate: ", fromDate)
 
-    if(fromDate === `1970-01-01`){
-        fromDate = '';
+    if (fromDate === `1970-01-01`) {
+        fromDate = null;
     }
 
     console.log("Cost-b-down fromDate 1: ", fromDate)
 
-    useEffect((fromDate) => {
+    useEffect(() => {
         const fetchCostBreakdownLineData = async () => {
             try {
-
-                const baseURL = 'http://localhost:8080/service/master/cost-breakdown-line'
-                const fetchURL = selectedLand ? `${baseURL}?landId=${selectedLand}` : baseURL;
-
 
                 if (selectedLand) {
                     if (fromDate) {
 
-                        const fetchURL = `${baseURL}?fromDate=${fromDate}&landId=${selectedLand}`
-                        const response = await axios.get(fetchURL)
-                        console.log("Line : ", response.data);
-                        setCostBreakdownLineData(response.data);
-                        setYearMonth(response.data)
+                        const response = await submitSets(submitCollection.cost_breakdown_line, "?fromDate=" + fromDate + '&landId=' + selectedLand, true)
+                        console.log("Line : ", response);
+                        setCostBreakdownLineData(response);
+                        setYearMonth(response)
 
                     } else {
 
-                        const fetchURL = `${baseURL}?landId=${selectedLand}`
-                        const response = await axios.get(fetchURL)
-                        console.log("Line : ", response.data);
-                        setCostBreakdownLineData(response.data);
+                        const response = await submitSets(submitCollection.cost_breakdown_line, '?landId=' + selectedLand, true)
+                        console.log("Line : ", response);
+                        setCostBreakdownLineData(response);
 
                     }
 
                 } else {
 
-                    const fetchURL = fromDate ? `${baseURL}?fromDate=${fromDate}` : baseURL;
-                    const response = await axios.get(fetchURL)
-                    console.log("Line : ", response.data);
-                    setCostBreakdownLineData(response.data);
-                    setYearMonth(response.data)
+                    if(fromDate) {
+
+                        const response = await submitSets(submitCollection.cost_breakdown_line, "?fromDate=" + fromDate, true)
+                        console.log("Line : ", response);
+                        setCostBreakdownLineData(response);
+                        setYearMonth(response)
+
+                    } else {
+
+                        const response = await submitSets(submitCollection.cost_breakdown_line, false)
+                        console.log("Line : ", response);
+                        setCostBreakdownLineData(response);
+                        setYearMonth(response)
+
+                    }
 
                 }
 
@@ -66,9 +71,9 @@ const CostBreakdownReport = ({ fromDate, selectedLand }) => {
 
         const fetchCostBreakdownPieData = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/service/master/cost-breakdown-pie');
-                console.log("Pie : ", response.data);
-                setCostBreakdownPieData(response.data);
+                const response = await submitSets(submitCollection.cost_breakdown_pie);
+                console.log("Pie : ", response);
+                setCostBreakdownPieData(response);
             } catch (error) {
                 console.error('Error fetching Cost Breakdown:', error);
             }
@@ -237,7 +242,7 @@ const CostBreakdownReport = ({ fromDate, selectedLand }) => {
                 </div>
             </div>
 
-            <br/>
+            <br />
         </>
     );
 };

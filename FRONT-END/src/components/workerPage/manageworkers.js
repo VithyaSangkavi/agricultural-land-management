@@ -61,9 +61,6 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
   }
 
   useEffect(() => {
-    submitSets(submitCollection.manageland, false).then((res) => {
-      setLandNames(res.extra);
-    });
 
     if (selectedLandId) {
       submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true)
@@ -78,11 +75,6 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
     }
   }, [submitCollection.manageland, selectedLandId]);
 
-  const handleLandChange = (event) => {
-    console.log("Land : ", event);
-    setSelectedLandId(event);
-  };
-
   useEffect(() => {
     const getWorker = {
       landId: parseInt(selectedLandId),
@@ -93,10 +85,12 @@ function ManageWorkers({ setSelectedLandId, selectedLandId }) {
 
     submitSets(submitCollection.findworkerbyland, getWorker, false)
       .then(res => {
-        if (res.extra.length === 0) {
-          alertService.info('No Data Found !')
+        if(selectedLandId !== ''){
+          if (res.extra.length === 0) {
+            alertService.info('No Data Found !')
+          }
         }
-
+        
         if (Array.isArray(res.extra)) {
           setFilteredWorkersForSelectedLand(res.extra);
         } else {
