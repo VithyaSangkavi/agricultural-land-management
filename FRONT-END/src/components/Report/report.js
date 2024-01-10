@@ -143,8 +143,8 @@ function Report({ setSelectedLandId, selectedLandId }) {
         axios.get('http://localhost:8081/service/master/lotFindAll')
        // submitSets(submitCollection.findalllot, true)
             .then((response) => {
-                setLots(response.data.extra);
-                console.log("Lots : ", response.data.extra);
+                setLots(response.extra);
+                console.log("Lots : ", response.extra);
             });
     }, [])
 
