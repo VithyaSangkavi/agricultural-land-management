@@ -119,6 +119,10 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
 
   //update worker
   const handleUpdateWorker = () => {
+    let sendobjoriginal = JSON.parse(JSON.stringify(submitCollection.updateworker));
+    let sendobj = submitCollection.updateworker;
+    sendobj.url = (sendobj.url + '?workerId=' + workerId);
+
     const updatedWorker = {
       name,
       dob,
@@ -133,14 +137,15 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
 
     console.log('new update worker id: ', workerId);
     //axios.post(`http://localhost:8081/service/master/workerUpdate?workerId=${workerId}`, updatedWorker)
-      submitSets(submitCollection.updateworker, "?workerId=" + workerId, updatedWorker, true)
+    submitSets(submitCollection.updateworker, updatedWorker, true)
       .then((response) => {
-        if (response.status === 200) {
-          alertService.success("Worker updated successfully")
-          history.push('/manageWorkers')
-        } else {
-          alertService.error("Updating worker failed")
-        }
+        console.log(response);
+        console.log(sendobjoriginal);
+        sendobj.url = sendobjoriginal.url
+
+        alertService.success("Worker updated successfully")
+        history.push('/manageWorkers')
+
       })
       .catch((error) => {
         console.error('Error updating worker:', error);
@@ -194,6 +199,10 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
           }
         })
     } else {
+      let sendobjoriginal = JSON.parse(JSON.stringify(submitCollection.updatepayment));
+      let sendobj = submitCollection.updatepayment;
+      sendobj.url = (sendobj.url + '?paymentId=' + paymentId);
+
       const updatedPayment = {
         paymentType,
         basePayment,
@@ -201,15 +210,16 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
         attendancePayment
       };
 
-      axios.post(`http://localhost:8081/service/master/paymentUpdate?paymentId=${paymentId}`, updatedPayment)
-        //submitSets(submitCollection.updatepayment, "?paymentId=" + paymentId, updatedPayment, true)
+      //axios.post(`http://localhost:8081/service/master/paymentUpdate?paymentId=${paymentId}`, updatedPayment)
+      submitSets(submitCollection.updatepayment, updatedPayment, true)
         .then((response) => {
-          if (response.status === 200) {
-            alertService.success("Payment updated successfully")
-            history.push('/manageWorkers')
-          } else {
-            alertService.error("Updating payment failed")
-          }
+          console.log(response);
+          console.log(sendobjoriginal);
+          sendobj.url = sendobjoriginal.url
+
+          alertService.success("Payment updated successfully")
+          history.push('/manageWorkers')
+
         })
         .catch((error) => {
           console.error('Error updating payment:', error);
