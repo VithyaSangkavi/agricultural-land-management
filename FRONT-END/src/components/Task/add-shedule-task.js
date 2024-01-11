@@ -101,8 +101,8 @@ const ManageTask = ({ selectedLandId }) => {
 
 
     const fetchWorkerNames = () => {
-        // axios.get(`http://localhost:8081/service/master/findByLandId?landId=${selectedLandId}`)
-        submitSets(submitCollection.findByLandId, '?landId=' + selectedLandId)
+        // axios.get(`http://localhost:8081/service/master/findWorkersByLandId?landId=${selectedLandId}`)
+        submitSets(submitCollection.findWorkersByLandId, '?landId=' + selectedLandId)
             .then((response) => {
                 const workerNamesArray = response.extra.map((worker) => worker.name);
                 setWorkerNames(workerNamesArray);
@@ -145,7 +145,7 @@ const ManageTask = ({ selectedLandId }) => {
 
         //get expense id according to the expense type
 
-        // axios.get(`http://localhost:8080/service/master/find-by-type?expenseType=${selectedExpenseType}`)
+        // axios.get(`http://localhost:8081/service/master/find-by-type?expenseType=${selectedExpenseType}`)
         submitSets(submitCollection.find_by_type, '?expenseType=' + selectedExpenseType, true)
             .then((response) => {
                 const expenseId = response.expenseId;
@@ -323,7 +323,7 @@ const ManageTask = ({ selectedLandId }) => {
     };
 
     const addWorkerToTaskCard = (taskCardId, selectedWorker, quantity, dateIndex) => {
-        // axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${selectedWorker}`)
+        // axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${selectedWorker}`)
 
         let sendobjoriginal = JSON.parse(JSON.stringify(submitCollection.findWorkerIdByName));
         let sendobj = submitCollection.findWorkerIdByName;
@@ -376,7 +376,7 @@ const ManageTask = ({ selectedLandId }) => {
         console.log('date index:', dateIndex)
         console.log('date index:', workerName)
 
-        // axios.delete(`http://localhost:8080/service/master/work-assigned-delete/${workAssignedId}`)
+        // axios.delete(`http://localhost:8081/service/master/work-assigned-delete/${workAssignedId}`)
 
         let sendobjoriginal = JSON.parse(JSON.stringify(submitCollection.work_assigned_delete));
         let sendobj = submitCollection.work_assigned_delete;
