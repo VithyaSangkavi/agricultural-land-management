@@ -22,7 +22,6 @@ router.post("/login", userController.login);
 
 //crop routes
 router.post("/cropSave", cropController.save);
-router.get('/cropFindByLandId/:landId', cropController.findCropIdByLandId);
 router.get('/cropNameFindByLandId/:landId', cropController.findCropNameByLandId);
 /* router.post("/cropUpdate", cropController.update);
 router.post("/cropDelete", cropController.delete);
@@ -49,6 +48,7 @@ router.post("/landSave", landController.save);
 router.get("/landFindAll", landController.findAll);
 router.get("/landFind", landController.findById);
 router.post('/findLandIdByName', landController.findLandIdByName);
+router.get('/cropFindByLandId/:landId', landController.findCropIdByLandId);
 
 //lot routes
 router.post("/lotSave", lotController.save);
@@ -64,7 +64,7 @@ router.post("/workerFindAll", workerController.findAll);
 router.get("/workerFindById", workerController.findById);
 router.post('/findWorkByLandId', workerController.findWorkByLandId);
 router.post('/findWorkerIdByName', workerController.findWorkerIdByName);
-router.get('/findByLandId', workerController.findByLandId);
+router.get('/findWorkersByLandId', workerController.findByLandId);
 
 // task-type routes
 router.post("/taskSave", taskTypeController.save);
@@ -76,7 +76,7 @@ router.get('/findTaskNameById', taskTypeController.findTaskNameById);
 
 // payment routes
 router.post("/paymentSave", paymentController.save);
-router.get('/findByWorkerId', paymentController.findByWorkerId);
+router.get('/findPaymentByWorkerId', paymentController.findByWorkerId);
 router.post("/paymentUpdate", paymentController.update);
 // router.post("/taskDelete", taskTypeController.delete);
 // router.post("/taskFindAll", taskTypeController.findAll);

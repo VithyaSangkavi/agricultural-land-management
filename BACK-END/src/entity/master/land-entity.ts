@@ -51,4 +51,5 @@ export class LandEntity {
 
     @OneToMany(() => TaskAssignedEntity, (taskAssigned) => taskAssigned.land)
     taskAssigned: TaskAssignedEntity[];
+
 }

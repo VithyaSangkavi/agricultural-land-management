@@ -112,8 +112,8 @@ const ManageTask = ({ selectedLandId }) => {
     //fetch worker names according to the landId
     const fetchWorkerNames = () => {
 
-        // axios.get(`http://localhost:8080/service/master/findByLandId?landId=${selectedLandId}`)
-        submitSets(submitCollection.findByLandId, "?landId=" + selectedLandId, true)
+        // axios.get(`http://localhost:8080/service/master/findWorkersByLandId?landId=${selectedLandId}`)
+        submitSets(submitCollection.findWorkersByLandId, "?landId=" + selectedLandId, true)
 
             .then((response) => {
                 const workerNamesArray = response.extra.map((worker) => worker.name);
@@ -264,16 +264,23 @@ const ManageTask = ({ selectedLandId }) => {
     }
 
     const addWorkerToPluckTaskCard = (taskCardId) => {
+        
         const selectedWorker = localStorage.getItem('selectedWorker');
         console.log('add -> selected worker pluck task: ', selectedWorker);
         console.log('Quantity: ', quantity);
 
-        axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${selectedWorker}`)
-            // submitSets(submitCollection.findWorkerIdByName, '?name=' + name, true)
+        let sendobjoriginal = JSON.parse(JSON.stringify(submitCollection.findWorkerIdByName));
+        let sendobj = submitCollection.findWorkerIdByName;
+        sendobj.url = (sendobj.url + '?name=' + selectedWorker);
 
+        //axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${selectedWorker}`)
+        submitSets(submitCollection.findWorkerIdByName, true)
             .then((response) => {
-                const workerId = response.extra.workerId;
+                const workerId = response.extra.workerId
                 console.log('Worker ID :', workerId);
+
+                console.log(sendobjoriginal);
+                sendobj.url = sendobjoriginal.url
 
                 const addWorkAssigned = {
                     startDate,
@@ -307,14 +314,20 @@ const ManageTask = ({ selectedLandId }) => {
         // const selectedWorker = localStorage.getItem('selectedWorker');
         console.log('add -> selected worker: ', selectedWorker);
 
-        axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${selectedWorker}`)
-            // submitSets(submitCollection.findWorkerIdByName, '?name=' + name, true)
+        let sendobjoriginal = JSON.parse(JSON.stringify(submitCollection.findWorkerIdByName));
+        let sendobj = submitCollection.findWorkerIdByName;
+        sendobj.url = (sendobj.url + '?name=' + selectedWorker);
 
+
+        //axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${selectedWorker}`)
+        submitSets(submitCollection.findWorkerIdByName, true)
 
             .then((response) => {
-                const workerId = response.extra.workerId;
+                const workerId = response.extra.workerId
                 console.log('Worker ID :', workerId);
 
+                console.log(sendobjoriginal);
+                sendobj.url = sendobjoriginal.url
                 const addWorkAssigned = {
                     startDate,
                     workerId,
@@ -447,13 +460,19 @@ const ManageTask = ({ selectedLandId }) => {
     }
 
     const deleteItem = (workerName) => {
-        axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${workerName}`)
-            // submitSets(submitCollection.findWorkerIdByName, '?name=' + name, true)
+        let sendobjoriginal = JSON.parse(JSON.stringify(submitCollection.findWorkerIdByName));
+        let sendobj = submitCollection.findWorkerIdByName;
+        sendobj.url = (sendobj.url + '?name=' + workerName);
+        //axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${workerName}`)
+            submitSets(submitCollection.findWorkerIdByName, true)
 
             .then((response) => {
                 const thisid = response.extra.workerId
-                console.log("Delete")
-                console.log('workerid:', response.extra.workerId);
+                console.log('Worker ID :', thisid);
+
+                console.log(sendobjoriginal);
+                sendobj.url = sendobjoriginal.url
+
                 console.log('Task card id: ', taskCardId)
 
                 axios.delete(`http://localhost:8080/service/master/work-assigned-delete/${thisid}/${taskCardId}`)
@@ -605,11 +624,11 @@ const ManageTask = ({ selectedLandId }) => {
                                         <div className="kg-input-container">
                                             <div className="kg-input">
                                                 <input
-                                                    type="text"
+                                                    type="number"
                                                     placeholder={t('numberofkg')}
                                                     value={kgValues[index] || ''}
                                                     onChange={(e) => handleKgChange(e, index)}
-                                                    className="dropdown-input"
+                                                    className="quantity-input"
                                                 />
                                                 <span className="add-kg-icon">
                                                     <FontAwesomeIcon icon={faPlus} onClick={addQuantity} />

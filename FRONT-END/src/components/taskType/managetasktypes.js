@@ -1,15 +1,11 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useHistory } from "react-router-dom";
 import './managetasktypes.css';
 import Footer from '../footer/footer';
 import Header from '../header/header';
-import { FaGlobeAmericas, FaSearch, FaMapMarker } from 'react-icons/fa';
-import { Dropdown } from 'react-bootstrap';
+import { FaSearch, FaMapMarker } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
-import { MdArrowBackIos } from "react-icons/md";
 import { submitCollection } from '../../_services/submit.service';
-import { Col, Form } from 'react-bootstrap';
 import { submitSets } from '../UiComponents/SubmitSets';
 import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
@@ -24,20 +20,10 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
   const [landNames, setLandNames] = useState([]);
   const [landName, setLandName] = useState([]);
 
-
-
   const history = useHistory();
 
-  const handleLandChange = (event) => {
-    console.log("Land : ", event);
-    setSelectedLandId(event);
-  };
-
   useEffect(() => {
-    submitSets(submitCollection.manageland, false).then((res) => {
-      setLandNames(res.extra || []);
-    });
-
+    
     if (selectedLandId && selectedLandId !== "") {
       submitSets(submitCollection.getlandbyid, `?landId=${selectedLandId}`, true)
         .then((res) => {
@@ -58,19 +44,12 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
 
   useEffect(() => {
 
-    // axios.post('http://localhost:8080/service/master/taskFindAll')
     submitSets(submitCollection.taskFindAll, true)
       .then((response) => {
-        setTasks(response.data.extra);
-        console.log("Tasks : ", response.data.extra);
+        setTasks(response.extra);
+        console.log("Tasks : ", response.extra);
       });
 
-    // axios.get('http://localhost:8080/service/master/landFindAll')
-    submitSets(submitCollection.manageland, true)
-      .then((response) => {
-        setLands(response.data.extra);
-        console.log("Lands : ", response.data.extra);
-      });
   }, []);
 
   const handleSearchChange = (event) => {
@@ -79,25 +58,6 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
   const filteredTasks = tasks.filter((tasks) =>
     tasks.taskName.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-
-  useEffect(() => {
-    //get crop id by using landid
-    // axios.get(`http://localhost:8080/service/master/cropFindByLandId/${selectedLandId}`)
-    submitSets(submitCollection.cropFindByLandId, "/" + selectedLandId, true)
-
-      .then((response) => {
-        const cropIdLand = response.data.cropId.extra;
-        localStorage.setItem('CropIdLand', cropIdLand);
-        console.log('Crop API Response:', response.data);
-
-        console.log('Crop ID From Land :', cropIdLand);
-
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, [selectedLandId]);
 
   const AddTaskType = () => {
     history.push('/addTaskType')

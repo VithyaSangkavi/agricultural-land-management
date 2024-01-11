@@ -4,17 +4,13 @@ import { useHistory } from "react-router-dom";
 import './completed-task.css';
 import Footer from '../footer/footer';
 import Header from '../header/header';
-import { FaGlobeAmericas, FaMapMarker } from 'react-icons/fa';
-import { Col, Form } from 'react-bootstrap';
-import { Dropdown } from 'react-bootstrap';
+import { FaMapMarker } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import { submitSets } from '../UiComponents/SubmitSets';
 import { submitCollection } from '../../_services/submit.service';
 import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 import { alertService } from '../../_services/alert.service';
-
-import { MdArrowBackIos } from "react-icons/md";
 
 function Home({ setSelectedLandId, selectedLandId }) {
     const [t, i18n] = useTranslation();
@@ -83,16 +79,15 @@ function Home({ setSelectedLandId, selectedLandId }) {
                 setOngoingTasks([]);
             });
 
-        axios.get(`http://localhost:8080/service/master/completed-tasks-with-names?landId=${selectedLandId}`)
-        // submitSets(submitCollection.completed_tasks_with_names, "?landId=" + selectedLandId, true)
+        submitSets(submitCollection.completed_tasks_with_names, "?landId=" + selectedLandId, true)
             .then((response) => {
 
-                if (response.data.extra.length === 0) {
+                if (response.extra.length === 0) {
                     alertService.info('No Data Found !');
                 }
 
-                setOngoingTasks(response.data.extra);
-                console.log("Ongoing tasks : ", response.data.extra);
+                setOngoingTasks(response.extra);
+                console.log("Ongoing tasks : ", response.extra);
 
             });
 

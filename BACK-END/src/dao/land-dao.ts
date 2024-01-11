@@ -11,4 +11,5 @@ export interface LandDao {
     findByName(landName: String): Promise<LandEntity>;
     findCount(departmentDto: LandDto): Promise<number>;
     findLandIdByName(name: String): Promise<number>;
+    findCropIdByLandId(landId: number): Promise<number>;
 }

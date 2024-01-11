@@ -43,7 +43,6 @@ function Home({ setSelectedLandId, selectedLandId, selectedCrop }) {
 
 
     useEffect(() => {
-
         
         submitSets(submitCollection.taskAssignedFindAll, false).then((response) => {
             setTaskAssigned(response);
@@ -81,10 +80,6 @@ function Home({ setSelectedLandId, selectedLandId, selectedCrop }) {
     // };
 
     useEffect(() => {
-        submitSets(submitCollection.manageland, false).then((res) => {
-            setLandNames(res.extra);
-        });
-
         if (selectedLandId) {
             submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true)
                 .then((res) => {

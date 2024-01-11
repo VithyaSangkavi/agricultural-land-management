@@ -28,4 +28,5 @@ export class CropEntity {
 
     @OneToMany(() => TaskTypeEntity, (task) => task.crop)
     task: TaskTypeEntity[];
+  
 }

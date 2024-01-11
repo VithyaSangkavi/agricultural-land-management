@@ -7,4 +7,5 @@ export interface LandService {
     delete(landDto: LandDto): Promise<CommonResponse>;
     find(landDto: LandDto): Promise<CommonResponse>;
     findById(landId: number): Promise<CommonResponse>;
+    findCropIdByLandId(landId: number): Promise<CommonResponse>
 }

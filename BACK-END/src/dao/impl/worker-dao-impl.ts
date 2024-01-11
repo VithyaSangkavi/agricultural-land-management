@@ -24,6 +24,7 @@ export class WorkerDaoImpl implements WorkerDao {
 
   async update(workerDto: WorkerDto): Promise<WorkerEntity> {
     let workerRepo = getConnection().getRepository(WorkerEntity);
+    console.log('get worker id: ', workerDto.getWorkerId());
     let workerModel = await workerRepo.findOne(workerDto.getWorkerId());
     if (workerModel) {
       this.prepareWorkerModel(workerModel, workerDto);

@@ -53,7 +53,6 @@ function HomeNewTasks({ setSelectedLandId, selectedLandId }) {
             setLandName(res.extra.name);
         });
 
-
     }, [submitCollection.manageland, selectedLandId]);
 
     const handleSearchChange = (event) => {
@@ -76,19 +75,6 @@ function HomeNewTasks({ setSelectedLandId, selectedLandId }) {
     const filteredTaskAssigned = Array.isArray(taskAssigned)
         ? taskAssigned.filter((task) => task.taskAssignedId)
         : [];
-
-    const handleLanguageChange = (lang) => {
-        i18n.changeLanguage(lang);
-    };
-
-    const handleTaskClick = (taskAssignedid) => {
-        history.push(`/manageOngoingTask/${taskAssignedid}`);
-        console.log("task assigned : ", taskAssignedid);
-    };
-
-    const goBack = () => {
-        history.goBack(); 
-    };
 
     return (
         <div className="home-app-screen">

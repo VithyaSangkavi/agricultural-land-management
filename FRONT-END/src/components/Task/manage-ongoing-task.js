@@ -259,8 +259,8 @@ const ManageOngoingTask = ({ selectedLandId }) => {
 
     const fetchWorkerNames = () => {
 
-        // axios.get(`http://localhost:8080/service/master/findByLandId?landId=${selectedLandId}`)
-        submitSets(submitCollection.findByLandId, "?landId=" + selectedLandId, true)
+        // axios.get(`http://localhost:8080/service/master/findWorkersByLandId?landId=${selectedLandId}`)
+        submitSets(submitCollection.findWorkersByLandId, "?landId=" + selectedLandId, true)
 
             .then((response) => {
                 console.log("worker names : ", response.extra);

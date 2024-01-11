@@ -90,19 +90,6 @@ const AddTask = ({ selectedLandId }) => {
       });
   };
 
-  const handleLanguageChange = (lang) => {
-    i18n.changeLanguage(lang);
-  };
-
-
-  const handleSheduleTask = () => {
-    history.push('/addsheduledtask');
-  };
-
-  const goBack = () => {
-    history.goBack();
-  };
-
   return (
     <div className="task-app-screen">
       <Header />
