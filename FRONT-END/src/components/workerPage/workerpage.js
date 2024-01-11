@@ -1,18 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import './workerpage.css';
 import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
 import { alertService } from '../../_services/alert.service';
 import Footer from '../footer/footer';
 import Header from '../header/header';
-import { Form, Button, Container, Col, Row, Card } from 'react-bootstrap';
-import DatePicker from 'react-datepicker';
 import { useHistory, useLocation } from "react-router-dom";
-import { FaGlobeAmericas, FaLanguage, FaMapMarker } from 'react-icons/fa';
-import { Dropdown, DropdownButton } from 'react-bootstrap';
+import { FaMapMarker } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
-import { MdArrowBackIos } from "react-icons/md";
 import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 
@@ -136,7 +131,7 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
     };
 
     console.log('new update worker id: ', workerId);
-    //axios.post(`http://localhost:8081/service/master/workerUpdate?workerId=${workerId}`, updatedWorker)
+
     submitSets(submitCollection.updateworker, updatedWorker, true)
       .then((response) => {
         console.log(response);
@@ -210,7 +205,6 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
         attendancePayment
       };
 
-      //axios.post(`http://localhost:8081/service/master/paymentUpdate?paymentId=${paymentId}`, updatedPayment)
       submitSets(submitCollection.updatepayment, updatedPayment, true)
         .then((response) => {
           console.log(response);

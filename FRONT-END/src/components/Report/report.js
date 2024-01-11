@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useHistory } from "react-router-dom";
 import '../home/home.css';
 import './report.css'
 import Footer from '../footer/footer';
 import Header from '../header/header'
-import { FaGlobeAmericas, FaMapMarker } from 'react-icons/fa';
-import { Dropdown } from 'react-bootstrap';
+import { FaMapMarker } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
-import { FaFilter, FaUndo, FaCalendarAlt } from 'react-icons/fa';
+import { FaFilter, FaCalendarAlt } from 'react-icons/fa';
 import EmployeeAttendanceReport from './employee-attendance-report';
 import MonthlyCropReport from './monthly-crop-report';
 import CostYieldReport from './other-cost-yield-report';
@@ -19,9 +17,6 @@ import { submitSets } from '../UiComponents/SubmitSets';
 import { connect } from 'react-redux';
 import { submitCollection } from '../../_services/submit.service';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
-import { alertService } from '../../_services/alert.service';
-import { Col, Form } from 'react-bootstrap';
-import { MdArrowBackIos } from "react-icons/md";
 import { DateRange } from 'react-date-range';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
@@ -140,8 +135,7 @@ function Report({ setSelectedLandId, selectedLandId }) {
 
     useEffect(() => {
         //lot find all
-        axios.get('http://localhost:8081/service/master/lotFindAll')
-       // submitSets(submitCollection.findalllot, true)
+        submitSets(submitCollection.findalllot, true)
             .then((response) => {
                 setLots(response.extra);
                 console.log("Lots : ", response.extra);

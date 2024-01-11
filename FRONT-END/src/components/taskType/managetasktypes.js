@@ -1,15 +1,11 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useHistory } from "react-router-dom";
 import './managetasktypes.css';
 import Footer from '../footer/footer';
 import Header from '../header/header';
-import { FaGlobeAmericas, FaSearch, FaMapMarker } from 'react-icons/fa';
-import { Dropdown } from 'react-bootstrap';
+import { FaSearch, FaMapMarker } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
-import { MdArrowBackIos } from "react-icons/md";
 import { submitCollection } from '../../_services/submit.service';
-import { Col, Form } from 'react-bootstrap';
 import { submitSets } from '../UiComponents/SubmitSets';
 import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
@@ -48,11 +44,10 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
 
   useEffect(() => {
 
-    axios.post('http://localhost:8081/service/master/taskFindAll')
-    //submitSets(submitCollection.taskFindAll, true)
+    submitSets(submitCollection.taskFindAll, true)
       .then((response) => {
-        setTasks(response.data.extra);
-        console.log("Tasks : ", response.data.extra);
+        setTasks(response.extra);
+        console.log("Tasks : ", response.extra);
       });
 
   }, []);
