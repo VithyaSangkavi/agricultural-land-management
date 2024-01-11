@@ -162,7 +162,7 @@ class App extends React.Component {
           <RoleBasedRouting path="/home"><Home /></RoleBasedRouting>
           <RoleBasedRouting path="/addTask"><AddTask /></RoleBasedRouting>
           <RoleBasedRouting path="/manageTask"><ManageTask /></RoleBasedRouting>
-          <RoleBasedRouting path="/manageOngoingTask/:taskAssignedid"><ManageOngoingTask /></RoleBasedRouting> 
+          <RoleBasedRouting path="/manageOngoingTask/:taskAssignedid/:taskId"><ManageOngoingTask /></RoleBasedRouting> 
           <RoleBasedRouting path="/viewcompltedtasks"><ViewCompletedTasks /></RoleBasedRouting>
           <RoleBasedRouting path="/report"><Report /></RoleBasedRouting>
 

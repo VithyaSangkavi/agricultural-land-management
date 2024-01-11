@@ -41,12 +41,15 @@ const ManageOngoingTask = ({ selectedLandId }) => {
 
 
     const [t, i18n] = useTranslation();
-    const { taskAssignedid } = useParams();
+    const { taskAssignedid, taskId } = useParams();
+
+    console.log("Task assigned : ", taskAssignedid);
+    console.log("task id : ", taskId);
 
     const history = useHistory();
 
-    const taskId = localStorage.getItem('TaskIDFromTaskAssigned')
-    const startDate = localStorage.getItem('StartDate');
+    // const taskId = localStorage.getItem('TaskIDFromTaskAssigned')
+    // const startDate = localStorage.getItem('StartDate');
     const landId = localStorage.getItem('SelectedLandId')
 
     const [taskName, setTaskName] = useState('');
@@ -83,6 +86,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
     const [showExpenses, setShowExpenses] = useState(false);
     const [totalAmount, setTotalAmount] = useState(0);
     const [quantityForPluck, setQuantityForPluck] = useState({});
+    const [startDate, setStartDate] = useState('');
 
 
 
@@ -135,7 +139,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                 console.log(response);
                 console.log(sendobjoriginal);
                 sendobj.url = sendobjoriginal.url
-                window.location.reload();
+                window.location.reload()
             })
             .catch((error) => {
                 console.error(`Error updating TaskCard ${taskCardId} status:`, error);
@@ -198,6 +202,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                 setTaskStatus(response.extra.taskStatus);
                 const workerNames = [...new Set(response.extra.cardDetails.flatMap(card => card.workerDetails.map(worker => worker.workerName)))];
                 console.log(workerNames)
+                console.log("st : ", response.extra.startDate)
 
                 const formattedStartDate = getFormattedDate(response.extra.startDate);
                 setOngoingTaskDate(formattedStartDate);
@@ -207,10 +212,11 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                     (card) => getFormattedDate(card.date) === today
                 );
 
-                // axios.get(`http://localhost:8080/service/master/taskAssignedFindById?taskAssignedId=${taskAssignedid}`)
-                submitSets(submitCollection.taskAssignedFindById, '?taskAssignedId=' + taskAssignedid, true)
+                axios.get(`http://localhost:8080/service/master/taskAssignedFindById?taskAssignedId=${taskAssignedid}`)
+                    // submitSets(submitCollection.taskAssignedFindById, '?taskAssignedId=' + taskAssignedid, true)
                     .then((taskResponse) => {
-                        const schedule = taskResponse.extra.schedule;
+                        const schedule = taskResponse.data.extra.schedule;
+                        setStartDate(taskResponse.data.extra.startDate);
                         console.log('SCHEDULE ::::::: ', schedule)
                         if (schedule !== 'scheduled' && !isCardExist) {
                             // If the task is not scheduled and the card for today doesn't exist, generate a new card
@@ -235,8 +241,8 @@ const ManageOngoingTask = ({ selectedLandId }) => {
 
 
     const fetchTaskName = () => {
-        // axios.get(`http://localhost:8080/service/master/findTaskNameById/?taskId=${taskId}`)
-        submitSets(submitCollection.findTaskNameById, '/?taskId=' + taskId, true)
+        axios.get(`http://localhost:8080/service/master/findTaskNameById?taskId=${taskId}`)
+            // submitSets(submitCollection.findTaskNameById, '?taskId=' + taskId, true)
             .then((response) => {
 
                 setTaskName(response.extra.taskName);
@@ -388,6 +394,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                                         lotId,
                                         taskCardId: newtaskCardId,
                                         quantity,
+
                                     };
 
                                     // axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
@@ -395,7 +402,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                                         .then((response) => {
                                             console.log('Work assigned added successfully:', response.data);
                                             alertService.success('Worker added successfully');
-                                            window.location.reload();
+                                            window.location.reload()
                                         })
                                         .catch((error) => {
                                             console.error('Error adding work assigned:', error);
@@ -422,7 +429,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                                     console.log('Work assigned added successfully:', response);
                                     alertService.success('Worker added successfully');
                                     AddedWorkerList();
-                                    window.location.reload();
+                                    window.location.reload()
                                 })
                                 .catch((error) => {
                                     console.error('Error adding work assigned:', error);
@@ -484,7 +491,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                                         taskId,
                                         taskAssignedId: taskAssignedid,
                                         lotId,
-                                        taskCardId: newtaskCardId
+                                        taskCardId: newtaskCardId,
                                     }
 
                                     // axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
@@ -492,7 +499,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                                         .then((response) => {
                                             console.log('Work assigned added successfully:', response.data);
                                             alertService.success('Worker added successfully');
-                                            window.location.reload();
+                                            window.location.reload()
                                         })
                                         .catch((error) => {
                                             console.error('Error adding work assigned:', error);
@@ -510,7 +517,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                                 taskId,
                                 taskAssignedId: taskAssignedid,
                                 lotId,
-                                taskCardId: taskCardId
+                                taskCardId: taskCardId,
                             }
 
                             // axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
@@ -519,7 +526,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                                     console.log('Work assigned added successfully:', response.data);
                                     alertService.success('Worker added successfully');
                                     AddedWorkerList();
-                                    window.location.reload();
+                                    window.location.reload()
                                 })
                                 .catch((error) => {
                                     console.error('Error adding work assigned:', error);
@@ -602,7 +609,8 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                     workerId,
                     taskId,
                     taskAssignedId: taskAssignedid,
-                    lotId
+                    lotId,
+
                 }
 
                 // axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
@@ -640,7 +648,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
 
                 console.log(sendobjoriginal);
                 sendobj.url = sendobjoriginal.url
-                window.location.reload();
+                window.location.reload()
             })
             .catch((error) => {
                 console.error(`Error updating endDate`, error);
@@ -665,7 +673,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                 sendobj.url = sendobjoriginal.url
 
                 AddedWorkerList();
-                window.location.reload();
+                window.location.reload()
 
             })
             .catch(error => {
@@ -835,41 +843,58 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                                             {taskStatus === 'ongoing' ? (
                                                 <>
                                                     <div className="dropdown-and-button-container">
-                                                        <select
-                                                            value={selectedWorker[taskDetail.taskCardId] || ''}
-                                                            onChange={(e) =>
-                                                                handleSelectedWorkerChange(taskDetail.taskCardId, e.target.value)
-                                                            }
-                                                            className="dropdown-input-select-worker"
-                                                        >
-                                                            <option value="">{t('selectaworker')}</option>
-                                                            {workerNames.map((workerName) => (
-                                                                <option key={workerName.name} value={workerName.name}>
-                                                                    {workerName.name}
-                                                                </option>
-                                                            ))}
-                                                        </select>
+
+                                                        {taskDetail.cardStatus !== 'completed' ? (
+                                                            <select
+                                                                value={selectedWorker[taskDetail.taskCardId] || ''}
+                                                                onChange={(e) =>
+                                                                    handleSelectedWorkerChange(taskDetail.taskCardId, e.target.value)
+                                                                }
+                                                                className="dropdown-input-select-worker"
+                                                            >
+                                                                <option value="">{t('selectaworker')}</option>
+                                                                {workerNames.map((workerName) => (
+                                                                    <option key={workerName.name} value={workerName.name}>
+                                                                        {workerName.name}
+                                                                    </option>
+                                                                ))}
+                                                            </select>
+                                                        ) : (
+                                                            <div></div>
+                                                        )}
 
                                                         {taskStatus === 'ongoing' ? (
                                                             <>
                                                                 {ongoingTaskName === 'Pluck' ? (
-                                                                    <input
-                                                                        type="number"
-                                                                        value={quantityForPluck[taskDetail.taskCardId] || ''}
-                                                                        onChange={(e) =>
-                                                                            handleQuantityChange(taskDetail.taskCardId, e.target.value)
-                                                                        }
-                                                                        placeholder="Qty."
-                                                                        className="quantity-input"
-                                                                        style={{ width: '100px', height: '40px' }}
-                                                                    />
+                                                                    <>
+                                                                        {taskDetail.cardStatus !== 'completed' ? (
+                                                                            <input
+                                                                                type="number"
+                                                                                value={quantityForPluck[taskDetail.taskCardId] || ''}
+                                                                                onChange={(e) =>
+                                                                                    handleQuantityChange(taskDetail.taskCardId, e.target.value)
+                                                                                }
+                                                                                placeholder="Qty."
+                                                                                className="quantity-input"
+                                                                                style={{ width: '100px', height: '40px' }}
+                                                                            />
+
+                                                                        ) : (
+                                                                            <div></div>
+                                                                        )}
+                                                                    </>
                                                                 ) : (
                                                                     <div></div>
                                                                 )}
 
-                                                                <button className='add-small' onClick={() => handleAddSelectedWorker(taskDetail.taskCardId)}>
-                                                                    {t('add')}
-                                                                </button>
+                                                                {taskDetail.cardStatus !== 'completed' ? (
+
+                                                                    <button className='add-small' onClick={() => handleAddSelectedWorker(taskDetail.taskCardId)}>
+                                                                        {t('add')}
+                                                                    </button>
+                                                                ) : (
+                                                                    <div></div>
+                                                                )}
 
                                                                 {taskDetail.cardStatus === 'completed' ? (
                                                                     <button className="reopen-button" onClick={() => handleReopenTask(taskDetail.taskCardId)}>
