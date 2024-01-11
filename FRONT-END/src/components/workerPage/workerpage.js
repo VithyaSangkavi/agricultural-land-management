@@ -65,7 +65,7 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
   };
 
   useEffect(() => {
-  
+
     if (selectedLandId) {
       submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true)
         .then((res) => {
@@ -131,9 +131,9 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
       landId: selectedLandId
     };
 
-
-    // axios.post(`http://localhost:8081/service/master/workerUpdate?workerId=${workerId}`, updatedWorker)
-    submitSets(submitCollection.updateworker, "?workerId=" + workerId, updatedWorker, true)
+    console.log('new update worker id: ', workerId);
+    //axios.post(`http://localhost:8081/service/master/workerUpdate?workerId=${workerId}`, updatedWorker)
+      submitSets(submitCollection.updateworker, "?workerId=" + workerId, updatedWorker, true)
       .then((response) => {
         if (response.status === 200) {
           alertService.success("Worker updated successfully")
@@ -172,27 +172,49 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
 
   //update payment
   const handleUpdatePayment = () => {
-    const updatedPayment = {
-      paymentType,
-      basePayment,
-      extraPayment,
-      attendancePayment
-    };
 
+    console.log('payment worker id: ', workerId);
 
-    // axios.post(`http://localhost:8081/service/master/paymentUpdate?paymentId=${paymentId}`, updatedPayment)
-    submitSets(submitCollection.updatepayment, "?paymentId=" + paymentId, updatedPayment, true)
-      .then((response) => {
-        if (response.status === 200) {
-          alertService.success("Payment updated successfully")
-          history.push('/manageWorkers')
-        } else {
-          alertService.error("Updating payment failed")
-        }
-      })
-      .catch((error) => {
-        console.error('Error updating payment:', error);
-      });
+    if (paymentId == -1) {
+      const addPayment = {
+        workerId,
+        paymentType,
+        basePayment,
+        extraPayment,
+        attendancePayment
+      };
+
+      submitSets(submitCollection.savepayment, addPayment, false)
+        .then(res => {
+          if (res && res.status) {
+            alertService.success("Payment added successfully")
+            history.push('/manageWorkers')
+          } else {
+            alertService.error("Adding payment failed")
+          }
+        })
+    } else {
+      const updatedPayment = {
+        paymentType,
+        basePayment,
+        extraPayment,
+        attendancePayment
+      };
+
+      axios.post(`http://localhost:8081/service/master/paymentUpdate?paymentId=${paymentId}`, updatedPayment)
+        //submitSets(submitCollection.updatepayment, "?paymentId=" + paymentId, updatedPayment, true)
+        .then((response) => {
+          if (response.status === 200) {
+            alertService.success("Payment updated successfully")
+            history.push('/manageWorkers')
+          } else {
+            alertService.error("Updating payment failed")
+          }
+        })
+        .catch((error) => {
+          console.error('Error updating payment:', error);
+        });
+    }
 
   };
 

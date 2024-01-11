@@ -54,7 +54,7 @@ const CompletedTask = ({ selectedLandId }) => {
             .catch((error) => {
                 console.error('Error fetching task expenses:', error);
             });
-    })
+    },[taskAssignedid])
 
     useEffect(() => {
         const calculateTotalAmount = () => {

@@ -48,19 +48,13 @@ function ManageTaskTypes({ setSelectedLandId, selectedLandId }) {
 
   useEffect(() => {
 
-    // axios.post('http://localhost:8081/service/master/taskFindAll')
-    submitSets(submitCollection.taskFindAll, true)
+    axios.post('http://localhost:8081/service/master/taskFindAll')
+    //submitSets(submitCollection.taskFindAll, true)
       .then((response) => {
         setTasks(response.data.extra);
         console.log("Tasks : ", response.data.extra);
       });
 
-    // axios.get('http://localhost:8081/service/master/landFindAll')
-    submitSets(submitCollection.manageland, true)
-      .then((response) => {
-        setLands(response.data.extra);
-        console.log("Lands : ", response.data.extra);
-      });
   }, []);
 
   const handleSearchChange = (event) => {
