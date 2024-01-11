@@ -33,7 +33,7 @@ const InsertLand = () => {
         submitSets(submitCollection.saveland, dataToSend, false).then(res => {
             if (res && res.status) {
 
-                alertService.success("Data sent successfully!")
+                alertService.success("Land Added !")
                 window.location.reload();
 
             } else {
