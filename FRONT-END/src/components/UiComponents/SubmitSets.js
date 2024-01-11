@@ -16,6 +16,13 @@ async function submitSets (callstat,cobj,showalerts, newheaders){
 
     if(csubObj !== undefined && Object.keys(csubObj).length > 0){
         try {
+
+            console.log(csubObj.url+(csubObj.ptype === "GET" && csubObj.queryparam&&cobj?cobj:""))
+
+            console.log(csubObj.ptype)
+            console.log(csubObj.queryparam)
+            console.log(cobj)
+            
             var res = await axios({method: csubObj.ptype,url: csubObj.url+(csubObj.ptype === "GET" && csubObj.queryparam&&cobj?cobj:""),data: (csubObj.ptype!=="GET"?cobj:""),headers:coheaders});
             if(res.status === 200){
                 //alertService.success("Data loaded", { autoClose, keepAfterRouteChange });

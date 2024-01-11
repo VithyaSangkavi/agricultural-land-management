@@ -66,6 +66,7 @@ const submitCollection = {
     incomeFindByLandId: { ptype: "GET", url: basePath+"/service/master/incomeFindByLandId", queryparam: true, data:true, auth: true},
     cropFindByLandId: { ptype: "GET", url: basePath+"/service/master/cropFindByLandId", queryparam: true, data:true, auth: true},
     updateStatus: { ptype: "POST", url: basePath+"/service/master/updateStatus", queryparam: true, data:true, auth: true},
+    updateEndDate: { ptype: "POST", url: basePath+"/service/master/updateEndDate", queryparam: true, data:true, auth: true},
 
 
 }
