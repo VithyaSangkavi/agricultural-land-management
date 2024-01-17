@@ -228,7 +228,7 @@ export class ReportServiceImpl implements ReportService {
       const combinedSummary = await Promise.all(Object.entries(quantitySummary).map(async ([key, totalQuantity]) => {
         const [month, year] = key.split(' ');
 
-        const expenseForMonth = monthlyExpenses.find(expense => expense.monthYear === `${month} ${year}`);
+        const expenseForMonth = monthlyExpenses.find(expense => expense.monthYear === `${month} ${year}` );
         const finalMonthlyExpenses = monthlyExpenses2.find(otherExpense => otherExpense.monthYear === `${month} ${year}`);
         const additionalMonthlyExpenses = monthlyExpenses3.find(taskExpense => taskExpense.monthYear === `${month} ${year}`);
         const incomeForMonth = groupedIncomeByMonthAndYear.find(income => income.monthYear === `${month} ${year}`);
@@ -384,9 +384,9 @@ export class ReportServiceImpl implements ReportService {
       const quantitySummary = await this.GetQuantitySummaryDay(workAssignedEntity);
 
       const combinedSummary = Object.entries(quantitySummary).map(([date, totalQuantity]) => {
-        const expenseForDate = dailyExpenses.find(expense => expense.date === date);
-        const finalDailyExpenses = dailyExpenses2.find(otherExpense => otherExpense.date === date);
-        const additionalDailyExpenses = dailyExpenses3.find(taskExpense => taskExpense.date === date);
+        const expenseForDate = dailyExpenses.find(expense => expense.formattedDate === date);
+        const finalDailyExpenses = dailyExpenses2.find(otherExpense => otherExpense.formattedDate === date);
+        const additionalDailyExpenses = dailyExpenses3.find(taskExpense => taskExpense.formattedDate === date);
 
         return {
           date,
@@ -414,8 +414,8 @@ export class ReportServiceImpl implements ReportService {
    */
   async GetQuantitySummaryDay(workAssignedEntity: any): Promise<any> {
 
-    const quantitySummary = workAssignedEntity.reduce((summary, workAssigned) => {
-      const workDate = workAssigned.taskCard.workDate || workAssigned.startDate.toISOString().split("T")[0];
+    const quantitySummary = workAssignedEntity.reduce((summary: any, workAssigned: any) => {
+      const workDate = workAssigned.taskCard.workDate || workAssigned.createdDate.toISOString().split("T")[0];
       const date = moment(workDate).format("YYYY-MM-DD");
 
       if (!summary[date]) {
