@@ -453,10 +453,10 @@ export class ReportDaoImpl implements ReportDao {
       .innerJoin(LandEntity, 'land', 'land.id = taskAssigned.landId')
       .innerJoin(TaskTypeEntity, 'taskType', 'taskType.taskName = :taskName AND taskType.id = taskAssigned.taskId', { taskName: 'Pluck' })
       .where('land.id = :landId', { landId })
-      .groupBy('EXTRACT(YEAR FROM taskExpense.createdDate), WEEK(taskExpense.createdDate) + 1')
+      .groupBy('EXTRACT(YEAR FROM taskExpense.createdDate), WEEK(taskExpense.createdDate, 3)')
       .select([
         'EXTRACT(YEAR FROM taskExpense.createdDate) AS year',
-        '(WEEK(taskExpense.createdDate) + 1) AS weekNumber',
+        '(WEEK(taskExpense.createdDate, 3)) AS weekNumber',
         'SUM(taskExpense.value) AS totalExpense',
       ])
       .getRawMany();
@@ -474,10 +474,10 @@ export class ReportDaoImpl implements ReportDao {
       .innerJoin("taskAssigned.land", "land")
       .innerJoin(TaskTypeEntity, "task", "task.taskName <> :pluckTaskName AND task.id = taskAssigned.taskId", { pluckTaskName: "Pluck" })
       .where("land.id = :landId", { landId })
-      .groupBy("EXTRACT(YEAR FROM taskExpense.createdDate), WEEK(taskExpense.createdDate) + 1")
+      .groupBy("EXTRACT(YEAR FROM taskExpense.createdDate), WEEK(taskExpense.createdDate, 3)")
       .select([
         "EXTRACT(YEAR FROM taskExpense.createdDate) AS year",
-        '(WEEK(taskExpense.createdDate) + 1) AS weekNumber',
+        '(WEEK(taskExpense.createdDate, 3)) AS weekNumber',
         "SUM(taskExpense.value) AS totalExpense"
       ])
       .getRawMany();
@@ -496,10 +496,10 @@ export class ReportDaoImpl implements ReportDao {
       .innerJoin("taskAssigned.land", "land")
       .where("expense.expenseType != :salaryExpenseType", { salaryExpenseType: "Salary" })
       .andWhere("land.id = :landId", { landId })
-      .groupBy("EXTRACT(YEAR FROM taskExpense.createdDate), WEEK(taskExpense.createdDate) + 1")
+      .groupBy("EXTRACT(YEAR FROM taskExpense.createdDate), WEEK(taskExpense.createdDate, 3)")
       .select([
         "EXTRACT(YEAR FROM taskExpense.createdDate) AS year",
-        '(WEEK(taskExpense.createdDate) + 1) AS weekNumber',
+        '(WEEK(taskExpense.createdDate, 3)) AS weekNumber',
         "SUM(taskExpense.value) AS totalExpense"
       ])
       .getRawMany();

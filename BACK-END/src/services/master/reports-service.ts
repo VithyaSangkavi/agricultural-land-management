@@ -13,7 +13,7 @@ export interface ReportService {
 
     getSummary(landId: number): Promise<any>;
     findCIR(taskExpenseForMonth: any, incomeForMonth: any): Promise<number>
-    GetQuantitySummary(workAssignedEntity : any): Promise<any>
+    GetQuantitySummary(workAssignedEntity : any, TaskExpenseEntity: any[]): Promise<any>
     findProfit(incomeForMonth: any, taskExpenseForMonth: any): Promise<number>
 
     getWeekSummary(landId: number): Promise<any>
