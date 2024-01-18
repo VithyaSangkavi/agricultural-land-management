@@ -12,6 +12,7 @@ import { ExpensesEntity } from '../../entity/master/expense-entity';
 
 import moment from 'moment';
 import { LandEntity } from '../../entity/master/land-entity';
+import { format, parse } from 'date-fns';
 export class ReportDaoImpl implements ReportDao {
 
   //employee-attendance report
@@ -318,99 +319,151 @@ export class ReportDaoImpl implements ReportDao {
 
   //Monthly Summary Report - Start
 
-  async getWorkAssignedEntity(landId?: number): Promise<WorkAssignedEntity[]> {
+  async getWorkAssignedEntity(landId?: number, fromDate?: string): Promise<WorkAssignedEntity[]> {
 
+    console.log("dao date: ", fromDate);
     const workAssignedRepository = getConnection().getRepository(WorkAssignedEntity);
 
-    const workAssignedEntities = await workAssignedRepository
+    let queryBuilder = workAssignedRepository
       .createQueryBuilder("workAssigned")
       .leftJoinAndSelect("workAssigned.taskCard", "taskCard")
       .leftJoinAndSelect("taskCard.taskAssigned", "taskAssigned")
-      .leftJoinAndSelect("taskAssigned.land", "land")
-      .where("land.id = :landId", { landId })
+      .leftJoinAndSelect("taskAssigned.land", "land");
+
+    if (landId !== undefined) {
+      queryBuilder = queryBuilder.where("land.id = :landId", { landId });
+    }
+
+    const workAssignedEntities = await queryBuilder
       .distinct(true)
       .getMany();
 
+    // console.log(workAssignedEntities)
+
     return workAssignedEntities;
-
   }
 
-  async getPluckExpense(landId?: number): Promise<any[]> {
 
-    const monthlyExpenses = await getRepository(TaskExpenseEntity)
+  async getPluckExpense(landId?: number, fromDate?: string): Promise<any[]> {
+    const queryBuilder = getRepository(TaskExpenseEntity)
       .createQueryBuilder("taskExpense")
       .innerJoin("taskExpense.taskAssigned", "taskAssigned")
       .innerJoin("taskAssigned.land", "land")
-      .innerJoin(TaskTypeEntity, "task", "task.taskName = :taskName AND task.id = taskAssigned.taskId", { taskName: "Pluck" })
-      .where("land.id = :landId", { landId })
+      .innerJoin(TaskTypeEntity, "task", "task.taskName = :taskName AND task.id = taskAssigned.taskId", { taskName: "Pluck" });
+
+    if (landId !== undefined) {
+      queryBuilder.where("land.id = :landId", { landId });
+    }
+
+    if (fromDate !== undefined) {
+      queryBuilder.andWhere("DATE_FORMAT(taskExpense.createdDate, '%Y-%m') = :fromDate", { fromDate });
+    }
+
+    const monthlyExpenses = await queryBuilder
       .groupBy("DATE_FORMAT(taskExpense.createdDate, '%M %Y')")
       .select("DATE_FORMAT(taskExpense.createdDate, '%M %Y')", "monthYear")
       .addSelect("SUM(taskExpense.value)", "totalExpense")
       .distinct(true)
       .getRawMany();
 
-    return monthlyExpenses
+    // console.log(monthlyExpenses);
 
+    return monthlyExpenses;
   }
 
 
-  async getOtherExpenses(landId?: number): Promise<any[]> {
 
-    const monthlyExpenses2 = await getRepository(TaskExpenseEntity)
+  async getOtherExpenses(landId?: number, fromDate?: string): Promise<any[]> {
+    const queryBuilder = getRepository(TaskExpenseEntity)
       .createQueryBuilder("taskExpense")
       .innerJoin("taskExpense.taskAssigned", "taskAssigned")
       .innerJoin("taskAssigned.land", "land")
-      .innerJoin(TaskTypeEntity, "task", "task.taskName <> :pluckTaskName AND task.id = taskAssigned.taskId", { pluckTaskName: "Pluck" })
-      .where("land.id = :landId", { landId })
+      .innerJoin(TaskTypeEntity, "task", "task.taskName <> :pluckTaskName AND task.id = taskAssigned.taskId", { pluckTaskName: "Pluck" });
+
+    if (landId !== undefined) {
+      queryBuilder.where("land.id = :landId", { landId });
+    }
+
+    if (fromDate !== undefined) {
+      queryBuilder.andWhere("DATE_FORMAT(taskExpense.createdDate, '%Y-%m') = :fromDate", { fromDate });
+    }
+
+    const monthlyExpenses2 = await queryBuilder
       .groupBy("DATE_FORMAT(taskExpense.createdDate, '%M %Y')")
       .select("DATE_FORMAT(taskExpense.createdDate, '%M %Y')", "monthYear")
       .addSelect("SUM(taskExpense.value)", "totalExpense")
       .distinct(true)
       .getRawMany();
+
+    // console.log(monthlyExpenses2);
 
     return monthlyExpenses2;
-
   }
 
-  async getNonCrewExpenses(landId?: number): Promise<any[]> {
 
-    const monthlyExpenses3 = await getRepository(TaskExpenseEntity)
+  async getNonCrewExpenses(landId?: number, fromDate?: string): Promise<any[]> {
+    const queryBuilder = getRepository(TaskExpenseEntity)
       .createQueryBuilder("taskExpense")
       .innerJoin("taskExpense.taskAssigned", "taskAssigned")
       .innerJoin("taskExpense.expense", "expense")
       .innerJoin("taskAssigned.land", "land")
-      .where("expense.expenseType != :salaryExpenseType", { salaryExpenseType: "Salary" })
-      .andWhere("land.id = :landId", { landId })
+      .where("expense.expenseType != :salaryExpenseType", { salaryExpenseType: "Salary" });
+
+    if (landId !== undefined) {
+      queryBuilder.andWhere("land.id = :landId", { landId });
+    }
+
+    if (fromDate !== undefined) {
+      queryBuilder.andWhere("DATE_FORMAT(taskExpense.createdDate, '%Y-%m') = :fromDate", { fromDate });
+    }
+
+    const monthlyExpenses3 = await queryBuilder
       .groupBy("DATE_FORMAT(taskExpense.createdDate, '%M %Y')")
       .select("DATE_FORMAT(taskExpense.createdDate, '%M %Y')", "monthYear")
       .addSelect("SUM(taskExpense.value)", "totalExpense")
       .distinct(true)
       .getRawMany();
 
-    return monthlyExpenses3;
+    // console.log(monthlyExpenses3);
 
+    return monthlyExpenses3;
   }
 
-  async getTotalIncome(landId?: number): Promise<any[]> {
 
-    const groupedIncomeByMonthAndYear = await getRepository(IncomeEntity)
+  async getTotalIncome(landId?: number, fromDate?: string): Promise<any[]> {
+    const queryBuilder = getRepository(IncomeEntity)
       .createQueryBuilder("income")
       .select([
         "CONCAT(income.month, ' ', YEAR(income.createdDate)) AS monthYear",
         "SUM(income.price) AS totalIncome"
       ])
-      .distinct(true)
-      .where("income.landId = :landId", { landId })
+      .distinct(true);
+
+    if (landId !== undefined) {
+      queryBuilder.where("income.landId = :landId", { landId });
+    }
+
+    if (fromDate !== undefined) {
+      const parsedDate = parse(fromDate, 'yyyy-MM', new Date());
+      const formattedFromDate = format(parsedDate, 'MMMM yyyy');
+
+      console.log(formattedFromDate);
+
+      queryBuilder.andWhere("CONCAT(income.month, ' ', YEAR(income.createdDate)) = :yearMonthFromDate", { yearMonthFromDate: formattedFromDate });
+    }
+
+    const groupedIncomeByMonthAndYear = await queryBuilder
       .groupBy("monthYear")
       .getRawMany();
 
-    return groupedIncomeByMonthAndYear
+    // console.log(groupedIncomeByMonthAndYear);
 
+    return groupedIncomeByMonthAndYear;
   }
 
-  async getTaskExpenses(landId?: number): Promise<any[]> {
 
-    const monthlyExpenses4 = await getRepository(TaskExpenseEntity)
+  async getTaskExpenses(landId?: number, fromDate?: string): Promise<any[]> {
+    const queryBuilder = getRepository(TaskExpenseEntity)
       .createQueryBuilder("taskExpense")
       .innerJoin("taskExpense.taskAssigned", "taskAssigned")
       .innerJoin("taskAssigned.land", "land")
@@ -418,13 +471,24 @@ export class ReportDaoImpl implements ReportDao {
         "DATE_FORMAT(taskExpense.createdDate, '%M %Y') AS monthYear",
         "SUM(taskExpense.value) AS totalExpense"
       ])
-      .distinct(true)
-      .where("land.id = :landId", { landId })
+      .distinct(true);
+
+    if (landId !== undefined) {
+      queryBuilder.where("land.id = :landId", { landId });
+    }
+
+    if (fromDate !== undefined) {
+      queryBuilder.andWhere("DATE_FORMAT(taskExpense.createdDate, '%Y-%m') = :fromDate", { fromDate });
+    }
+
+    const monthlyExpenses4 = await queryBuilder
       .groupBy("monthYear")
       .getRawMany();
 
-    return monthlyExpenses4;
+      console.log(monthlyExpenses4);
 
+
+    return monthlyExpenses4;
   }
 
   //Total - weekly Summary Report

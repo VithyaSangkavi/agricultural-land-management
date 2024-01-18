@@ -8,12 +8,13 @@ export interface ReportDao {
   getEmployeePerfomanceReport(fromDate: string, toDate: string, landId: number): Promise<any>;
   getCostBreakdownLineReport(fromDate:string, landId: number): Promise<any>;
   getCostBreakdownPieReport(): Promise<any>;
-  getWorkAssignedEntity(landId?: number): Promise<WorkAssignedEntity[]>
-  getPluckExpense(landId?: number): Promise<any[]>
-  getOtherExpenses(landId?: number): Promise<any[]>
-  getNonCrewExpenses(landId?: number): Promise<any[]>
-  getTotalIncome(landId?: number): Promise<any[]>
-  getTaskExpenses(landId?: number): Promise<any[]>
+
+  getWorkAssignedEntity(landId?: number, fromDate?: string): Promise<WorkAssignedEntity[]>
+  getPluckExpense(landId?: number, fromDate?: string): Promise<any[]>
+  getOtherExpenses(landId?: number, fromDate?: string): Promise<any[]>
+  getNonCrewExpenses(landId?: number, fromDate?: string): Promise<any[]>
+  getTotalIncome(landId?: number, fromDate?: string): Promise<any[]>
+  getTaskExpenses(landId?: number, fromDate?: string): Promise<any[]>
 
   getWorkAssignedEntityForWeek(landId?: number): Promise<WorkAssignedEntity[]>
   getPluckExpenseWeek(landId?: number): Promise<any[]>

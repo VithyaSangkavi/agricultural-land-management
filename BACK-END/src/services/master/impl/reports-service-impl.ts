@@ -186,8 +186,8 @@ export class ReportServiceImpl implements ReportService {
    * @param cateNum 
    * @returns 
    */
-  async getSummaryReport(landId?: number, cateNum?: number): Promise<any> {
-    return this.getSummary(landId);
+  async getSummaryReport(landId?: number, cateNum?: number, fromDate?: string): Promise<any> {
+    return this.getSummary(landId, fromDate);
   }
 
   /**
@@ -214,16 +214,16 @@ export class ReportServiceImpl implements ReportService {
    * @param landId 
    * @returns any
    */
-  async getSummary(landId: number): Promise<any> {
+  async getSummary(landId: number, fromDate: string): Promise<any> {
 
     try {
-      const workAssignedEntity = await this.reportDao.getWorkAssignedEntity(landId);
-      const monthlyExpenses = await this.reportDao.getPluckExpense(landId);
-      const monthlyExpenses2 = await this.reportDao.getOtherExpenses(landId);
-      const monthlyExpenses3 = await this.reportDao.getNonCrewExpenses(landId);
-      const monthlyExpenses4 = await this.reportDao.getTaskExpenses(landId);
-      const quantitySummary = await this.GetQuantitySummary(workAssignedEntity);
-      const groupedIncomeByMonthAndYear = await this.reportDao.getTotalIncome(landId);
+      const workAssignedEntity = await this.reportDao.getWorkAssignedEntity(landId, fromDate);
+      const monthlyExpenses = await this.reportDao.getPluckExpense(landId, fromDate);
+      const monthlyExpenses2 = await this.reportDao.getOtherExpenses(landId, fromDate);
+      const monthlyExpenses3 = await this.reportDao.getNonCrewExpenses(landId, fromDate);
+      const monthlyExpenses4 = await this.reportDao.getTaskExpenses(landId, fromDate);
+      const quantitySummary = await this.GetQuantitySummary(workAssignedEntity, fromDate);
+      const groupedIncomeByMonthAndYear = await this.reportDao.getTotalIncome(landId, fromDate);
 
       const allMonths = Array.from(
         new Set([
@@ -270,11 +270,18 @@ export class ReportServiceImpl implements ReportService {
   }
 
 
-  async GetQuantitySummary(workAssignedEntity: any): Promise<any> {
+  async GetQuantitySummary(workAssignedEntity: any, fromDate: string): Promise<any> {
 
-    const quantitySummary = workAssignedEntity.reduce((summary: any, workAssigned: any) => {
+    const filteredWorkAssigned = fromDate
+      ? workAssignedEntity.filter((workAssigned: any) => {
+        const workDate = workAssigned.taskCard.workDate || workAssigned.startDate.toISOString().split("T")[0];
+        const yearMonthFromDate = fromDate.substring(0, 7); 
+        const yearMonthWorkDate = workDate.substring(0, 7); 
+        return yearMonthWorkDate === yearMonthFromDate;
+      })
+      : workAssignedEntity;
 
-
+    const quantitySummary = filteredWorkAssigned.reduce((summary: any, workAssigned: any) => {
       const workDate = workAssigned.taskCard.workDate || workAssigned.startDate.toISOString().split("T")[0];
       const year = new Date(workDate).getFullYear();
       const month = new Date(workDate).toLocaleString('en-US', { month: 'long' });
@@ -289,13 +296,14 @@ export class ReportServiceImpl implements ReportService {
       console.log("Summary :", summary);
 
       return summary;
-    }, {})
+    }, {});
 
     console.log("Qty Summary :", quantitySummary);
 
     return quantitySummary;
-
   }
+
+
 
 
   async findCIR(taskExpenseForMonth: any, incomeForMonth: any): Promise<number> {

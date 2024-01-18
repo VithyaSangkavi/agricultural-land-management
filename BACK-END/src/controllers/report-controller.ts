@@ -123,10 +123,12 @@ export const getgetCostBreakdownPieReport = async (req: Request, res: Response):
 export const getSummaryReport = async (req: Request, res: Response): Promise<void> => {
   const landId = req.query.landId;
   const cateNum = req.query.cateNum;
+  const fromDate = req.query.fromDate;
   console.log("Back-end ctr land: ", landId);
   console.log("Back-end ctr cateNum: ", cateNum);
+  console.log("Back-end ctr fromdate: ", fromDate);
   try {
-    const costSummaryReport = await reportServiceImpl.getSummaryReport(landId, cateNum);
+    const costSummaryReport = await reportServiceImpl.getSummaryReport(landId, cateNum, fromDate);
     res.json(costSummaryReport);
   } catch (error) {
     res.status(500).json({ error: 'Failed to generate cost Summary Report report' });

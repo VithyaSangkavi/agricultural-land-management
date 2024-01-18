@@ -7,13 +7,13 @@ export interface ReportService {
     getCostBreakdownLineReport(fromDate?: string, landId?: number): Promise<any>;
     getCostBreakdownPieReport(): Promise<any>;
 
-    getSummaryReport(landId?: number, cateNum?: number): Promise<any>;   
+    getSummaryReport(landId?: number, cateNum?: number, fromDate?: string): Promise<any>;   
     getWeeklySummaryReport(landId?: number): Promise<any>;
     getDailySummaryReport(landId?: number): Promise<any>;
 
-    getSummary(landId: number): Promise<any>;
+    getSummary(landId: number, fromDate: string): Promise<any>;
     findCIR(taskExpenseForMonth: any, incomeForMonth: any): Promise<number>
-    GetQuantitySummary(workAssignedEntity : any, TaskExpenseEntity: any[]): Promise<any>
+    GetQuantitySummary(workAssignedEntity : any, fromDate: string): Promise<any>
     findProfit(incomeForMonth: any, taskExpenseForMonth: any): Promise<number>
 
     getWeekSummary(landId: number): Promise<any>
