@@ -34,7 +34,7 @@ const InsertLand = () => {
             if (res && res.status) {
 
                 alertService.success("Data sent successfully!")
-                window.location.reload();
+                history.push('/managelands')
 
             } else {
                 alertService.error("Data sent failed!")

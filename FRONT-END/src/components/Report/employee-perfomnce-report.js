@@ -37,7 +37,7 @@ const EmployeePerfomnceReport = ({ dateRange: { fromDate, toDate }, selectedLand
 
                 if (selectedLand) {
                     if (fromDate && toDate) {
-                        const response = await submitSets(submitCollection.employee_perfomance, '?landId=' + selectedLand + '&fromDate=' + fromDate + '&toDate=' +toDate);
+                        const response = await submitSets(submitCollection.employee_perfomance, '?landId=' + selectedLand + '&fromDate=' + fromDate + '&toDate=' + toDate);
                         setPerfomnceData(response);
 
                     } else {
@@ -48,13 +48,13 @@ const EmployeePerfomnceReport = ({ dateRange: { fromDate, toDate }, selectedLand
 
                 } else {
 
-                    if(fromDate && toDate) {
+                    if (fromDate && toDate) {
 
-                        const response = await submitSets(submitCollection.employee_perfomance, '?fromDate=' + fromDate + '&toDate=' +toDate);
+                        const response = await submitSets(submitCollection.employee_perfomance, '?fromDate=' + fromDate + '&toDate=' + toDate);
                         setPerfomnceData(response);
 
 
-                    }else{
+                    } else {
 
                         const response = await submitSets(submitCollection.employee_perfomance);
                         setPerfomnceData(response);
@@ -159,15 +159,17 @@ const EmployeePerfomnceReport = ({ dateRange: { fromDate, toDate }, selectedLand
                         )}
                     </div>
                 ) : (
-                    <button className='see-more' onClick={handleSeeLess}>
-                        See Less
-                    </button>
+                    // <button className='see-more' onClick={handleSeeLess}>
+                    //     See Less
+                    // </button>
+                    <div>
+                    </div>
                 )}
 
             </div>
 
-            <div className='report-app-screen' style={{height: '360px', backgroundColor: ''}}>
-                <div className='attendance-chart' style={{height: "300px", boxShadow: 'none'}}>
+            <div className='report-app-screen' style={{ height: '360px', backgroundColor: '' }}>
+                <div className='attendance-chart' style={{ height: "300px", boxShadow: 'none' }}>
                     {perfomnceData.length > 0 ? (
                         <>
                             <h2>Employee Perfomnce Chart</h2> <br />
