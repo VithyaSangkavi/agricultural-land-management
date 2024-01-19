@@ -1,18 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import './workerpage.css';
 import { submitCollection } from '../../_services/submit.service';
 import { submitSets } from '../UiComponents/SubmitSets';
 import { alertService } from '../../_services/alert.service';
 import Footer from '../footer/footer';
 import Header from '../header/header';
-import { Form, Button, Container, Col, Row, Card } from 'react-bootstrap';
-import DatePicker from 'react-datepicker';
 import { useHistory, useLocation } from "react-router-dom";
-import { FaGlobeAmericas, FaLanguage, FaMapMarker } from 'react-icons/fa';
-import { Dropdown, DropdownButton } from 'react-bootstrap';
+import { FaMapMarker } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
-import { MdArrowBackIos } from "react-icons/md";
 import { connect } from 'react-redux';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
 
@@ -65,7 +60,7 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
   };
 
   useEffect(() => {
-  
+
     if (selectedLandId) {
       submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true)
         .then((res) => {
@@ -119,6 +114,10 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
 
   //update worker
   const handleUpdateWorker = () => {
+    let sendobjoriginal = JSON.parse(JSON.stringify(submitCollection.updateworker));
+    let sendobj = submitCollection.updateworker;
+    sendobj.url = (sendobj.url + '?workerId=' + workerId);
+
     const updatedWorker = {
       name,
       dob,
@@ -131,16 +130,17 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
       landId: selectedLandId
     };
 
+    console.log('new update worker id: ', workerId);
 
-    // axios.post(`http://localhost:8081/service/master/workerUpdate?workerId=${workerId}`, updatedWorker)
-    submitSets(submitCollection.updateworker, "?workerId=" + workerId, updatedWorker, true)
+    submitSets(submitCollection.updateworker, updatedWorker, true)
       .then((response) => {
-        if (response.status === 200) {
-          alertService.success("Worker updated successfully")
-          history.push('/manageWorkers')
-        } else {
-          alertService.error("Updating worker failed")
-        }
+        console.log(response);
+        console.log(sendobjoriginal);
+        sendobj.url = sendobjoriginal.url
+
+        alertService.success("Worker updated successfully")
+        history.push('/manageWorkers')
+
       })
       .catch((error) => {
         console.error('Error updating worker:', error);
@@ -172,27 +172,53 @@ const WorkerPage = ({ selectedLandId, setSelectedLandId }) => {
 
   //update payment
   const handleUpdatePayment = () => {
-    const updatedPayment = {
-      paymentType,
-      basePayment,
-      extraPayment,
-      attendancePayment
-    };
 
+    console.log('payment worker id: ', workerId);
 
-    // axios.post(`http://localhost:8081/service/master/paymentUpdate?paymentId=${paymentId}`, updatedPayment)
-    submitSets(submitCollection.updatepayment, "?paymentId=" + paymentId, updatedPayment, true)
-      .then((response) => {
-        if (response.status === 200) {
+    if (paymentId == -1) {
+      const addPayment = {
+        workerId,
+        paymentType,
+        basePayment,
+        extraPayment,
+        attendancePayment
+      };
+
+      submitSets(submitCollection.savepayment, addPayment, false)
+        .then(res => {
+          if (res && res.status) {
+            alertService.success("Payment added successfully")
+            history.push('/manageWorkers')
+          } else {
+            alertService.error("Adding payment failed")
+          }
+        })
+    } else {
+      let sendobjoriginal = JSON.parse(JSON.stringify(submitCollection.updatepayment));
+      let sendobj = submitCollection.updatepayment;
+      sendobj.url = (sendobj.url + '?paymentId=' + paymentId);
+
+      const updatedPayment = {
+        paymentType,
+        basePayment,
+        extraPayment,
+        attendancePayment
+      };
+
+      submitSets(submitCollection.updatepayment, updatedPayment, true)
+        .then((response) => {
+          console.log(response);
+          console.log(sendobjoriginal);
+          sendobj.url = sendobjoriginal.url
+
           alertService.success("Payment updated successfully")
           history.push('/manageWorkers')
-        } else {
-          alertService.error("Updating payment failed")
-        }
-      })
-      .catch((error) => {
-        console.error('Error updating payment:', error);
-      });
+
+        })
+        .catch((error) => {
+          console.error('Error updating payment:', error);
+        });
+    }
 
   };
 

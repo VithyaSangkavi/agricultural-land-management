@@ -28,7 +28,6 @@ const submitCollection = {
     savetasktype: { ptype: "POST", url: basePath+"/service/master/taskSave", queryparam: false, data:true, auth: true },
     findworkerbyland: { ptype: "POST", url: basePath+"/service/master/findWorkByLandId", queryparam: false, data:true, auth: true },
     findpaymentbyworkerid: { ptype: "GET", url: basePath+"/service/master/findPaymentByWorkerId", queryparam: true, data:true, auth: true },
-    findpaymentbyworkerid: { ptype: "GET", url: basePath+"/service/master/findByWorkerId", queryparam: true, data:true, auth: true },
     taskAssignedFindAll: { ptype: "POST", url: basePath+"/service/master/taskAssignedFindAll", queryparam: false, data:true, auth: true },
     taskFindAll: { ptype: "POST", url: basePath+"/service/master/taskFindAll", queryparam: false, data:true, auth: true },
     ongoing_tasks_with_names: { ptype: "GET", url: basePath+"/service/master/ongoing-tasks-with-names", queryparam: true, data:true, auth: true },
@@ -45,10 +44,13 @@ const submitCollection = {
     summary_weekly: { ptype: "GET", url: basePath+"/service/master/summary-weekly", queryparam: true, data:true, auth: true },
     summary_daily: { ptype: "GET", url: basePath+"/service/master/summary-daily", queryparam: true, data:true, auth: true },
 
+    //employee-attendance report
+    employee_attendance: {ptype: "GET", url: basePath+"/service/master/employee-perfomance", queryparam: true, data:true, auth: true },
+
     findTaskNameById: { ptype: "GET", url: basePath+"/service/master/findTaskNameById", queryparam: true, data:true, auth: true },
     task_assigned_save: { ptype: "POST", url: basePath+"/service/master/task-assigned-save", queryparam: true, data:true, auth: true },
     work_assigned_details: { ptype: "GET", url: basePath+"/service/master/work-assigned-details", queryparam: true, data:true, auth: true},
-    findByLandId: { ptype: "GET", url: basePath+"/service/master/findByLandId", queryparam: true, data:true, auth: true},
+    findWorkersByLandId: { ptype: "GET", url: basePath+"/service/master/findWorkersByLandId", queryparam: true, data:true, auth: true},
     findLotByLandId : { ptype: "GET", url: basePath+"/service/master/findLotByLandId", queryparam: true, data:true, auth: true},
     find_by_type : { ptype: "GET", url: basePath+"/service/master/find-by-type", queryparam: true, data:true, auth: true},
     task_expense_save : { ptype: "POST", url: basePath+"/service/master/task-expense-save", queryparam: true, data:true, auth: true},
@@ -64,7 +66,8 @@ const submitCollection = {
     incomeFindByLandId: { ptype: "GET", url: basePath+"/service/master/incomeFindByLandId", queryparam: true, data:true, auth: true},
     cropFindByLandId: { ptype: "GET", url: basePath+"/service/master/cropFindByLandId", queryparam: true, data:true, auth: true},
     updateStatus: { ptype: "POST", url: basePath+"/service/master/updateStatus", queryparam: true, data:true, auth: true},
-
+    updateEndDate: { ptype: "POST", url: basePath+"/service/master/updateEndDate", queryparam: true, data:true, auth: true},
+    completed_tasks_with_names: { ptype: "GET", url: basePath+"/service/master/completed-tasks-with-names", queryparam: true, data:true, auth: true},
 
 }
 

@@ -3,7 +3,7 @@
 }
 
 .reportnotfound {
-  background-color: rgba(255, 123, 0, 0.5);
+  background-color: rgba(149, 231, 142, 0.5);
   padding: 7px;
   border-radius: 5px;
   font-style: oblique;
@@ -11,7 +11,7 @@
   margin-bottom: 16px;
   margin-top: 16px;
   font-weight: bolder;
-  color: red;
+  color: rgb(15, 65, 40);
   text-align: center;
 }
 

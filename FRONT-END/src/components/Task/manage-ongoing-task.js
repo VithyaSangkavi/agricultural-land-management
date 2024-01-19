@@ -41,12 +41,15 @@ const ManageOngoingTask = ({ selectedLandId }) => {
 
 
     const [t, i18n] = useTranslation();
-    const { taskAssignedid } = useParams();
+    const { taskAssignedid, taskId } = useParams();
+
+    console.log("Task assigned : ", taskAssignedid);
+    console.log("task id : ", taskId);
 
     const history = useHistory();
 
-    const taskId = localStorage.getItem('TaskIDFromTaskAssigned')
-    const startDate = localStorage.getItem('StartDate');
+    // const taskId = localStorage.getItem('TaskIDFromTaskAssigned')
+    // const startDate = localStorage.getItem('StartDate');
     const landId = localStorage.getItem('SelectedLandId')
 
     const [taskName, setTaskName] = useState('');
@@ -72,7 +75,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
     const [taskExpenses, setTaskExpenses] = useState([]);
 
     //const [workerId, setWorkerId] = useState('');
-    const [taskAssignedId, setTaskAssignedId] = useState('');
+    // const [taskAssignedId, setTaskAssignedId] = useState('');
     const [lotId, setLotId] = useState('');
     const [quantity, setQuantity] = useState('');
 
@@ -83,6 +86,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
     const [showExpenses, setShowExpenses] = useState(false);
     const [totalAmount, setTotalAmount] = useState(0);
     const [quantityForPluck, setQuantityForPluck] = useState({});
+    const [startDate, setStartDate] = useState('');
 
 
 
@@ -119,17 +123,23 @@ const ManageOngoingTask = ({ selectedLandId }) => {
 
     const updateTaskCardStatus = (taskCardId, newStatus) => {
 
-        axios.post(`http://localhost:8081/service/master/updateStatus?taskCardId=${taskCardId}`, {
-            newStatus,
-        })
-
-        // submitSets(submitCollection.updateStatus, "?taskCardId=" + taskCardId, true, {
-        //     newStatus: newStatus,
+        // axios.post(`http://localhost:8080/service/master/updateStatus?taskCardId=${taskCardId}`, {
+        //     newStatus,
         // })
+
+        let sendobjoriginal = JSON.parse(JSON.stringify(submitCollection.updateStatus));
+        let sendobj = submitCollection.updateStatus;
+        sendobj.url = (sendobj.url + '?taskCardId=' + taskCardId);
+
+
+        submitSets(submitCollection.updateStatus, { newStatus }, true,)
             .then((response) => {
 
-                // window.location.reload();
+
                 console.log(response);
+                console.log(sendobjoriginal);
+                sendobj.url = sendobjoriginal.url
+                window.location.reload()
             })
             .catch((error) => {
                 console.error(`Error updating TaskCard ${taskCardId} status:`, error);
@@ -171,7 +181,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
 
     useEffect(() => {
         console.log('USE EFFECT TASK ID: ', taskId);
-        fetchTaskAssignedId();
+        // fetchTaskAssignedId();
         fetchTaskName();
         fetchWorkerNames();
         fetchExpenseTypes();
@@ -181,17 +191,18 @@ const ManageOngoingTask = ({ selectedLandId }) => {
 
     const AddedWorkerList = () => {
 
-        // axios.get(`http://localhost:8081/service/master/work-assigned-details/${taskAssignedid}`)
+        // axios.get(`http://localhost:8080/service/master/work-assigned-details/${taskAssignedid}`)
         submitSets(submitCollection.work_assigned_details, "/" + taskAssignedid, true)
             .then((response) => {
 
                 setTaskDetails(response.extra.cardDetails);
-                // setWorkerDetails(response.extra.cardDetails.workerDetails)
+                // setWorkerDetails(response.data.extra.cardDetails.workerDetails)
                 setCommanTaskDetails(response.extra);
                 setOngoingTaskName(response.extra.taskName);
                 setTaskStatus(response.extra.taskStatus);
                 const workerNames = [...new Set(response.extra.cardDetails.flatMap(card => card.workerDetails.map(worker => worker.workerName)))];
                 console.log(workerNames)
+                console.log("st : ", response.extra.startDate)
 
                 const formattedStartDate = getFormattedDate(response.extra.startDate);
                 setOngoingTaskDate(formattedStartDate);
@@ -201,10 +212,11 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                     (card) => getFormattedDate(card.date) === today
                 );
 
-                // axios.get(`http://localhost:8081/service/master/taskAssignedFindById?taskAssignedId=${taskAssignedid}`)
-                submitSets(submitCollection.taskAssignedFindById, '?taskAssignedId=' + taskAssignedid, true)
+                axios.get(`http://localhost:8080/service/master/taskAssignedFindById?taskAssignedId=${taskAssignedid}`)
+                    // submitSets(submitCollection.taskAssignedFindById, '?taskAssignedId=' + taskAssignedid, true)
                     .then((taskResponse) => {
-                        const schedule = taskResponse.extra.schedule;
+                        const schedule = taskResponse.data.extra.schedule;
+                        setStartDate(taskResponse.data.extra.startDate);
                         console.log('SCHEDULE ::::::: ', schedule)
                         if (schedule !== 'scheduled' && !isCardExist) {
                             // If the task is not scheduled and the card for today doesn't exist, generate a new card
@@ -229,8 +241,8 @@ const ManageOngoingTask = ({ selectedLandId }) => {
 
 
     const fetchTaskName = () => {
-        // axios.get(`http://localhost:8081/service/master/findTaskNameById/?taskId=${taskId}`)
-        submitSets(submitCollection.findTaskNameById, '/?taskId=' + taskId, true)
+        axios.get(`http://localhost:8080/service/master/findTaskNameById?taskId=${taskId}`)
+            // submitSets(submitCollection.findTaskNameById, '?taskId=' + taskId, true)
             .then((response) => {
 
                 setTaskName(response.extra.taskName);
@@ -247,8 +259,8 @@ const ManageOngoingTask = ({ selectedLandId }) => {
 
     const fetchWorkerNames = () => {
 
-        // axios.get(`http://localhost:8081/service/master/findByLandId?landId=${selectedLandId}`)
-        submitSets(submitCollection.findByLandId, "?landId=" + selectedLandId, true)
+        // axios.get(`http://localhost:8080/service/master/findWorkersByLandId?landId=${selectedLandId}`)
+        submitSets(submitCollection.findWorkersByLandId, "?landId=" + selectedLandId, true)
 
             .then((response) => {
                 console.log("worker names : ", response.extra);
@@ -260,32 +272,19 @@ const ManageOngoingTask = ({ selectedLandId }) => {
     };
 
     const fetchExpenseTypes = () => {
-        // axios.get('http://localhost:8081/service/master/expenseFindAll')
+        // axios.get('http://localhost:8080/service/master/expenseFindAll')
         submitSets(submitCollection.manageexpense, false)
             .then((response) => {
                 const expenseTypeArrays = response.extra.map((expense) => expense.expenseType);
                 setExpenseTypes(expenseTypeArrays);
             })
             .catch((error) => {
-                // console.error('Error fetching expenses:', error);
+                console.error('Error fetching expenses:', error);
             });
     };
 
-    const fetchTaskAssignedId = () => {
-        //get task-assigned id
-        // axios.get(`http://localhost:8081/service/master/task-assigned?taskId=${taskId}`)
-        submitSets(submitCollection.task_assigned, '?taskId=' + taskId, true)
-            .then((response) => {
-                console.log('Task assigned id: ', response.extra.id)
-                setTaskAssignedId(response.extra.id);
-            })
-            .catch((error) => {
-                console.error('Error fetching task name:', error);
-            });
-    }
-
     const fetchLotId = () => {
-        // axios.get(`http://localhost:8081/service/master/findLotByLandId?landId=${selectedLandId}`)
+        // axios.get(`http://localhost:8080/service/master/findLotByLandId?landId=${selectedLandId}`)
         submitSets(submitCollection.findLotByLandId, '?landId=' + selectedLandId, true)
             .then((response) => {
                 const thislot = response.extra.id;
@@ -355,14 +354,23 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                 }));
                 setSelectedWorker('');
 
-                axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${name}`)
-                    // submitSets(submitCollection.findWorkerIdByName, '?name=' + name, true)
+                // axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${name}`)
+
+                let sendobjoriginal = JSON.parse(JSON.stringify(submitCollection.findWorkerIdByName));
+                let sendobj = submitCollection.findWorkerIdByName;
+                sendobj.url = (sendobj.url + '?name=' + name);
+
+                submitSets(submitCollection.findWorkerIdByName, true)
                     .then((response) => {
                         console.log("save worker : ", response);
-                        const workerId = 1
-                        console.log('Worker ID:', workerId);
 
+                        const workerId = response.extra.workerId;
+
+                        console.log('Worker ID:', workerId);
                         console.log('New task card id: ', taskCardId);
+
+                        console.log(sendobjoriginal);
+                        sendobj.url = sendobjoriginal.url
 
                         if (taskCardId == null) {
                             const newTaskCard = {
@@ -370,7 +378,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                                 taskAssignedId: taskAssignedid,
                             };
 
-                            // axios.post('http://localhost:8081/service/master/task-card-save', newTaskCard)
+                            // axios.post('http://localhost:8080/service/master/task-card-save', newTaskCard)
                             submitSets(submitCollection.task_card_save, newTaskCard, true)
                                 .then((savedTaskCardResponse) => {
                                     console.log('New Task card added', savedTaskCardResponse.extra);
@@ -386,14 +394,15 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                                         lotId,
                                         taskCardId: newtaskCardId,
                                         quantity,
+
                                     };
 
-                                    // axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
+                                    // axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
                                     submitSets(submitCollection.work_assigned_save, addWorkAssigned, true)
                                         .then((response) => {
-                                            console.log('Work assigned added successfully:', response);
+                                            console.log('Work assigned added successfully:', response.data);
                                             alertService.success('Worker added successfully');
-                                            // window.location.reload();
+                                            window.location.reload()
                                         })
                                         .catch((error) => {
                                             console.error('Error adding work assigned:', error);
@@ -414,13 +423,13 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                                 quantity,
                             };
 
-                            // axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
+                            // axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
                             submitSets(submitCollection.work_assigned_save, addWorkAssigned, true)
                                 .then((response) => {
                                     console.log('Work assigned added successfully:', response);
                                     alertService.success('Worker added successfully');
                                     AddedWorkerList();
-                                    // window.location.reload();
+                                    window.location.reload()
                                 })
                                 .catch((error) => {
                                     console.error('Error adding work assigned:', error);
@@ -443,13 +452,23 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                 setSelectedWorker('');
 
 
-                axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${name}`)
-                    // submitSets(submitCollection.findWorkerIdByName, '?name=' + name, true)
+                // axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${name}`)
+                let sendobjoriginal = JSON.parse(JSON.stringify(submitCollection.findWorkerIdByName));
+                let sendobj = submitCollection.findWorkerIdByName;
+                sendobj.url = (sendobj.url + '?name=' + name);
+
+                submitSets(submitCollection.findWorkerIdByName, true)
+
                     .then((response) => {
                         const workerId = response.extra.workerId
                         console.log('Worker ID :', workerId);
 
                         console.log('New task card id: ', taskCardId)
+
+
+                        console.log(sendobjoriginal);
+                        sendobj.url = sendobjoriginal.url
+
                         // Check if taskCardId is null
                         if (taskCardId == null) {
                             // If null, it means it's a new card
@@ -458,7 +477,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                                 taskAssignedId: taskAssignedid
                             };
 
-                            // axios.post('http://localhost:8081/service/master/task-card-save', newTaskCard)
+                            // axios.post('http://localhost:8080/service/master/task-card-save', newTaskCard)
                             submitSets(submitCollection.task_card_save, newTaskCard, true)
                                 .then((savedTaskCardResponse) => {
                                     console.log('New Task card added', savedTaskCardResponse.extra);
@@ -472,15 +491,15 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                                         taskId,
                                         taskAssignedId: taskAssignedid,
                                         lotId,
-                                        taskCardId: newtaskCardId
+                                        taskCardId: newtaskCardId,
                                     }
 
-                                    // axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
+                                    // axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
                                     submitSets(submitCollection.work_assigned_save, addWorkAssigned, true)
                                         .then((response) => {
-                                            console.log('Work assigned added successfully:', response);
+                                            console.log('Work assigned added successfully:', response.data);
                                             alertService.success('Worker added successfully');
-                                            // window.location.reload();
+                                            window.location.reload()
                                         })
                                         .catch((error) => {
                                             console.error('Error adding work assigned:', error);
@@ -498,16 +517,16 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                                 taskId,
                                 taskAssignedId: taskAssignedid,
                                 lotId,
-                                taskCardId: taskCardId
+                                taskCardId: taskCardId,
                             }
 
-                            // axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
+                            // axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
                             submitSets(submitCollection.work_assigned_save, addWorkAssigned, true)
                                 .then((response) => {
-                                    console.log('Work assigned added successfully:', response);
+                                    console.log('Work assigned added successfully:', response.data);
                                     alertService.success('Worker added successfully');
                                     AddedWorkerList();
-                                    // window.location.reload();
+                                    window.location.reload()
                                 })
                                 .catch((error) => {
                                     console.error('Error adding work assigned:', error);
@@ -527,7 +546,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
 
         //get expense id according to the expense type
 
-        // axios.get(`http://localhost:8081/service/master/find-by-type?expenseType=${selectedExpenseType}`)
+        // axios.get(`http://localhost:8080/service/master/find-by-type?expenseType=${selectedExpenseType}`)
         submitSets(submitCollection.find_by_type, '?expenseType=' + selectedExpenseType, true)
             .then((response) => {
                 const expenseId = response.expenseId;
@@ -541,10 +560,10 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                 };
 
                 //save task expense 
-                // axios.post('http://localhost:8081/service/master/task-expense-save', addTaskExpense)
+                // axios.post('http://localhost:8080/service/master/task-expense-save', addTaskExpense)
                 submitSets(submitCollection.task_expense_save, addTaskExpense, true)
                     .then((response) => {
-                        console.log('Task expense added successfully:', response);
+                        console.log('Task expense added successfully:', response.data);
                         alertService.success('Task-expense added successfully');
 
                         setValue('');
@@ -570,26 +589,34 @@ const ManageOngoingTask = ({ selectedLandId }) => {
         const selectedWorker = localStorage.getItem('selectedWorker');
         console.log('selected worker: ', selectedWorker);
 
-        axios.post(`http://localhost:8081/service/master/findWorkerIdByName?name=${selectedWorker}`)
-            // submitSets(submitCollection.findWorkerIdByName, '?name=' + selectedWorker, true)
+        // axios.post(`http://localhost:8080/service/master/findWorkerIdByName?name=${selectedWorker}`)
+        let sendobjoriginal = JSON.parse(JSON.stringify(submitCollection.findWorkerIdByName));
+        let sendobj = submitCollection.findWorkerIdByName;
+        sendobj.url = (sendobj.url + '?name=' + selectedWorker);
+
+        submitSets(submitCollection.findWorkerIdByName, true)
             .then((response) => {
                 const workerId = response.extra.workerId
                 // setWorkerId(storeWorkerId);
                 console.log('Worker ID :', workerId);
+
+                console.log(sendobjoriginal);
+                sendobj.url = sendobjoriginal.url
 
                 const addWorkAssigned = {
                     quantity,
                     startDate,
                     workerId,
                     taskId,
-                    taskAssignedId,
-                    lotId
+                    taskAssignedId: taskAssignedid,
+                    lotId,
+
                 }
 
-                // axios.post('http://localhost:8081/service/master/work-assigned-save', addWorkAssigned)
+                // axios.post('http://localhost:8080/service/master/work-assigned-save', addWorkAssigned)
                 submitSets(submitCollection.work_assigned_save, addWorkAssigned, true)
                     .then((response) => {
-                        console.log('Work assigned added successfully:', response);
+                        console.log('Work assigned added successfully:', response.data);
 
                     })
                     .catch((error) => {
@@ -610,9 +637,18 @@ const ManageOngoingTask = ({ selectedLandId }) => {
             newStatus: 'completed',
         }
 
-        axios.post(`http://localhost:8081/service/master/updateEndDate/${taskAssignedid}`, details)
+        // axios.post(`http://localhost:8080/service/master/updateEndDate/${taskAssignedid}`, details)
+
+        let sendobjoriginal = JSON.parse(JSON.stringify(submitCollection.updateEndDate));
+        let sendobj = submitCollection.updateEndDate;
+        sendobj.url = (sendobj.url + '/' + taskAssignedid);
+
+        submitSets(submitCollection.updateEndDate, details, true)
             .then((response) => {
-                window.location.reload();
+
+                console.log(sendobjoriginal);
+                sendobj.url = sendobjoriginal.url
+                window.location.reload()
             })
             .catch((error) => {
                 console.error(`Error updating endDate`, error);
@@ -623,11 +659,21 @@ const ManageOngoingTask = ({ selectedLandId }) => {
 
     const handleRemoveWorker = (workAssignedId) => {
 
-        axios.delete(`http://localhost:8081/service/master/work-assigned-delete/${workAssignedId}`)
+        // axios.delete(`http://localhost:8080/service/master/work-assigned-delete/${workAssignedId}`)
+
+        let sendobjoriginal = JSON.parse(JSON.stringify(submitCollection.work_assigned_delete));
+        let sendobj = submitCollection.work_assigned_delete;
+        sendobj.url = (sendobj.url + '/' + workAssignedId);
+
+        submitSets(submitCollection.work_assigned_delete, true)
             .then(response => {
-                console.log('Worker removed successfully:', response.data);
+                console.log('Worker removed successfully:', response);
+
+                console.log(sendobjoriginal);
+                sendobj.url = sendobjoriginal.url
+
                 AddedWorkerList();
-                // window.location.reload();
+                window.location.reload()
 
             })
             .catch(error => {
@@ -643,11 +689,11 @@ const ManageOngoingTask = ({ selectedLandId }) => {
 
     const getTaskExpenses = (e) => {
         console.log('task ass id: ', taskAssignedid);
-        // axios.get(`http://localhost:8081/service/master/findByTaskAssignedId?taskAssignedId=${taskAssignedid}`)
+        // axios.get(`http://localhost:8080/service/master/findByTaskAssignedId?taskAssignedId=${taskAssignedid}`)
         submitSets(submitCollection.findByTaskAssignedId, '?taskAssignedId=' + taskAssignedid, true)
             .then((response) => {
-                console.log('task expenses ------------ ', response.extra)
-                setTaskExpenses(response.extra);
+                console.log('task expenses ------------ ', response.data.extra)
+                setTaskExpenses(response.data.extra);
             })
             .catch((error) => {
                 console.error('Error fetching task expenses:', error);
@@ -797,41 +843,58 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                                             {taskStatus === 'ongoing' ? (
                                                 <>
                                                     <div className="dropdown-and-button-container">
-                                                        <select
-                                                            value={selectedWorker[taskDetail.taskCardId] || ''}
-                                                            onChange={(e) =>
-                                                                handleSelectedWorkerChange(taskDetail.taskCardId, e.target.value)
-                                                            }
-                                                            className="dropdown-input-select-worker"
-                                                        >
-                                                            <option value="">{t('selectaworker')}</option>
-                                                            {workerNames.map((workerName) => (
-                                                                <option key={workerName.name} value={workerName.name}>
-                                                                    {workerName.name}
-                                                                </option>
-                                                            ))}
-                                                        </select>
+
+                                                        {taskDetail.cardStatus !== 'completed' ? (
+                                                            <select
+                                                                value={selectedWorker[taskDetail.taskCardId] || ''}
+                                                                onChange={(e) =>
+                                                                    handleSelectedWorkerChange(taskDetail.taskCardId, e.target.value)
+                                                                }
+                                                                className="dropdown-input-select-worker"
+                                                            >
+                                                                <option value="">{t('selectaworker')}</option>
+                                                                {workerNames.map((workerName) => (
+                                                                    <option key={workerName.name} value={workerName.name}>
+                                                                        {workerName.name}
+                                                                    </option>
+                                                                ))}
+                                                            </select>
+                                                        ) : (
+                                                            <div></div>
+                                                        )}
 
                                                         {taskStatus === 'ongoing' ? (
                                                             <>
                                                                 {ongoingTaskName === 'Pluck' ? (
-                                                                    <input
-                                                                        type="number"
-                                                                        value={quantityForPluck[taskDetail.taskCardId] || ''}
-                                                                        onChange={(e) =>
-                                                                            handleQuantityChange(taskDetail.taskCardId, e.target.value)
-                                                                        }
-                                                                        placeholder="Qty."
-                                                                        className="quantity-input"
-                                                                        style={{ width: '100px', height: '40px' }}
-                                                                    />
+                                                                    <>
+                                                                        {taskDetail.cardStatus !== 'completed' ? (
+                                                                            <input
+                                                                                type="number"
+                                                                                value={quantityForPluck[taskDetail.taskCardId] || ''}
+                                                                                onChange={(e) =>
+                                                                                    handleQuantityChange(taskDetail.taskCardId, e.target.value)
+                                                                                }
+                                                                                placeholder="Qty."
+                                                                                className="quantity-input"
+                                                                                style={{ width: '100px', height: '40px' }}
+                                                                            />
+
+                                                                        ) : (
+                                                                            <div></div>
+                                                                        )}
+                                                                    </>
                                                                 ) : (
                                                                     <div></div>
                                                                 )}
 
-                                                                <button className='add-small' onClick={() => handleAddSelectedWorker(taskDetail.taskCardId)}>
-                                                                    {t('add')}
-                                                                </button>
+                                                                {taskDetail.cardStatus !== 'completed' ? (
+
+                                                                    <button className='add-small' onClick={() => handleAddSelectedWorker(taskDetail.taskCardId)}>
+                                                                        {t('add')}
+                                                                    </button>
+                                                                ) : (
+                                                                    <div></div>
+                                                                )}
 
                                                                 {taskDetail.cardStatus === 'completed' ? (
                                                                     <button className="reopen-button" onClick={() => handleReopenTask(taskDetail.taskCardId)}>

@@ -16,7 +16,7 @@ export class ReportServiceImpl implements ReportService {
    * @returns any
    */
   async generateEmployeeAttendanceReport(startDate: Date, endDate: Date, lotId: number, landId: number): Promise<any[]> {
-    try{
+    try {
       return this.reportDao.generateEmployeeAttendanceReport(startDate, endDate, lotId, landId);
     } catch (err) {
       console.error(err);
@@ -116,7 +116,7 @@ export class ReportServiceImpl implements ReportService {
    * @returns any
    */
   async generateOtherCostYieldReport(startDate: Date, endDate: Date, landId: number, lotId: number): Promise<any> {
-    try{
+    try {
       const monthNames = [
         'January', 'February', 'March', 'April', 'May', 'June',
         'July', 'August', 'September', 'October', 'November', 'December'
@@ -186,8 +186,8 @@ export class ReportServiceImpl implements ReportService {
    * @param cateNum 
    * @returns 
    */
-  async getSummaryReport(landId?: number, cateNum?: number): Promise<any> {
-    return this.getSummary(landId);
+  async getSummaryReport(landId?: number, cateNum?: number, fromDate?: string): Promise<any> {
+    return this.getSummary(landId, fromDate);
   }
 
   /**
@@ -195,8 +195,8 @@ export class ReportServiceImpl implements ReportService {
    * @param landId 
    * @returns 
    */
-  async getWeeklySummaryReport(landId?: number): Promise<any> {
-    return this.getWeekSummary(landId);
+  async getWeeklySummaryReport(landId?: number, fromDate?: string, toDate?: string): Promise<any> {
+    return this.getWeekSummary(landId, fromDate, toDate);
   }
 
   /**
@@ -204,8 +204,8 @@ export class ReportServiceImpl implements ReportService {
    * @param landId 
    * @returns 
    */
-  async getDailySummaryReport(landId?: number): Promise<any> {
-    return this.GetDailySummary(landId);
+  async getDailySummaryReport(landId?: number, fromDate?: string, toDate?: string): Promise<any> {
+    return this.GetDailySummary(landId, fromDate, toDate);
   }
 
 
@@ -214,25 +214,36 @@ export class ReportServiceImpl implements ReportService {
    * @param landId 
    * @returns any
    */
-  async getSummary(landId: number): Promise<any> {
+  async getSummary(landId: number, fromDate: string): Promise<any> {
 
     try {
-      const workAssignedEntity = await this.reportDao.getWorkAssignedEntity(landId);
-      const monthlyExpenses = await this.reportDao.getPluckExpense(landId);
-      const monthlyExpenses2 = await this.reportDao.getOtherExpenses(landId);
-      const monthlyExpenses3 = await this.reportDao.getNonCrewExpenses(landId);
-      const groupedIncomeByMonthAndYear = await this.reportDao.getTotalIncome(landId);
-      const monthlyExpenses4 = await this.reportDao.getTaskExpenses(landId);
-      const quantitySummary = await this.GetQuantitySummary(workAssignedEntity);
+      const workAssignedEntity = await this.reportDao.getWorkAssignedEntity(landId, fromDate);
+      const monthlyExpenses = await this.reportDao.getPluckExpense(landId, fromDate);
+      const monthlyExpenses2 = await this.reportDao.getOtherExpenses(landId, fromDate);
+      const monthlyExpenses3 = await this.reportDao.getNonCrewExpenses(landId, fromDate);
+      const monthlyExpenses4 = await this.reportDao.getTaskExpenses(landId, fromDate);
+      const quantitySummary = await this.GetQuantitySummary(workAssignedEntity, fromDate);
+      const groupedIncomeByMonthAndYear = await this.reportDao.getTotalIncome(landId, fromDate);
 
-      const combinedSummary = await Promise.all(Object.entries(quantitySummary).map(async ([key, totalQuantity]) => {
-        const [month, year] = key.split(' ');
+      const allMonths = Array.from(
+        new Set([
+          ...Object.keys(quantitySummary),
+          ...monthlyExpenses.map(expense => expense.monthYear),
+          ...monthlyExpenses2.map(otherExpense => otherExpense.monthYear),
+          ...monthlyExpenses3.map(taskExpense => taskExpense.monthYear),
+          ...monthlyExpenses4.map(taskExpense => taskExpense.monthYear),
+          ...groupedIncomeByMonthAndYear.map(income => income.monthYear)
+        ])
+      );
 
-        const expenseForMonth = monthlyExpenses.find(expense => expense.monthYear === `${month} ${year}`);
-        const finalMonthlyExpenses = monthlyExpenses2.find(otherExpense => otherExpense.monthYear === `${month} ${year}`);
-        const additionalMonthlyExpenses = monthlyExpenses3.find(taskExpense => taskExpense.monthYear === `${month} ${year}`);
-        const incomeForMonth = groupedIncomeByMonthAndYear.find(income => income.monthYear === `${month} ${year}`);
-        const taskExpenseForMonth = monthlyExpenses4.find(taskExpense => taskExpense.monthYear === `${month} ${year}`);
+      const combinedSummary = await Promise.all(allMonths.map(async (monthYear) => {
+        const [month, year] = monthYear.split(' ');
+
+        const expenseForMonth = monthlyExpenses.find(expense => expense.monthYear === monthYear);
+        const finalMonthlyExpenses = monthlyExpenses2.find(otherExpense => otherExpense.monthYear === monthYear);
+        const additionalMonthlyExpenses = monthlyExpenses3.find(taskExpense => taskExpense.monthYear === monthYear);
+        const incomeForMonth = groupedIncomeByMonthAndYear.find(income => income.monthYear === monthYear);
+        const taskExpenseForMonth = monthlyExpenses4.find(taskExpense => taskExpense.monthYear === monthYear);
 
         const CIR = await this.findCIR(taskExpenseForMonth, incomeForMonth);
         const Profit = await this.findProfit(incomeForMonth, taskExpenseForMonth);
@@ -240,13 +251,12 @@ export class ReportServiceImpl implements ReportService {
         return {
           month,
           year,
-          totalQuantity,
+          totalQuantity: quantitySummary[monthYear] || 0,
           PluckExpense: expenseForMonth ? parseFloat(expenseForMonth.totalExpense) : 0,
           OtherExpenses: finalMonthlyExpenses ? parseFloat(finalMonthlyExpenses.totalExpense) : 0,
           NonCrewExpenses: additionalMonthlyExpenses ? parseFloat(additionalMonthlyExpenses.totalExpense) : 0,
           TotalIncome: incomeForMonth ? parseFloat(incomeForMonth.totalIncome) : 0,
           TaskExpenses: taskExpenseForMonth ? parseFloat(taskExpenseForMonth.totalExpense) : 0,
-
           Profit: Profit,
           CIR: CIR,
         };
@@ -256,9 +266,45 @@ export class ReportServiceImpl implements ReportService {
 
     } catch (e) {
       console.log(e);
-
     }
   }
+
+
+  async GetQuantitySummary(workAssignedEntity: any, fromDate: string): Promise<any> {
+
+    const filteredWorkAssigned = fromDate
+      ? workAssignedEntity.filter((workAssigned: any) => {
+        const workDate = workAssigned.taskCard.workDate || workAssigned.startDate.toISOString().split("T")[0];
+        const yearMonthFromDate = fromDate.substring(0, 7);
+        const yearMonthWorkDate = workDate.substring(0, 7);
+        return yearMonthWorkDate === yearMonthFromDate;
+      })
+      : workAssignedEntity;
+
+    const quantitySummary = filteredWorkAssigned.reduce((summary: any, workAssigned: any) => {
+      const workDate = workAssigned.taskCard.workDate || workAssigned.startDate.toISOString().split("T")[0];
+      const year = new Date(workDate).getFullYear();
+      const month = new Date(workDate).toLocaleString('en-US', { month: 'long' });
+      const key = `${month} ${year}`;
+
+      if (!summary[key]) {
+        summary[key] = 0;
+      }
+
+      summary[key] += workAssigned.quantity || 0;
+
+      console.log("Summary :", summary);
+
+      return summary;
+    }, {});
+
+    console.log("Qty Summary :", quantitySummary);
+
+    return quantitySummary;
+  }
+
+
+
 
   async findCIR(taskExpenseForMonth: any, incomeForMonth: any): Promise<number> {
 
@@ -275,45 +321,33 @@ export class ReportServiceImpl implements ReportService {
     return parseFloat(profit.toString());
   }
 
-  async GetQuantitySummary(workAssignedEntity: any): Promise<any> {
-
-    const quantitySummary = workAssignedEntity.reduce((summary: any, workAssigned: any) => {
-      const workDate = workAssigned.taskCard.workDate || workAssigned.startDate.toISOString().split("T")[0];
-      const year = new Date(workDate).getFullYear();
-      const month = new Date(workDate).toLocaleString('en-US', { month: 'long' });
-      const key = `${month} ${year}`;
-
-      if (!summary[key]) {
-        summary[key] = 0;
-      }
-
-      summary[key] += workAssigned.quantity || 0;
-
-      return summary;
-    }, {})
-
-    return quantitySummary;
-
-  }
 
 
   /**
    * Get Week - Summary Report
    * @param landId 
    */
-  async getWeekSummary(landId: number): Promise<any> {
+  async getWeekSummary(landId: number, fromDate: string, toDate: string): Promise<any> {
 
     try {
 
-      const workAssignedEntity = await this.reportDao.getWorkAssignedEntityForWeek(landId);
-      const weeklyExpenses = await this.reportDao.getPluckExpenseWeek(landId);
-      const weeklyExpenses2 = await this.reportDao.getOtherExpensesWeek(landId);
-      const weeklyExpenses3 = await this.reportDao.getNonCrewExpensesWeek(landId);
-      const quantitySummary = await this.GetQuantitySummaryWeek(workAssignedEntity);
+      const workAssignedEntity = await this.reportDao.getWorkAssignedEntityForWeek(landId, fromDate, toDate);
+      const weeklyExpenses = await this.reportDao.getPluckExpenseWeek(landId, fromDate, toDate);
+      const weeklyExpenses2 = await this.reportDao.getOtherExpensesWeek(landId, fromDate, toDate);
+      const weeklyExpenses3 = await this.reportDao.getNonCrewExpensesWeek(landId, fromDate, toDate);
+      const quantitySummary = await this.GetQuantitySummaryWeek(workAssignedEntity, fromDate, toDate);
 
-      const combinedSummary = Object.entries(quantitySummary).map(([key, totalQuantity]) => {
-        const [year, weekNumber] = key.split(' W');
-        const weekYear = `${year} W${weekNumber}`;
+      const allWeeks = Array.from(
+        new Set([
+          ...Object.keys(quantitySummary),
+          ...weeklyExpenses.map(expense => `${expense.year} W${expense.weekNumber}`),
+          ...weeklyExpenses2.map(otherExpense => `${otherExpense.year} W${otherExpense.weekNumber}`),
+          ...weeklyExpenses3.map(taskExpense => `${taskExpense.year} W${taskExpense.weekNumber}`),
+        ])
+      );
+
+      const combinedSummary = allWeeks.map((weekKey) => {
+        const [year, weekNumber] = weekKey.split(' W');
 
         const expenseForWeek = weeklyExpenses.find(expense => expense.weekNumber === parseInt(weekNumber) && expense.year === parseInt(year));
         const finalWeeklyExpenses = weeklyExpenses2.find(otherExpense => otherExpense.weekNumber === parseInt(weekNumber) && otherExpense.year === parseInt(year));
@@ -322,7 +356,7 @@ export class ReportServiceImpl implements ReportService {
         return {
           year: parseInt(year),
           weekNumber: parseInt(weekNumber),
-          totalQuantity,
+          totalQuantity: quantitySummary[weekKey] || 0,
           PluckExpense: expenseForWeek ? parseFloat(expenseForWeek.totalExpense) : 0,
           OtherExpenses: finalWeeklyExpenses ? parseFloat(finalWeeklyExpenses.totalExpense) : 0,
           NonCrewExpenses: additionalWeeklyExpenses ? parseFloat(additionalWeeklyExpenses.totalExpense) : 0,
@@ -341,15 +375,23 @@ export class ReportServiceImpl implements ReportService {
 
   }
 
+
   /**
    * Get Weekly Quntity
    * @param workAssignedEntity 
    * @returns 
    */
-  async GetQuantitySummaryWeek(workAssignedEntity: any): Promise<any> {
+  async GetQuantitySummaryWeek(workAssignedEntity: any, fromDate: string, toDate: string): Promise<any> {
 
     const quantitySummary = workAssignedEntity.reduce((summary: any, workAssigned: any) => {
       const workDate = workAssigned.taskCard.workDate || workAssigned.startDate.toISOString().split("T")[0];
+
+      if (fromDate && toDate) {
+        if (workDate < fromDate || workDate > toDate) {
+          return summary;
+        }
+      }
+
       const year = moment(workDate).isoWeekYear();
       const weekNumber = moment(workDate).isoWeek();
 
@@ -364,8 +406,9 @@ export class ReportServiceImpl implements ReportService {
       return summary;
     }, {});
 
-    return quantitySummary;
+    console.log(quantitySummary);
 
+    return quantitySummary;
   }
 
   /**
@@ -373,24 +416,33 @@ export class ReportServiceImpl implements ReportService {
    * @param landId 
    * @returns 
    */
-  async GetDailySummary(landId: number): Promise<any> {
+  async GetDailySummary(landId: number, fromDate: string, toDate: string): Promise<any> {
 
     try {
 
-      const workAssignedEntity = await this.reportDao.getWorkAssignedEntityForDay(landId);
-      const dailyExpenses = await this.reportDao.getPluckExpenseDay(landId);
-      const dailyExpenses2 = await this.reportDao.getOtherExpensesDay(landId);
-      const dailyExpenses3 = await this.reportDao.getNonCrewExpensesDay(landId);
-      const quantitySummary = await this.GetQuantitySummaryDay(workAssignedEntity);
+      const workAssignedEntity = await this.reportDao.getWorkAssignedEntityForDay(landId, fromDate, toDate);
+      const dailyExpenses = await this.reportDao.getPluckExpenseDay(landId, fromDate, toDate);
+      const dailyExpenses2 = await this.reportDao.getOtherExpensesDay(landId, fromDate, toDate);
+      const dailyExpenses3 = await this.reportDao.getNonCrewExpensesDay(landId, fromDate, toDate);
+      const quantitySummary = await this.GetQuantitySummaryDay(workAssignedEntity, fromDate, toDate);
 
-      const combinedSummary = Object.entries(quantitySummary).map(([date, totalQuantity]) => {
-        const expenseForDate = dailyExpenses.find(expense => expense.date === date);
-        const finalDailyExpenses = dailyExpenses2.find(otherExpense => otherExpense.date === date);
-        const additionalDailyExpenses = dailyExpenses3.find(taskExpense => taskExpense.date === date);
+      const allDates = Array.from(
+        new Set([
+          ...Object.keys(quantitySummary),
+          ...dailyExpenses.map(expense => expense.formattedDate),
+          ...dailyExpenses2.map(otherExpense => otherExpense.formattedDate),
+          ...dailyExpenses3.map(taskExpense => taskExpense.formattedDate),
+        ])
+      );
+
+      const combinedSummary = allDates.map((date) => {
+        const expenseForDate = dailyExpenses.find(expense => expense.formattedDate === date);
+        const finalDailyExpenses = dailyExpenses2.find(otherExpense => otherExpense.formattedDate === date);
+        const additionalDailyExpenses = dailyExpenses3.find(taskExpense => taskExpense.formattedDate === date);
 
         return {
           date,
-          totalQuantity,
+          totalQuantity: quantitySummary[date] || 0,
           PluckExpense: expenseForDate ? parseFloat(expenseForDate.totalExpense) : 0,
           OtherExpenses: finalDailyExpenses ? parseFloat(finalDailyExpenses.totalExpense) : 0,
           NonCrewExpenses: additionalDailyExpenses ? parseFloat(additionalDailyExpenses.totalExpense) : 0,
@@ -402,20 +454,29 @@ export class ReportServiceImpl implements ReportService {
       return combinedSummary;
 
     } catch (err) {
-
+      console.error(err);
     }
 
   }
+
 
   /**
    * Get Daily Quantity
    * @param workAssignedEntity 
    * @returns 
    */
-  async GetQuantitySummaryDay(workAssignedEntity: any): Promise<any> {
+  async GetQuantitySummaryDay(workAssignedEntity: any, fromDate: string, toDate: string): Promise<any> {
+    console.log("dates : ", fromDate, toDate);
 
-    const quantitySummary = workAssignedEntity.reduce((summary, workAssigned) => {
-      const workDate = workAssigned.taskCard.workDate || workAssigned.startDate.toISOString().split("T")[0];
+    const quantitySummary = workAssignedEntity.reduce((summary: any, workAssigned: any) => {
+      const workDate = workAssigned.taskCard.workDate || workAssigned.createdDate.toISOString().split("T")[0];
+
+      if (fromDate && toDate) {
+        if (workDate < fromDate || workDate > toDate) {
+          return summary;
+        }
+      }
+
       const date = moment(workDate).format("YYYY-MM-DD");
 
       if (!summary[date]) {
@@ -428,7 +489,7 @@ export class ReportServiceImpl implements ReportService {
     }, {});
 
     return quantitySummary;
-
   }
+
 
 }

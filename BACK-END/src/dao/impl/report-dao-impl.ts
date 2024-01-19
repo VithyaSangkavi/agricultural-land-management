@@ -11,6 +11,8 @@ import { WorkerEntity } from '../../entity/master/worker-entity';
 import { ExpensesEntity } from '../../entity/master/expense-entity';
 
 import moment from 'moment';
+import { LandEntity } from '../../entity/master/land-entity';
+import { format, parse } from 'date-fns';
 export class ReportDaoImpl implements ReportDao {
 
   //employee-attendance report
@@ -116,11 +118,11 @@ export class ReportDaoImpl implements ReportDao {
     const taskExpenseRepository = getConnection().getRepository(TaskExpenseEntity);
 
     const taskExpensesQuery = taskExpenseRepository.createQueryBuilder('task_expense')
-    .select('SUM(task_expense.value)', 'cost')
-    .addSelect('EXTRACT(MONTH FROM task_expense.createdDate)', 'month')
+      .select('SUM(task_expense.value)', 'cost')
+      .addSelect('EXTRACT(MONTH FROM task_expense.createdDate)', 'month')
 
-     // Filter by date range
-     if (startDate && endDate) {
+    // Filter by date range
+    if (startDate && endDate) {
       taskExpensesQuery.andWhere('task_expense.createdDate BETWEEN :startDate AND :endDate', {
         startDate,
         endDate,
@@ -136,8 +138,8 @@ export class ReportDaoImpl implements ReportDao {
         .andWhere('land.id = :landId', { landId });
     }
 
-     // filtering by lotId
-     if (lotId) {
+    // filtering by lotId
+    if (lotId) {
       taskExpensesQuery
         .innerJoin('task_expense.taskType', 'taskType')
         .innerJoin('taskType.crop', 'crop')
@@ -157,8 +159,8 @@ export class ReportDaoImpl implements ReportDao {
     const incomeRepository = getConnection().getRepository(IncomeEntity);
 
     const incomesQuery = incomeRepository.createQueryBuilder('income')
-    .select('SUM(income.price)', 'yield')
-    .addSelect('income.month')
+      .select('SUM(income.price)', 'yield')
+      .addSelect('income.month')
 
     // Filter by date range
     if (startDate && endDate) {
@@ -317,99 +319,152 @@ export class ReportDaoImpl implements ReportDao {
 
   //Monthly Summary Report - Start
 
-  async getWorkAssignedEntity(landId?: number): Promise<WorkAssignedEntity[]> {
+  async getWorkAssignedEntity(landId?: number, fromDate?: string): Promise<WorkAssignedEntity[]> {
 
+    console.log("dao date: ", fromDate);
     const workAssignedRepository = getConnection().getRepository(WorkAssignedEntity);
 
-    const workAssignedEntities = await workAssignedRepository
+    let queryBuilder = workAssignedRepository
       .createQueryBuilder("workAssigned")
       .leftJoinAndSelect("workAssigned.taskCard", "taskCard")
       .leftJoinAndSelect("taskCard.taskAssigned", "taskAssigned")
       .leftJoinAndSelect("taskAssigned.land", "land")
-      .where("land.id = :landId", { landId })
+      .where("workAssigned.status = :status", { status: "online"})
+
+    if (landId !== undefined) {
+      queryBuilder = queryBuilder.andWhere("land.id = :landId", { landId });
+    }
+
+    const workAssignedEntities = await queryBuilder
       .distinct(true)
       .getMany();
 
+    // console.log(workAssignedEntities)
+
     return workAssignedEntities;
-
   }
 
-  async getPluckExpense(landId?: number): Promise<any[]> {
 
-    const monthlyExpenses = await getRepository(TaskExpenseEntity)
+  async getPluckExpense(landId?: number, fromDate?: string): Promise<any[]> {
+    const queryBuilder = getRepository(TaskExpenseEntity)
       .createQueryBuilder("taskExpense")
       .innerJoin("taskExpense.taskAssigned", "taskAssigned")
       .innerJoin("taskAssigned.land", "land")
-      .innerJoin(TaskTypeEntity, "task", "task.taskName = :taskName AND task.id = taskAssigned.taskId", { taskName: "Pluck" })
-      .where("land.id = :landId", { landId })
+      .innerJoin(TaskTypeEntity, "task", "task.taskName = :taskName AND task.id = taskAssigned.taskId", { taskName: "Pluck" });
+
+    if (landId !== undefined) {
+      queryBuilder.where("land.id = :landId", { landId });
+    }
+
+    if (fromDate !== undefined) {
+      queryBuilder.andWhere("DATE_FORMAT(taskExpense.createdDate, '%Y-%m') = :fromDate", { fromDate });
+    }
+
+    const monthlyExpenses = await queryBuilder
       .groupBy("DATE_FORMAT(taskExpense.createdDate, '%M %Y')")
       .select("DATE_FORMAT(taskExpense.createdDate, '%M %Y')", "monthYear")
       .addSelect("SUM(taskExpense.value)", "totalExpense")
       .distinct(true)
       .getRawMany();
 
-    return monthlyExpenses
+    // console.log(monthlyExpenses);
 
+    return monthlyExpenses;
   }
 
 
-  async getOtherExpenses(landId?: number): Promise<any[]> {
 
-    const monthlyExpenses2 = await getRepository(TaskExpenseEntity)
+  async getOtherExpenses(landId?: number, fromDate?: string): Promise<any[]> {
+    const queryBuilder = getRepository(TaskExpenseEntity)
       .createQueryBuilder("taskExpense")
       .innerJoin("taskExpense.taskAssigned", "taskAssigned")
       .innerJoin("taskAssigned.land", "land")
-      .innerJoin(TaskTypeEntity, "task", "task.taskName <> :pluckTaskName AND task.id = taskAssigned.taskId", { pluckTaskName: "Pluck" })
-      .where("land.id = :landId", { landId })
+      .innerJoin(TaskTypeEntity, "task", "task.taskName <> :pluckTaskName AND task.id = taskAssigned.taskId", { pluckTaskName: "Pluck" });
+
+    if (landId !== undefined) {
+      queryBuilder.where("land.id = :landId", { landId });
+    }
+
+    if (fromDate !== undefined) {
+      queryBuilder.andWhere("DATE_FORMAT(taskExpense.createdDate, '%Y-%m') = :fromDate", { fromDate });
+    }
+
+    const monthlyExpenses2 = await queryBuilder
       .groupBy("DATE_FORMAT(taskExpense.createdDate, '%M %Y')")
       .select("DATE_FORMAT(taskExpense.createdDate, '%M %Y')", "monthYear")
       .addSelect("SUM(taskExpense.value)", "totalExpense")
       .distinct(true)
       .getRawMany();
+
+    // console.log(monthlyExpenses2);
 
     return monthlyExpenses2;
-
   }
 
-  async getNonCrewExpenses(landId?: number): Promise<any[]> {
 
-    const monthlyExpenses3 = await getRepository(TaskExpenseEntity)
+  async getNonCrewExpenses(landId?: number, fromDate?: string): Promise<any[]> {
+    const queryBuilder = getRepository(TaskExpenseEntity)
       .createQueryBuilder("taskExpense")
       .innerJoin("taskExpense.taskAssigned", "taskAssigned")
       .innerJoin("taskExpense.expense", "expense")
       .innerJoin("taskAssigned.land", "land")
-      .where("expense.expenseType != :salaryExpenseType", { salaryExpenseType: "Salary" })
-      .andWhere("land.id = :landId", { landId })
+      .where("expense.expenseType != :salaryExpenseType", { salaryExpenseType: "Salary" });
+
+    if (landId !== undefined) {
+      queryBuilder.andWhere("land.id = :landId", { landId });
+    }
+
+    if (fromDate !== undefined) {
+      queryBuilder.andWhere("DATE_FORMAT(taskExpense.createdDate, '%Y-%m') = :fromDate", { fromDate });
+    }
+
+    const monthlyExpenses3 = await queryBuilder
       .groupBy("DATE_FORMAT(taskExpense.createdDate, '%M %Y')")
       .select("DATE_FORMAT(taskExpense.createdDate, '%M %Y')", "monthYear")
       .addSelect("SUM(taskExpense.value)", "totalExpense")
       .distinct(true)
       .getRawMany();
 
-    return monthlyExpenses3;
+    // console.log(monthlyExpenses3);
 
+    return monthlyExpenses3;
   }
 
-  async getTotalIncome(landId?: number): Promise<any[]> {
 
-    const groupedIncomeByMonthAndYear = await getRepository(IncomeEntity)
+  async getTotalIncome(landId?: number, fromDate?: string): Promise<any[]> {
+    const queryBuilder = getRepository(IncomeEntity)
       .createQueryBuilder("income")
       .select([
         "CONCAT(income.month, ' ', YEAR(income.createdDate)) AS monthYear",
         "SUM(income.price) AS totalIncome"
       ])
-      .distinct(true)
-      .where("income.landId = :landId", { landId })
+      .distinct(true);
+
+    if (landId !== undefined) {
+      queryBuilder.where("income.landId = :landId", { landId });
+    }
+
+    if (fromDate !== undefined) {
+      const parsedDate = parse(fromDate, 'yyyy-MM', new Date());
+      const formattedFromDate = format(parsedDate, 'MMMM yyyy');
+
+      console.log(formattedFromDate);
+
+      queryBuilder.andWhere("CONCAT(income.month, ' ', YEAR(income.createdDate)) = :yearMonthFromDate", { yearMonthFromDate: formattedFromDate });
+    }
+
+    const groupedIncomeByMonthAndYear = await queryBuilder
       .groupBy("monthYear")
       .getRawMany();
 
-    return groupedIncomeByMonthAndYear
+    // console.log(groupedIncomeByMonthAndYear);
 
+    return groupedIncomeByMonthAndYear;
   }
 
-  async getTaskExpenses(landId?: number): Promise<any[]> {
 
-    const monthlyExpenses4 = await getRepository(TaskExpenseEntity)
+  async getTaskExpenses(landId?: number, fromDate?: string): Promise<any[]> {
+    const queryBuilder = getRepository(TaskExpenseEntity)
       .createQueryBuilder("taskExpense")
       .innerJoin("taskExpense.taskAssigned", "taskAssigned")
       .innerJoin("taskAssigned.land", "land")
@@ -417,172 +472,258 @@ export class ReportDaoImpl implements ReportDao {
         "DATE_FORMAT(taskExpense.createdDate, '%M %Y') AS monthYear",
         "SUM(taskExpense.value) AS totalExpense"
       ])
-      .distinct(true)
-      .where("land.id = :landId", { landId })
+      .distinct(true);
+
+    if (landId !== undefined) {
+      queryBuilder.where("land.id = :landId", { landId });
+    }
+
+    if (fromDate !== undefined) {
+      queryBuilder.andWhere("DATE_FORMAT(taskExpense.createdDate, '%Y-%m') = :fromDate", { fromDate });
+    }
+
+    const monthlyExpenses4 = await queryBuilder
       .groupBy("monthYear")
       .getRawMany();
 
-    return monthlyExpenses4;
+    console.log(monthlyExpenses4);
 
+
+    return monthlyExpenses4;
   }
 
   //Total - weekly Summary Report
 
-  async getWorkAssignedEntityForWeek(landId?: number): Promise<WorkAssignedEntity[]> {
-
+  async getWorkAssignedEntityForWeek(landId?: number, fromDate?: string, toDate?: string): Promise<WorkAssignedEntity[]> {
     const workAssignedRepository = getConnection().getRepository(WorkAssignedEntity);
 
-    const workAssignedEntities = await workAssignedRepository
+    let queryBuilder = workAssignedRepository
       .createQueryBuilder("workAssigned")
       .leftJoinAndSelect("workAssigned.taskCard", "taskCard")
       .leftJoinAndSelect("taskCard.taskAssigned", "taskAssigned")
       .leftJoinAndSelect("taskAssigned.land", "land")
-      .where("land.id = :landId", { landId })
+      .where("workAssigned.status = :status", { status: "online"})
+
+    if (landId !== undefined) {
+      queryBuilder = queryBuilder.andWhere("land.id = :landId", { landId });
+    }
+
+    const workAssignedEntities = await queryBuilder
       .getMany();
 
+    // console.log(workAssignedEntities)
+
     return workAssignedEntities;
-
   }
 
-  async getPluckExpenseWeek(landId?: number): Promise<any[]> {
 
-    const weeklyExpenses = await getRepository(TaskExpenseEntity)
+
+  async getPluckExpenseWeek(landId?: number, fromDate?: string, toDate?: string): Promise<any[]> {
+
+    // console.log("pluck expense date: ", fromDate, toDate);
+
+    const queryBuilder = getRepository(TaskExpenseEntity)
+      .createQueryBuilder('taskExpense')
+      .innerJoin(TaskAssignedEntity, 'taskAssigned', 'taskAssigned.id = taskExpense.taskAssignedId')
+      .innerJoin(LandEntity, 'land', 'land.id = taskAssigned.landId')
+      .innerJoin(TaskTypeEntity, 'taskType', 'taskType.taskName = :taskName AND taskType.id = taskAssigned.taskId', { taskName: 'Pluck' });
+
+    if (landId !== undefined) {
+      queryBuilder.andWhere('land.id = :landId', { landId });
+    }
+
+    if (fromDate && toDate) {
+
+      queryBuilder.andWhere('taskExpense.createdDate BETWEEN :fromDate AND :toDate', { fromDate, toDate });
+    }
+
+    const weeklyExpenses = await queryBuilder
+      .groupBy('EXTRACT(YEAR FROM taskExpense.createdDate), WEEK(taskExpense.createdDate, 3)')
+      .select([
+        'EXTRACT(YEAR FROM taskExpense.createdDate) AS year',
+        '(WEEK(taskExpense.createdDate, 3)) AS weekNumber',
+        'SUM(taskExpense.value) AS totalExpense',
+      ])
+      .getRawMany();
+
+    // console.log("pluck expense : ", weeklyExpenses);
+
+    return weeklyExpenses;
+  }
+
+
+
+  async getOtherExpensesWeek(landId?: number, fromDate?: string, toDate?: string): Promise<any[]> {
+    const queryBuilder = getRepository(TaskExpenseEntity)
       .createQueryBuilder("taskExpense")
       .innerJoin("taskExpense.taskAssigned", "taskAssigned")
       .innerJoin("taskAssigned.land", "land")
-      .innerJoin(TaskTypeEntity, "task", "task.taskName = :taskName AND task.id = taskAssigned.taskId", { taskName: "Pluck" })
-      .where("land.id = :landId", { landId })
-      .groupBy("EXTRACT(YEAR FROM taskExpense.createdDate), EXTRACT(WEEK FROM taskExpense.createdDate)")
+      .innerJoin(TaskTypeEntity, "task", "task.taskName <> :pluckTaskName AND task.id = taskAssigned.taskId", { pluckTaskName: "Pluck" });
+
+    if (landId !== undefined) {
+      queryBuilder.andWhere("land.id = :landId", { landId });
+    }
+
+    if (fromDate && toDate) {
+      queryBuilder.andWhere("taskExpense.createdDate BETWEEN :fromDate AND :toDate", { fromDate, toDate });
+    }
+
+    const weeklyExpenses2 = await queryBuilder
+      .groupBy("EXTRACT(YEAR FROM taskExpense.createdDate), WEEK(taskExpense.createdDate, 3)")
       .select([
         "EXTRACT(YEAR FROM taskExpense.createdDate) AS year",
-        "EXTRACT(WEEK FROM taskExpense.createdDate) AS weekNumber",
+        '(WEEK(taskExpense.createdDate, 3)) AS weekNumber',
         "SUM(taskExpense.value) AS totalExpense"
       ])
       .getRawMany();
 
-    return weeklyExpenses
-
-  }
-
-  async getOtherExpensesWeek(landId?: number): Promise<any[]> {
-
-    const weeklyExpenses2 = await getRepository(TaskExpenseEntity)
-      .createQueryBuilder("taskExpense")
-      .innerJoin("taskExpense.taskAssigned", "taskAssigned")
-      .innerJoin("taskAssigned.land", "land")
-      .innerJoin(TaskTypeEntity, "task", "task.taskName <> :pluckTaskName AND task.id = taskAssigned.taskId", { pluckTaskName: "Pluck" })
-      .where("land.id = :landId", { landId })
-      .groupBy("EXTRACT(YEAR FROM taskExpense.createdDate), EXTRACT(WEEK FROM taskExpense.createdDate)")
-      .select([
-        "EXTRACT(YEAR FROM taskExpense.createdDate) AS year",
-        "EXTRACT(WEEK FROM taskExpense.createdDate) AS weekNumber",
-        "SUM(taskExpense.value) AS totalExpense"
-      ])
-      .getRawMany();
+    // console.log(" expense : ", weeklyExpenses2);
 
     return weeklyExpenses2;
-
   }
 
-  async getNonCrewExpensesWeek(landId?: number): Promise<any[]> {
 
-    const weeklyExpenses3 = await getRepository(TaskExpenseEntity)
+  async getNonCrewExpensesWeek(landId?: number, fromDate?: string, toDate?: string): Promise<any[]> {
+    const queryBuilder = getRepository(TaskExpenseEntity)
       .createQueryBuilder("taskExpense")
       .innerJoin("taskExpense.taskAssigned", "taskAssigned")
       .innerJoin("taskExpense.expense", "expense")
       .innerJoin("taskAssigned.land", "land")
-      .where("expense.expenseType != :salaryExpenseType", { salaryExpenseType: "Salary" })
-      .andWhere("land.id = :landId", { landId })
-      .groupBy("EXTRACT(YEAR FROM taskExpense.createdDate), EXTRACT(WEEK FROM taskExpense.createdDate)")
+      .where("expense.expenseType != :salaryExpenseType", { salaryExpenseType: "Salary" });
+
+    if (landId !== undefined) {
+      queryBuilder.andWhere("land.id = :landId", { landId });
+    }
+
+    if (fromDate && toDate) {
+      queryBuilder.andWhere("taskExpense.createdDate BETWEEN :fromDate AND :toDate", { fromDate, toDate });
+    }
+
+    const weeklyExpenses3 = await queryBuilder
+      .groupBy("EXTRACT(YEAR FROM taskExpense.createdDate), WEEK(taskExpense.createdDate, 3)")
       .select([
         "EXTRACT(YEAR FROM taskExpense.createdDate) AS year",
-        "EXTRACT(WEEK FROM taskExpense.createdDate) AS weekNumber",
+        '(WEEK(taskExpense.createdDate, 3)) AS weekNumber',
         "SUM(taskExpense.value) AS totalExpense"
       ])
       .getRawMany();
 
-    return weeklyExpenses3;
+    // console.log("Non-Crew", weeklyExpenses3);
 
+    return weeklyExpenses3;
   }
 
 
-  async getWorkAssignedEntityForDay(landId?: number): Promise<WorkAssignedEntity[]> {
+  //Total - daily Summary Report
 
+  async getWorkAssignedEntityForDay(landId?: number, fromDate?: string, toDate?: string): Promise<WorkAssignedEntity[]> {
     const workAssignedRepository = getConnection().getRepository(WorkAssignedEntity);
-
-    const workAssignedEntities = await workAssignedRepository
+  
+    let queryBuilder = workAssignedRepository
       .createQueryBuilder("workAssigned")
       .leftJoinAndSelect("workAssigned.taskCard", "taskCard")
       .leftJoinAndSelect("taskCard.taskAssigned", "taskAssigned")
       .leftJoinAndSelect("taskAssigned.land", "land")
-      .where("land.id = :landId", { landId })
-      .getMany();
+      .where("workAssigned.status = :status", { status: "online"})
+  
+    if (landId !== undefined) {
+      queryBuilder = queryBuilder.andWhere("land.id = :landId", { landId });
+    }
 
+    const workAssignedEntities = await queryBuilder.getMany();
+  
+    // console.log("Day", workAssignedEntities);
+  
     return workAssignedEntities;
-
   }
+  
 
-  async getPluckExpenseDay(landId?: number): Promise<any[]> {
+  async getPluckExpenseDay(landId?: number, fromDate?: string, toDate?: string): Promise<any[]> {
 
-    const dailyExpenses = await getRepository(TaskExpenseEntity)
-      .createQueryBuilder("taskExpense")
-      .innerJoin("taskExpense.taskAssigned", "taskAssigned")
-      .innerJoin("taskAssigned.land", "land")
-      .innerJoin(TaskTypeEntity, "task", "task.taskName = :taskName AND task.id = taskAssigned.taskId", { taskName: "Pluck" })
-      .where("land.id = :landId", { landId })
-      .groupBy("EXTRACT(YEAR FROM taskExpense.createdDate), EXTRACT(MONTH FROM taskExpense.createdDate), EXTRACT(DAY FROM taskExpense.createdDate)")
+    const queryBuilder = getRepository(TaskExpenseEntity)
+      .createQueryBuilder('taskExpense')
+      .innerJoin(TaskAssignedEntity, 'taskAssigned', 'taskAssigned.id = taskExpense.taskAssignedId')
+      .innerJoin(LandEntity, 'land', 'land.id = taskAssigned.landId')
+      .innerJoin(TaskTypeEntity, 'task', 'task.taskName = :taskName AND task.id = taskAssigned.taskId', { taskName: 'Pluck' });
+
+    if (landId !== undefined) {
+      queryBuilder.andWhere('land.id = :landId', { landId });
+    }
+
+    if (fromDate && toDate) {
+      queryBuilder.andWhere('DATE(taskExpense.createdDate) BETWEEN :fromDate AND :toDate', { fromDate, toDate });
+    }
+
+    const dailyExpenses = await queryBuilder
+      .groupBy('DATE_FORMAT(taskExpense.createdDate, "%Y-%m-%d")')
       .select([
-        "EXTRACT(YEAR FROM taskExpense.createdDate) AS year",
-        "EXTRACT(MONTH FROM taskExpense.createdDate) AS monthNumber",
-        "EXTRACT(DAY FROM taskExpense.createdDate) AS dayNumber",
-        "SUM(taskExpense.value) AS totalExpense"
+        'DATE_FORMAT(taskExpense.createdDate, "%Y-%m-%d") AS formattedDate',
+        'SUM(taskExpense.value) AS totalExpense',
       ])
       .getRawMany();
 
-    return dailyExpenses
+    // console.log('pluck', dailyExpenses);
 
+    return dailyExpenses;
   }
 
-  async getOtherExpensesDay(landId?: number): Promise<any[]> {
 
-    const dailyExpenses2 = await getRepository(TaskExpenseEntity)
+  async getOtherExpensesDay(landId?: number, fromDate?: string, toDate?: string): Promise<any[]> {
+    const queryBuilder = getRepository(TaskExpenseEntity)
       .createQueryBuilder("taskExpense")
       .innerJoin("taskExpense.taskAssigned", "taskAssigned")
       .innerJoin("taskAssigned.land", "land")
-      .innerJoin(TaskTypeEntity, "task", "task.taskName <> :pluckTaskName AND task.id = taskAssigned.taskId", { pluckTaskName: "Pluck" })
-      .where("land.id = :landId", { landId })
-      .groupBy("EXTRACT(YEAR FROM taskExpense.createdDate), EXTRACT(MONTH FROM taskExpense.createdDate), EXTRACT(DAY FROM taskExpense.createdDate)")
+      .innerJoin(TaskTypeEntity, "task", "task.taskName <> :pluckTaskName AND task.id = taskAssigned.taskId", { pluckTaskName: "Pluck" });
+
+    if (landId !== undefined) {
+      queryBuilder.andWhere("land.id = :landId", { landId });
+    }
+
+    if (fromDate && toDate) {
+      queryBuilder.andWhere('DATE(taskExpense.createdDate) BETWEEN :fromDate AND :toDate', { fromDate, toDate });
+    }
+
+    const dailyExpenses2 = await queryBuilder
+      .groupBy('DATE_FORMAT(taskExpense.createdDate, "%Y-%m-%d")')
       .select([
-        "EXTRACT(YEAR FROM taskExpense.createdDate) AS year",
-        "EXTRACT(MONTH FROM taskExpense.createdDate) AS monthNumber",
-        "EXTRACT(DAY FROM taskExpense.createdDate) AS dayNumber",
-        "SUM(taskExpense.value) AS totalExpense"
+        'DATE_FORMAT(taskExpense.createdDate, "%Y-%m-%d") AS formattedDate',
+        'SUM(taskExpense.value) AS totalExpense',
       ])
       .getRawMany();
+
+    // console.log("other", dailyExpenses2);
 
     return dailyExpenses2;
-
   }
 
-  async getNonCrewExpensesDay(landId?: number): Promise<any[]> {
 
-    const dailyExpenses3 = await getRepository(TaskExpenseEntity)
+  async getNonCrewExpensesDay(landId?: number, fromDate?: string, toDate?: string): Promise<any[]> {
+    const queryBuilder = getRepository(TaskExpenseEntity)
       .createQueryBuilder("taskExpense")
       .innerJoin("taskExpense.taskAssigned", "taskAssigned")
       .innerJoin("taskExpense.expense", "expense")
       .innerJoin("taskAssigned.land", "land")
-      .where("expense.expenseType != :salaryExpenseType", { salaryExpenseType: "Salary" })
-      .andWhere("land.id = :landId", { landId })
-      .groupBy("EXTRACT(YEAR FROM taskExpense.createdDate), EXTRACT(MONTH FROM taskExpense.createdDate), EXTRACT(DAY FROM taskExpense.createdDate)")
+      .where("expense.expenseType != :salaryExpenseType", { salaryExpenseType: "Salary" });
+
+    if (landId !== undefined) {
+      queryBuilder.andWhere("land.id = :landId", { landId });
+    }
+
+    if (fromDate && toDate) {
+      queryBuilder.andWhere('DATE(taskExpense.createdDate) BETWEEN :fromDate AND :toDate', { fromDate, toDate });
+    }
+
+    const dailyExpenses3 = await queryBuilder
+      .groupBy('DATE_FORMAT(taskExpense.createdDate, "%Y-%m-%d")')
       .select([
-        "EXTRACT(YEAR FROM taskExpense.createdDate) AS year",
-        "EXTRACT(MONTH FROM taskExpense.createdDate) AS monthNumber",
-        "EXTRACT(DAY FROM taskExpense.createdDate) AS dayNumber",
-        "SUM(taskExpense.value) AS totalExpense"
+        'DATE_FORMAT(taskExpense.createdDate, "%Y-%m-%d") AS formattedDate',
+        'SUM(taskExpense.value) AS totalExpense',
       ])
       .getRawMany();
 
-    return dailyExpenses3;
+    console.log("other", dailyExpenses3);
 
+    return dailyExpenses3;
   }
+
 }

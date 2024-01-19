@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useHistory } from "react-router-dom";
 import '../home/home.css';
 import './report.css'
 import Footer from '../footer/footer';
 import Header from '../header/header'
-import { FaGlobeAmericas, FaMapMarker } from 'react-icons/fa';
-import { Dropdown } from 'react-bootstrap';
+import { FaMapMarker } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
-import { FaFilter, FaUndo, FaCalendarAlt } from 'react-icons/fa';
+import { FaFilter, FaCalendarAlt } from 'react-icons/fa';
 import EmployeeAttendanceReport from './employee-attendance-report';
 import MonthlyCropReport from './monthly-crop-report';
 import CostYieldReport from './other-cost-yield-report';
@@ -19,9 +17,6 @@ import { submitSets } from '../UiComponents/SubmitSets';
 import { connect } from 'react-redux';
 import { submitCollection } from '../../_services/submit.service';
 import { setSelectedLandIdAction } from '../../actions/auth/land_action';
-import { alertService } from '../../_services/alert.service';
-import { Col, Form } from 'react-bootstrap';
-import { MdArrowBackIos } from "react-icons/md";
 import { DateRange } from 'react-date-range';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
@@ -53,6 +48,8 @@ function Report({ setSelectedLandId, selectedLandId }) {
     const [category, setSelectedCategory] = useState('');
 
     const extraValue = 'All Lands';
+
+    console.log("report page cate no : ", category)
 
     const [dateRange, setDateRange] = useState([
         {
@@ -122,9 +119,6 @@ function Report({ setSelectedLandId, selectedLandId }) {
     };
 
     useEffect(() => {
-        submitSets(submitCollection.manageland, false).then((res) => {
-            setLandNames(res.extra);
-        });
 
         if (selectedLandId) {
             submitSets(submitCollection.getlandbyid, "?landId=" + selectedLandId, true)
@@ -143,11 +137,10 @@ function Report({ setSelectedLandId, selectedLandId }) {
 
     useEffect(() => {
         //lot find all
-        // axios.get('http://localhost:8081/service/master/lotFindAll')
         submitSets(submitCollection.findalllot, true)
             .then((response) => {
-                setLots(response.data.extra);
-                console.log("Lots : ", response.data.extra);
+                setLots(response.extra);
+                console.log("Lots : ", response.extra);
             });
     }, [])
 
@@ -155,6 +148,8 @@ function Report({ setSelectedLandId, selectedLandId }) {
         setDateRange([{ startDate: new Date('1970-01-01'), endDate: new Date('2100-12-31'), key: 'selection' }]);
         setSelectedLot('');
         setSelectedWorker('');
+        dateRange.fromDate = undefined;
+
     };
 
     const handleDateRangeChange = (event) => {
@@ -331,17 +326,59 @@ function Report({ setSelectedLandId, selectedLandId }) {
                         )}
 
                         {selectedReport === 'Summary' ? (
-                            <div>
-                                <select className='custom-select'
-                                    // value={selectedReportCate}
-                                    onChange={handleCateChange}
-                                >
-                                    <option value="0">Monthly</option>
-                                    <option value="1">Weekly</option>
-                                    <option value="2">Daily</option>
-                                </select>
-                            </div>
+                            <select className='report-dropdown' style={{ marginLeft: '0%', width: '30%', backgroundColor: '#b2d7bc', border: 'none', color: 'black', marginTop: '10px' }}
+                                // value={selectedReportCate}
+                                onChange={handleCateChange}
+                            >
+                                <option value="0">Monthly</option>
+                                <option value="1">Weekly</option>
+                                <option value="2">Daily</option>
+                            </select>
+
                         ) : null}
+
+
+
+
+                        {selectedReport === 'Summary' && category === '0' || selectedReport === 'Summary' && category === '' ? (
+                            <>
+                                <div>
+                                    <label className='custom-label'>Month : </label>
+                                    <input
+                                        className='custom-select'
+                                        type="month"
+                                        name="fromDate"
+                                        value={dateRange.fromDate}
+                                        onChange={handleDateRangeChange}
+                                    />
+                                </div>
+                            </>
+
+                        ) : (selectedReport !== 'Employee Perfomance' && selectedReport !== 'Cost Breakdown' && selectedReport !== 'Employee Attendance' &&
+                            selectedReport !== 'Monthly Crop' && selectedReport !== 'Other Cost / Yield' ? (
+                            <div>
+                                <label className='custom-label'>
+                                    {t('daterange')} :
+                                </label>
+                                <FaCalendarAlt className='calendar-icon' onClick={handleLabelClick} />
+
+
+                                <div className='date-range-picker'>
+                                    {showPicker && (
+                                        <DateRange
+                                            ranges={dateRange}
+                                            onChange={handleSelect}
+                                            editableDateInputs={true}
+                                            dragSelectionEnabled={true}
+                                            rangeColors={['#0079224D']}
+
+                                        />
+                                    )}
+                                </div>
+                            </div>
+                        ) : null
+                        )}
+
                         <div className='reset-filter'>
                             <button className='reset-filter-button' onClick={handleResetFilters}>{t('resetfilters')}</button>
                         </div>
@@ -355,7 +392,7 @@ function Report({ setSelectedLandId, selectedLandId }) {
             {showCostYieldReport && <CostYieldReport dateRange={formatDate(dateRange)} landId={selectedLandId} lotId={lotId} selectedLot={selectedLot} />}
             {showEmployeePerfomnce && <EmployeePerfomnce dateRange={formatDate(dateRange)} selectedLand={selectedLandId} />}
             {showCostBreakdown && <CostBreakdownReport selectedLand={selectedLandId} fromDate={fromDate} />}
-            {showSummary && <SummaryReport selectedLand={selectedLandId} category={category} />}
+            {showSummary && <SummaryReport selectedLand={selectedLandId} category={category} fromDate={fromDate} dateRange={formatDate(dateRange)}/>}
             < br /> <br /> <br />
             <Footer />
         </div >

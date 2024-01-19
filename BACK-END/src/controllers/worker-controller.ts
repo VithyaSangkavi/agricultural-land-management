@@ -19,17 +19,29 @@ exports.save = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 exports.update = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      let workerDto = new WorkerDto();
-      workerDto.filViaRequest(req.body);
-  
-      let cr = await workerService.update(workerDto);
-  
-      res.send(cr);
-    } catch (error) {
-      next(error);
+  try {
+    let workerDto = new WorkerDto();
+
+    const workerIdFromQuery = req.query.workerId;
+
+    if (workerIdFromQuery) {
+      workerDto.setWorkerId(Number(workerIdFromQuery));
+    } else {
+      console.error('WorkerId not found in the query parameters');
+      return res.status(400).json({ error: 'WorkerId not found in the query parameters' });
     }
-  };
+    console.log('Controller workerId:', workerDto.getWorkerId());
+
+    workerDto.filViaRequest(req.body);
+
+    let cr = await workerService.update(workerDto);
+
+    res.send(cr);
+  } catch (error) {
+    next(error);
+  }
+};
+
   
   exports.delete = async (req: Request, res: Response, next: NextFunction) => {
     try {

@@ -104,9 +104,10 @@ function Home({ setSelectedLandId, selectedLandId, selectedCrop }) {
     const handleLanguageChange = (lang) => {
         i18n.changeLanguage(lang);
     };
-    const handleTaskClick = (taskAssignedid) => {
-        history.push(`/manageOngoingTask/${taskAssignedid}`);
+    const handleTaskClick = (taskAssignedid, taskId) => {
+        history.push(`/manageOngoingTask/${taskAssignedid}/${taskId}`);
         console.log("task assigned : ", taskAssignedid);
+        console.log("task id : ", taskId);
     };
 
     return (
@@ -130,7 +131,7 @@ function Home({ setSelectedLandId, selectedLandId, selectedCrop }) {
 
             <div className="task-list">
                 {OngoingTasks.map((taskAssigned) => (
-                    <div key={taskAssigned.id} className="task-card" onClick={() => handleTaskClick(taskAssigned.taskAssignedId)}>
+                    <div key={taskAssigned.id} className="task-card" onClick={() => handleTaskClick(taskAssigned.taskAssignedId, taskAssigned.taskId)}>
                         <p>{taskAssigned.taskName} - {getFormattedDate(taskAssigned.taskStartDate)}</p>
                     </div>
                 ))}
