@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 ChartJS.register(LineElement, PointElement, Tooltip, Legend, LinearScale, TimeScale);
 
 
-const SummaryReport = ({ selectedLand, category, fromDate }) => {
+const SummaryReport = ({ selectedLand, category, fromDate, dateRange }) => {
 
 
 
@@ -25,6 +25,7 @@ const SummaryReport = ({ selectedLand, category, fromDate }) => {
     console.log("category : ", category)
     console.log("selectedLand : ", selectedLand)
     console.log("fromDate : ", fromDate)
+    console.log("fromDate : ", dateRange)
 
     // function convertDateFormat(fromDate) {
     //     const dateParts = fromDate.split('-');
@@ -88,17 +89,61 @@ const SummaryReport = ({ selectedLand, category, fromDate }) => {
                 }
             } else if (category == 1) {
                 try {
-                    const response = await submitSets(submitCollection.summary_weekly, '?landId=' + selectedLand, true);
-                    console.log(response);
-                    setSummaryData(response);
+
+                    if (selectedLand) {
+
+                        if (dateRange) {
+
+
+                            console.log(dateRange)
+
+                            const response = await submitSets(submitCollection.summary_weekly, '?landId=' + selectedLand + '&fromDate=' + dateRange.fromDate + '&toDate=' + dateRange.toDate, true);
+                            console.log(response);
+                            setSummaryData(response);
+
+                        } else {
+
+                            const response = await submitSets(submitCollection.summary_weekly, '?landId=' + selectedLand, true);
+                            console.log(response);
+                            setSummaryData(response);
+
+                        }
+                    } else {
+
+                        const response = await submitSets(submitCollection.summary_weekly);
+                        console.log(response);
+                        setSummaryData(response);
+
+                    }
                 } catch (error) {
                     console.error("Error fetching weekly summary data:", error);
                 }
             } else {
                 try {
-                    const response = await submitSets(submitCollection.summary_daily, '?landId=' + selectedLand, true);
-                    console.log(response);
-                    setSummaryData(response);
+
+                    if (selectedLand) {
+
+                        if (dateRange) {
+
+                            const response = await submitSets(submitCollection.summary_daily, '?landId=' + selectedLand + '&fromDate=' + dateRange.fromDate + '&toDate=' + dateRange.toDate, true);
+                            console.log(response);
+                            setSummaryData(response);
+
+                        } else {
+
+                            const response = await submitSets(submitCollection.summary_daily, '?landId=' + selectedLand, true);
+                            console.log(response);
+                            setSummaryData(response);
+
+                        }
+
+                    } else {
+
+                        const response = await submitSets(submitCollection.summary_daily);
+                        console.log(response);
+                        setSummaryData(response);
+
+                    }
                 } catch (error) {
                     console.error("Error fetching weekly summary data:", error);
                 }
@@ -106,7 +151,7 @@ const SummaryReport = ({ selectedLand, category, fromDate }) => {
         };
 
         fetchData();
-    }, [selectedLand, category, fromDate]);
+    }, [selectedLand, category, fromDate, dateRange.fromDate, dateRange.toDate]);
 
 
 
@@ -144,25 +189,6 @@ const SummaryReport = ({ selectedLand, category, fromDate }) => {
                     <h2>Monthly Summary Report</h2>
 
                 )}
-
-
-
-
-
-                <div className="search-container" style={{ marginTop: '4%' }}>
-                    <div className="search-wrapper">
-                        <input
-                            className='search-field'
-                            type="text"
-                            placeholder={t('search')}
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
-                        <div className="search-icon">
-                            <FaSearch />
-                        </div>
-                    </div>
-                </div>
 
 
                 {summaryData.length > 0 ? (

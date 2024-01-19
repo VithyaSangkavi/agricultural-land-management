@@ -340,7 +340,7 @@ function Report({ setSelectedLandId, selectedLandId }) {
 
 
 
-                        {selectedReport === 'Summary' && category === '0' || category === '' ? (
+                        {selectedReport === 'Summary' && category === '0' || selectedReport === 'Summary' && category === '' ? (
                             <>
                                 <div>
                                     <label className='custom-label'>Month : </label>
@@ -392,7 +392,7 @@ function Report({ setSelectedLandId, selectedLandId }) {
             {showCostYieldReport && <CostYieldReport dateRange={formatDate(dateRange)} landId={selectedLandId} lotId={lotId} selectedLot={selectedLot} />}
             {showEmployeePerfomnce && <EmployeePerfomnce dateRange={formatDate(dateRange)} selectedLand={selectedLandId} />}
             {showCostBreakdown && <CostBreakdownReport selectedLand={selectedLandId} fromDate={fromDate} />}
-            {showSummary && <SummaryReport selectedLand={selectedLandId} category={category} fromDate={fromDate}/>}
+            {showSummary && <SummaryReport selectedLand={selectedLandId} category={category} fromDate={fromDate} dateRange={formatDate(dateRange)}/>}
             < br /> <br /> <br />
             <Footer />
         </div >

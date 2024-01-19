@@ -137,9 +137,14 @@ export const getSummaryReport = async (req: Request, res: Response): Promise<voi
 
 export const getWeeklySummaryReport = async (req: Request, res: Response): Promise<void> => {
   const landId = req.query.landId;
+  const fromDate = req.query.fromDate;
+  const toDate = req.query.toDate;
+
   console.log("Back-end ctr land: ", landId);
+  console.log("Back-end ctr dateRange: ", fromDate, toDate);
+
   try {
-    const costSummaryReport = await reportServiceImpl.getWeeklySummaryReport(landId);
+    const costSummaryReport = await reportServiceImpl.getWeeklySummaryReport(landId, fromDate, toDate);
     res.json(costSummaryReport);
   } catch (error) {
     res.status(500).json({ error: 'Failed to generate cost Summary Report report' });
@@ -148,9 +153,14 @@ export const getWeeklySummaryReport = async (req: Request, res: Response): Promi
 
 export const getDailySummaryReport = async (req: Request, res: Response): Promise<void> => {
   const landId = req.query.landId;
+  const fromDate = req.query.fromDate;
+  const toDate = req.query.toDate;
+
   console.log("Back-end ctr land: ", landId);
+  console.log("Back-end ctr dateRange: ", fromDate, toDate);
+
   try {
-    const costSummaryReport = await reportServiceImpl.getDailySummaryReport(landId);
+    const costSummaryReport = await reportServiceImpl.getDailySummaryReport(landId, fromDate, toDate);
     res.json(costSummaryReport);
   } catch (error) {
     res.status(500).json({ error: 'Failed to generate cost Summary Report report' });

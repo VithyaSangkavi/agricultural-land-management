@@ -16,15 +16,15 @@ export interface ReportDao {
   getTotalIncome(landId?: number, fromDate?: string): Promise<any[]>
   getTaskExpenses(landId?: number, fromDate?: string): Promise<any[]>
 
-  getWorkAssignedEntityForWeek(landId?: number): Promise<WorkAssignedEntity[]>
-  getPluckExpenseWeek(landId?: number): Promise<any[]>
-  getOtherExpensesWeek(landId?: number): Promise<any[]>
-  getNonCrewExpensesWeek(landId?: number): Promise<any[]>
+  getWorkAssignedEntityForWeek(landId?: number, fromDate?: string, toDate?: string): Promise<WorkAssignedEntity[]>
+  getPluckExpenseWeek(landId?: number, fromDate?: string, toDate?: string): Promise<any[]>
+  getOtherExpensesWeek(landId?: number, fromDate?: string, toDate?: string): Promise<any[]>
+  getNonCrewExpensesWeek(landId?: number, fromDate?: string, toDate?: string): Promise<any[]>
 
-  getWorkAssignedEntityForDay(landId?: number): Promise<WorkAssignedEntity[]>
-  getPluckExpenseDay(landId?: number): Promise<any[]>
-  getOtherExpensesDay(landId?: number): Promise<any[]>
-  getNonCrewExpensesDay(landId?: number): Promise<any[]>
+  getWorkAssignedEntityForDay(landId?: number, fromDate?: string, toDate?: string): Promise<WorkAssignedEntity[]>
+  getPluckExpenseDay(landId?: number, fromDate?: string, toDate?: string): Promise<any[]>
+  getOtherExpensesDay(landId?: number, fromDate?: string, toDate?: string): Promise<any[]>
+  getNonCrewExpensesDay(landId?: number, fromDate?: string, toDate?: string): Promise<any[]>
 
   getCurrentYearQuantityForMonthlyCrop(currentYear: number, lotId?: number, startDate?: Date, endDate?: Date, landId?: number): Promise<any>;
   getPastYearQuantityForMonthlyCrop(pastYear: number, lotId?: number, startDate?: Date, endDate?: Date, landId?: number): Promise<any>;
