@@ -328,10 +328,11 @@ export class ReportDaoImpl implements ReportDao {
       .createQueryBuilder("workAssigned")
       .leftJoinAndSelect("workAssigned.taskCard", "taskCard")
       .leftJoinAndSelect("taskCard.taskAssigned", "taskAssigned")
-      .leftJoinAndSelect("taskAssigned.land", "land");
+      .leftJoinAndSelect("taskAssigned.land", "land")
+      .where("workAssigned.status = :status", { status: "online"})
 
     if (landId !== undefined) {
-      queryBuilder = queryBuilder.where("land.id = :landId", { landId });
+      queryBuilder = queryBuilder.andWhere("land.id = :landId", { landId });
     }
 
     const workAssignedEntities = await queryBuilder
@@ -500,10 +501,11 @@ export class ReportDaoImpl implements ReportDao {
       .createQueryBuilder("workAssigned")
       .leftJoinAndSelect("workAssigned.taskCard", "taskCard")
       .leftJoinAndSelect("taskCard.taskAssigned", "taskAssigned")
-      .leftJoinAndSelect("taskAssigned.land", "land");
+      .leftJoinAndSelect("taskAssigned.land", "land")
+      .where("workAssigned.status = :status", { status: "online"})
 
     if (landId !== undefined) {
-      queryBuilder = queryBuilder.where("land.id = :landId", { landId });
+      queryBuilder = queryBuilder.andWhere("land.id = :landId", { landId });
     }
 
     const workAssignedEntities = await queryBuilder
@@ -615,22 +617,26 @@ export class ReportDaoImpl implements ReportDao {
   //Total - daily Summary Report
 
   async getWorkAssignedEntityForDay(landId?: number, fromDate?: string, toDate?: string): Promise<WorkAssignedEntity[]> {
-
     const workAssignedRepository = getConnection().getRepository(WorkAssignedEntity);
-
-    const workAssignedEntities = await workAssignedRepository
+  
+    let queryBuilder = workAssignedRepository
       .createQueryBuilder("workAssigned")
       .leftJoinAndSelect("workAssigned.taskCard", "taskCard")
       .leftJoinAndSelect("taskCard.taskAssigned", "taskAssigned")
       .leftJoinAndSelect("taskAssigned.land", "land")
-      .where("land.id = :landId", { landId })
-      .getMany();
+      .where("workAssigned.status = :status", { status: "online"})
+  
+    if (landId !== undefined) {
+      queryBuilder = queryBuilder.andWhere("land.id = :landId", { landId });
+    }
 
+    const workAssignedEntities = await queryBuilder.getMany();
+  
     // console.log("Day", workAssignedEntities);
-
+  
     return workAssignedEntities;
-
   }
+  
 
   async getPluckExpenseDay(landId?: number, fromDate?: string, toDate?: string): Promise<any[]> {
 

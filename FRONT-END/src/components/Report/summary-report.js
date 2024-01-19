@@ -22,6 +22,19 @@ const SummaryReport = ({ selectedLand, category, fromDate, dateRange }) => {
     const { t, i18n } = useTranslation();
     // const [category, setSelectedCategory] = useState('');
 
+
+    const [visibleRecords, setVisibleRecords] = useState(3);
+
+    const handleSeeMore = () => {
+        setVisibleRecords(prevVisibleRecords => prevVisibleRecords + 3);
+    };
+
+    const handleSeeLess = () => {
+        setVisibleRecords(prevVisibleRecords =>
+            prevVisibleRecords > 3 ? prevVisibleRecords - 3 : 3
+        );
+    };
+
     console.log("category : ", category)
     console.log("selectedLand : ", selectedLand)
     console.log("fromDate : ", fromDate)
@@ -235,7 +248,7 @@ const SummaryReport = ({ selectedLand, category, fromDate, dateRange }) => {
 
                         </thead>
                         <tbody>
-                            {summaryData.map((item, index) => (
+                            {summaryData.slice(0, visibleRecords).map((item, index) => (
                                 <tr key={index}>
 
 
@@ -281,17 +294,40 @@ const SummaryReport = ({ selectedLand, category, fromDate, dateRange }) => {
                     </table >
 
                 ) : (
+
+
                     <div>
                         <br />
                         <div className='attendance-chart'>
                             <p className='reportnotfound'>
-                                Please Select Land !
+                                Data Not Found !
                             </p>
                         </div>
                     </div>
 
                 )}
+
+                <div>
+
+                    {summaryData.length > visibleRecords && (
+
+                        <button className='see-more' onClick={handleSeeMore}>
+                            See More
+                        </button>
+
+
+                    )}
+
+                    {visibleRecords > 3 && (
+                        <button className='see-more' onClick={handleSeeLess}>
+                            See Less
+                        </button>
+                    )}
+
+                </div>
             </div >
+
+
             <br />
         </>
     );
