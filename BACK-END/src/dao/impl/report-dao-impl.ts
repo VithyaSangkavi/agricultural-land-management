@@ -14,7 +14,7 @@ import moment from 'moment';
 export class ReportDaoImpl implements ReportDao {
 
   //employee-attendance report
-  async generateEmployeeAttendanceReport(startDate: Date, endDate: Date, lotId: number, landId: number): Promise<any> {
+  async generateEmployeeAttendanceReport(startDate: Date, endDate: Date, lotId: number, landId: number): Promise<any[]> {
     const workAssignedRepository = getConnection().getRepository(WorkAssignedEntity);
     let query = workAssignedRepository
       .createQueryBuilder('work_assigned')
@@ -38,15 +38,16 @@ export class ReportDaoImpl implements ReportDao {
       query = query
         .innerJoin('work_assigned.lot', 'lot')
         .innerJoin('lot.land', 'land')
-        .andWhere('land.id = :landId', { landId });
+        .andWhere('land.id =: landId', { landId });
     }
 
-    try {
-      const employeeAttendance = await query.getRawMany();
-      return employeeAttendance;
-    } catch (error) {
-      throw new Error(`Error fetching employee attendance: ${error}`);
-    }
+    console.log('Query from employee attendance report: ', query.getQueryAndParameters());
+
+    const employeeAttendance = await query.getRawMany();
+
+    console.log('Retrieved updatedDate values from the database:', employeeAttendance.map(entry => entry.date));
+
+    return employeeAttendance;
   }
 
   //monthly-crop report
