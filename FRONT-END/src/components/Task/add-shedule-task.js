@@ -153,6 +153,7 @@ const ManageTask = ({ selectedLandId }) => {
 
                 const addTaskExpense = {
                     value,
+                    taskAssignedId,
                     taskId,
                     expenseId,
                 };

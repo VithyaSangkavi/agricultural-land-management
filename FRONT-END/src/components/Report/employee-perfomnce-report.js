@@ -17,6 +17,7 @@ const EmployeePerfomnceReport = ({ dateRange: { fromDate, toDate }, selectedLand
 
     const [perfomnceData, setPerfomnceData] = useState([]);
     console.log("emp-per-rep : ", fromDate, toDate);
+
     const [visibleRecords, setVisibleRecords] = useState(3);
 
     const handleSeeMore = () => {
@@ -28,6 +29,9 @@ const EmployeePerfomnceReport = ({ dateRange: { fromDate, toDate }, selectedLand
             prevVisibleRecords > 3 ? prevVisibleRecords - 3 : 3
         );
     };
+
+    console.log("visibal rec: ", visibleRecords)
+    console.log("performnce rec: ", perfomnceData.length)
 
 
     useEffect(() => {
@@ -147,24 +151,24 @@ const EmployeePerfomnceReport = ({ dateRange: { fromDate, toDate }, selectedLand
                     </tbody>
                 </table>
 
-                {perfomnceData.length > visibleRecords ? (
-                    <div>
+                <div>
+
+                    {perfomnceData.length > visibleRecords && (
+
                         <button className='see-more' onClick={handleSeeMore}>
                             See More
                         </button>
-                        {visibleRecords > 3 && (
-                            <button className='see-more' onClick={handleSeeLess}>
-                                See Less
-                            </button>
-                        )}
-                    </div>
-                ) : (
-                    // <button className='see-more' onClick={handleSeeLess}>
-                    //     See Less
-                    // </button>
-                    <div>
-                    </div>
-                )}
+
+
+                    )}
+
+                    {visibleRecords > 3 && (
+                        <button className='see-more' onClick={handleSeeLess}>
+                            See Less
+                        </button>
+                    )}
+
+                </div>
 
             </div>
 

@@ -46,7 +46,7 @@ const CostBreakdownReport = ({ fromDate, selectedLand }) => {
 
                 } else {
 
-                    if(fromDate) {
+                    if (fromDate) {
 
                         const response = await submitSets(submitCollection.cost_breakdown_line, "?fromDate=" + fromDate, true)
                         console.log("Line : ", response);
@@ -171,7 +171,19 @@ const CostBreakdownReport = ({ fromDate, selectedLand }) => {
     const uniqueColors = generateRandomColors(costBreakdownPieData.length);
 
     const totalCosts = costBreakdownPieData.map((item) => parseFloat(item.totalCost));
-    const total = totalCosts.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+    // const total = totalCosts.reduce((accumulator, item) => accumulator + parseFloat(item.totalCost), 0);
+
+    let total = 0;
+
+    for (let i = 0; i < costBreakdownPieData.length; i++) {
+        let cost = parseFloat(costBreakdownPieData[i].totalCost);
+
+        if (!isNaN(cost)) {
+            total += cost;
+        }
+    }
+
+    console.log(total);
 
     const pieChartData = {
         labels: costBreakdownPieData.map((item) => {

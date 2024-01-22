@@ -49,6 +49,8 @@ function Report({ setSelectedLandId, selectedLandId }) {
 
     const extraValue = 'All Lands';
 
+    console.log("report page cate no : ", category)
+
     const [dateRange, setDateRange] = useState([
         {
             startDate: new Date('1970-01-01'),
@@ -146,6 +148,8 @@ function Report({ setSelectedLandId, selectedLandId }) {
         setDateRange([{ startDate: new Date('1970-01-01'), endDate: new Date('2100-12-31'), key: 'selection' }]);
         setSelectedLot('');
         setSelectedWorker('');
+        dateRange.fromDate = undefined;
+
     };
 
     const handleDateRangeChange = (event) => {
@@ -322,17 +326,59 @@ function Report({ setSelectedLandId, selectedLandId }) {
                         )}
 
                         {selectedReport === 'Summary' ? (
-                            <div>
-                                <select className='custom-select'
-                                    // value={selectedReportCate}
-                                    onChange={handleCateChange}
-                                >
-                                    <option value="0">Monthly</option>
-                                    <option value="1">Weekly</option>
-                                    <option value="2">Daily</option>
-                                </select>
-                            </div>
+                            <select className='report-dropdown' style={{ marginLeft: '0%', width: '30%', backgroundColor: '#b2d7bc', border: 'none', color: 'black', marginTop: '10px' }}
+                                // value={selectedReportCate}
+                                onChange={handleCateChange}
+                            >
+                                <option value="0">Monthly</option>
+                                <option value="1">Weekly</option>
+                                <option value="2">Daily</option>
+                            </select>
+
                         ) : null}
+
+
+
+
+                        {selectedReport === 'Summary' && category === '0' || selectedReport === 'Summary' && category === '' ? (
+                            <>
+                                <div>
+                                    <label className='custom-label'>Month : </label>
+                                    <input
+                                        className='custom-select'
+                                        type="month"
+                                        name="fromDate"
+                                        value={dateRange.fromDate}
+                                        onChange={handleDateRangeChange}
+                                    />
+                                </div>
+                            </>
+
+                        ) : (selectedReport !== 'Employee Perfomance' && selectedReport !== 'Cost Breakdown' && selectedReport !== 'Employee Attendance' &&
+                            selectedReport !== 'Monthly Crop' && selectedReport !== 'Other Cost / Yield' ? (
+                            <div>
+                                <label className='custom-label'>
+                                    {t('daterange')} :
+                                </label>
+                                <FaCalendarAlt className='calendar-icon' onClick={handleLabelClick} />
+
+
+                                <div className='date-range-picker'>
+                                    {showPicker && (
+                                        <DateRange
+                                            ranges={dateRange}
+                                            onChange={handleSelect}
+                                            editableDateInputs={true}
+                                            dragSelectionEnabled={true}
+                                            rangeColors={['#0079224D']}
+
+                                        />
+                                    )}
+                                </div>
+                            </div>
+                        ) : null
+                        )}
+
                         <div className='reset-filter'>
                             <button className='reset-filter-button' onClick={handleResetFilters}>{t('resetfilters')}</button>
                         </div>
@@ -346,7 +392,7 @@ function Report({ setSelectedLandId, selectedLandId }) {
             {showCostYieldReport && <CostYieldReport dateRange={formatDate(dateRange)} landId={selectedLandId} lotId={lotId} selectedLot={selectedLot} />}
             {showEmployeePerfomnce && <EmployeePerfomnce dateRange={formatDate(dateRange)} selectedLand={selectedLandId} />}
             {showCostBreakdown && <CostBreakdownReport selectedLand={selectedLandId} fromDate={fromDate} />}
-            {showSummary && <SummaryReport selectedLand={selectedLandId} category={category} />}
+            {showSummary && <SummaryReport selectedLand={selectedLandId} category={category} fromDate={fromDate} dateRange={formatDate(dateRange)}/>}
             < br /> <br /> <br />
             <Footer />
         </div >
