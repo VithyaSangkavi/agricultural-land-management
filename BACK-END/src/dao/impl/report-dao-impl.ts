@@ -227,6 +227,8 @@ export class ReportDaoImpl implements ReportDao {
       );
     }
 
+    console.log('Employee performance: ', query.getQueryAndParameters());
+
     const result = await query
       .orderBy("workDate", "ASC")
       .getRawMany();
@@ -281,7 +283,8 @@ export class ReportDaoImpl implements ReportDao {
       .from(TaskExpenseEntity, 'te')
       .leftJoin('te.expense', 'e')
       .leftJoin('te.taskAssigned', 'taskAssigned')
-      .leftJoin('taskAssigned.land', 'land');
+      .leftJoin('taskAssigned.land', 'land')
+      .groupBy('DATE_FORMAT(te.createdDate, "%Y-%b"), e.expenseType')
 
     if (landId !== null && landId !== undefined) {
       query.where('land.id = :landId', { landId });
@@ -291,8 +294,10 @@ export class ReportDaoImpl implements ReportDao {
       query.andWhere('DATE_FORMAT(te.createdDate, "%Y-%m") = :yearMonth', { yearMonth: fromDate });
     }
 
+    console.log('cost breakdown : ', query.getQueryAndParameters());
+
     const result = await query
-      .groupBy('DATE_FORMAT(te.createdDate, "%Y-%b"), e.expenseType')
+
       .orderBy('yearMonth', 'DESC')
       .getRawMany();
 
@@ -329,7 +334,7 @@ export class ReportDaoImpl implements ReportDao {
       .leftJoinAndSelect("workAssigned.taskCard", "taskCard")
       .leftJoinAndSelect("taskCard.taskAssigned", "taskAssigned")
       .leftJoinAndSelect("taskAssigned.land", "land")
-      .where("workAssigned.status = :status", { status: "online"})
+      .where("workAssigned.status = :status", { status: "online" })
 
     if (landId !== undefined) {
       queryBuilder = queryBuilder.andWhere("land.id = :landId", { landId });
@@ -502,7 +507,7 @@ export class ReportDaoImpl implements ReportDao {
       .leftJoinAndSelect("workAssigned.taskCard", "taskCard")
       .leftJoinAndSelect("taskCard.taskAssigned", "taskAssigned")
       .leftJoinAndSelect("taskAssigned.land", "land")
-      .where("workAssigned.status = :status", { status: "online"})
+      .where("workAssigned.status = :status", { status: "online" })
 
     if (landId !== undefined) {
       queryBuilder = queryBuilder.andWhere("land.id = :landId", { landId });
@@ -618,25 +623,25 @@ export class ReportDaoImpl implements ReportDao {
 
   async getWorkAssignedEntityForDay(landId?: number, fromDate?: string, toDate?: string): Promise<WorkAssignedEntity[]> {
     const workAssignedRepository = getConnection().getRepository(WorkAssignedEntity);
-  
+
     let queryBuilder = workAssignedRepository
       .createQueryBuilder("workAssigned")
       .leftJoinAndSelect("workAssigned.taskCard", "taskCard")
       .leftJoinAndSelect("taskCard.taskAssigned", "taskAssigned")
       .leftJoinAndSelect("taskAssigned.land", "land")
-      .where("workAssigned.status = :status", { status: "online"})
-  
+      .where("workAssigned.status = :status", { status: "online" })
+
     if (landId !== undefined) {
       queryBuilder = queryBuilder.andWhere("land.id = :landId", { landId });
     }
 
     const workAssignedEntities = await queryBuilder.getMany();
-  
+
     // console.log("Day", workAssignedEntities);
-  
+
     return workAssignedEntities;
   }
-  
+
 
   async getPluckExpenseDay(landId?: number, fromDate?: string, toDate?: string): Promise<any[]> {
 

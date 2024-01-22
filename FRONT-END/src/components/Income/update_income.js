@@ -68,7 +68,7 @@ const UpdateIncome = () => {
             sendobj.url = sendobjoriginal.url
             if (res && res.status) {
                 alertService.success("Price Updated successfully!")
-                // history.push("/manageIncome")
+                history.push('/manageIncome');
             } else {
                 alertService.error("Error updating price");
             };
