@@ -46,7 +46,7 @@ const CompletedTask = ({ selectedLandId }) => {
 
     useEffect(() => {
         console.log('task ass id: ', taskAssignedid);
-        axios.get(`http://localhost:8081/service/master/findByTaskAssignedId?taskAssignedId=${taskAssignedid}`)
+        axios.get(`http://localhost:8080/service/master/findByTaskAssignedId?taskAssignedId=${taskAssignedid}`)
             .then((response) => {
                 console.log('task expenses ------------ ', response.data.extra)
                 setTaskExpenses(response.data.extra);
@@ -107,7 +107,7 @@ const CompletedTask = ({ selectedLandId }) => {
 
     const AddedWorkerList = () => {
 
-        axios.get(`http://localhost:8081/service/master/work-assigned-details/${taskAssignedid}`)
+        axios.get(`http://localhost:8080/service/master/work-assigned-details/${taskAssignedid}`)
             .then((response) => {
 
                 setTaskDetails(response.data.extra.cardDetails);

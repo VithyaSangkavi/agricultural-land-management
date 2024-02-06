@@ -204,20 +204,23 @@ export class ReportDaoImpl implements ReportDao {
         "taskType.taskName AS taskName",
         "CASE WHEN taskAssigned.schedule = 'Scheduled' THEN taskCard.workDate ELSE DATE(workAssigned.updatedDate) END AS workDate",
         "workAssigned.quantity AS quantity",
+        "workAssigned.status AS status",
       ])
       .from(WorkAssignedEntity, "workAssigned")
+      .where("workAssigned.status = :status", { status: "online" })
       .leftJoin(TaskCardEntity, "taskCard", "workAssigned.taskCardId = taskCard.id")
       .leftJoin(TaskAssignedEntity, "taskAssigned", "workAssigned.taskAssignedId = taskAssigned.id")
       .innerJoin(TaskTypeEntity, "taskType", "workAssigned.taskId = taskType.id")
-      .innerJoin(WorkerEntity, "worker", "workAssigned.workerId = worker.id");
+      .innerJoin(WorkerEntity, "worker", "workAssigned.workerId = worker.id")
+      
 
     if (landId !== null && landId !== undefined) {
       query
         .innerJoin('taskAssigned.land', 'land')
-        .where('land.id = :landId', { landId })
+        .andWhere('land.id = :landId', { landId })
         .andWhere("taskType.taskName = :taskName", { taskName: "Pluck" });
     } else {
-      query.where("taskType.taskName = :taskName", { taskName: "Pluck" });
+      query.andWhere("taskType.taskName = :taskName", { taskName: "Pluck" });
     }
 
     if (fromDate && toDate) {
