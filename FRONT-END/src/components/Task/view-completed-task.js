@@ -59,7 +59,7 @@ function Home({ setSelectedLandId, selectedLandId }) {
     }, [submitCollection.manageland, selectedLandId]);
 
     useEffect(() => {
-        let apiUrl = 'http://localhost:8081/service/master/completed-tasks-with-names';
+        let apiUrl = 'http://localhost:8080/service/master/completed-tasks-with-names';
 
         if (selectedLandId) {
             apiUrl += `?landId=${selectedLandId}`;
