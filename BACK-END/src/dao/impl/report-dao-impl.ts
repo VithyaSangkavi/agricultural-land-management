@@ -38,7 +38,7 @@ export class ReportDaoImpl implements ReportDao {
       query = query
         .innerJoin('work_assigned.lot', 'lot')
         .innerJoin('lot.land', 'land')
-        .andWhere('land.id =: landId', { landId });
+        .andWhere('land.id = :landId', { landId });
     }
 
     console.log('Query from employee attendance report: ', query.getQueryAndParameters());
