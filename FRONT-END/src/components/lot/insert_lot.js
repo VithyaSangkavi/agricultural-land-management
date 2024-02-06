@@ -60,7 +60,7 @@ const InsertLot = ({ setSelectedLandId, selectedLandId }) => {
 
             if (res && res.status) {
                 alertService.success("Data sent successfully!")
-                // window.location.reload();
+                history.push('/managelots')
                setArea('')
                setAreaUom('')
                setName('')

@@ -377,7 +377,6 @@ const ManageTask = ({ selectedLandId }) => {
 
                     .then((response) => {
                         console.log('Task expense added successfully:', response);
-                        history.push('/home');
                     })
                     .catch((error) => {
                         // console.error('Error adding task expense:', error);
@@ -673,7 +672,7 @@ const ManageTask = ({ selectedLandId }) => {
                     <div>
                         {showExpenses ? (
                             <button onClick={() => setShowExpenses(false)} className='view-task-expenses'>
-                                <MdClose /> {t('closetaskexpenses')}
+                                <MdClose /> 
                             </button>
                         ) : (
                             <button onClick={() => setShowExpenses(true)} className='view-task-expenses'>

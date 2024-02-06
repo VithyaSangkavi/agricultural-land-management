@@ -18,10 +18,6 @@ const EmployeeAttendanceReport = ({ dateRange, lotId, landId, selectedLot }) => 
     const fromDate = dateRange && dateRange.fromDate;
     const toDate = dateRange && dateRange.toDate;
 
-    const handleLanguageChange = (lang) => {
-        i18n.changeLanguage(lang);
-    };
-
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -55,7 +51,6 @@ const EmployeeAttendanceReport = ({ dateRange, lotId, landId, selectedLot }) => 
     }, [fromDate, toDate, lotId, landId]);
 
     //Lined chart
-
     const chartData = {
 
         labels: attendanceData.map((item) => item.date),

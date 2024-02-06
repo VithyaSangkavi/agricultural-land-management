@@ -212,11 +212,11 @@ const ManageOngoingTask = ({ selectedLandId }) => {
                     (card) => getFormattedDate(card.date) === today
                 );
 
-                axios.get(`http://localhost:8080/service/master/taskAssignedFindById?taskAssignedId=${taskAssignedid}`)
-                    // submitSets(submitCollection.taskAssignedFindById, '?taskAssignedId=' + taskAssignedid, true)
+                //axios.get(`http://localhost:8080/service/master/taskAssignedFindById?taskAssignedId=${taskAssignedid}`)
+                     submitSets(submitCollection.taskAssignedFindById, '?taskAssignedId=' + taskAssignedid, true)
                     .then((taskResponse) => {
-                        const schedule = taskResponse.data.extra.schedule;
-                        setStartDate(taskResponse.data.extra.startDate);
+                        const schedule = taskResponse.extra.schedule;
+                        setStartDate(taskResponse.extra.startDate);
                         console.log('SCHEDULE ::::::: ', schedule)
                         if (schedule !== 'scheduled' && !isCardExist) {
                             // If the task is not scheduled and the card for today doesn't exist, generate a new card
@@ -241,8 +241,8 @@ const ManageOngoingTask = ({ selectedLandId }) => {
 
 
     const fetchTaskName = () => {
-        axios.get(`http://localhost:8080/service/master/findTaskNameById?taskId=${taskId}`)
-            // submitSets(submitCollection.findTaskNameById, '?taskId=' + taskId, true)
+       // axios.get(`http://localhost:8080/service/master/findTaskNameById?taskId=${taskId}`)
+            submitSets(submitCollection.findTaskNameById, '?taskId=' + taskId, true)
             .then((response) => {
 
                 setTaskName(response.extra.taskName);
@@ -277,6 +277,7 @@ const ManageOngoingTask = ({ selectedLandId }) => {
             .then((response) => {
                 const expenseTypeArrays = response.extra.map((expense) => expense.expenseType);
                 setExpenseTypes(expenseTypeArrays);
+                console.log('expense types from array: ', expenseTypes);
             })
             .catch((error) => {
                 console.error('Error fetching expenses:', error);
@@ -659,21 +660,20 @@ const ManageOngoingTask = ({ selectedLandId }) => {
 
     const handleRemoveWorker = (workAssignedId) => {
 
-        // axios.delete(`http://localhost:8080/service/master/work-assigned-delete/${workAssignedId}`)
+        axios.delete(`http://localhost:8080/service/master/work-assigned-delete/${workAssignedId}`)
 
-        let sendobjoriginal = JSON.parse(JSON.stringify(submitCollection.work_assigned_delete));
-        let sendobj = submitCollection.work_assigned_delete;
-        sendobj.url = (sendobj.url + '/' + workAssignedId);
+        // let sendobjoriginal = JSON.parse(JSON.stringify(submitCollection.work_assigned_delete));
+        // let sendobj = submitCollection.work_assigned_delete;
+        // sendobj.url = (sendobj.url + '/' + workAssignedId);
 
-        submitSets(submitCollection.work_assigned_delete, true)
+        // submitSets(submitCollection.work_assigned_delete, true)
             .then(response => {
                 console.log('Worker removed successfully:', response);
 
-                console.log(sendobjoriginal);
-                sendobj.url = sendobjoriginal.url
+                // console.log(sendobjoriginal);
+                // sendobj.url = sendobjoriginal.url
 
                 AddedWorkerList();
-                window.location.reload()
 
             })
             .catch(error => {
@@ -692,8 +692,8 @@ const ManageOngoingTask = ({ selectedLandId }) => {
         // axios.get(`http://localhost:8080/service/master/findByTaskAssignedId?taskAssignedId=${taskAssignedid}`)
         submitSets(submitCollection.findByTaskAssignedId, '?taskAssignedId=' + taskAssignedid, true)
             .then((response) => {
-                console.log('task expenses ------------ ', response.data.extra)
-                setTaskExpenses(response.data.extra);
+                console.log('task expenses ------------ ', response.extra)
+                setTaskExpenses(response.extra);
             })
             .catch((error) => {
                 console.error('Error fetching task expenses:', error);
