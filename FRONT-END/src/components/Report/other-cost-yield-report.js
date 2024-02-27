@@ -18,10 +18,6 @@ const CostYieldReport = ({ dateRange, landId, lotId, selectedLot }) => {
 
     console.log('passed land id: ', landId)
 
-    const handleLanguageChange = (lang) => {
-        i18n.changeLanguage(lang);
-    };
-
     useEffect(() => {
         const fetchData = async () => {
             try {
